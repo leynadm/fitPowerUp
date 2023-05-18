@@ -7,8 +7,6 @@ import { AuthProvider } from "./context/Auth"
 import AuthRoute from './context/AuthRoute';
 import SignUp from './pages/Signup/SignUp';
 import Home from './pages/Home/Home';
-
-
   
 function App() {  
 
@@ -31,6 +29,7 @@ function App() {
             <Route element={<AuthRoute type="login" />}>
               <Route element={<Login />} path="/" />
             </Route>
+          
           </Routes>
         </Router>
       </AuthProvider>

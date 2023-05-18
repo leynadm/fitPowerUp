@@ -4,16 +4,21 @@ import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
 import Friends from "../Friends/Friends";
 import Workout from "../Workout/Workout";
+import Box from "@mui/material/Box";
 function Home() {
   return (
-    <div>
+    <Box
+      sx={{
+        height: "100%",
+      }}
+    >
       <Navbar />
       <Routes>
-        <Route path="/*" element={<Workout />}  index/>
+        <Route path="/*" element={<Workout />} index />
         <Route path="friends" element={<Friends />} />
         <Route path="progress" element={<Progress />} />
       </Routes>
-    </div>
+    </Box>
   );
 }
 
