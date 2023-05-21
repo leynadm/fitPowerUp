@@ -17,24 +17,20 @@ import { useNavigate } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 
 interface ExerciseSelectionProps {
-  todayDate:Date | undefined
+  todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
   setSelectedExercise: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }>
   >;
+  unitsSystem:string
 }
 
 function ExerciseSelected({
   todayDate,
   selectedExercise,
   setSelectedExercise,
+  unitsSystem
 }: ExerciseSelectionProps) {
-  /* 
-    useEffect(() => {
-        navigate("track");
-      }, []); // Empty dependency array ensures this effect runs only once on mount
-     */
-
   const navigate = useNavigate();
 
   const handleNavigateTrack = () => {
@@ -171,10 +167,19 @@ function ExerciseSelected({
         <Route
           path=""
           element={
-            <ExerciseSelectedTrack selectedExercise={selectedExercise} todayDate={todayDate} />
+            <ExerciseSelectedTrack
+              selectedExercise={selectedExercise}
+              todayDate={todayDate}
+              unitsSystem={unitsSystem}
+            />
           }
         />
-        <Route path="history" element={<ExerciseSelectedHistory selectedExercise={selectedExercise} />} />
+        <Route
+          path="history"
+          element={
+            <ExerciseSelectedHistory selectedExercise={selectedExercise} unitsSystem={unitsSystem}/>
+          }
+        />
         <Route path="graph" element={<ExerciseSelectedGraph />} />
       </Routes>
     </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,Dispatch,SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -19,15 +19,30 @@ interface Exercise {
   // Add other properties
 }
 
-function Workout() {
-  const [todayDate, setTodayDate] = useState<Date>();
+interface HomeProps {
+  existingExercises: { name: string; exercises: Exercise[] }[];
+  selectedCategoryExercises: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }[];
+  exercisesCategories: string[];
+  setExistingExercises:Dispatch<
+  SetStateAction<{ name: string; exercises: Exercise[] }[]>
+>;
+  setSelectedCategoryExercises: Dispatch<
+    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
+  >;
+}
 
-  const [selectedCategoryExercises, setSelectedCategoryExercises] = useState<
-    { category: string; name: string; measurement: any[] }[]
-  >([]);
-  const [existingExercises, setExistingExercises] = useState<
-    { date: Date | string; exercises: Exercise[] }[]
-  >([]);
+function Workout({
+  existingExercises,
+  selectedCategoryExercises,
+  exercisesCategories,
+  setSelectedCategoryExercises,
+  setExistingExercises
+}: HomeProps) {
+  const [todayDate, setTodayDate] = useState<Date>();
 
   const [selectedExercise, setSelectedExercise] = useState<{
     category: string;
@@ -35,19 +50,56 @@ function Workout() {
     measurement: any[];
   }>({ category: "", name: "", measurement: [] });
 
+  const [unitsSystem, setUnitsSystem] = useState('');
+
   useEffect(() => {
-    const currentDate = new Date();
-    setTodayDate(currentDate);
+    if (!todayDate) {
+      const currentDate = new Date();
+      setTodayDate(currentDate);
+    }
+    console.log('logging exercises categories: ')
+    console.log(exercisesCategories)
+    getDataPreferences()
   }, []);
 
   useEffect(() => {
     if (todayDate) {
+       
       getExercisesByDate(todayDate);
+      
     }
   }, [todayDate]);
 
+
+  function getDataPreferences() {
+    const request = indexedDB.open('fitScouterDb', 1);
+
+    request.onerror = function(event) {
+      // Handle errors
+    };
+
+    request.onsuccess = function(event) {
+      const db = request.result;
+
+      // Retrieve the record with id 1 from the object store
+      const transaction = db.transaction('user-data-preferences', 'readonly');
+      const objectStore = transaction.objectStore('user-data-preferences');
+      const getRequest = objectStore.get(1);
+
+      getRequest.onsuccess = function(event) {
+        const record = getRequest.result;
+        if (record) {
+          // Extract the unitsSystem value from the record
+          const { unitsSystem } = record;
+          setUnitsSystem(unitsSystem);
+          console.log(unitsSystem)
+        }
+      };
+    };
+  }
+
   function getExercisesByDate(currentDate: Date) {
-    const request = indexedDB.open("ExerciseDB", 1);
+    const request = indexedDB.open("fitScouterDb", 1);
 
     request.onsuccess = function () {
       const db = request.result;
@@ -64,31 +116,39 @@ function Workout() {
       const dateIndex = userEntryTransactionStore.index("exercise_date");
 
       const dateToQuery = currentDate;
-      console.log("loggin dateToQuery; " + dateToQuery);
+      console.log("logging dateToQuery: " + dateToQuery);
       const range = IDBKeyRange.only(dateToQuery);
 
       const exercisesRequest = dateIndex.openCursor(range);
-      const groupedExercises: { date: Date | string; exercises: Exercise[] }[] =
-        [];
+      const groupedExercisesByName: { [name: string]: Exercise[] } = {};
 
       exercisesRequest.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest).result;
 
         if (cursor) {
           const exercise = cursor.value;
-          const date = exercise.date.toDateString(); // Convert the date to a string for grouping
 
-          // Find the group for the current date, or create a new group if it doesn't exist
-          const group = groupedExercises.find((group) => group.date === date);
+          // Find the group for the current exercise name, or create a new group if it doesn't exist
+          const group = groupedExercisesByName[exercise.exercise];
           if (group) {
-            group.exercises.push(exercise);
+            group.push(exercise);
           } else {
-            groupedExercises.push({ date, exercises: [exercise] });
+            groupedExercisesByName[exercise.exercise] = [exercise];
           }
 
           cursor.continue();
         } else {
-          console.log(groupedExercises);
+          const groupedExercises: { name: string; exercises: Exercise[] }[] =
+            [];
+
+          // Create a group for each name and add exercises grouped by name
+          Object.keys(groupedExercisesByName).forEach((name) => {
+            groupedExercises.push({
+              name,
+              exercises: groupedExercisesByName[name],
+            });
+          });
+
           setExistingExercises(groupedExercises);
         }
       };
@@ -103,7 +163,7 @@ function Workout() {
     };
 
     request.onerror = function () {
-      console.log("Error opening database");
+      console.error("Error opening database");
     };
   }
 
@@ -143,6 +203,7 @@ function Workout() {
                 setTodayDate={setTodayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedCategoryExercises={setSelectedCategoryExercises}
+                exercisesCategories={exercisesCategories}
               />
             }
           />
@@ -165,6 +226,7 @@ function Workout() {
                 todayDate={todayDate}
                 selectedExercise={selectedExercise}
                 setSelectedExercise={setSelectedExercise}
+                unitsSystem={unitsSystem}
               />
             }
           />

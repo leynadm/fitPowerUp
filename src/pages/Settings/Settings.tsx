@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -6,21 +6,107 @@ import Typography from "@mui/material/Typography";
 import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import SettingsIcon from '@mui/icons-material/Settings';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SettingsIcon from "@mui/icons-material/Settings";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
-function Settings(){
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-    const navigate = useNavigate()
-    const handleGoBack = () =>{
+function Settings() {
+  const [enabled, setEnabled] = useState(true);
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate("/home");
+  };
 
-        navigate("/home")
 
+  const updateWeightToImperial = () => {
+    const request = indexedDB.open("fitScouterDb", 1);
+  
+    request.onsuccess = function () {
+      const db = request.result;
+      const transaction = db.transaction("user-exercises-entries", "readwrite");
+      const store = transaction.objectStore("user-exercises-entries");
+  
+      const updateCursor = store.openCursor();
+  
+      updateCursor.onsuccess = function (event: Event) {
+        const cursor = (event.target as IDBRequest).result;
+  
+        if (cursor) {
+          const updatedRecord = cursor.value;
+          updatedRecord.weight *= 2.20;
+  
+          const updateRequest = cursor.update(updatedRecord);
+          updateRequest.onsuccess = function () {
+            console.log("Weight updated successfully");
+          };
+  
+          updateRequest.onerror = function () {
+            console.error("Error updating weight");
+          };
+  
+          cursor.continue();
+        }
+      };
+    };
+  
+    request.onerror = function () {
+      console.error("Error opening database");
+    };
+  };
+
+  const updateWeightToMetric = () => {
+    const request = indexedDB.open("fitScouterDb", 1);
+  
+    request.onsuccess = function () {
+      const db = request.result;
+      const transaction = db.transaction("user-exercises-entries", "readwrite");
+      const store = transaction.objectStore("user-exercises-entries");
+  
+      const updateCursor = store.openCursor();
+  
+      updateCursor.onsuccess = function (event: Event) {
+        const cursor = (event.target as IDBRequest).result;
+  
+        if (cursor) {
+          const updatedRecord = cursor.value;
+          updatedRecord.weight *= 2.20; // Divide by 2.20
+  
+          const updateRequest = cursor.update(updatedRecord);
+          updateRequest.onsuccess = function () {
+            console.log("Weight updated successfully");
+          };
+  
+          updateRequest.onerror = function () {
+            console.error("Error updating weight");
+          };
+  
+          cursor.continue();
+        }
+      };
+    };
+  
+    request.onerror = function () {
+      console.error("Error opening database");
+    };
+  };
+  
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEnabled(event.target.checked);
+
+    if (event.target.checked) {
+      updateWeightToImperial();
+    } else {
+      updateWeightToMetric();
     }
-    return(
-        <Box>
+  };
 
-<AppBar position="fixed" style={{ top: 0 }}>
+  return (
+    <Box>
+      <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -81,9 +167,14 @@ function Settings(){
         </Container>
       </AppBar>
 
-        </Box>
-    )
-
+      <FormGroup>
+      <FormControlLabel
+        control={<Switch checked={enabled} onChange={handleSwitchChange} />}
+        label={enabled ? "Imperial" : "Metric"}
+      />
+    </FormGroup>
+    </Box>
+  );
 }
 
-export default Settings
+export default Settings;

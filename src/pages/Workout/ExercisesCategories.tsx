@@ -25,6 +25,7 @@ interface NewWorkoutProps {
     name: string;
     measurement: any[];
   }[];
+  exercisesCategories: string[];
 
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
@@ -36,122 +37,39 @@ function ExercisesCategories({
   setTodayDate,
   selectedCategoryExercises,
   setSelectedCategoryExercises,
+  exercisesCategories,
 }: NewWorkoutProps) {
+  /*  
   const [preselectedExercises, setPreselectedExercises] = useState<
     { category: string; name: string; measurement: any[] }[]
   >([]);
+*/
 
-  const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
   const indexedDb = useContext(IndexedDBContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log("logging the passed date:");
     console.log(todayDate);
+    /* 
     setPreselectedExercises(importedPreselectedExercises);
+   */
   }, []);
 
+  /* 
   useEffect(() => {
+    
     if (preselectedExercises.length > 0) {
       populatePreselectedExercises();
     }
+  
   }, [preselectedExercises]);
+ */
 
-  function populatePreselectedExercises() {
-    const indexedDb = window.indexedDB;
-
-    if (!indexedDb) {
-      console.log("IndexedDB could not be found in this browser.");
-    }
-
-    const request = indexedDB.open("ExerciseDB", 1);
-
-    // Check if there are any error while opening the Db
-    request.onerror = function (event) {
-      console.error("And error occured with IndexedDb");
-      console.error(event);
-    };
-
-    request.onupgradeneeded = function () {
-      const db = request.result; // Result of our open request
-      
-      // create first table
-      const store = db.createObjectStore("preselected-exercises", {
-        keyPath: "id",
-        autoIncrement: true,
-      });
-
-      store.createIndex("exercise_name", "name", { unique: false });
-      store.createIndex("exercise_category", "category", { unique: false });
-      store.createIndex("exercise_name_and_category", ["name", "category"], {
-        unique: false,
-      });
-
-      // create second table
-      const user_entries = db.createObjectStore("user-exercises-entries", {
-        keyPath: "id",
-        autoIncrement: true,
-      });
-
-      user_entries.createIndex("exercise_date", "date", { unique: false });
-      user_entries.createIndex("exercise_name", "exercise", { unique: false });
-      user_entries.createIndex("exercise_category", "category", { unique: false });
-      user_entries.createIndex("exercise_weight", "weight", { unique: false });
-      user_entries.createIndex("exercise_reps", "reps", { unique: false });
-      user_entries.createIndex("exercise_distance", "distance", { unique: false });
-      user_entries.createIndex("exercise_distance_unit", "distance_unit", { unique: false });
-      user_entries.createIndex("exercise_time", "time", { unique: false });
-      user_entries.createIndex("exercise_name_and_date", ["exercise", "date"], {
-        unique: false,
-      });
-    };
-
-    request.onsuccess = function () {
-      const db = request.result;
-      const transaction = db.transaction("preselected-exercises", "readwrite");
-      const store = transaction.objectStore("preselected-exercises");
-
-      const exerciseNameIndex = store.index("exercise_name");
-      const exerciseCategoryIndex = store.index("exercise_category");
-
-      preselectedExercises.forEach((exercise) => {
-        const formattedExercise = {
-          name: exercise.name,
-          category: exercise.category,
-          measurement:exercise.measurement
-        };
-
-        const exerciseNameQuery = exerciseNameIndex.getAll(exercise.name);
-
-        exerciseNameQuery.onsuccess = function (event) {
-          const result = (event.target as IDBRequest).result;
-          if (result.length === 0) {
-            store.add(formattedExercise);
-          }
-        };
-      });
-
-      const categoryQuery = exerciseCategoryIndex.openKeyCursor();
-      const uniqueCategories = new Set<string>(); // Specify string type for the Set
-
-      categoryQuery.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-        if (cursor) {
-          const category: string = cursor.key; // Specify string type for the category
-          uniqueCategories.add(category);
-          cursor.continue();
-        } else {
-          const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
-          console.log("Categories:", categories);
-          setExercisesCategories(categories);
-        }
-      };
-
-      transaction.oncomplete = function () {
-        db.close();
-      };
-    };
-  }
+  /* 
+  function handleCategoryClick(category:string){
+    console.log('test')
+  } */
 
   function handleCategoryClick(category: string) {
     const indexedDb = window.indexedDB;
@@ -160,7 +78,7 @@ function ExercisesCategories({
       console.log("IndexedDB could not be found in this browser.");
     }
 
-    const request = indexedDB.open("ExerciseDB", 1);
+    const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = function (event) {
       console.error("An error occurred with IndexedDB");

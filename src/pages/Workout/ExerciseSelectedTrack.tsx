@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
+  unitsSystem:string
 }
 
 interface Exercise {
@@ -30,6 +31,7 @@ interface Exercise {
 function ExerciseSelectedTrack({
   selectedExercise,
   todayDate,
+  unitsSystem
 }: ExerciseSelectionProps) {
   const [weightValue, setWeightValue] = useState(0);
   const [repsValue, setRepsValue] = useState(0);
@@ -67,7 +69,7 @@ function ExerciseSelectedTrack({
       return;
     }
 
-    const request = indexedDB.open("ExerciseDB", 1);
+    const request = indexedDB.open("fitScouterDb", 1);
 
     request.onsuccess = function () {
       const db = request.result;
@@ -120,7 +122,7 @@ function ExerciseSelectedTrack({
   }
 
   function saveExerciseEntry() {
-    const request = indexedDB.open("ExerciseDB", 1);
+    const request = indexedDB.open("fitScouterDb", 1);
 
     request.onupgradeneeded = (e) => {
       const db = (e.target as IDBOpenDBRequest).result;
@@ -322,9 +324,11 @@ function ExerciseSelectedTrack({
                 justifyContent: "space-around",
               }}
             >
-              {exercise.weight !== 0 && (
-                <Typography>{exercise.weight} kgs </Typography>
-              )}
+             {exercise.weight !== 0 && (
+  <Typography>
+     {exercise.weight.toFixed(2)}{" "}{unitsSystem === 'metric' ? 'kgs' : 'lbs'}
+  </Typography>
+)}
               {exercise.reps !== 0 && <Typography>{exercise.reps} reps</Typography>}
               {exercise.distance !== 0 && (
                 <Typography>{exercise.distance}</Typography>

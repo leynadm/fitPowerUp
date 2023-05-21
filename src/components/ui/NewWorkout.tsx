@@ -20,13 +20,13 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Divider from "@mui/material/Divider";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { auth } from "../../config/firebase";
-
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-  existingExercises: { date: Date | string; exercises: Exercise[] }[];
+  existingExercises: { name: string; exercises: Exercise[] }[];
 }
 
 interface Exercise {
@@ -144,7 +144,8 @@ function NewWorkout({
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <FitnessCenterIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            
             <Typography
               variant="h6"
               noWrap
@@ -163,7 +164,7 @@ function NewWorkout({
               LOGO
             </Typography>
 
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <FitnessCenterIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
 
             <Typography
               variant="h5"
@@ -181,7 +182,7 @@ function NewWorkout({
                 textDecoration: "none",
               }}
             >
-              Work
+              Log
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
@@ -298,12 +299,9 @@ function NewWorkout({
         </IconButton>
       </Box>
 
-
       <Box>
         {existingExercises.length === 0 ? (
           <Box>
-           
-
             <Box
               sx={{
                 height: "100%",
@@ -349,16 +347,17 @@ function NewWorkout({
         ) : (
           <Box>
             {existingExercises
-            
+              /* 
               .sort(
                 (a, b) =>
                   new Date(b.date).getTime() - new Date(a.date).getTime()
-              ) 
+              ) */
               .map((group, index) => (
                 <Box key={index}>
                   <Typography variant="h6" sx={{ textAlign: "center" }}>
-                    {group.date.toLocaleString()}
+                    {group.name}
                   </Typography>
+
                   <Divider />
                   {group.exercises.map((exercise, exerciseIndex) => (
                     <Box
@@ -388,7 +387,7 @@ function NewWorkout({
                         }}
                       >
                         {exercise.weight !== 0 && (
-                          <Typography>{exercise.weight} kgs </Typography>
+                          <Typography> {exercise.weight.toFixed(2)}{" "} kgs </Typography>
                         )}
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>
