@@ -1,4 +1,10 @@
-import React, { useEffect, useState,Dispatch, SetStateAction } from "react";
+import React, {
+  useEffect,
+  useState,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
 import importedPreselectedExercises from "../../utils/preselectedExercises";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -8,31 +14,40 @@ import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { Routes, Route } from "react-router-dom";
-import { useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { IndexedDBContext } from "../../context/IndexedDB";
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-  selectedCategoryExercises: { category: string; name: string }[];
+
+  selectedCategoryExercises: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }[];
+
   setSelectedCategoryExercises: Dispatch<
-    SetStateAction<{ category: string; name: string }[]>
+    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
 }
 
-function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercises,
-  setSelectedCategoryExercises }: NewWorkoutProps) {
-
+function ExercisesCategories({
+  todayDate,
+  setTodayDate,
+  selectedCategoryExercises,
+  setSelectedCategoryExercises,
+}: NewWorkoutProps) {
   const [preselectedExercises, setPreselectedExercises] = useState<
-    { category: string; name: string }[]
+    { category: string; name: string; measurement: any[] }[]
   >([]);
-  const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
 
+  const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
+  const indexedDb = useContext(IndexedDBContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('logging the passed date:')
-    console.log(todayDate)
+    console.log("logging the passed date:");
+    console.log(todayDate);
     setPreselectedExercises(importedPreselectedExercises);
   }, []);
 
@@ -59,7 +74,8 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
 
     request.onupgradeneeded = function () {
       const db = request.result; // Result of our open request
-      console.log(db);
+      
+      // create first table
       const store = db.createObjectStore("preselected-exercises", {
         keyPath: "id",
         autoIncrement: true,
@@ -68,6 +84,24 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
       store.createIndex("exercise_name", "name", { unique: false });
       store.createIndex("exercise_category", "category", { unique: false });
       store.createIndex("exercise_name_and_category", ["name", "category"], {
+        unique: false,
+      });
+
+      // create second table
+      const user_entries = db.createObjectStore("user-exercises-entries", {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+
+      user_entries.createIndex("exercise_date", "date", { unique: false });
+      user_entries.createIndex("exercise_name", "exercise", { unique: false });
+      user_entries.createIndex("exercise_category", "category", { unique: false });
+      user_entries.createIndex("exercise_weight", "weight", { unique: false });
+      user_entries.createIndex("exercise_reps", "reps", { unique: false });
+      user_entries.createIndex("exercise_distance", "distance", { unique: false });
+      user_entries.createIndex("exercise_distance_unit", "distance_unit", { unique: false });
+      user_entries.createIndex("exercise_time", "time", { unique: false });
+      user_entries.createIndex("exercise_name_and_date", ["exercise", "date"], {
         unique: false,
       });
     };
@@ -84,6 +118,7 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
         const formattedExercise = {
           name: exercise.name,
           category: exercise.category,
+          measurement:exercise.measurement
         };
 
         const exerciseNameQuery = exerciseNameIndex.getAll(exercise.name);
@@ -119,8 +154,6 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
   }
 
   function handleCategoryClick(category: string) {
-
-
     const indexedDb = window.indexedDB;
 
     if (!indexedDb) {
@@ -143,18 +176,16 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
       const categoryRange = IDBKeyRange.only(category);
 
       const categoryQuery = exerciseCategoryIndex.openCursor(categoryRange);
-      const selectedCategoryExercises: { category: string; name: string }[] =
-        [];
-      const tempArrSelectedCategoryExercises: {
+      const selectedCategoryExercises: {
         category: string;
         name: string;
+        measurement: any[];
       }[] = [];
 
       categoryQuery.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
         if (cursor) {
           selectedCategoryExercises.push(cursor.value);
-          tempArrSelectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
           setSelectedCategoryExercises(selectedCategoryExercises);
@@ -162,20 +193,15 @@ function ExercisesCategories({ todayDate, setTodayDate,  selectedCategoryExercis
             "Selected Category Exercises:",
             selectedCategoryExercises
           );
-          console.log(
-            "Temporary Array of Exercises:",
-            tempArrSelectedCategoryExercises
-          );
         }
       };
 
       transaction.oncomplete = function () {
         db.close();
       };
- 
+
       navigate("exercises");
     };
-
   }
 
   return (

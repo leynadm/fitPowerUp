@@ -7,12 +7,13 @@ import { AuthProvider } from "./context/Auth"
 import AuthRoute from './context/AuthRoute';
 import SignUp from './pages/Signup/SignUp';
 import Home from './pages/Home/Home';
-  
+import { IndexedDBProvider } from './context/IndexedDB';
 function App() {  
 
   return (
     <div className="App">
       <AuthProvider>
+        <IndexedDBProvider>
         <Router>
           <Routes>
             {/* If the user is signed in and tries to access login, reroute him to home */}
@@ -32,6 +33,7 @@ function App() {
           
           </Routes>
         </Router>
+        </IndexedDBProvider>
       </AuthProvider>
 
     </div>

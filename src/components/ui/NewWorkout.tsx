@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -17,19 +17,41 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Divider from "@mui/material/Divider";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import { auth } from "../../config/firebase";
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
+  existingExercises: { date: Date | string; exercises: Exercise[] }[];
 }
 
-function NewWorkout({ todayDate, setTodayDate }: NewWorkoutProps) {
+interface Exercise {
+  exercise: string;
+  date: Date | string;
+  weight: number;
+  reps: number;
+  distance: number;
+  distance_unit: number | object;
+  time: number;
+  category: string;
+  // Add other properties
+}
+
+function NewWorkout({
+  todayDate,
+  setTodayDate,
+  existingExercises,
+}: NewWorkoutProps) {
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-
+  const [currentPage, setCurrentPage] = useState("");
   const formatDate = (date: Date): string => {
     const today = new Date().setHours(0, 0, 0, 0);
     const passedDate = date.setHours(0, 0, 0, 0);
@@ -68,6 +90,7 @@ function NewWorkout({ todayDate, setTodayDate }: NewWorkoutProps) {
     "Time Workout",
     "Body Tracker",
     "Analysis",
+    "Sign Out",
   ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -82,6 +105,33 @@ function NewWorkout({ todayDate, setTodayDate }: NewWorkoutProps) {
     navigate("workout_categories");
   };
 
+  const handlePageClick = (page: string) => {
+    handleCloseNavMenu();
+
+    // Handle logic based on the clicked page
+    if (page === "Settings") {
+      // Handle Settings page click
+      navigate("settings");
+    } else if (page === "Copy Workout") {
+      // Handle Copy Workout page click
+      // ...
+    } else if (page === "Comment Workout") {
+      // Handle Comment Workout page click
+      // ...
+    } else if (page === "Time Workout") {
+      // Handle Time Workout page click
+      // ...
+    } else if (page === "Body Tracker") {
+      // Handle Body Tracker page click
+      // ...
+    } else if (page === "Analysis") {
+      // Handle Analysis page click
+      // ...
+    } else if (page === "Sign Out") {
+      auth.signOut();
+      // ...
+    }
+  };
   return (
     <Box
       sx={{
@@ -200,7 +250,7 @@ function NewWorkout({ todayDate, setTodayDate }: NewWorkoutProps) {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem key={page} onClick={() => handlePageClick(page)}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
@@ -248,48 +298,125 @@ function NewWorkout({ todayDate, setTodayDate }: NewWorkoutProps) {
         </IconButton>
       </Box>
 
-      <Box
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="body2"
-          sx={{
-            fontSize: "large",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          Workout Log Empty
-        </Typography>
 
-        <IconButton
-          aria-label="add workout"
-          sx={{
-            mb: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-          onClick={handleNewWorkout}
-        >
-          <AddIcon />
-          <Typography variant="body2">Start New Workout</Typography>
-        </IconButton>
+      <Box>
+        {existingExercises.length === 0 ? (
+          <Box>
+           
 
-        <IconButton
-          aria-label="copy workout"
-          sx={{ mb: 2, display: "flex", flexDirection: "column" }}
-        >
-          <ContentCopyIcon />
-          <Typography variant="body2">Copy Previous Workout</Typography>
-        </IconButton>
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "large",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              ></Typography>
+
+              <IconButton
+                aria-label="add workout"
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                onClick={handleNewWorkout}
+              >
+                <AddIcon />
+                <Typography variant="body2">Start New Workout</Typography>
+              </IconButton>
+
+              <IconButton
+                aria-label="copy workout"
+                sx={{ mb: 2, display: "flex", flexDirection: "column" }}
+              >
+                <ContentCopyIcon />
+                <Typography variant="body2">Copy Previous Workout</Typography>
+              </IconButton>
+            </Box>
+          </Box>
+        ) : (
+          <Box>
+            {existingExercises
+            
+              .sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              ) 
+              .map((group, index) => (
+                <Box key={index}>
+                  <Typography variant="h6" sx={{ textAlign: "center" }}>
+                    {group.date.toLocaleString()}
+                  </Typography>
+                  <Divider />
+                  {group.exercises.map((exercise, exerciseIndex) => (
+                    <Box
+                      key={exerciseIndex}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-evenly",
+                        alignItems: "center",
+                        width: "100vw",
+                      }}
+                    >
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <AddCommentIcon />
+                      </IconButton>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          width: "100vw",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        {exercise.weight !== 0 && (
+                          <Typography>{exercise.weight} kgs </Typography>
+                        )}
+                        {exercise.reps !== 0 && (
+                          <Typography>{exercise.reps} reps</Typography>
+                        )}
+                        {exercise.distance !== 0 && (
+                          <Typography>{exercise.distance}</Typography>
+                        )}
+                        {exercise.time !== 0 && (
+                          <Typography>{exercise.time}</Typography>
+                        )}
+                      </Box>
+
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <Divider />
+                    </Box>
+                  ))}
+                </Box>
+              ))}
+          </Box>
+        )}
       </Box>
     </Box>
   );

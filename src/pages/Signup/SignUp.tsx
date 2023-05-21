@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
+    
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
@@ -133,7 +134,9 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
+        {/* 
         <Copyright sx={{ mt: 5 }} />
+         */}
       </Container>
     </ThemeProvider>
   );

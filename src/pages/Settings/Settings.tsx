@@ -1,47 +1,26 @@
-import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
+import React from "react";
+import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import SettingsIcon from '@mui/icons-material/Settings';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
-interface ExercisesCategoriesProps {
-  todayDate: Date | undefined;
-  selectedCategoryExercises: { category: string; name: string }[];
-  setSelectedExercise: Dispatch<
-    SetStateAction<{name:string,category:string}>
-  >;
-}
+function Settings(){
 
-function ExercisesByCategory({
-  todayDate,
-  selectedCategoryExercises,
-  setSelectedExercise
-}: ExercisesCategoriesProps) {
+    const navigate = useNavigate()
+    const handleGoBack = () =>{
 
-  const navigate = useNavigate()
-  const handleExerciseClick = (exercise: {category:string, name:string}) => {
+        navigate("/home")
 
-    setSelectedExercise(exercise)
-    navigate(`selected`)
+    }
+    return(
+        <Box>
 
-  };
-
-  return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <AppBar position="fixed" style={{ top: 0 }}>
+<AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -63,7 +42,7 @@ function ExercisesByCategory({
               LOGO
             </Typography>
 
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <SettingsIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
 
             <Typography
               variant="h5"
@@ -81,7 +60,7 @@ function ExercisesByCategory({
                 textDecoration: "none",
               }}
             >
-              Work
+              Settings
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -92,9 +71,9 @@ function ExercisesByCategory({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  onClick={() => console.log("yes")}
+                  onClick={handleGoBack}
                 >
-                  <AddOutlinedIcon />
+                  <ArrowBackIcon />
                 </IconButton>
               </Box>
             </Box>
@@ -102,33 +81,9 @@ function ExercisesByCategory({
         </Container>
       </AppBar>
 
-      <TextField
-        id="standard-basic"
-        label="Look for an exercise"
-        variant="standard"
-        sx={{
-          width: "100%",
-        }}
-      />
+        </Box>
+    )
 
-      <Box>
-        {selectedCategoryExercises.map((exercise, index) => (
-          <Typography
-            key={index}
-            sx={{
-              width: "100%",
-              fontSize: "larger",
-              margin: "0.15rem",
-              cursor: "pointer",
-            }}
-            onClick={() => handleExerciseClick(exercise)}
-          >
-            {exercise.name.charAt(0).toUpperCase() + exercise.name.slice(1)}
-          </Typography>
-        ))}
-      </Box>
-    </Container>
-  );
 }
 
-export default ExercisesByCategory;
+export default Settings
