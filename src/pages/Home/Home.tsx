@@ -6,17 +6,7 @@ import Friends from "../Friends/Friends";
 import Workout from "../Workout/Workout";
 import Box from "@mui/material/Box";
 import importedPreselectedExercises from "../../utils/preselectedExercises";
-interface Exercise {
-  exercise: string;
-  date: Date | string;
-  weight: number;
-  reps: number;
-  distance: number;
-  distance_unit: number | object;
-  time: number;
-  category: string;
-  // Add other properties
-}
+import Exercise from "../../utils/interfaces/Exercise";
 
 function Home() {
   const [preselectedExercises, setPreselectedExercises] = useState<

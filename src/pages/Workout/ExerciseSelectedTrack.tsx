@@ -10,35 +10,31 @@ import { time } from "console";
 import IconButton from "@mui/material/IconButton";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Modal from "@mui/material/Modal";
+import Exercise from "../../utils/interfaces/Exercise";
+import CommentModal from "../../components/ui/CommentModal";
+
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
-  unitsSystem:string
-}
-
-interface Exercise {
-  exercise: string;
-  date: Date | string;
-  weight: number;
-  reps: number;
-  distance: number;
-  distance_unit: number | object;
-  time: number;
-  category: string;
-  // Add other properties here as per your exercise object structure
+  unitsSystem: string;
 }
 
 function ExerciseSelectedTrack({
   selectedExercise,
   todayDate,
-  unitsSystem
+  unitsSystem,
 }: ExerciseSelectionProps) {
   const [weightValue, setWeightValue] = useState(0);
   const [repsValue, setRepsValue] = useState(0);
   const [distanceValue, setDistanceValue] = useState(0);
   const [timeValue, setTimeValue] = useState(0);
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
-
+  const [userDataInput, setUserDataInput] = useState(false);
+  const [userUpdatedExerciseData, setUserUpdatedExerciseData] = useState(false);
+  const [openCommentModal, setOpenCommentModal] = useState(false);
+  const [commentValue, setCommentValue] = useState("");
+  const [exerciseCommentId, setExerciseCommentId] = useState(0);
   const [entryToSave, setEntryToSave] = useState({
     date: todayDate,
     exercise: selectedExercise.name,
@@ -52,7 +48,16 @@ function ExerciseSelectedTrack({
 
   useEffect(() => {
     getExistingExercises();
-  }, [todayDate]);
+
+    if (existingExercises.length > 0 && !userUpdatedExerciseData) {
+      setUserUpdatedExerciseData(true);
+      const lastExercise = existingExercises[existingExercises.length - 1];
+      setWeightValue(lastExercise.weight);
+      setRepsValue(lastExercise.reps);
+      setDistanceValue(lastExercise.distance);
+      setTimeValue(lastExercise.time);
+    }
+  }, [todayDate, existingExercises]);
 
   useEffect(() => {
     setEntryToSave((prevState) => ({
@@ -63,6 +68,18 @@ function ExerciseSelectedTrack({
       time: timeValue,
     }));
   }, [weightValue, repsValue, distanceValue, timeValue]);
+
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   function getExistingExercises() {
     if (!todayDate) {
@@ -89,7 +106,7 @@ function ExerciseSelectedTrack({
 
       const range = IDBKeyRange.bound(
         [selectedExercise.name, todayDate],
-        [selectedExercise.name, new Date(todayDate.getTime() + 86400000)]
+        [selectedExercise.name, todayDate] // Use the same date for both bounds
       );
 
       const exercisesRequest = exerciseNameAndDateIndex.openCursor(range);
@@ -112,13 +129,17 @@ function ExerciseSelectedTrack({
 
       userEntryTransaction.oncomplete = function () {
         db.close();
-
       };
     };
 
     request.onerror = function () {
       console.log("Error opening database");
     };
+  }
+
+  function handleModalVisibility(exerciseId: number) {
+    setExerciseCommentId(exerciseId);
+    setOpenCommentModal(!openCommentModal);
   }
 
   function saveExerciseEntry() {
@@ -172,7 +193,7 @@ function ExerciseSelectedTrack({
 
       userEntryTransaction.oncomplete = function () {
         db.close();
-        getExistingExercises(); 
+        getExistingExercises();
       };
     };
 
@@ -180,23 +201,73 @@ function ExerciseSelectedTrack({
       console.log("found error:");
     };
   }
-
-  // Function to handle changes in the TextField
   function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
 
     if (id === "reps") {
-      console.log("currently in reps");
       setRepsValue(parseInt(value, 10));
+      setEntryToSave((prevState) => ({
+        ...prevState,
+        reps: parseInt(value, 10),
+      }));
     } else if (id === "weight") {
-      console.log("currently in weight");
-      setWeightValue(parseInt(value, 10));
+      setWeightValue(parseFloat(value));
+      setEntryToSave((prevState) => ({
+        ...prevState,
+        weight: parseFloat(value),
+      }));
     } else if (id === "distance") {
-      console.log("currently in distance");
-      setDistanceValue(parseInt(value, 10));
-      console.log("currently in time");
+      setDistanceValue(parseFloat(value));
+      setEntryToSave((prevState) => ({
+        ...prevState,
+        distance: parseFloat(value),
+      }));
     } else if (id === "time") {
-      setTimeValue(parseInt(value, 10));
+      setTimeValue(parseFloat(value));
+      setEntryToSave((prevState) => ({
+        ...prevState,
+        time: parseFloat(value),
+      }));
+    }
+  }
+
+  function handleAddButtonClick(index: number) {
+    setUserDataInput(true);
+    switch (selectedExercise.measurement[index]) {
+      case "weight":
+        setWeightValue((prevWeight) => prevWeight + 1);
+        break;
+      case "reps":
+        setRepsValue((prevReps) => prevReps + 1);
+        break;
+      case "distance":
+        setDistanceValue((prevDistance) => prevDistance + 1);
+        break;
+      case "time":
+        setTimeValue((prevTime) => prevTime + 1);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function handleSubtractButtonClick(index: number) {
+    setUserDataInput(true);
+    switch (selectedExercise.measurement[index]) {
+      case "weight":
+        setWeightValue((prevWeight) => prevWeight - 1);
+        break;
+      case "reps":
+        setRepsValue((prevReps) => prevReps - 1);
+        break;
+      case "distance":
+        setDistanceValue((prevDistance) => prevDistance - 1);
+        break;
+      case "time":
+        setTimeValue((prevTime) => prevTime - 1);
+        break;
+      default:
+        break;
     }
   }
 
@@ -210,6 +281,14 @@ function ExerciseSelectedTrack({
         alignItems: "center",
       }}
     >
+      <CommentModal
+        openCommentModal={openCommentModal}
+        setOpenCommentModal={setOpenCommentModal}
+        commentValue={commentValue}
+        setCommentValue={setCommentValue}
+        exerciseCommentId={exerciseCommentId}
+      />
+
       <Typography
         sx={{
           padding: {
@@ -255,7 +334,10 @@ function ExerciseSelectedTrack({
               display: "flex",
             }}
           >
-            <Button variant="outlined">
+            <Button
+              variant="outlined"
+              onClick={() => handleSubtractButtonClick(index)}
+            >
               <RemoveIcon />
             </Button>
 
@@ -264,12 +346,24 @@ function ExerciseSelectedTrack({
               id={selectedExercise.measurement[index]}
               variant="filled"
               inputProps={{
-                style: { fontSize: "large" },
+                style: { fontSize: "large", textAlign: "center" },
               }}
+              value={
+                selectedExercise.measurement[index] === "weight"
+                  ? weightValue.toFixed(2)
+                  : selectedExercise.measurement[index] === "reps"
+                  ? repsValue
+                  : selectedExercise.measurement[index] === "distance"
+                  ? distanceValue
+                  : timeValue
+              }
               onChange={handleTextFieldChange}
             />
 
-            <Button variant="outlined">
+            <Button
+              variant="outlined"
+              onClick={() => handleAddButtonClick(index)}
+            >
               <AddIcon />
             </Button>
           </Box>
@@ -313,6 +407,7 @@ function ExerciseSelectedTrack({
               aria-controls="menu-appbar"
               aria-haspopup="true"
               color="inherit"
+              onClick={() => handleModalVisibility(exercise.id)}
             >
               <AddCommentIcon />
             </IconButton>
@@ -324,12 +419,15 @@ function ExerciseSelectedTrack({
                 justifyContent: "space-around",
               }}
             >
-             {exercise.weight !== 0 && (
-  <Typography>
-     {exercise.weight.toFixed(2)}{" "}{unitsSystem === 'metric' ? 'kgs' : 'lbs'}
-  </Typography>
-)}
-              {exercise.reps !== 0 && <Typography>{exercise.reps} reps</Typography>}
+              {exercise.weight !== 0 && (
+                <Typography>
+                  {exercise.weight.toFixed(2)}{" "}
+                  {unitsSystem === "metric" ? "kgs" : "lbs"}
+                </Typography>
+              )}
+              {exercise.reps !== 0 && (
+                <Typography>{exercise.reps} reps</Typography>
+              )}
               {exercise.distance !== 0 && (
                 <Typography>{exercise.distance}</Typography>
               )}
@@ -345,12 +443,10 @@ function ExerciseSelectedTrack({
             >
               <DeleteIcon />
             </IconButton>
-            <Divider/>            
+            <Divider />
           </Box>
-
         ))}
       </Box>
-
     </Box>
   );
 }

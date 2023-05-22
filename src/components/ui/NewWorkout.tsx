@@ -18,33 +18,28 @@ import AdbIcon from "@mui/icons-material/Adb";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Divider from "@mui/material/Divider";
-import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { auth } from "../../config/firebase";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import CommentIcon from "@mui/icons-material/Comment";
+
+import Exercise from "../../utils/interfaces/Exercise";
+
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-  existingExercises: { name: string; exercises: Exercise[] }[];
-}
 
-interface Exercise {
-  exercise: string;
-  date: Date | string;
-  weight: number;
-  reps: number;
-  distance: number;
-  distance_unit: number | object;
-  time: number;
-  category: string;
-  // Add other properties
+  existingExercises: { name: string; exercises: Exercise[] }[];
+
+  unitsSystem: string;
 }
 
 function NewWorkout({
   todayDate,
   setTodayDate,
   existingExercises,
+  unitsSystem,
 }: NewWorkoutProps) {
   const navigate = useNavigate();
 
@@ -144,8 +139,10 @@ function NewWorkout({
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <FitnessCenterIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-            
+            <FitnessCenterIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
+
             <Typography
               variant="h6"
               noWrap
@@ -164,7 +161,9 @@ function NewWorkout({
               LOGO
             </Typography>
 
-            <FitnessCenterIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <FitnessCenterIcon
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
 
             <Typography
               variant="h5"
@@ -369,15 +368,28 @@ function NewWorkout({
                         width: "100vw",
                       }}
                     >
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                      >
-                        <AddCommentIcon />
-                      </IconButton>
+                      {exercise.comment ? ( // Check if 'comment' property exists
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                        >
+                          <CommentIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <CommentIcon style={{ opacity: 0 }} />
+                        </IconButton>
+                      )}
 
                       <Box
                         sx={{
@@ -387,7 +399,11 @@ function NewWorkout({
                         }}
                       >
                         {exercise.weight !== 0 && (
-                          <Typography> {exercise.weight.toFixed(2)}{" "} kgs </Typography>
+                          <Typography>
+                            {" "}
+                            {exercise.weight.toFixed(2)}{" "}
+                            {unitsSystem === "metric" ? "kgs" : "lbs"}{" "}
+                          </Typography>
                         )}
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>

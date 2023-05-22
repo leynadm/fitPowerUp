@@ -6,7 +6,9 @@ import NewWorkout from "../../components/ui/NewWorkout";
 import ExercisesByCategory from "./ExercisesByCategory";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
+import Exercise from "../../utils/interfaces/Exercise";
 
+/* 
 interface Exercise {
   exercise: string;
   date: Date | string;
@@ -17,7 +19,7 @@ interface Exercise {
   time: number;
   category: string;
   // Add other properties
-}
+} */
 
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -188,6 +190,7 @@ function Workout({
             path="/"
             element={
               <NewWorkout
+              unitsSystem={unitsSystem}
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
                 existingExercises={existingExercises}
@@ -231,7 +234,7 @@ function Workout({
             }
           />
 
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings" element={<Settings unitsSystem={unitsSystem} />} />
         </Routes>
       </Box>
     </Box>

@@ -13,25 +13,56 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-function Settings() {
-  const [enabled, setEnabled] = useState(true);
+interface WorkoutProps {
+  unitsSystem:string
+}
+
+
+function Settings({unitsSystem}:WorkoutProps) {
+  const [enabled, setEnabled] = useState(unitsSystem === "imperial");
   const navigate = useNavigate();
+  
+  /* 
   const handleGoBack = () => {
     navigate("/home");
-  };
+  }; */
 
 
-  const updateWeightToImperial = () => {
+  const updateToImperial = () => {
     const request = indexedDB.open("fitScouterDb", 1);
   
     request.onsuccess = function () {
       const db = request.result;
-      const transaction = db.transaction("user-exercises-entries", "readwrite");
-      const store = transaction.objectStore("user-exercises-entries");
   
-      const updateCursor = store.openCursor();
+      // Update unitsSystem to "imperial"
+      const preferenceTransaction = db.transaction("user-data-preferences", "readwrite");
+      const preferenceStore = preferenceTransaction.objectStore("user-data-preferences");
+      const preferenceRequest = preferenceStore.get(1);
   
-      updateCursor.onsuccess = function (event: Event) {
+      preferenceRequest.onsuccess = function (event) {
+        const preferenceRecord = (event.target as IDBRequest).result;
+  
+        if (preferenceRecord) {
+          preferenceRecord.unitsSystem = "imperial";
+  
+          const updatePreferenceRequest = preferenceStore.put(preferenceRecord);
+  
+          updatePreferenceRequest.onsuccess = function () {
+            console.log("Units system updated successfully");
+          };
+  
+          updatePreferenceRequest.onerror = function () {
+            console.error("Error updating units system");
+          };
+        }
+      };
+  
+      // Update weight to imperial
+      const weightTransaction = db.transaction("user-exercises-entries", "readwrite");
+      const weightStore = weightTransaction.objectStore("user-exercises-entries");
+      const weightCursor = weightStore.openCursor();
+  
+      weightCursor.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest).result;
   
         if (cursor) {
@@ -39,16 +70,34 @@ function Settings() {
           updatedRecord.weight *= 2.20;
   
           const updateRequest = cursor.update(updatedRecord);
+  
           updateRequest.onsuccess = function () {
             console.log("Weight updated successfully");
+            cursor.continue();
           };
   
           updateRequest.onerror = function () {
             console.error("Error updating weight");
+            cursor.continue();
           };
-  
-          cursor.continue();
         }
+      };
+  
+      // Commit the transactions
+      preferenceTransaction.oncomplete = function () {
+        console.log("Preference transaction completed");
+      };
+  
+      preferenceTransaction.onerror = function () {
+        console.error("Error in preference transaction");
+      };
+  
+      weightTransaction.oncomplete = function () {
+        console.log("Weight transaction completed");
+      };
+  
+      weightTransaction.onerror = function () {
+        console.error("Error in weight transaction");
       };
     };
   
@@ -56,35 +105,79 @@ function Settings() {
       console.error("Error opening database");
     };
   };
+  
+  
 
-  const updateWeightToMetric = () => {
+  const updateToMetric = () => {
     const request = indexedDB.open("fitScouterDb", 1);
   
     request.onsuccess = function () {
       const db = request.result;
-      const transaction = db.transaction("user-exercises-entries", "readwrite");
-      const store = transaction.objectStore("user-exercises-entries");
   
-      const updateCursor = store.openCursor();
+      // Update unitsSystem to "imperial"
+      const preferenceTransaction = db.transaction("user-data-preferences", "readwrite");
+      const preferenceStore = preferenceTransaction.objectStore("user-data-preferences");
+      const preferenceRequest = preferenceStore.get(1);
   
-      updateCursor.onsuccess = function (event: Event) {
+      preferenceRequest.onsuccess = function (event) {
+        const preferenceRecord = (event.target as IDBRequest).result;
+  
+        if (preferenceRecord) {
+          preferenceRecord.unitsSystem = "metric";
+  
+          const updatePreferenceRequest = preferenceStore.put(preferenceRecord);
+  
+          updatePreferenceRequest.onsuccess = function () {
+            console.log("Units system updated successfully");
+          };
+  
+          updatePreferenceRequest.onerror = function () {
+            console.error("Error updating units system");
+          };
+        }
+      };
+  
+      // Update weight to imperial
+      const weightTransaction = db.transaction("user-exercises-entries", "readwrite");
+      const weightStore = weightTransaction.objectStore("user-exercises-entries");
+      const weightCursor = weightStore.openCursor();
+  
+      weightCursor.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest).result;
   
         if (cursor) {
           const updatedRecord = cursor.value;
-          updatedRecord.weight *= 2.20; // Divide by 2.20
+          updatedRecord.weight /= 2.20;
   
           const updateRequest = cursor.update(updatedRecord);
+  
           updateRequest.onsuccess = function () {
             console.log("Weight updated successfully");
+            cursor.continue();
           };
   
           updateRequest.onerror = function () {
             console.error("Error updating weight");
+            cursor.continue();
           };
-  
-          cursor.continue();
         }
+      };
+  
+      // Commit the transactions
+      preferenceTransaction.oncomplete = function () {
+        console.log("Preference transaction completed");
+      };
+  
+      preferenceTransaction.onerror = function () {
+        console.error("Error in preference transaction");
+      };
+  
+      weightTransaction.oncomplete = function () {
+        console.log("Weight transaction completed");
+      };
+  
+      weightTransaction.onerror = function () {
+        console.error("Error in weight transaction");
       };
     };
   
@@ -92,15 +185,14 @@ function Settings() {
       console.error("Error opening database");
     };
   };
-  
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEnabled(event.target.checked);
 
     if (event.target.checked) {
-      updateWeightToImperial();
+      updateToImperial();
     } else {
-      updateWeightToMetric();
+      updateToMetric();
     }
   };
 
@@ -151,16 +243,20 @@ function Settings() {
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
+                {/* 
                 <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
+                   
                   onClick={handleGoBack}
-                >
+               
+                  >
                   <ArrowBackIcon />
                 </IconButton>
+              */}
               </Box>
             </Box>
           </Toolbar>

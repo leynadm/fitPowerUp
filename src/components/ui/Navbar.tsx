@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import PeopleIcon from "@mui/icons-material/People";
 import Paper from "@mui/material/Paper";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {

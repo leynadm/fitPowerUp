@@ -5,25 +5,17 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import Exercise from "../../utils/interfaces/Exercise";
+import CommentIcon from "@mui/icons-material/Comment";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
-  unitsSystem:string
+  unitsSystem: string;
 }
 
-interface Exercise {
-  exercise: string;
-  date: Date | string;
-  weight: number;
-  reps: number;
-  distance: number;
-  distance_unit: number | object;
-  time: number;
-  category: string;
-  // Add other properties
-}
-
-function ExerciseSelectedHistory({ selectedExercise,unitsSystem }: ExerciseSelectionProps) {
+function ExerciseSelectedHistory({
+  selectedExercise,
+  unitsSystem,
+}: ExerciseSelectionProps) {
   const [existingExercises, setExistingExercises] = useState<
     { date: Date | string; exercises: Exercise[] }[]
   >([]);
@@ -123,21 +115,32 @@ function ExerciseSelectedHistory({ selectedExercise,unitsSystem }: ExerciseSelec
                   key={exerciseIndex}
                   sx={{
                     display: "flex",
-                    justifyContent: "space-evenly",
                     alignItems: "center",
                     width: "100vw",
                   }}
                 >
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                  >
-                    <AddCommentIcon />
-                  </IconButton>
-
+                  {exercise.comment ? ( // Check if 'comment' property exists
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      color="secondary"
+                    >
+                      <CommentIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      color="inherit"
+                      disabled // Placeholder element
+                    >
+                      <CommentIcon style={{ opacity: 0 }} />
+                    </IconButton>
+                  )}
                   <Box
                     sx={{
                       display: "flex",
@@ -145,11 +148,12 @@ function ExerciseSelectedHistory({ selectedExercise,unitsSystem }: ExerciseSelec
                       justifyContent: "space-around",
                     }}
                   >
-{exercise.weight !== 0 && (
-  <Typography>
-     {exercise.weight.toFixed(2)}{" "} {unitsSystem === 'metric' ? 'kgs' : 'lbs'}
-  </Typography>
-)}
+                    {exercise.weight !== 0 && (
+                      <Typography>
+                        {exercise.weight.toFixed(2)}{" "}
+                        {unitsSystem === "metric" ? "kgs" : "lbs"}
+                      </Typography>
+                    )}
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}

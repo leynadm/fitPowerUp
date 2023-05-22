@@ -13,7 +13,7 @@ import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseSelectedGraph from "./ExerciseSelectedGraph";
 import { useNavigate } from "react-router-dom";
-
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { Routes, Route } from "react-router-dom";
 
 interface ExerciseSelectionProps {
@@ -50,7 +50,7 @@ function ExerciseSelected({
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <LibraryBooksIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -69,7 +69,7 @@ function ExerciseSelected({
               LOGO
             </Typography>
 
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <LibraryBooksIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
 
             <Typography
               variant="h5"
@@ -87,7 +87,7 @@ function ExerciseSelected({
                 textDecoration: "none",
               }}
             >
-              Work
+              Add
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
