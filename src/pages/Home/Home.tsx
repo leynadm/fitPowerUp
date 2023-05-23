@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
@@ -22,9 +22,7 @@ function Home() {
   useEffect(() => {
     setPreselectedExercises(importedPreselectedExercises);
   }, []);
-  /* 
-  const { database, request } = useContext(IndexedDBContext);
- */
+
   useEffect(() => {
     if (preselectedExercises.length > 0) {
       populatePreselectedExercises();
@@ -138,30 +136,6 @@ function Home() {
         };
       });
 
-      /* 
-      const userPreferencesObjectStore = transaction.objectStore("user-data-preferences");
-      const getRequest = userPreferencesObjectStore.get(1); // Assuming the default record has id = 1
-
-      getRequest.onsuccess = function (event) {
-        const defaultRecord = (event.target as IDBOpenDBRequest).result;
-  
-        if (!defaultRecord) {
-          // The default record doesn't exist, so add it
-          const addRequest = userPreferencesObjectStore.add({
-            unitsSystem: "metric",
-            defaultWeightIncrement: 2.5,
-          });
-  
-          addRequest.onsuccess = function () {
-            console.log("Default record added successfully.");
-          };
-  
-          addRequest.onerror = function (event) {
-            console.error("Failed to add default record:");
-          };
-        }
-      }; */
-
       const categoryQuery = exerciseCategoryIndex.openKeyCursor();
       const uniqueCategories = new Set<string>(); // Specify string type for the Set
 
@@ -261,12 +235,11 @@ function Home() {
       };
     };
   };
-  
-
+ 
   return (
     <Box
       sx={{
-        height: "100%",
+        height: "100vh",
       }}
     >
       <Navbar />
@@ -274,7 +247,8 @@ function Home() {
         <Route
           path="/*"
           element={
-            <Workout
+            
+            <Workout 
               existingExercises={existingExercises}
               selectedCategoryExercises={selectedCategoryExercises}
               exercisesCategories={exercisesCategories}

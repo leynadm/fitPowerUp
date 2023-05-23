@@ -1,4 +1,4 @@
-import React, { useState, useEffect,Dispatch,SetStateAction } from "react";
+import React, { useState, useEffect,Dispatch,SetStateAction,useRef } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -7,7 +7,7 @@ import ExercisesByCategory from "./ExercisesByCategory";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
-
+import { Ref } from 'react';
 /* 
 interface Exercise {
   exercise: string;
@@ -35,6 +35,7 @@ interface HomeProps {
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
+
 }
 
 function Workout({
@@ -42,7 +43,7 @@ function Workout({
   selectedCategoryExercises,
   exercisesCategories,
   setSelectedCategoryExercises,
-  setExistingExercises
+  setExistingExercises,
 }: HomeProps) {
   const [todayDate, setTodayDate] = useState<Date>();
 
@@ -53,6 +54,7 @@ function Workout({
   }>({ category: "", name: "", measurement: [] });
 
   const [unitsSystem, setUnitsSystem] = useState('');
+  const workoutRef = useRef(null);
 
   useEffect(() => {
     if (!todayDate) {
@@ -171,10 +173,7 @@ function Workout({
 
   return (
     <Box
-      sx={{
-        height: "75vh",
-        width: "100vw",
-      }}
+    sx={{ paddingBottom:"56px" }}
     >
       <Box
         sx={{
@@ -194,6 +193,10 @@ function Workout({
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
                 existingExercises={existingExercises}
+                setSelectedCategoryExercises={setSelectedCategoryExercises}
+                selectedCategoryExercises={selectedCategoryExercises}
+                setSelectedExercise={setSelectedExercise}
+                selectedExercise={selectedExercise}
               />
             }
           />
@@ -228,7 +231,6 @@ function Workout({
               <ExerciseSelected
                 todayDate={todayDate}
                 selectedExercise={selectedExercise}
-                setSelectedExercise={setSelectedExercise}
                 unitsSystem={unitsSystem}
               />
             }

@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
 import TextField from "@mui/material/TextField";
 
 const style = {
@@ -16,7 +15,7 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-};
+}; 
 
 interface ParentComponentProps {
   openCommentModal: boolean;

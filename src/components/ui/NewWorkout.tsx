@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -14,25 +14,33 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Divider from "@mui/material/Divider";
-import DeleteIcon from "@mui/icons-material/Delete";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { auth } from "../../config/firebase";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import CommentIcon from "@mui/icons-material/Comment";
-
+import ViewCommentModal from "./ViewCommentModal";
 import Exercise from "../../utils/interfaces/Exercise";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-
   existingExercises: { name: string; exercises: Exercise[] }[];
-
   unitsSystem: string;
+  selectedCategoryExercises: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }[];
+  setSelectedCategoryExercises: Dispatch<
+    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
+  >;
+  setSelectedExercise: Dispatch<
+    SetStateAction<{ name: string; category: string; measurement: any[] }>
+  >;
+  selectedExercise: { category: string; name: string; measurement: any[] };
 }
 
 function NewWorkout({
@@ -40,13 +48,18 @@ function NewWorkout({
   setTodayDate,
   existingExercises,
   unitsSystem,
+  setSelectedCategoryExercises,
+  selectedCategoryExercises,
+  setSelectedExercise,
+  selectedExercise,
 }: NewWorkoutProps) {
   const navigate = useNavigate();
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const [currentPage, setCurrentPage] = useState("");
+  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
+  const [exerciseCommentId, setExerciseCommentId] = useState(0);
+
   const formatDate = (date: Date): string => {
     const today = new Date().setHours(0, 0, 0, 0);
     const passedDate = date.setHours(0, 0, 0, 0);
@@ -127,16 +140,116 @@ function NewWorkout({
       // ...
     }
   };
+
+  function handleSetClick(groupName: string) {
+    handleGroupNameClick(groupName);
+
+    /* 
+    forwardToExerciseMenuClick(groupName, selectedExercise);
+     */
+    console.log("logging selected exercise inside handleSetClick");
+    console.log(selectedExercise);
+  }
+
+  function forwardToExerciseMenuClick(
+    exerciseName: string,
+    myExercise: {
+      category: string;
+      name: string;
+      measurement: any[];
+    }
+  ) {
+    console.log("logging myExercise");
+    console.log(myExercise);
+    const selectedState = {
+      category: myExercise.category,
+      name: myExercise.name,
+      measurement: myExercise.measurement,
+    };
+    console.log("logging Selected State");
+    console.log(selectedState);
+    setSelectedExercise(myExercise);
+    navigate(`workout_categories/exercises/selected`, {
+      state: { todayDate, selectedExercise: selectedState, unitsSystem },
+    });
+  }
+
+  function handleGroupNameClick(category: string) {
+    console.log("logging the category");
+    console.log(category);
+
+    const request = indexedDB.open("fitScouterDb", 1);
+
+    request.onerror = function (event) {
+      console.error("An error occurred with IndexedDB");
+      console.error(event);
+    };
+
+    request.onsuccess = function () {
+      const db = request.result;
+      const transaction = db.transaction("preselected-exercises", "readonly");
+      const store = transaction.objectStore("preselected-exercises");
+      const exerciseCategoryIndex = store.index("exercise_name");
+
+      const categoryRange = IDBKeyRange.only(category);
+
+      const categoryQuery = exerciseCategoryIndex.openCursor(categoryRange);
+      const selectedCategoryExercises: {
+        category: string;
+        name: string;
+        measurement: any[];
+      }[] = [];
+
+      categoryQuery.onsuccess = function (event) {
+        const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+        if (cursor) {
+          selectedCategoryExercises.push(cursor.value);
+          cursor.continue();
+        } else {
+          console.log("logging selectedCategoryExercises:");
+          console.log(selectedCategoryExercises);
+          setSelectedCategoryExercises(selectedCategoryExercises);
+          console.log("logging the type of selectedCategoryExercises:");
+          console.log(selectedCategoryExercises);
+
+          forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
+
+          console.log(
+            "Selected Category Exercises:",
+            selectedCategoryExercises
+          );
+        }
+      };
+
+      transaction.oncomplete = function () {
+        db.close();
+      };
+    };
+  }
+
+  function handleViewCommentModalVisibility(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    exerciseId: number
+  ) {
+    event.stopPropagation();
+    setExerciseCommentId(exerciseId);
+    setOpenViewCommentModal(!openViewCommentModal);
+  }
+
   return (
     <Box
       sx={{
-        width: "100vw",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
       }}
     >
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <ViewCommentModal
+        openViewCommentModal={openViewCommentModal}
+        setOpenViewCommentModal={setOpenViewCommentModal}
+        exerciseCommentId={exerciseCommentId}
+      />
+      <AppBar position="fixed" style={{ top: 0, width: "100%" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FitnessCenterIcon
@@ -204,7 +317,7 @@ function NewWorkout({
                   aria-haspopup="true"
                   color="inherit"
                 >
-                  <CalendarMonthIcon />
+                  <CalendarMonthIcon sx={{color:"white"}} />
                 </IconButton>
 
                 <IconButton
@@ -215,7 +328,7 @@ function NewWorkout({
                   color="inherit"
                   onClick={handleNewWorkout}
                 >
-                  <AddOutlinedIcon />
+                  <AddOutlinedIcon sx={{color:"white"}} />
                 </IconButton>
 
                 <IconButton
@@ -227,7 +340,7 @@ function NewWorkout({
                   color="inherit"
                   sx={{ display: { md: "none" } }}
                 >
-                  <MenuIcon />
+                  <MenuIcon sx={{color:"white"}} />
                 </IconButton>
               </Box>
 
@@ -269,6 +382,7 @@ function NewWorkout({
           backgroundColor: "#3f51b5",
           paddingTop: "8px",
           paddingBottom: "8px",
+          width: "100%",
         }}
       >
         <IconButton aria-label="left arrow" onClick={subtractDays}>
@@ -298,12 +412,11 @@ function NewWorkout({
         </IconButton>
       </Box>
 
-      <Box>
+      <Box sx={{ height: "calc(100% - 56px)" }}>
         {existingExercises.length === 0 ? (
           <Box>
             <Box
               sx={{
-                height: "100%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
@@ -318,6 +431,7 @@ function NewWorkout({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  
                 }}
               ></Typography>
 
@@ -352,20 +466,45 @@ function NewWorkout({
                   new Date(b.date).getTime() - new Date(a.date).getTime()
               ) */
               .map((group, index) => (
-                <Box key={index}>
-                  <Typography variant="h6" sx={{ textAlign: "center" }}>
-                    {group.name}
+                <Box
+                  key={index}
+                  sx={{
+                    borderRadius: "4px",
+                    
+                  boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
+                   
+                    /*  
+                    boxShadow:
+                      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+                    */
+                    margin: "16px",
+
+                  }}
+                  onClick={() => handleSetClick(group.name)}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ textAlign: "center", fontSize: "medium" }}
+                  >
+                    {group.name.toLocaleUpperCase()}
                   </Typography>
 
-                  <Divider />
+                  <Divider sx={{ backgroundColor: "lightblue" }} />
                   {group.exercises.map((exercise, exerciseIndex) => (
                     <Box
                       key={exerciseIndex}
                       sx={{
+                        /* 
                         display: "flex",
+                         */
+                        display: "grid",
+                        gridAutoFlow: "column",
+                        gridTemplateColumns: "1fr 1fr 4fr",
                         justifyContent: "space-evenly",
+                        justifyItems:"center",
                         alignItems: "center",
-                        width: "100vw",
+                        width: "100%",
+
                       }}
                     >
                       {exercise.comment ? ( // Check if 'comment' property exists
@@ -374,9 +513,15 @@ function NewWorkout({
                           aria-label="account of current user"
                           aria-controls="menu-appbar"
                           aria-haspopup="true"
-                          color="inherit"
+                          onClick={(event) =>
+                            handleViewCommentModalVisibility(event, exercise.id)
+                          }
                         >
-                          <CommentIcon />
+                          <CommentIcon
+                            sx={{
+                              zIndex: -1,
+                            }}
+                          />
                         </IconButton>
                       ) : (
                         <IconButton
@@ -391,19 +536,37 @@ function NewWorkout({
                         </IconButton>
                       )}
 
+
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <EmojiEventsIcon sx={{ opacity:0,  zIndex:-1}}  />
+                      </IconButton>
+                      
+                      
+                      
                       <Box
                         sx={{
-                          display: "flex",
-                          width: "100vw",
-                          justifyContent: "space-around",
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          width: "100%",
+                          justifyContent: "space-evenly",
+
                         }}
+                        
                       >
-                        {exercise.weight !== 0 && (
+                        {exercise.weight !== 0 ? (
                           <Typography>
-                            {" "}
                             {exercise.weight.toFixed(2)}{" "}
-                            {unitsSystem === "metric" ? "kgs" : "lbs"}{" "}
+                            {unitsSystem === "metric" ? "kgs" : "lbs"}
                           </Typography>
+                        ) : (
+                          <Typography></Typography>
                         )}
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>
@@ -416,15 +579,6 @@ function NewWorkout({
                         )}
                       </Box>
 
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
                       <Divider />
                     </Box>
                   ))}

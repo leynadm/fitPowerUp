@@ -19,16 +19,12 @@ import { Routes, Route } from "react-router-dom";
 interface ExerciseSelectionProps {
   todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
-  setSelectedExercise: Dispatch<
-    SetStateAction<{ category: string; name: string; measurement: any[] }>
-  >;
   unitsSystem:string
 }
 
 function ExerciseSelected({
   todayDate,
   selectedExercise,
-  setSelectedExercise,
   unitsSystem
 }: ExerciseSelectionProps) {
   const navigate = useNavigate();
@@ -44,6 +40,12 @@ function ExerciseSelected({
   const handleNavigateGraph = () => {
     navigate("graph");
   };
+
+  useEffect(()=>{
+    console.log('logging selected exercise')
+    console.log(selectedExercise)
+    console.log(todayDate)
+  },[])
 
   return (
     <Box>

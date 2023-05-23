@@ -72,12 +72,9 @@ function ExercisesCategories({
   } */
 
   function handleCategoryClick(category: string) {
-    const indexedDb = window.indexedDB;
 
-    if (!indexedDb) {
-      console.log("IndexedDB could not be found in this browser.");
-    }
-
+    console.log('logging the category inside exercise categories:')
+    console.log(category)
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = function (event) {

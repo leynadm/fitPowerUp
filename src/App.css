@@ -40,3 +40,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.App{
+	height: 100%;
+}

@@ -6,13 +6,12 @@ import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { time } from "console";
 import IconButton from "@mui/material/IconButton";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Modal from "@mui/material/Modal";
 import Exercise from "../../utils/interfaces/Exercise";
 import CommentModal from "../../components/ui/CommentModal";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
@@ -271,6 +270,46 @@ function ExerciseSelectedTrack({
     }
   }
 
+  function deleteEntry(id: number) {
+    console.log("Logging the ID of the entry:");
+    console.log(id);
+
+    const request = indexedDB.open("fitScouterDb", 1);
+
+    request.onsuccess = function (event) {
+      const db = (event.target as IDBRequest).result;
+
+      const userEntryTransaction = db.transaction(
+        "user-exercises-entries",
+        "readwrite"
+      );
+
+      const userEntryTransactionStore = userEntryTransaction.objectStore(
+        "user-exercises-entries"
+      );
+      console.log(userEntryTransactionStore);
+
+      const primaryKeyRequest = userEntryTransactionStore.delete(id);
+
+      primaryKeyRequest.onsuccess = function () {
+        console.log("Entry deleted successfully");
+        getExistingExercises(); // Update the list of existing exercises
+      };
+
+      primaryKeyRequest.onerror = function () {
+        console.log("Error deleting entry");
+      };
+
+      userEntryTransaction.oncomplete = function () {
+        db.close();
+      };
+    };
+
+    request.onerror = function () {
+      console.log("Error opening database");
+    };
+  }
+
   return (
     <Box
       sx={{
@@ -297,6 +336,7 @@ function ExerciseSelectedTrack({
             md: "1rem", // Padding for medium screens
             lg: "1.5rem", // Padding for large screens
           },
+          textAlign: "center",
         }}
       >
         {selectedExercise.name.toLocaleUpperCase()}
@@ -395,36 +435,66 @@ function ExerciseSelectedTrack({
           <Box
             key={index}
             sx={{
-              display: "flex",
+              /* display: "flex",
               justifyContent: "space-evenly",
+               */
+              display: "grid",
+              gridTemplateColumns: "1fr 3fr 1fr",
               alignItems: "center",
               width: "100vw",
             }}
           >
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-              onClick={() => handleModalVisibility(exercise.id)}
-            >
-              <AddCommentIcon />
-            </IconButton>
-
             <Box
               sx={{
                 display: "flex",
-                width: "100vw",
-                justifyContent: "space-around",
               }}
             >
-              {exercise.weight !== 0 && (
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={() => handleModalVisibility(exercise.id)}
+              >
+                <AddCommentIcon
+                  sx={{
+                    zIndex: -1,
+                  }}
+                />
+              </IconButton>
+
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+                disabled // Placeholder element
+              >
+                <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
+              </IconButton>
+            </Box>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                justifyItems: "center",
+                justifyContent: "center",
+                /* 
+                display: "flex",
+                
+                 */
+              }}
+            >
+              {exercise.weight !== 0 ? (
                 <Typography>
                   {exercise.weight.toFixed(2)}{" "}
                   {unitsSystem === "metric" ? "kgs" : "lbs"}
                 </Typography>
+              ) : (
+                <Typography></Typography>
               )}
+
               {exercise.reps !== 0 && (
                 <Typography>{exercise.reps} reps</Typography>
               )}
@@ -439,11 +509,14 @@ function ExerciseSelectedTrack({
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              color="inherit"
+              onClick={() => deleteEntry(exercise.id)}
             >
-              <DeleteIcon />
+              <DeleteIcon
+                sx={{
+                  zIndex: -1,
+                }}
+              />
             </IconButton>
-            <Divider />
           </Box>
         ))}
       </Box>

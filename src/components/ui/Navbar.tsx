@@ -37,6 +37,9 @@ function Navbar() {
             label="Workout Log"
             icon={<FitnessCenterIcon />}
             onClick={handleWorkoutClick}
+            sx={{
+              backgroundColor:"white"
+            }}
           />
           <BottomNavigationAction
             label="Your friends"
