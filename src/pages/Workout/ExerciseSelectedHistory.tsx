@@ -94,6 +94,11 @@ function ExerciseSelectedHistory({
   }
   return (
     <Box>
+      <ViewCommentModal
+        openViewCommentModal={openViewCommentModal}
+        setOpenViewCommentModal={setOpenViewCommentModal}
+        exerciseCommentId={exerciseCommentId}
+      />
       <Typography
         sx={{
           padding: {
@@ -105,31 +110,28 @@ function ExerciseSelectedHistory({
           textAlign: "center",
         }}
       >
-        <ViewCommentModal
-          openViewCommentModal={openViewCommentModal}
-          setOpenViewCommentModal={setOpenViewCommentModal}
-          exerciseCommentId={exerciseCommentId}
-        />
-
         {selectedExercise.name.toLocaleUpperCase()}
       </Typography>
       <Divider sx={{ width: "100vw" }}></Divider>
 
-      <Box sx={{
-        width:"100vw"
-      }}>
+      <Box
+        sx={{
+          width: "100vw",
+        }}
+      >
         {existingExercises
           .sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
           )
           .map((group, index) => (
-            <Box key={index} sx={{
-
-            }}>
+            <Box key={index} sx={{}}>
               <Typography
                 variant="h6"
-                sx={{ textAlign: "left", fontSize: "medium",paddingLeft:"1rem" }}
-
+                sx={{
+                  textAlign: "left",
+                  fontSize: "medium",
+                  paddingLeft: "1rem",
+                }}
               >
                 {group.date.toLocaleString()}
               </Typography>
@@ -139,9 +141,8 @@ function ExerciseSelectedHistory({
                 <Box
                   key={exerciseIndex}
                   sx={{
-
-                    display:"grid",
-                    gridTemplateColumns:"1fr 2fr",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 2fr",
                     /* 
                     display: "flex",
                     alignItems: "center",
@@ -149,24 +150,37 @@ function ExerciseSelectedHistory({
                     alignItems: "center",
                   }}
                 >
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                    }}
+                  >
+                    {exercise.comment ? ( // Check if 'comment' property exists
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={() =>
+                          handleViewCommentModalVisibility(exercise.id)
+                        }
+                      >
+                        <CommentIcon sx={{zIndex:-1}} />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <CommentIcon style={{ opacity: 0 }} />
+                      </IconButton>
+                    )}
 
-                  <Box sx={{
-                    display:"grid",
-                    gridTemplateColumns:"1fr 1fr"
-                  }}>
-                  {exercise.comment ? ( // Check if 'comment' property exists
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={() =>
-                        handleViewCommentModalVisibility(exercise.id)
-                      }
-                    >
-                      <CommentIcon />
-                    </IconButton>
-                  ) : (
                     <IconButton
                       size="large"
                       aria-label="account of current user"
@@ -175,47 +189,24 @@ function ExerciseSelectedHistory({
                       color="inherit"
                       disabled // Placeholder element
                     >
-                      <CommentIcon style={{ opacity: 0 }} />
+                      <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
                     </IconButton>
-                  )}
-
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    disabled // Placeholder element
-                  >
-                    <EmojiEventsIcon sx={{ /*  opacity: 0 ,*/ zIndex: -1 }} />
-                  </IconButton>
                   </Box>
                   <Box
                     sx={{
-
-                      /* 
-                      display: "flex",
-                      justifyContent: "space-around",
-                       */
-
-                      display:"grid",
-                      gridTemplateColumns:"1fr 1fr",
-                      justifyItems:"center",
-                      
-                    
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      justifyItems: "center",
                     }}
                   >
-
-              {exercise.weight !== 0 ? (
-                <Typography>
-                  {exercise.weight.toFixed(2)}{" "}
-                  {unitsSystem === "metric" ? "kgs" : "lbs"}
-                </Typography>
-              ) : (
-                <Typography></Typography>
-              )}
-
-
+                    {exercise.weight !== 0 ? (
+                      <Typography>
+                        {exercise.weight.toFixed(2)}{" "}
+                        {unitsSystem === "metric" ? "kgs" : "lbs"}
+                      </Typography>
+                    ) : (
+                      <Typography></Typography>
+                    )}
 
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
@@ -227,7 +218,6 @@ function ExerciseSelectedHistory({
                       <Typography>{exercise.time}</Typography>
                     )}
                   </Box>
-
                 </Box>
               ))}
             </Box>

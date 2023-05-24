@@ -29,7 +29,6 @@ function Home() {
     }
   }, [preselectedExercises]);
 
- 
   function populatePreselectedExercises() {
 
     const request = indexedDB.open("fitScouterDb", 1);
@@ -106,8 +105,6 @@ function Home() {
 
     };
 
-
-
     request.onsuccess = function (event) {
 
       const db = request.result;
@@ -161,8 +158,6 @@ function Home() {
         db.close()
       };
     };
-
-
   }
 
   function initializeIndexedDB ()  {
@@ -231,7 +226,7 @@ function Home() {
       };
   
       transaction.oncomplete = function () {
-
+        db.close()
       };
     };
   };

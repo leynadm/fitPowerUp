@@ -221,6 +221,7 @@ function Workout({
                 todayDate={todayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}
+                exercisesCategories={exercisesCategories}
               />
             }
           />

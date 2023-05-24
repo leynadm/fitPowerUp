@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Toolbar, Divider } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import AdbIcon from "@mui/icons-material/Adb";
@@ -8,27 +8,42 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
-  selectedCategoryExercises: { category: string; name: string;measurement:any[] }[];
+  selectedCategoryExercises: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }[];
   setSelectedExercise: Dispatch<
-    SetStateAction<{name:string,category:string,measurement:any[]}>
+    SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
+  exercisesCategories: string[];
 }
 
 function ExercisesByCategory({
   todayDate,
   selectedCategoryExercises,
-  setSelectedExercise
+  setSelectedExercise,
+  exercisesCategories
 }: ExercisesCategoriesProps) {
-
-  const navigate = useNavigate()
-  const handleExerciseClick = (exercise: {category:string, name:string,measurement:any[]}) => {
-
-    setSelectedExercise(exercise)
-    navigate(`selected`)
-
+  const navigate = useNavigate();
+  const handleExerciseClick = (exercise: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }) => {
+    setSelectedExercise(exercise);
+    navigate(`selected`);
   };
+
+  const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
+
+  function handleAddNewExerciseModal() {
+    setOpenAddNewExerciseModal(!openAddNewExerciseModal);
+  }
 
   return (
     <Container
@@ -41,6 +56,13 @@ function ExercisesByCategory({
         height: "100%",
       }}
     >
+
+      <AddNewExerciseModal
+        exercisesCategories={exercisesCategories}
+        openAddNewExerciseModal={openAddNewExerciseModal}
+        setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+      />
+
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -92,7 +114,7 @@ function ExercisesByCategory({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  onClick={() => console.log("yes")}
+                  onClick={handleAddNewExerciseModal}
                 >
                   <AddOutlinedIcon />
                 </IconButton>
@@ -111,20 +133,46 @@ function ExercisesByCategory({
         }}
       />
 
-      <Box>
+      <Box
+        sx={{
+          width: "100%",
+        }}
+      >
         {selectedCategoryExercises.map((exercise, index) => (
-          <Typography
-            key={index}
-            sx={{
-              width: "100%",
-              fontSize: "larger",
-              margin: "0.15rem",
-              cursor: "pointer",
-            }}
-            onClick={() => handleExerciseClick(exercise)}
-          >
-            {exercise.name.charAt(0).toUpperCase() + exercise.name.slice(1)}
-          </Typography>
+          <Box key={index}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                key={index}
+                sx={{
+                  width: "100%",
+                  fontSize: "larger",
+                  margin: "0.15rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleExerciseClick(exercise)}
+              >
+                {exercise.name.charAt(0).toUpperCase() + exercise.name.slice(1)}
+              </Typography>
+
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+                onClick={() => console.log("yes")}
+              >
+                <MoreVertIcon sx={{ zIndex: -1 }} />
+              </IconButton>
+            </Box>
+            <Divider sx={{ width: "100%" }} />
+          </Box>
         ))}
       </Box>
     </Container>

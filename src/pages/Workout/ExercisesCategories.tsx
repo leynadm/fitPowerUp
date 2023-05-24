@@ -5,28 +5,28 @@ import React, {
   SetStateAction,
   useContext,
 } from "react";
-import importedPreselectedExercises from "../../utils/preselectedExercises";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Divider, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
+import AdbIcon from "@mui/icons-material/Adb";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import { IndexedDBContext } from "../../context/IndexedDB";
+import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-
   selectedCategoryExercises: {
     category: string;
     name: string;
     measurement: any[];
   }[];
   exercisesCategories: string[];
-
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
@@ -39,42 +39,17 @@ function ExercisesCategories({
   setSelectedCategoryExercises,
   exercisesCategories,
 }: NewWorkoutProps) {
-  /*  
-  const [preselectedExercises, setPreselectedExercises] = useState<
-    { category: string; name: string; measurement: any[] }[]
-  >([]);
-*/
-
   const indexedDb = useContext(IndexedDBContext);
   const navigate = useNavigate();
+  const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
 
-  useEffect(() => {
-    console.log("logging the passed date:");
-    console.log(todayDate);
-    /* 
-    setPreselectedExercises(importedPreselectedExercises);
-   */
-  }, []);
-
-  /* 
-  useEffect(() => {
-    
-    if (preselectedExercises.length > 0) {
-      populatePreselectedExercises();
-    }
-  
-  }, [preselectedExercises]);
- */
-
-  /* 
-  function handleCategoryClick(category:string){
-    console.log('test')
-  } */
+  function handleAddNewExerciseModal() {
+    setOpenAddNewExerciseModal(!openAddNewExerciseModal);
+  }
 
   function handleCategoryClick(category: string) {
-
-    console.log('logging the category inside exercise categories:')
-    console.log(category)
+    console.log("logging the category inside exercise categories:");
+    console.log(category);
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = function (event) {
@@ -130,6 +105,12 @@ function ExercisesCategories({
         height: "100%",
       }}
     >
+      <AddNewExerciseModal
+        exercisesCategories={exercisesCategories}
+        openAddNewExerciseModal={openAddNewExerciseModal}
+        setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+      />
+
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -181,7 +162,7 @@ function ExercisesCategories({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  onClick={() => console.log("yes")}
+                  onClick={handleAddNewExerciseModal}
                 >
                   <AddOutlinedIcon />
                 </IconButton>
@@ -200,27 +181,48 @@ function ExercisesCategories({
         }}
       />
 
-      <Box>
+      <Box
+        sx={{
+          width: "100%",
+        }}
+      >
         {exercisesCategories.map((category, index) => (
-          <Typography
-            key={index}
-            sx={{
-              width: "100%",
-              fontSize: "larger",
-              margin: "0.15rem",
-              cursor: "pointer",
-            }}
-            onClick={() => handleCategoryClick(category)}
-          >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </Typography>
+          <Box key={index}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                key={index}
+                sx={{
+                  width: "100%",
+                  fontSize: "larger",
+                  margin: "0.15rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Typography>
+
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+                onClick={() => console.log("yes")}
+              >
+                <MoreVertIcon sx={{zIndex:-1}} />
+              </IconButton>
+            </Box>
+            <Divider sx={{ width: "100%" }} />
+          </Box>
         ))}
       </Box>
-      {/* 
-      <Routes>
-        <Route path="exercises" element={<ExercisesByCategory />} />
-      </Routes>
- */}
     </Container>
   );
 }

@@ -10,12 +10,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "95%",
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
-}; 
+  p: 2,
+  borderRadius: 1,
+};
 
 interface ParentComponentProps {
   openCommentModal: boolean;
@@ -37,7 +37,6 @@ function CommentModal({
   useEffect(() => {
     console.log(exerciseCommentId);
   }, [exerciseCommentId]);
-
 
   function saveComment() {
     const request = window.indexedDB.open("fitScouterDb");
@@ -66,7 +65,7 @@ function CommentModal({
 
       transaction.oncomplete = function () {
         console.log("Transaction completed");
-        setCommentValue('')
+        setCommentValue("");
         setOpenCommentModal(false);
       };
       transaction.onerror = function () {
@@ -107,14 +106,17 @@ function CommentModal({
             }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
               color="success"
-              sx={{ width: "100%", marginTop: "8px" }}
+              sx={{ width: "100%", marginTop: "8px",marginRight: "8px" }}
               onClick={saveComment}
             >
               Save
             </Button>
-            <Button variant="outlined" sx={{ width: "100%", marginTop: "8px" }}>
+            <Button
+              variant="contained"
+              sx={{ width: "100%", marginTop: "8px",marginLeft: "8px" }}
+            >
               Cancel
             </Button>
           </Box>

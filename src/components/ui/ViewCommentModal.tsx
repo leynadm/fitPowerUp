@@ -12,7 +12,9 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "95%",
   bgcolor: "background.paper",
+  boxShadow: 24,
   p: 2,
+  borderRadius: 1,
 };
 
 interface ParentComponentProps {

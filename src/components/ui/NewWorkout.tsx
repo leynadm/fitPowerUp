@@ -22,7 +22,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "./ViewCommentModal";
 import Exercise from "../../utils/interfaces/Exercise";
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -317,7 +317,7 @@ function NewWorkout({
                   aria-haspopup="true"
                   color="inherit"
                 >
-                  <CalendarMonthIcon sx={{color:"white"}} />
+                  <CalendarMonthIcon sx={{ color: "white" }} />
                 </IconButton>
 
                 <IconButton
@@ -328,7 +328,7 @@ function NewWorkout({
                   color="inherit"
                   onClick={handleNewWorkout}
                 >
-                  <AddOutlinedIcon sx={{color:"white"}} />
+                  <AddOutlinedIcon sx={{ color: "white" }} />
                 </IconButton>
 
                 <IconButton
@@ -340,7 +340,7 @@ function NewWorkout({
                   color="inherit"
                   sx={{ display: { md: "none" } }}
                 >
-                  <MenuIcon sx={{color:"white"}} />
+                  <MenuIcon sx={{ color: "white" }} />
                 </IconButton>
               </Box>
 
@@ -431,7 +431,6 @@ function NewWorkout({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  
                 }}
               ></Typography>
 
@@ -470,15 +469,15 @@ function NewWorkout({
                   key={index}
                   sx={{
                     borderRadius: "4px",
-                    
-                  boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
-                   
+
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
+
                     /*  
                     boxShadow:
                       "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
                     */
                     margin: "16px",
-
                   }}
                   onClick={() => handleSetClick(group.name)}
                 >
@@ -501,10 +500,9 @@ function NewWorkout({
                         gridAutoFlow: "column",
                         gridTemplateColumns: "1fr 1fr 4fr",
                         justifyContent: "space-evenly",
-                        justifyItems:"center",
+                        justifyItems: "center",
                         alignItems: "center",
                         width: "100%",
-
                       }}
                     >
                       {exercise.comment ? ( // Check if 'comment' property exists
@@ -536,7 +534,6 @@ function NewWorkout({
                         </IconButton>
                       )}
 
-
                       <IconButton
                         size="large"
                         aria-label="account of current user"
@@ -545,20 +542,16 @@ function NewWorkout({
                         color="inherit"
                         disabled // Placeholder element
                       >
-                        <EmojiEventsIcon sx={{ opacity:0,  zIndex:-1}}  />
+                        <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
                       </IconButton>
-                      
-                      
-                      
+
                       <Box
                         sx={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
                           width: "100%",
                           justifyContent: "space-evenly",
-
                         }}
-                        
                       >
                         {exercise.weight !== 0 ? (
                           <Typography>
