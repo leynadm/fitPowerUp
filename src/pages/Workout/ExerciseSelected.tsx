@@ -13,19 +13,20 @@ import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseSelectedGraph from "./ExerciseSelectedGraph";
 import { useNavigate } from "react-router-dom";
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Routes, Route } from "react-router-dom";
-
+import RestTimer from "../../components/ui/RestTimer";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 interface ExerciseSelectionProps {
   todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
-  unitsSystem:string
+  unitsSystem: string;
 }
 
 function ExerciseSelected({
   todayDate,
   selectedExercise,
-  unitsSystem
+  unitsSystem,
 }: ExerciseSelectionProps) {
   const navigate = useNavigate();
 
@@ -41,18 +42,21 @@ function ExerciseSelected({
     navigate("graph");
   };
 
-  useEffect(()=>{
-    console.log('logging selected exercise')
-    console.log(selectedExercise)
-    console.log(todayDate)
-  },[])
+  useEffect(() => {
+    console.log("logging selected exercise");
+    console.log(selectedExercise);
+    console.log(todayDate);
+  }, []);
 
   return (
     <Box>
+      <RestTimer/>
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <LibraryBooksIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <LibraryBooksIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -71,7 +75,9 @@ function ExerciseSelected({
               LOGO
             </Typography>
 
-            <LibraryBooksIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <LibraryBooksIcon
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
 
             <Typography
               variant="h5"
@@ -113,6 +119,18 @@ function ExerciseSelected({
                   color="inherit"
                   onClick={() => console.log("yes")}
                 >
+                  <EmojiEventsIcon />
+                </IconButton>
+
+                
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() => console.log("yes")}
+                >
                   <AddOutlinedIcon />
                 </IconButton>
               </Box>
@@ -120,6 +138,7 @@ function ExerciseSelected({
           </Toolbar>
         </Container>
       </AppBar>
+
       <Box
         sx={{
           display: "flex",
@@ -179,7 +198,10 @@ function ExerciseSelected({
         <Route
           path="history"
           element={
-            <ExerciseSelectedHistory selectedExercise={selectedExercise} unitsSystem={unitsSystem}/>
+            <ExerciseSelectedHistory
+              selectedExercise={selectedExercise}
+              unitsSystem={unitsSystem}
+            />
           }
         />
         <Route path="graph" element={<ExerciseSelectedGraph />} />

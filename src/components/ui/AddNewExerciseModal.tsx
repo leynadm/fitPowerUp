@@ -182,37 +182,38 @@ function AddNewExerciseModal({
             />
           )}
 
+          <Autocomplete
+            disablePortal
+            id="measurement-input"
+            sx={{ width: "100%", marginTop: "1rem" }}
+            getOptionLabel={(option) => option.label}
+            renderInput={(params) => (
+              <TextField {...params} label="Measurement options" />
+            )}
+            options={[{ label: "", value: [] }, ...typeOptions]}
+            value={measurement}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                const selectedValue = newValue as {
+                  label: string;
+                  value: string[];
+                };
+                setMeasurement(selectedValue);
+              } else {
+                setMeasurement(null);
+              }
+            }}
+            isOptionEqualToValue={(option, value) => {
+              if (value === null) {
+                return option.label === "" && option.value.length === 0;
+              }
+              return (
+                value.label === option.label &&
+                value.value.length === option.value.length
+              );
+            }}
+          />
 
-<Autocomplete
-  disablePortal
-  id="measurement-input"
-  sx={{ width: "100%", marginTop: "1rem" }}
-  getOptionLabel={(option) => option.label}
-  renderInput={(params) => (
-    <TextField {...params} label="Measurement options" />
-  )}
-  options={[{ label: "", value: [] }, ...typeOptions]}
-  value={measurement}
-  onChange={(event, newValue) => {
-    if (newValue) {
-      const selectedValue = newValue as { label: string; value: string[] };
-      setMeasurement(selectedValue);
-    } else {
-      setMeasurement(null);
-    }
-  }}
-  isOptionEqualToValue={(option, value) => {
-    if (value === null) {
-      return option.label === "" && option.value.length === 0;
-    }
-    return (
-      value.label === option.label && value.value.length === option.value.length
-    );
-  }}
-/>
-
-
- 
           <Box
             sx={{
               display: "flex",

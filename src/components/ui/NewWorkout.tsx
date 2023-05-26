@@ -23,6 +23,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "./ViewCommentModal";
 import Exercise from "../../utils/interfaces/Exercise";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import formatTime from "../../utils/formatTime";
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -564,12 +565,17 @@ function NewWorkout({
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>
                         )}
+                        <Typography></Typography>
+
                         {exercise.distance !== 0 && (
-                          <Typography>{exercise.distance}</Typography>
+                          <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                         )}
+
                         {exercise.time !== 0 && (
-                          <Typography>{exercise.time}</Typography>
+                          <Typography>{exercise.time !== 0 ? formatTime(exercise.time) : ""}</Typography>
                         )}
+
+
                       </Box>
 
                       <Divider />

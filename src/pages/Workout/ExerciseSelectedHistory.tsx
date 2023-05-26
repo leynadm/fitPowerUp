@@ -9,7 +9,7 @@ import Exercise from "../../utils/interfaces/Exercise";
 import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "../../components/ui/ViewCommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-
+import formatTime from "../../utils/formatTime";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   unitsSystem: string;
@@ -211,12 +211,14 @@ function ExerciseSelectedHistory({
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}
+                    <Typography></Typography>
                     {exercise.distance !== 0 && (
-                      <Typography>{exercise.distance}</Typography>
-                    )}
-                    {exercise.time !== 0 && (
-                      <Typography>{exercise.time}</Typography>
-                    )}
+                          <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                        )}
+
+                        {exercise.time !== 0 && (
+                          <Typography>{exercise.time !== 0 ? formatTime(exercise.time) : ""}</Typography>
+                        )}
                   </Box>
                 </Box>
               ))}

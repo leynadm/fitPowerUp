@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -12,7 +12,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Exercise from "../../utils/interfaces/Exercise";
 import CommentModal from "../../components/ui/CommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-
+import ValidationAlert from "../../components/ui/ValidationAlert";
+import Autocomplete from "@mui/material/Autocomplete";
+import formatTime from "../../utils/formatTime";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
@@ -27,13 +29,29 @@ function ExerciseSelectedTrack({
   const [weightValue, setWeightValue] = useState(0);
   const [repsValue, setRepsValue] = useState(0);
   const [distanceValue, setDistanceValue] = useState(0);
+  const [distanceUnit, setDistanceUnit] = useState("m");
+
   const [timeValue, setTimeValue] = useState(0);
+  const [hourTimeValue, setHourTimeValue] = useState(0);
+  const [minuteTimeValue, setMinuteTimeValue] = useState(0);
+  const [secondTimeValue, setSecondTimeValue] = useState(0);
+
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const [userDataInput, setUserDataInput] = useState(false);
   const [userUpdatedExerciseData, setUserUpdatedExerciseData] = useState(false);
   const [openCommentModal, setOpenCommentModal] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const [finalTimeValue, setFinalTimeValue] = useState({
+    hh: "",
+    mm: "",
+    ss: "",
+  });
+
   const [entryToSave, setEntryToSave] = useState({
     date: todayDate,
     exercise: selectedExercise.name,
@@ -41,7 +59,7 @@ function ExerciseSelectedTrack({
     weight: weightValue,
     reps: repsValue,
     distance: distanceValue,
-    distance_unit: 0,
+    distance_unit: distanceUnit,
     time: timeValue,
   });
 
@@ -54,7 +72,9 @@ function ExerciseSelectedTrack({
       setWeightValue(lastExercise.weight);
       setRepsValue(lastExercise.reps);
       setDistanceValue(lastExercise.distance);
+      
       setTimeValue(lastExercise.time);
+     
     }
   }, [todayDate, existingExercises]);
 
@@ -65,8 +85,9 @@ function ExerciseSelectedTrack({
       reps: repsValue,
       distance: distanceValue,
       time: timeValue,
+      distance_unit: distanceUnit,
     }));
-  }, [weightValue, repsValue, distanceValue, timeValue]);
+  }, [weightValue, repsValue, distanceValue, timeValue, distanceUnit]);
 
   const style = {
     position: "absolute" as "absolute",
@@ -141,13 +162,49 @@ function ExerciseSelectedTrack({
     setOpenCommentModal(!openCommentModal);
   }
 
+  function exerciseFieldValidation() {
+    for (const element of selectedExercise.measurement) {
+      if (element === "weight" && weightValue === 0) {
+        return "invalid";
+      }
+      if (element === "reps" && repsValue === 0) {
+        return "invalid";
+      }
+      if (element === "distance" && distanceValue === 0) {
+        return "invalid";
+      }
+
+      if (element === "time" && timeValue === 0) {
+        return "invalid";
+      }
+    }
+  }
+
   function saveExerciseEntry() {
+    const checkEntriesValidity = exerciseFieldValidation();
+
+    if (checkEntriesValidity) {
+      setShowAlert(true);
+
+      // Clear previous timeout if it exists
+      if (alertTimeoutId) {
+        clearTimeout(alertTimeoutId);
+      }
+
+      // Set new timeout to hide the alert after 2 seconds
+      const timeoutId = setTimeout(() => {
+        setShowAlert(false);
+      }, 2000);
+
+      setAlertTimeoutId(timeoutId);
+      return;
+    }
+
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onupgradeneeded = (e) => {
       const db = (e.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains("user_exercises-entries")) {
-        console.log("no table");
         const userEntries = db.createObjectStore("user_exercises-entries", {
           keyPath: "id",
           autoIncrement: true,
@@ -168,27 +225,7 @@ function ExerciseSelectedTrack({
         "user-exercises-entries"
       );
 
-      const exerciseNameIndex =
-        userEntryTransactionStore.index("exercise_name");
-
-      const exerciseDateIndex =
-        userEntryTransactionStore.index("exercise_date");
-
-      const exerciseNameAndDateIndex = userEntryTransactionStore.index(
-        "exercise_name_and_date"
-      );
-
       userEntryTransactionStore.add(entryToSave);
-
-      const exerciseNameQuery = exerciseNameIndex.getAll(selectedExercise.name);
-
-      let exerciseNameAndDateQuery;
-      if (todayDate) {
-        exerciseNameAndDateQuery = exerciseNameAndDateIndex.getAll([
-          selectedExercise.name,
-          todayDate,
-        ]);
-      }
 
       userEntryTransaction.oncomplete = function () {
         db.close();
@@ -200,6 +237,7 @@ function ExerciseSelectedTrack({
       console.log("found error:");
     };
   }
+
   function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
 
@@ -239,12 +277,6 @@ function ExerciseSelectedTrack({
       case "reps":
         setRepsValue((prevReps) => prevReps + 1);
         break;
-      case "distance":
-        setDistanceValue((prevDistance) => prevDistance + 1);
-        break;
-      case "time":
-        setTimeValue((prevTime) => prevTime + 1);
-        break;
       default:
         break;
     }
@@ -254,20 +286,21 @@ function ExerciseSelectedTrack({
     setUserDataInput(true);
     switch (selectedExercise.measurement[index]) {
       case "weight":
-        setWeightValue((prevWeight) => prevWeight - 1);
+        setWeightValue((prevWeight) => (prevWeight > 0 ? prevWeight - 1 : 0));
         break;
       case "reps":
-        setRepsValue((prevReps) => prevReps - 1);
-        break;
-      case "distance":
-        setDistanceValue((prevDistance) => prevDistance - 1);
-        break;
-      case "time":
-        setTimeValue((prevTime) => prevTime - 1);
+        setRepsValue((prevReps) => (prevReps > 0 ? prevReps - 1 : 0));
         break;
       default:
         break;
     }
+  }
+
+  function handleClearButtonClick() {
+    setWeightValue(0);
+    setRepsValue(0);
+    setDistanceValue(0);
+    setTimeValue(0);
   }
 
   function deleteEntry(id: number) {
@@ -310,6 +343,36 @@ function ExerciseSelectedTrack({
     };
   }
 
+  const handleTimeFieldsChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    let inputValue = Number(value);
+
+    if (inputValue < 0) {
+      inputValue = 0; // Set negative values to 0
+    }
+    
+    if (id === "hh") {
+      setTimeValue((prevTimeValue) => {
+        const minutes = Math.floor((prevTimeValue % 3600) / 60);
+        const remainingSeconds = prevTimeValue % 60;
+        return inputValue * 3600 + minutes * 60 + remainingSeconds;
+      });
+    } else if (id === "mm") {
+      setTimeValue((prevTimeValue) => {
+        const hours = Math.floor(prevTimeValue / 3600);
+        const remainingSeconds = prevTimeValue % 60;
+        return hours * 3600 + inputValue * 60 + remainingSeconds;
+      });
+    } else if (id === "ss") {
+      setTimeValue((prevTimeValue) => {
+        const hours = Math.floor(prevTimeValue / 3600);
+        const minutes = Math.floor((prevTimeValue % 3600) / 60);
+        return hours * 3600 + minutes * 60 + inputValue;
+      });
+    }
+
+  };
+
   return (
     <Box
       sx={{
@@ -320,6 +383,7 @@ function ExerciseSelectedTrack({
         alignItems: "center",
       }}
     >
+      <ValidationAlert showAlert={showAlert} />
       <CommentModal
         openCommentModal={openCommentModal}
         setOpenCommentModal={setOpenCommentModal}
@@ -344,71 +408,197 @@ function ExerciseSelectedTrack({
 
       <Divider sx={{ width: "100vw" }}></Divider>
 
-      {selectedExercise.measurement.map((exercise, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingLeft: "0.5rem",
-            paddingRight: "0.5rem",
-          }}
-        >
-          <Typography
+      {selectedExercise.measurement.map((exercise, index) => {
+        const measurementType = selectedExercise.measurement[index];
+
+        if (measurementType === "distance") {
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "0.5rem",
+                paddingRight: "0.5rem",
+              }}
+            >
+              <Typography
+                key={index}
+                sx={{
+                  width: "100%",
+                  fontSize: "larger",
+                  margin: "0.15rem",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                {measurementType.toLocaleUpperCase()}
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: "8px" }}>
+                <TextField
+                  id={measurementType}
+                  value={distanceValue}
+                  label="Number"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ textAlign: "center" }}
+                  variant="filled"
+                  onChange={handleTextFieldChange}
+                />
+
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  value={distanceUnit}
+                  options={["m", "km", "ft", "mi"]}
+                  onChange={(event, newValue) => {
+                    console.log("logging new value");
+                    console.log(newValue);
+                    setDistanceUnit(newValue || "m");
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Box>
+            </Box>
+          );
+        }
+
+        if (measurementType === "time") {
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "0.5rem",
+                paddingRight: "0.5rem",
+              }}
+            >
+              <Typography
+                key={index}
+                sx={{
+                  width: "100%",
+                  fontSize: "larger",
+                  margin: "0.15rem",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                {measurementType.toLocaleUpperCase()}
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: "8px" }}>
+                <TextField
+                  id="hh"
+                  value={Math.floor(timeValue / 3600)}
+                  label="hh"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ textAlign: "center" }}
+                  variant="filled"
+                  onChange={handleTimeFieldsChange}
+                />
+                <TextField
+                  id="mm"
+                  value={Math.floor((timeValue % 3600) / 60)}
+                  label="mm"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ textAlign: "center" }}
+                  variant="filled"
+                  onChange={handleTimeFieldsChange}
+                />
+                <TextField
+                  id="ss"
+                  value={timeValue % 60}
+                  label="ss"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ textAlign: "center" }}
+                  variant="filled"
+                  onChange={handleTimeFieldsChange}
+                />
+              </Box>
+            </Box>
+          );
+        }
+
+        // Render for "weight" or "reps" measurement types
+        return (
+          <Box
             key={index}
             sx={{
-              width: "100%",
-              fontSize: "larger",
-              margin: "0.15rem",
-              cursor: "pointer",
-              textAlign: "center",
-            }}
-          >
-            {selectedExercise.measurement[index].toLocaleUpperCase()}
-          </Typography>
-
-          <Box
-            sx={{
               display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingLeft: "0.5rem",
+              paddingRight: "0.5rem",
             }}
           >
-            <Button
-              variant="outlined"
-              onClick={() => handleSubtractButtonClick(index)}
-            >
-              <RemoveIcon />
-            </Button>
-
-            <TextField
-              type="number"
-              id={selectedExercise.measurement[index]}
-              variant="filled"
-              inputProps={{
-                style: { fontSize: "large", textAlign: "center" },
+            <Typography
+              key={index}
+              sx={{
+                width: "100%",
+                fontSize: "larger",
+                margin: "0.15rem",
+                cursor: "pointer",
+                textAlign: "center",
               }}
-              value={
-                selectedExercise.measurement[index] === "weight"
-                  ? weightValue.toFixed(2)
-                  : selectedExercise.measurement[index] === "reps"
-                  ? repsValue
-                  : selectedExercise.measurement[index] === "distance"
-                  ? distanceValue
-                  : timeValue
-              }
-              onChange={handleTextFieldChange}
-            />
-
-            <Button
-              variant="outlined"
-              onClick={() => handleAddButtonClick(index)}
             >
-              <AddIcon />
-            </Button>
+              {measurementType.toLocaleUpperCase()}
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => handleSubtractButtonClick(index)}
+              >
+                <RemoveIcon />
+              </Button>
+
+              <TextField
+                type="number"
+                id={measurementType}
+                variant="filled"
+                inputProps={{
+                  style: { fontSize: "large", textAlign: "center" },
+                }}
+                value={
+                  measurementType === "weight"
+                    ? weightValue.toFixed(2)
+                    : repsValue
+                }
+                onChange={handleTextFieldChange}
+              />
+
+              <Button
+                variant="outlined"
+                onClick={() => handleAddButtonClick(index)}
+              >
+                <AddIcon />
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      ))}
+        );
+      })}
 
       <Box
         sx={{
@@ -425,7 +615,11 @@ function ExerciseSelectedTrack({
         >
           SAVE
         </Button>
-        <Button variant="contained" sx={{ width: "100%", margin: "0.25rem" }}>
+        <Button
+          variant="contained"
+          sx={{ width: "100%", margin: "0.25rem" }}
+          onClick={handleClearButtonClick}
+        >
           CLEAR
         </Button>
       </Box>
@@ -435,9 +629,6 @@ function ExerciseSelectedTrack({
           <Box
             key={index}
             sx={{
-              /* display: "flex",
-              justifyContent: "space-evenly",
-               */
               display: "grid",
               gridTemplateColumns: "1fr 3fr 1fr",
               alignItems: "center",
@@ -474,16 +665,13 @@ function ExerciseSelectedTrack({
                 <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
               </IconButton>
             </Box>
+
             <Box
               sx={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 justifyItems: "center",
                 justifyContent: "center",
-                /* 
-                display: "flex",
-                
-                 */
               }}
             >
               {exercise.weight !== 0 ? (
@@ -498,10 +686,18 @@ function ExerciseSelectedTrack({
               {exercise.reps !== 0 && (
                 <Typography>{exercise.reps} reps</Typography>
               )}
+
+              <Typography></Typography>
+
               {exercise.distance !== 0 && (
-                <Typography>{exercise.distance}</Typography>
+                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
               )}
-              {exercise.time !== 0 && <Typography>{exercise.time}</Typography>}
+
+              {exercise.time !== 0 && (
+                <Typography>
+                  {exercise.time !== 0 ? formatTime(exercise.time) : ""}
+                </Typography>
+              )}
             </Box>
 
             <IconButton
