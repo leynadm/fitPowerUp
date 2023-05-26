@@ -20,7 +20,7 @@ const style = {
 
   boxShadow: 24,
   p: 1,
-  broderRadius: 1,
+  borderRadius: 1,
   display:"flex",
   flexDirection:"column",
   justifyContent:"center",

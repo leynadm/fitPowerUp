@@ -30,12 +30,7 @@ function ExerciseSelectedTrack({
   const [repsValue, setRepsValue] = useState(0);
   const [distanceValue, setDistanceValue] = useState(0);
   const [distanceUnit, setDistanceUnit] = useState("m");
-
   const [timeValue, setTimeValue] = useState(0);
-  const [hourTimeValue, setHourTimeValue] = useState(0);
-  const [minuteTimeValue, setMinuteTimeValue] = useState(0);
-  const [secondTimeValue, setSecondTimeValue] = useState(0);
-
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const [userDataInput, setUserDataInput] = useState(false);
   const [userUpdatedExerciseData, setUserUpdatedExerciseData] = useState(false);
@@ -46,11 +41,6 @@ function ExerciseSelectedTrack({
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
-  const [finalTimeValue, setFinalTimeValue] = useState({
-    hh: "",
-    mm: "",
-    ss: "",
-  });
 
   const [entryToSave, setEntryToSave] = useState({
     date: todayDate,
@@ -64,19 +54,31 @@ function ExerciseSelectedTrack({
   });
 
   useEffect(() => {
+
     getExistingExercises();
 
-    if (existingExercises.length > 0 && !userUpdatedExerciseData) {
-      setUserUpdatedExerciseData(true);
+
+
+  }, [todayDate]);
+
+
+  useEffect(()=>{
+
+    if (userUpdatedExerciseData) {
+      return;
+    }
+    
+    if (existingExercises.length > 0) {
       const lastExercise = existingExercises[existingExercises.length - 1];
       setWeightValue(lastExercise.weight);
       setRepsValue(lastExercise.reps);
       setDistanceValue(lastExercise.distance);
-      
       setTimeValue(lastExercise.time);
-     
-    }
-  }, [todayDate, existingExercises]);
+      
+      setUserUpdatedExerciseData(true);
+    } 
+
+  },[existingExercises])
 
   useEffect(() => {
     setEntryToSave((prevState) => ({
@@ -130,16 +132,25 @@ function ExerciseSelectedTrack({
       );
 
       const exercisesRequest = exerciseNameAndDateIndex.openCursor(range);
+
       const existingExercises: any[] | ((prevState: Exercise[]) => Exercise[]) =
         [];
+
+      const tempExistingExercises:
+        | any[]
+        | ((prevState: Exercise[]) => Exercise[]) = [];
       exercisesRequest.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest).result;
 
         if (cursor) {
-          existingExercises.push(cursor.value);
+          tempExistingExercises.push(cursor.value);
           cursor.continue();
         } else {
-          setExistingExercises(existingExercises);
+          console.log("logging existing exercises:");
+
+          console.log(tempExistingExercises);
+
+          setExistingExercises(tempExistingExercises);
         }
       };
 
@@ -350,7 +361,7 @@ function ExerciseSelectedTrack({
     if (inputValue < 0) {
       inputValue = 0; // Set negative values to 0
     }
-    
+
     if (id === "hh") {
       setTimeValue((prevTimeValue) => {
         const minutes = Math.floor((prevTimeValue % 3600) / 60);
@@ -370,7 +381,6 @@ function ExerciseSelectedTrack({
         return hours * 3600 + minutes * 60 + inputValue;
       });
     }
-
   };
 
   return (
@@ -422,6 +432,7 @@ function ExerciseSelectedTrack({
                 alignItems: "center",
                 paddingLeft: "0.5rem",
                 paddingRight: "0.5rem",
+                width:"100%"
               }}
             >
               <Typography
@@ -437,7 +448,7 @@ function ExerciseSelectedTrack({
                 {measurementType.toLocaleUpperCase()}
               </Typography>
 
-              <Box sx={{ display: "flex", gap: "8px" }}>
+              <Box sx={{ display: "flex", gap: "8px", width:"100%" }}>
                 <TextField
                   id={measurementType}
                   value={distanceValue}
@@ -446,7 +457,7 @@ function ExerciseSelectedTrack({
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  sx={{ textAlign: "center" }}
+                  sx={{ textAlign: "center", width:"100%" }}
                   variant="filled"
                   onChange={handleTextFieldChange}
                 />
