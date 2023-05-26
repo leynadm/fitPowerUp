@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
@@ -30,16 +30,14 @@ function Home() {
   }, [preselectedExercises]);
 
   function populatePreselectedExercises() {
-
     const request = indexedDB.open("fitScouterDb", 1);
-  
-    if(!request){
-      console.log('request value:')
-      console.log(request)
-     return
+
+    if (!request) {
+      console.log("request value:");
+      console.log(request);
+      return;
     }
-    
-  
+
     // Check if there are any error while opening the Db
     request.onerror = function (event) {
       console.error("And error occured with IndexedDb");
@@ -85,7 +83,6 @@ function Home() {
         unique: false,
       });
 
-
       const objectStore = db.createObjectStore("user-data-preferences", {
         keyPath: "id",
         autoIncrement: true,
@@ -101,12 +98,9 @@ function Home() {
       };
 
       objectStore.add(defaultRecord);
-
-
     };
 
     request.onsuccess = function (event) {
-
       const db = request.result;
       const defaultRecord = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction("preselected-exercises", "readwrite");
@@ -114,7 +108,6 @@ function Home() {
 
       const exerciseNameIndex = store.index("exercise_name");
       const exerciseCategoryIndex = store.index("exercise_category");
-
 
       preselectedExercises.forEach((exercise) => {
         const formattedExercise = {
@@ -155,82 +148,79 @@ function Home() {
       };
 
       transaction.oncomplete = function () {
-        db.close()
+        db.close();
       };
     };
   }
 
-  function initializeIndexedDB ()  {
-
+  function initializeIndexedDB() {
     const request = indexedDB.open("fitScouterDb", 1);
 
-
-    if(!request){
-      return
+    if (!request) {
+      return;
     }
-
 
     request.onerror = function (event) {
       // Handle errors
     };
-  
+
     request.onupgradeneeded = function (event) {
       const db = (event.target as IDBOpenDBRequest).result;
-  
+
       // Create a table or object store only if it doesn't exist
       if (!db.objectStoreNames.contains("user-data-preferences")) {
         const objectStore = db.createObjectStore("user-data-preferences", {
           keyPath: "id",
           autoIncrement: true,
         });
-  
+
         // Add an index for querying if needed
         objectStore.createIndex("unitsIndex", "unitsSystem");
-  
+
         // Add the default record
         const defaultRecord = {
           unitsSystem: "metric",
           defaultWeightIncrement: 2.5,
         };
-  
+
         objectStore.add(defaultRecord);
       }
     };
-  
+
     request.onsuccess = function (event) {
       const db = request.result;
-  
+
       // Check if the default record exists
       const transaction = db.transaction("user-data-preferences", "readwrite");
       const objectStore = transaction.objectStore("user-data-preferences");
       const getRequest = objectStore.get(1); // Assuming the default record has id = 1
-  
+
       getRequest.onsuccess = function (event) {
         const defaultRecord = (event.target as IDBOpenDBRequest).result;
-  
+
         if (!defaultRecord) {
           // The default record doesn't exist, so add it
           const addRequest = objectStore.add({
             unitsSystem: "metric",
             defaultWeightIncrement: 2.5,
           });
-  
+
           addRequest.onsuccess = function () {
             console.log("Default record added successfully.");
           };
-  
+
           addRequest.onerror = function (event) {
             console.error("Failed to add default record:");
           };
         }
       };
-  
+
       transaction.oncomplete = function () {
-        db.close()
+        db.close();
       };
     };
-  };
- 
+  }
+
   return (
     <Box
       sx={{
@@ -242,8 +232,8 @@ function Home() {
         <Route
           path="/*"
           element={
-            
-            <Workout 
+            <Workout
+              setExercisesCategories={setExercisesCategories}
               existingExercises={existingExercises}
               selectedCategoryExercises={selectedCategoryExercises}
               exercisesCategories={exercisesCategories}

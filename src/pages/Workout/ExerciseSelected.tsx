@@ -1,5 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -28,8 +27,10 @@ function ExerciseSelected({
   selectedExercise,
   unitsSystem,
 }: ExerciseSelectionProps) {
-  const navigate = useNavigate();
 
+  const [showRestTimer, setShowRestTimer] = useState(false)
+  const [countdownValue, setCountdownValue] = useState(120)
+  const navigate = useNavigate();
   const handleNavigateTrack = () => {
     navigate("");
   };
@@ -42,6 +43,10 @@ function ExerciseSelected({
     navigate("graph");
   };
 
+  function handleShowRestTimer(){
+    setShowRestTimer(!showRestTimer)
+  }
+
   useEffect(() => {
     console.log("logging selected exercise");
     console.log(selectedExercise);
@@ -50,7 +55,9 @@ function ExerciseSelected({
 
   return (
     <Box>
-      <RestTimer/>
+      
+      <RestTimer showRestTimer={showRestTimer} setShowRestTimer={setShowRestTimer}/>
+      
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -106,7 +113,7 @@ function ExerciseSelected({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  onClick={() => console.log("yes")}
+                  onClick={handleShowRestTimer}
                 >
                   <TimerIcon />
                 </IconButton>
@@ -204,7 +211,9 @@ function ExerciseSelected({
             />
           }
         />
-        <Route path="graph" element={<ExerciseSelectedGraph />} />
+        <Route path="graph" element={<ExerciseSelectedGraph
+          selectedExercise={selectedExercise}
+        />} />
       </Routes>
     </Box>
   );

@@ -7,19 +7,6 @@ import ExercisesByCategory from "./ExercisesByCategory";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
-import { Ref } from 'react';
-/* 
-interface Exercise {
-  exercise: string;
-  date: Date | string;
-  weight: number;
-  reps: number;
-  distance: number;
-  distance_unit: number | object;
-  time: number;
-  category: string;
-  // Add other properties
-} */
 
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -29,6 +16,9 @@ interface HomeProps {
     measurement: any[];
   }[];
   exercisesCategories: string[];
+  setExercisesCategories:Dispatch<
+  SetStateAction<string[]>>
+ 
   setExistingExercises:Dispatch<
   SetStateAction<{ name: string; exercises: Exercise[] }[]>
 >;
@@ -42,6 +32,7 @@ function Workout({
   existingExercises,
   selectedCategoryExercises,
   exercisesCategories,
+  setExercisesCategories,
   setSelectedCategoryExercises,
   setExistingExercises,
 }: HomeProps) {
@@ -205,6 +196,7 @@ function Workout({
             path="workout_categories/*"
             element={
               <ExercisesCategories
+              setExercisesCategories={setExercisesCategories}
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
@@ -218,6 +210,7 @@ function Workout({
             path="workout_categories/exercises"
             element={
               <ExercisesByCategory
+              setExercisesCategories={setExercisesCategories}
                 todayDate={todayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}

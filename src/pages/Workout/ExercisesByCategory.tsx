@@ -21,13 +21,16 @@ interface ExercisesCategoriesProps {
     SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
   exercisesCategories: string[];
+  setExercisesCategories:Dispatch<
+  SetStateAction<string[]>>
 }
 
 function ExercisesByCategory({
   todayDate,
   selectedCategoryExercises,
   setSelectedExercise,
-  exercisesCategories
+  exercisesCategories,
+  setExercisesCategories
 }: ExercisesCategoriesProps) {
   const navigate = useNavigate();
   const handleExerciseClick = (exercise: {
@@ -58,6 +61,7 @@ function ExercisesByCategory({
     >
 
       <AddNewExerciseModal
+      setExercisesCategories={setExercisesCategories}
         exercisesCategories={exercisesCategories}
         openAddNewExerciseModal={openAddNewExerciseModal}
         setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}

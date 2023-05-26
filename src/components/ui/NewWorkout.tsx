@@ -470,9 +470,9 @@ function NewWorkout({
                   key={index}
                   sx={{
                     borderRadius: "4px",
-
+                    
                     boxShadow:
-                      "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
+                      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
 
                     /*  
                     boxShadow:

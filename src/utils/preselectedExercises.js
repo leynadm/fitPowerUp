@@ -263,6 +263,11 @@ const preselectedExercises = [
   },
   {
     category: "chest",
+    name: "Flat Barbell Bench Press",
+    measurement: ["weight", "reps"],
+  },
+  {
+    category: "chest",
     name: "Incline Barbell Bench Press",
     measurement: ["weight", "reps"],
   },

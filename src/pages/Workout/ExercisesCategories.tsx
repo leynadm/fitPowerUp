@@ -30,6 +30,8 @@ interface NewWorkoutProps {
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
+  setExercisesCategories:Dispatch<
+  SetStateAction<string[]>>
 }
 
 function ExercisesCategories({
@@ -38,8 +40,9 @@ function ExercisesCategories({
   selectedCategoryExercises,
   setSelectedCategoryExercises,
   exercisesCategories,
+  setExercisesCategories
 }: NewWorkoutProps) {
-  const indexedDb = useContext(IndexedDBContext);
+
   const navigate = useNavigate();
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
 
@@ -109,6 +112,7 @@ function ExercisesCategories({
         exercisesCategories={exercisesCategories}
         openAddNewExerciseModal={openAddNewExerciseModal}
         setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+        setExercisesCategories={setExercisesCategories}
       />
 
       <AppBar position="fixed" style={{ top: 0 }}>
