@@ -140,6 +140,8 @@ function ExercisesByCategory({
       <Box
         sx={{
           width: "100%",
+          height:"100%"
+
         }}
       >
         {selectedCategoryExercises.map((exercise, index) => (
@@ -149,6 +151,7 @@ function ExercisesByCategory({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                height:"100%"
               }}
             >
               <Typography

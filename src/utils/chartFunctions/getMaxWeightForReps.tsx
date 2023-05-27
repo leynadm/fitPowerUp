@@ -9,7 +9,8 @@ interface DataItem {
 function getMaxWeightForReps(
   setInitialRawData: any,
   selectedExercise: any,
-  targetReps: number[]
+  targetReps: number[],
+  timeframe: string
 ) {
   const request = indexedDB.open("fitScouterDb");
 
@@ -34,44 +35,56 @@ function getMaxWeightForReps(
       const data = getDataRequest.result as DataItem[];
 
       // Create a map to store unique dates and corresponding max weight for each target reps
-      const dateMaxWeightMap = new Map<string, number[]>();
+      const dateMaxWeightMap = new Map<string, { date: string, weight: number }[]>();
+      const validDates: string[] = [];
 
       targetReps.forEach((targetRep) => {
         dateMaxWeightMap.set(targetRep.toString(), []);
       });
+
+      const startDate = getStartDate(timeframe); // Get the start date based on the timeframe
 
       data.forEach((item) => {
         const currentDate = new Date(item.date).toLocaleDateString();
         const currentWeight = item.weight;
         const currentReps = item.reps;
 
+        // Check if the current date is within the selected timeframe
+        if (startDate && item.date < startDate) {
+          return; // Skip data outside the timeframe
+        }
+
         if (targetReps.includes(currentReps)) {
           const currentMaxWeights = dateMaxWeightMap.get(
             currentReps.toString()
           )!;
-          currentMaxWeights.push(currentWeight);
+          currentMaxWeights.push({ date: currentDate, weight: currentWeight });
           dateMaxWeightMap.set(currentReps.toString(), currentMaxWeights);
+          if (!validDates.includes(currentDate)) {
+            validDates.push(currentDate);
+          }
         }
       });
 
-      const sortedDates = Array.from(dateMaxWeightMap.values())
-        .flat()
-        .map((_, index) => index + 1);
+      validDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-      const datasets = targetReps.map((targetRep) => {
+      const sortedDatasets = targetReps.map((targetRep, index) => {
         const maxWeights = dateMaxWeightMap.get(targetRep.toString())!;
+        const sortedData = maxWeights.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        const colors = ["rgba(63,81,181,1)", "rgba(255,87,34,1)", "rgba(76,175,80,1)"]; // Example colors for each line
         return {
           label: `Max Weight for ${targetRep} Reps`,
-          data: maxWeights,
+          data: sortedData.map((entry) => entry.weight),
           fill: false,
-          borderColor: "rgba(75,192,192,1)",
-          borderWidth: 1,
+          borderColor: colors[index % colors.length], // Assign different color for each line
+          borderWidth: 2,
         };
       });
+       
 
       const chartData: ChartData<"line"> = {
-        labels: sortedDates.map((date) => date.toString()),
-        datasets: datasets,
+        labels: validDates,
+        datasets: sortedDatasets,
       };
 
       setInitialRawData(chartData);
@@ -81,6 +94,26 @@ function getMaxWeightForReps(
       console.error(getDataRequest.error);
     };
   };
+}
+
+function getStartDate(timeframe: string): Date | null {
+  if (timeframe === "All") {
+    return null; // Return null to indicate no start date filter
+  }
+
+  const today = new Date();
+  switch (timeframe) {
+    case "1m":
+      return new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    case "3m":
+      return new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+    case "6m":
+      return new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+    case "1y":
+      return new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+    default:
+      return new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
+  }
 }
 
 export default getMaxWeightForReps;

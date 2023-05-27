@@ -13,6 +13,7 @@ import getMax1RM from "../../utils/chartFunctions/getMax1RM";
 import getTotalReps from "../../utils/chartFunctions/getTotalReps";
 import getTotalVolume from "../../utils/chartFunctions/getTotalVolume";
 import getMaxWeightForReps from "../../utils/chartFunctions/getMaxWeightForReps";
+import { ChartOptions } from "chart.js";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -67,33 +68,34 @@ declare namespace Chart {
   }
 }
 
-// Function to call the appropriate chart function based on the selected option
+// Function to call the appropriate chart function based on the selected option and timeframe
 const callChartFunction = (
   selectedOption: string,
+  selectedTimeframe: string,
   setInitialRawData: React.Dispatch<React.SetStateAction<ChartData<"line"> | null>>,
   selectedExercise: { category: string; name: string; measurement: any[] },
 ) => {
   switch (selectedOption) {
     case "Max Weight":
-      getMaxWeight(setInitialRawData, selectedExercise);
+      getMaxWeight(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Max Reps":
-      getMaxReps(setInitialRawData, selectedExercise);
+      getMaxReps(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Max Volume":
-      getMaxVolume(setInitialRawData, selectedExercise);
+      getMaxVolume(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Estimated 1RM":
-      getMax1RM(setInitialRawData, selectedExercise);
+      getMax1RM(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Workout Reps":
-      getTotalReps(setInitialRawData, selectedExercise);
+      getTotalReps(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Workout Volume":
-      getTotalVolume(setInitialRawData, selectedExercise);
+      getTotalVolume(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Max Weight for Reps":
-      getMaxWeightForReps(setInitialRawData, selectedExercise, [5, 8, 12]);
+      getMaxWeightForReps(setInitialRawData, selectedExercise, [8, 10, 12], selectedTimeframe);
       break;
     default:
       break;
@@ -102,15 +104,17 @@ const callChartFunction = (
 
 function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
   const [initialRawData, setInitialRawData] = useState<ChartData<"line"> | null>(null);
+  const [selectedOption, setSelectedOption] = useState("Estimated 1RM"); // Initial selected option
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
+
   useEffect(() => {
-    callChartFunction("Max Weight", setInitialRawData,  selectedExercise);
-  }, [selectedExercise]);
+    // Call the chart function when the selected exercise changes or the timeframe changes
+    callChartFunction(selectedOption, selectedTimeframe, setInitialRawData, selectedExercise);
+  }, [selectedExercise, selectedTimeframe, selectedOption]);
 
   useEffect(() => {
     console.log("logging initial Raw Data");
     console.log(initialRawData);
-   
   }, [initialRawData]);
 
   const statisticsOptions = [
@@ -120,10 +124,17 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     { label: "Max Volume" },
     { label: "Max Weight for Reps" },
     { label: "Workout Volume" },
-    { label: "Workout Reps" },
-    { label: "Personal Records" },
+    { label: "Workout Reps" }
   ];
 
+  const timeframeOptions = [
+    { label: "1m", value: "1m" },
+    { label: "3m", value: "3m" },
+    { label: "6m", value: "6m" },
+    { label: "1y", value: "1y" },
+    { label: "All", value: "all" },
+  ];
+/* 
   const chartOptions = {
     // Other chart options...
 
@@ -141,6 +152,115 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     },
   };
 
+  const options = {
+    responsive: true,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart - Multi Axis',
+      },
+    },
+    scales: {
+      y: {
+        type: 'linear' as const,
+        display: true,
+        position: 'left' as const,
+      },
+      y1: {
+        type: 'linear' as const,
+        display: false,
+        position: 'right' as const,
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
+    },
+  }; 
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+      elements:{
+        line:{
+          borderWidth:3
+        }
+      }
+    },
+  };*/
+
+  const options: ChartOptions<"line"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false, // Hide the legend
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false, // Hide x-axis gridlines
+        },
+        ticks: {
+          color: "#999999", // x-axis tick color
+          stepSize: 5, // Show every 5th label
+          font: {
+            size: 12, // x-axis tick font size
+            weight: "bold", // x-axis tick font weight
+          },
+          autoSkip: true, // Enable automatic skipping of labels
+          maxTicksLimit: 5, // Maximum number of visible tick labels
+        },
+      },
+      y: {
+        grid: {
+          color: "#dddddd", // y-axis gridline color
+        },
+        ticks: {
+          color: "#999999", // y-axis tick color
+          stepSize: 3,
+          font: {
+            size: 12, // y-axis tick font size
+            weight: "bold", // y-axis tick font weight
+          },
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 3, // Hide data points
+      },
+      line: {
+        tension: 0.2, // Adjust the curve of the lines
+        borderWidth: 2, // Increase line width
+        borderColor: "rgba(63,81,181,1)", // Line color
+        backgroundColor: "rgba(63,81,181,0.2)", // Area under line color
+      },
+    },
+    interaction: {
+      mode: "index", // Display tooltip for the nearest data point
+      intersect: false, // Allow hovering over multiple data points
+    },
+    animation: {
+      duration: 500, // Animation duration in milliseconds
+    },
+  };
+  
+  
+
+  
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <Autocomplete
@@ -160,7 +280,8 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         onChange={(event, value) => {
           if (value) {
             const selectedOption = value.label;
-            callChartFunction(selectedOption, setInitialRawData, selectedExercise);
+            setSelectedOption(selectedOption); // Update selected option
+            callChartFunction(selectedOption, selectedTimeframe, setInitialRawData, selectedExercise);
           }
         }}
         renderInput={(params) => <TextField {...params} label="Graph" />}
@@ -170,14 +291,19 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         aria-label="outlined primary button group"
         sx={{ width: "100%", display: "flex", padding: "8px" }}
       >
-        <Button style={{ flexGrow: 1, fontWeight: "bolder" }}>1m</Button>
-        <Button style={{ flexGrow: 1, fontWeight: "bolder" }}>3m</Button>
-        <Button style={{ flexGrow: 1, fontWeight: "bolder" }}>6m</Button>
-        <Button style={{ flexGrow: 1, fontWeight: "bolder" }}>1y</Button>
-        <Button style={{ flexGrow: 1, fontWeight: "bolder" }}>All</Button>
+        {timeframeOptions.map((option) => (
+          <Button
+            key={option.label}
+            style={{ flexGrow: 1, fontWeight: "bolder" }}
+            onClick={() => setSelectedTimeframe(option.value)}
+          >
+            {option.label}
+          </Button>
+        ))}
       </ButtonGroup>
-      <Box sx={{ width: "100%", height: "100%" }}>
-        {initialRawData && <Line data={initialRawData} />}
+      <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+        {initialRawData && <Line data={initialRawData} options={options as any}  />}
+        {/* options={chartOptions} */}
       </Box>
     </Box>
   );

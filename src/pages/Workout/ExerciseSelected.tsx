@@ -54,7 +54,7 @@ function ExerciseSelected({
   }, []);
 
   return (
-    <Box>
+    <Box sx={{height:"100%"}}>
       
       <RestTimer showRestTimer={showRestTimer} setShowRestTimer={setShowRestTimer}/>
       

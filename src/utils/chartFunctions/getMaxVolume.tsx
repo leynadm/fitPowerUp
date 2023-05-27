@@ -6,7 +6,7 @@ interface DataItem {
   reps: number;
 }
 
-function getMaxVolume(setInitialRawData: any, selectedExercise: any) {
+function getMaxVolume(setInitialRawData: any, selectedExercise: any, timeframe: string) {
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
@@ -38,6 +38,14 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any) {
         const currentWeight = item.weight;
         const currentVolume = currentReps * currentWeight;
 
+        // Check if the current date is within the selected timeframe
+        const currentDateObj = new Date(item.date);
+        const startDate = getStartDate(timeframe);
+        const endDate = new Date();
+        if (currentDateObj < startDate || currentDateObj > endDate) {
+          return; // Skip data outside the timeframe
+        }
+
         // Check if the current date is already present in the map
         if (dateVolumeMap.has(currentDate)) {
           const existingVolume = dateVolumeMap.get(currentDate);
@@ -55,17 +63,23 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any) {
       const sortedDates = Array.from(dateVolumeMap.keys())
         .map((date) => new Date(date))
         .sort((a, b) => a.getTime() - b.getTime());
+        /*  
       const volumes = Array.from(dateVolumeMap.values());
+*/
+      const volumeValues = sortedDates.map((date) => {
+        const volume = dateVolumeMap.get(date.toLocaleDateString());
+        return volume !== undefined ? volume : null;
+      });
 
       const chartData: ChartData<"line"> = {
         labels: sortedDates.map((date) => date.toLocaleDateString()),
         datasets: [
           {
             label: "Volume",
-            data: volumes,
+            data: volumeValues,
             fill: false,
-            borderColor: "rgba(75,192,192,1)",
-            borderWidth: 1,
+            borderColor: "rgba(63,81,181,1)",
+            borderWidth: 2,
           },
         ],
       };
@@ -77,6 +91,22 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any) {
       console.error(getDataRequest.error);
     };
   };
+}
+
+function getStartDate(timeframe: string): Date {
+  const today = new Date();
+  switch (timeframe) {
+    case "1m":
+      return new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    case "3m":
+      return new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+    case "6m":
+      return new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+    case "1y":
+      return new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+    default:
+      return new Date(today.getFullYear()-50, today.getMonth(), today.getDate());
+  }
 }
 
 export default getMaxVolume;

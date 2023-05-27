@@ -173,6 +173,7 @@ function Workout({
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          height:"100%"
         }}
       >
         <Routes>
