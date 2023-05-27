@@ -1,4 +1,10 @@
-import React, { useState, useEffect,Dispatch,SetStateAction,useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  useRef,
+} from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -16,16 +22,14 @@ interface HomeProps {
     measurement: any[];
   }[];
   exercisesCategories: string[];
-  setExercisesCategories:Dispatch<
-  SetStateAction<string[]>>
- 
-  setExistingExercises:Dispatch<
-  SetStateAction<{ name: string; exercises: Exercise[] }[]>
->;
+  setExercisesCategories: Dispatch<SetStateAction<string[]>>;
+
+  setExistingExercises: Dispatch<
+    SetStateAction<{ name: string; exercises: Exercise[] }[]>
+  >;
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
-
 }
 
 function Workout({
@@ -44,50 +48,65 @@ function Workout({
     measurement: any[];
   }>({ category: "", name: "", measurement: [] });
 
-  const [unitsSystem, setUnitsSystem] = useState('');
-  const workoutRef = useRef(null);
+  const [unitsSystem, setUnitsSystem] = useState("");
 
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
       setTodayDate(currentDate);
     }
-    console.log('logging exercises categories: ')
-    console.log(exercisesCategories)
-    getDataPreferences()
+    console.log("logging exercises categories: ");
+    console.log(exercisesCategories);
+    getDataPreferences();
   }, []);
 
   useEffect(() => {
     if (todayDate) {
-       
       getExercisesByDate(todayDate);
-      
     }
   }, [todayDate]);
 
+  useEffect(() => {
+    const handlePopstate = () => {
+      handleEffectLogic();
+    };
+
+    window.addEventListener("popstate", handlePopstate);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopstate);
+    };
+  }, [todayDate]);
+
+  function handleEffectLogic() {
+    if (todayDate) {
+      getExercisesByDate(todayDate);
+      getDataPreferences();
+    }
+  }
 
   function getDataPreferences() {
-    const request = indexedDB.open('fitScouterDb', 1);
+    const request = indexedDB.open("fitScouterDb", 1);
 
-    request.onerror = function(event) {
+    request.onerror = function (event) {
       // Handle errors
     };
 
-    request.onsuccess = function(event) {
+    request.onsuccess = function (event) {
       const db = request.result;
 
       // Retrieve the record with id 1 from the object store
-      const transaction = db.transaction('user-data-preferences', 'readonly');
-      const objectStore = transaction.objectStore('user-data-preferences');
+      const transaction = db.transaction("user-data-preferences", "readonly");
+      const objectStore = transaction.objectStore("user-data-preferences");
       const getRequest = objectStore.get(1);
 
-      getRequest.onsuccess = function(event) {
+      getRequest.onsuccess = function (event) {
         const record = getRequest.result;
         if (record) {
           // Extract the unitsSystem value from the record
           const { unitsSystem } = record;
           setUnitsSystem(unitsSystem);
-          console.log(unitsSystem)
+          console.log(unitsSystem);
         }
       };
     };
@@ -163,9 +182,7 @@ function Workout({
   }
 
   return (
-    <Box
-    sx={{ paddingBottom:"56px" }}
-    >
+    <Box sx={{ paddingBottom: "56px" }}>
       <Box
         sx={{
           display: "flex",
@@ -173,7 +190,7 @@ function Workout({
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          height:"100%"
+          height: "100%",
         }}
       >
         <Routes>
@@ -181,7 +198,7 @@ function Workout({
             path="/"
             element={
               <NewWorkout
-              unitsSystem={unitsSystem}
+                unitsSystem={unitsSystem}
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
                 existingExercises={existingExercises}
@@ -197,7 +214,7 @@ function Workout({
             path="workout_categories/*"
             element={
               <ExercisesCategories
-              setExercisesCategories={setExercisesCategories}
+                setExercisesCategories={setExercisesCategories}
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
@@ -211,7 +228,7 @@ function Workout({
             path="workout_categories/exercises"
             element={
               <ExercisesByCategory
-              setExercisesCategories={setExercisesCategories}
+                setExercisesCategories={setExercisesCategories}
                 todayDate={todayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}
@@ -231,7 +248,10 @@ function Workout({
             }
           />
 
-          <Route path="/settings" element={<Settings unitsSystem={unitsSystem} />} />
+          <Route
+            path="/settings"
+            element={<Settings unitsSystem={unitsSystem} />}
+          />
         </Routes>
       </Box>
     </Box>
