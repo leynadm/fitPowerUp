@@ -72,8 +72,10 @@ declare namespace Chart {
 const callChartFunction = (
   selectedOption: string,
   selectedTimeframe: string,
-  setInitialRawData: React.Dispatch<React.SetStateAction<ChartData<"line"> | null>>,
-  selectedExercise: { category: string; name: string; measurement: any[] },
+  setInitialRawData: React.Dispatch<
+    React.SetStateAction<ChartData<"line"> | null>
+  >,
+  selectedExercise: { category: string; name: string; measurement: any[] }
 ) => {
   switch (selectedOption) {
     case "Max Weight":
@@ -95,7 +97,12 @@ const callChartFunction = (
       getTotalVolume(setInitialRawData, selectedExercise, selectedTimeframe);
       break;
     case "Max Weight for Reps":
-      getMaxWeightForReps(setInitialRawData, selectedExercise, [8, 10, 12], selectedTimeframe);
+      getMaxWeightForReps(
+        setInitialRawData,
+        selectedExercise,
+        [8, 10, 12],
+        selectedTimeframe
+      );
       break;
     default:
       break;
@@ -103,13 +110,19 @@ const callChartFunction = (
 };
 
 function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
-  const [initialRawData, setInitialRawData] = useState<ChartData<"line"> | null>(null);
+  const [initialRawData, setInitialRawData] =
+    useState<ChartData<"line"> | null>(null);
   const [selectedOption, setSelectedOption] = useState("Estimated 1RM"); // Initial selected option
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
 
   useEffect(() => {
     // Call the chart function when the selected exercise changes or the timeframe changes
-    callChartFunction(selectedOption, selectedTimeframe, setInitialRawData, selectedExercise);
+    callChartFunction(
+      selectedOption,
+      selectedTimeframe,
+      setInitialRawData,
+      selectedExercise
+    );
   }, [selectedExercise, selectedTimeframe, selectedOption]);
 
   useEffect(() => {
@@ -124,7 +137,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     { label: "Max Volume" },
     { label: "Max Weight for Reps" },
     { label: "Workout Volume" },
-    { label: "Workout Reps" }
+    { label: "Workout Reps" },
   ];
 
   const timeframeOptions = [
@@ -134,71 +147,6 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     { label: "1y", value: "1y" },
     { label: "All", value: "all" },
   ];
-/* 
-  const chartOptions = {
-    // Other chart options...
-
-    tooltips: {
-      callbacks: {
-        // Customize the tooltip label
-        label: function (tooltipItem: any, data: Chart.ChartData) {
-          const dataset = data.datasets?.[tooltipItem.datasetIndex];
-          const label = dataset?.label || "";
-          const value = tooltipItem.yLabel;
-
-          return `${label}: ${value}`;
-        },
-      },
-    },
-  };
-
-  const options = {
-    responsive: true,
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-    },
-    stacked: false,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Chart.js Line Chart - Multi Axis',
-      },
-    },
-    scales: {
-      y: {
-        type: 'linear' as const,
-        display: true,
-        position: 'left' as const,
-      },
-      y1: {
-        type: 'linear' as const,
-        display: false,
-        position: 'right' as const,
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-    },
-  }; 
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Chart.js Line Chart',
-      },
-      elements:{
-        line:{
-          borderWidth:3
-        }
-      }
-    },
-  };*/
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -215,13 +163,13 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         },
         ticks: {
           color: "#999999", // x-axis tick color
-          stepSize: 5, // Show every 5th label
+          stepSize: 8, // Show every 5th label
           font: {
             size: 12, // x-axis tick font size
             weight: "bold", // x-axis tick font weight
           },
           autoSkip: true, // Enable automatic skipping of labels
-          maxTicksLimit: 5, // Maximum number of visible tick labels
+          maxTicksLimit: 10, // Maximum number of visible tick labels
         },
       },
       y: {
@@ -230,11 +178,13 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         },
         ticks: {
           color: "#999999", // y-axis tick color
-          stepSize: 3,
+          stepSize: 8,
           font: {
             size: 12, // y-axis tick font size
             weight: "bold", // y-axis tick font weight
           },
+          maxTicksLimit: 10, // Maximum number of visible tick labels
+          autoSkip: true,
         },
       },
     },
@@ -257,10 +207,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
       duration: 500, // Animation duration in milliseconds
     },
   };
-  
-  
 
-  
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <Autocomplete
@@ -281,7 +228,12 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
           if (value) {
             const selectedOption = value.label;
             setSelectedOption(selectedOption); // Update selected option
-            callChartFunction(selectedOption, selectedTimeframe, setInitialRawData, selectedExercise);
+            callChartFunction(
+              selectedOption,
+              selectedTimeframe,
+              setInitialRawData,
+              selectedExercise
+            );
           }
         }}
         renderInput={(params) => <TextField {...params} label="Graph" />}
@@ -301,8 +253,15 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
           </Button>
         ))}
       </ButtonGroup>
-      <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-        {initialRawData && <Line data={initialRawData} options={options as any}  />}
+      <Box
+        sx={{
+          width: "100vw",
+          height:"calc(100vh - 270.5px)",
+        }}
+      >
+        {initialRawData && (
+          <Line data={initialRawData} options={options as any} />
+        )}
         {/* options={chartOptions} */}
       </Box>
     </Box>

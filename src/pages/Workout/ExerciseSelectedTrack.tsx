@@ -19,12 +19,14 @@ interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
   unitsSystem: string;
+  weightIncrementPreference:number
 }
 
 function ExerciseSelectedTrack({
   selectedExercise,
   todayDate,
   unitsSystem,
+  weightIncrementPreference
 }: ExerciseSelectionProps) {
   const [weightValue, setWeightValue] = useState(0);
   const [repsValue, setRepsValue] = useState(0);
@@ -54,11 +56,7 @@ function ExerciseSelectedTrack({
   });
 
   useEffect(() => {
-
     getExistingExercises();
-
-
-
   }, [todayDate]);
 
 
@@ -283,7 +281,7 @@ function ExerciseSelectedTrack({
     setUserDataInput(true);
     switch (selectedExercise.measurement[index]) {
       case "weight":
-        setWeightValue((prevWeight) => prevWeight + 1);
+        setWeightValue((prevWeight) => prevWeight + weightIncrementPreference);
         break;
       case "reps":
         setRepsValue((prevReps) => prevReps + 1);
@@ -297,7 +295,7 @@ function ExerciseSelectedTrack({
     setUserDataInput(true);
     switch (selectedExercise.measurement[index]) {
       case "weight":
-        setWeightValue((prevWeight) => (prevWeight > 0 ? prevWeight - 1 : 0));
+        setWeightValue((prevWeight) => (prevWeight > 0 ? prevWeight - weightIncrementPreference : 0));
         break;
       case "reps":
         setRepsValue((prevReps) => (prevReps > 0 ? prevReps - 1 : 0));

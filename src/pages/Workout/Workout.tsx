@@ -49,14 +49,13 @@ function Workout({
   }>({ category: "", name: "", measurement: [] });
 
   const [unitsSystem, setUnitsSystem] = useState("");
+  const [weightIncrementPreference, setWeightIncrementPreference] = useState(2.5);
 
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
       setTodayDate(currentDate);
     }
-    console.log("logging exercises categories: ");
-    console.log(exercisesCategories);
     getDataPreferences();
   }, []);
 
@@ -66,6 +65,8 @@ function Workout({
     }
   }, [todayDate]);
 
+  
+  /* Use this useEffect to force requerying of data and update state when user navigates with back button */
   useEffect(() => {
     const handlePopstate = () => {
       handleEffectLogic();
@@ -83,7 +84,7 @@ function Workout({
       getExercisesByDate(todayDate);
       getDataPreferences();
     }
-  }
+  } 
 
   function getDataPreferences() {
     const request = indexedDB.open("fitScouterDb", 1);
@@ -102,11 +103,15 @@ function Workout({
 
       getRequest.onsuccess = function (event) {
         const record = getRequest.result;
+        console.log('logging the record inside getDataPreferences')
+        console.log(record)
         if (record) {
           // Extract the unitsSystem value from the record
-          const { unitsSystem } = record;
+          const { unitsSystem, defaultWeightIncrement } = record;
           setUnitsSystem(unitsSystem);
-          console.log(unitsSystem);
+          setWeightIncrementPreference(defaultWeightIncrement)
+          console.log('logging default weight increment:')
+          console.log(defaultWeightIncrement)
         }
       };
     };
@@ -244,13 +249,14 @@ function Workout({
                 todayDate={todayDate}
                 selectedExercise={selectedExercise}
                 unitsSystem={unitsSystem}
+                weightIncrementPreference={weightIncrementPreference}
               />
             }
           />
 
           <Route
             path="/settings"
-            element={<Settings unitsSystem={unitsSystem} />}
+            element={<Settings unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} weightIncrementPreference={weightIncrementPreference} setWeightIncrementPreference={setWeightIncrementPreference}  />}
           />
         </Routes>
       </Box>

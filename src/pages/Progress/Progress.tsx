@@ -6,11 +6,10 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import Typography from "@mui/material/Typography";
 
 import Container from "@mui/material/Container";
-
-import AdbIcon from "@mui/icons-material/Adb";
-
+import Box from '@mui/material/Box';
 function Progress() {
   return (
+    <Box sx={{display: "grid", gridTemplateRows: "auto 1fr", height: "100vh"}}>
     <AppBar position="fixed" style={{ top: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -56,6 +55,13 @@ function Progress() {
         </Toolbar>
       </Container>
     </AppBar>
+    
+    <Box sx={{ overflow: "auto" }}>
+        <Typography sx={{alignSelf:"center",justifySelf:"center"}}>My text</Typography>
+    </Box>
+    
+    
+    </Box>
   );
 }
 

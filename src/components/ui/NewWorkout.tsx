@@ -391,10 +391,8 @@ function NewWorkout({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          height: "4.5vh",
+          height: "32px",
           backgroundColor: "#3f51b5",
-          paddingTop: "8px",
-          paddingBottom: "8px",
           width: "100%",
         }}
       >

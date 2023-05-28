@@ -20,12 +20,14 @@ interface ExerciseSelectionProps {
   todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
   unitsSystem: string;
+  weightIncrementPreference:number
 }
 
 function ExerciseSelected({
   todayDate,
   selectedExercise,
   unitsSystem,
+  weightIncrementPreference
 }: ExerciseSelectionProps) {
 
   const [showRestTimer, setShowRestTimer] = useState(false)
@@ -151,13 +153,11 @@ function ExerciseSelected({
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
-          height: "4.5vh",
+          height: "32px",
           width: "100vw",
-          backgroundColor: "#3f51b5",
-          paddingTop: "8px",
-          paddingBottom: "8px",
+          backgroundColor: "#3f51b5"
         }}
-      >
+      > 
         <Button
           sx={{
             color: "white",
@@ -199,6 +199,7 @@ function ExerciseSelected({
               selectedExercise={selectedExercise}
               todayDate={todayDate}
               unitsSystem={unitsSystem}
+              weightIncrementPreference={weightIncrementPreference}
             />
           }
         />

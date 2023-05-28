@@ -20,11 +20,13 @@ function Home() {
   >([]);
   const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
   useEffect(() => {
+    console.log('IN HOME: Setting up preselected exercises')
     setPreselectedExercises(importedPreselectedExercises);
   }, []);
 
   useEffect(() => {
     if (preselectedExercises.length > 0) {
+      console.log('in HOME: populating preselected exercises')
       populatePreselectedExercises();
     }
   }, [preselectedExercises]);
