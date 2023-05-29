@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { AppBar, Divider, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -10,10 +6,14 @@ import IconButton from "@mui/material/IconButton";
 import AdbIcon from "@mui/icons-material/Adb";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import deleteEntriesByCategory from "../../utils/CRUDFunctions/deleteEntriesByCategory";
+import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -40,6 +40,27 @@ function ExercisesCategories({
 }: NewWorkoutProps) {
   const navigate = useNavigate();
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState('')
+  
+  
+  useEffect(()=>{
+
+  },[exercisesCategories])
+
+  const open = Boolean(anchorEl);
+
+  function handleOptionsClick (event: React.MouseEvent<HTMLButtonElement>, category:string) {
+    setAnchorEl(event.currentTarget);
+    console.log('logging category inside handleOptionClick:')
+    console.log(category)
+    setCategoryToDelete(category)
+  };
+  const handleClose = () => {
+    deleteEntriesByCategory(categoryToDelete)
+    populatePreselectedExercises(setExercisesCategories)
+    setAnchorEl(null);
+  };
 
   function handleAddNewExerciseModal() {
     setOpenAddNewExerciseModal(!openAddNewExerciseModal);
@@ -113,7 +134,9 @@ function ExercisesCategories({
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <FitnessCenterIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -132,7 +155,9 @@ function ExercisesCategories({
               LOGO
             </Typography>
 
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <FitnessCenterIcon
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
 
             <Typography
               variant="h5"
@@ -170,7 +195,7 @@ function ExercisesCategories({
           </Toolbar>
         </Container>
       </AppBar>
-{/* 
+      {/* 
       <TextField
         id="standard-basic"
         label="Look for an exercise"
@@ -188,43 +213,56 @@ function ExercisesCategories({
         {exercisesCategories
           .slice() // Create a copy of the array to avoid mutating the original array
           .sort((a, b) => a.localeCompare(b)) // Sort the categories alphabetically
-        .map((category, index) => (
-          <Box key={index}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                key={index}
+          .map((category, index) => (
+            <Box key={index}>
+              <Box
                 sx={{
-                  width: "100%",
-                  fontSize: "larger",
-                  margin: "0.15rem",
-                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                onClick={() => handleCategoryClick(category)}
               >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </Typography>
+                <Typography
+                  key={index}
+                  sx={{
+                    width: "100%",
+                    fontSize: "larger",
+                    margin: "0.15rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </Typography>
 
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                onClick={() => console.log("yes")}
-              >
-                <MoreVertIcon sx={{ zIndex: -1 }} />
-              </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={(event) => handleOptionsClick(event, category)}
+                >
+                  <MoreVertIcon sx={{ zIndex: -1 }} />
+                </IconButton>
+              </Box>
+
+              <Divider sx={{ width: "100%" }} />
             </Box>
-            <Divider sx={{ width: "100%" }} />
-          </Box>
-        ))}
+          ))}
       </Box>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        style={{ boxShadow: "none", border: "none" }}
+      >
+        <MenuItem onClick={handleClose}>Delete Category</MenuItem>
+      </Menu>
     </Container>
   );
 }

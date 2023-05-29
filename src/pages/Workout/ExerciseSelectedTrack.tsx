@@ -696,7 +696,7 @@ function ExerciseSelectedTrack({
               {exercise.reps !== 0 && (
                 <Typography>{exercise.reps} reps</Typography>
               )}
-
+                <Typography></Typography>
 
               {exercise.distance !== 0 && (
                 <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>

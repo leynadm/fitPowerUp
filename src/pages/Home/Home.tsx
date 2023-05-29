@@ -235,6 +235,7 @@ function Home() {
           path="/*"
           element={
             <Workout
+              
               setExercisesCategories={setExercisesCategories}
               existingExercises={existingExercises}
               selectedCategoryExercises={selectedCategoryExercises}

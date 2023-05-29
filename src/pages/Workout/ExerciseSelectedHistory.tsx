@@ -218,7 +218,7 @@ function ExerciseSelectedHistory({
                     ) : (
                       <Typography></Typography>
                     )}
-
+                <Typography></Typography>
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}

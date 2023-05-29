@@ -6,10 +6,15 @@ import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntries";
+import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
+import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
@@ -21,8 +26,7 @@ interface ExercisesCategoriesProps {
     SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
   exercisesCategories: string[];
-  setExercisesCategories:Dispatch<
-  SetStateAction<string[]>>
+  setExercisesCategories: Dispatch<SetStateAction<string[]>>;
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
@@ -34,9 +38,8 @@ function ExercisesByCategory({
   setSelectedExercise,
   exercisesCategories,
   setExercisesCategories,
-  setSelectedCategoryExercises
+  setSelectedCategoryExercises,
 }: ExercisesCategoriesProps) {
-
   const navigate = useNavigate();
 
   const handleExerciseClick = (exercise: {
@@ -48,7 +51,32 @@ function ExercisesByCategory({
     navigate(`selected`);
   };
 
+  useEffect(()=>{
+
+  },[exercisesCategories])
+
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
+  const [exerciseToDelete, setExerciseToDelete] = useState("");
+  const [categoryToRefresh, setCategoryToRefresh] = useState("")
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  function handleOptionsClick(
+    event: React.MouseEvent<HTMLButtonElement>,
+    exerciseName: string,
+    exerciseCategory:string
+  ) {
+    setAnchorEl(event.currentTarget);
+
+    setExerciseToDelete(exerciseName);
+    setCategoryToRefresh(exerciseCategory)
+  } 
+  const handleClose = () => {
+    console.log("logging exerciseToDelete");
+    console.log(exerciseToDelete);
+    deleteExerciseEntries(exerciseToDelete);
+    handleCategoryClick(categoryToRefresh,setSelectedCategoryExercises)
+    setAnchorEl(null);
+  };
 
   function handleAddNewExerciseModal() {
     setOpenAddNewExerciseModal(!openAddNewExerciseModal);
@@ -65,7 +93,6 @@ function ExercisesByCategory({
         height: "100%",
       }}
     >
- 
       <AddNewExerciseModal
         setExercisesCategories={setExercisesCategories}
         exercisesCategories={exercisesCategories}
@@ -78,7 +105,9 @@ function ExercisesByCategory({
       <AppBar position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <FitnessCenterIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -97,7 +126,9 @@ function ExercisesByCategory({
               LOGO
             </Typography>
 
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <FitnessCenterIcon
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
 
             <Typography
               variant="h5"
@@ -135,7 +166,7 @@ function ExercisesByCategory({
           </Toolbar>
         </Container>
       </AppBar>
-{/* 
+      {/* 
       <TextField
         id="standard-basic"
         label="Look for an exercise"
@@ -148,52 +179,64 @@ function ExercisesByCategory({
       <Box
         sx={{
           width: "100%",
-          height:"100%"
-
+          height: "100%",
         }}
       >
-
         {selectedCategoryExercises
           .slice() // Create a copy of the array to avoid mutating the original array
           .sort((a, b) => a.name.localeCompare(b.name)) // Sort the categories alphabetically
-        .map((exercise, index) => (
-          <Box key={index}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height:"100%"
-              }}
-            >
-              <Typography
-                key={index}
+          .map((exercise, index) => (
+            <Box key={index}>
+              <Box
                 sx={{
-                  width: "100%",
-                  fontSize: "larger",
-                  margin: "0.15rem",
-                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
                 }}
-                onClick={() => handleExerciseClick(exercise)}
               >
-                {exercise.name.charAt(0).toUpperCase() + exercise.name.slice(1)}
-              </Typography>
+                <Typography
+                  key={index}
+                  sx={{
+                    width: "100%",
+                    fontSize: "larger",
+                    margin: "0.15rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleExerciseClick(exercise)}
+                >
+                  {exercise.name.charAt(0).toUpperCase() +
+                    exercise.name.slice(1)}
+                </Typography>
 
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                onClick={() => console.log("yes")}
-              >
-                <MoreVertIcon sx={{ zIndex: -1 }} />
-              </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={(event) => handleOptionsClick(event, exercise.name,exercise.category)}
+                >
+                  <MoreVertIcon sx={{ zIndex: -1 }} />
+                </IconButton>
+              </Box>
+              <Divider sx={{ width: "100%" }} />
             </Box>
-            <Divider sx={{ width: "100%" }} />
-          </Box>
-        ))}
+          ))}
       </Box>
+
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        style={{ boxShadow: "none", border: "none" }}
+      >
+        <MenuItem onClick={handleClose}>Delete Exercise</MenuItem>
+      </Menu>
     </Container>
   );
 }
