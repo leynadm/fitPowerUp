@@ -1,7 +1,6 @@
-import React, { useState,SetStateAction,Dispatch } from "react";
+import React, { useState, SetStateAction, Dispatch } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -9,15 +8,21 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import IconButton from "@mui/material/IconButton";
+import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
+
 interface ParentProps {
   exercisesCategories: string[];
   openAddNewExerciseModal: boolean;
   setOpenAddNewExerciseModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setExercisesCategories:Dispatch<
-  SetStateAction<string[]>>
+  setExercisesCategories: Dispatch<SetStateAction<string[]>>;
+  setSelectedCategoryExercises: Dispatch<
+    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
+  >;
+  selectedCategoryExercises: {
+    category: string;
+    name: string;
+    measurement: any[];
+  }[];
 }
 
 const style = {
@@ -36,7 +41,9 @@ function AddNewExerciseModal({
   exercisesCategories,
   openAddNewExerciseModal,
   setOpenAddNewExerciseModal,
-  setExercisesCategories
+  setExercisesCategories,
+  setSelectedCategoryExercises,
+  selectedCategoryExercises
 }: ParentProps) {
   const [exerciseName, setExerciseName] = useState("");
   const [category, setCategory] = useState("");
@@ -61,6 +68,7 @@ function AddNewExerciseModal({
     label: string;
     value: string[];
   } | null>(null);
+
   const saveNewExercise = () => {
     const measurementValue = measurement ? measurement.value : [];
     const newExercise = {
@@ -94,8 +102,8 @@ function AddNewExerciseModal({
         // Close the transaction and the database connection
 
         db.close();
-        updateExerciseCategories()
-        // Close the modal after saving
+        updateExerciseCategories();
+        handleCategoryClick(category,setSelectedCategoryExercises)
         handleClose();
       };
 
@@ -109,68 +117,64 @@ function AddNewExerciseModal({
     };
   };
 
-
-  function updateExerciseCategories(){
-
+  function updateExerciseCategories() {
     const request = indexedDB.open("fitScouterDb", 1);
 
-    if(!request){
-        console.log('request value:')
-        console.log(request)
-       return
-      }
-    
-          // Check if there are any error while opening the Db
+    if (!request) {
+      console.log("request value:");
+      console.log(request);
+      return;
+    }
+
+    // Check if there are any error while opening the Db
     request.onerror = function (event) {
-        console.error("And error occured with IndexedDb");
-        console.error(event);
-      };
+      console.error("And error occured with IndexedDb");
+      console.error(event);
+    };
 
-          // Check if there are any error while opening the Db
+    // Check if there are any error while opening the Db
     request.onerror = function (event) {
-        console.error("And error occured with IndexedDb");
-        console.error(event);
-      };
-  
-      request.onupgradeneeded = function () {
-        const db = request.result; // Result of our open request
-  
+      console.error("And error occured with IndexedDb");
+      console.error(event);
+    };
+
+    request.onupgradeneeded = function () {
+      const db = request.result; // Result of our open request
+    };
+
+    request.onsuccess = function (event) {
+      const db = request.result;
+      const defaultRecord = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction("preselected-exercises", "readwrite");
+      const store = transaction.objectStore("preselected-exercises");
+      const exerciseCategoryIndex = store.index("exercise_category");
+
+      const categoryQuery = exerciseCategoryIndex.openKeyCursor();
+      const uniqueCategories = new Set<string>(); // Specify string type for the Set
+
+      categoryQuery.onsuccess = function (event) {
+        const cursor = (event.target as IDBRequest).result;
+        if (cursor) {
+          const category: string = cursor.key; // Specify string type for the category
+          uniqueCategories.add(category);
+          cursor.continue();
+        } else {
+          const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
+          console.log("Categories:", categories);
+
+          console.log("categories");
+
+          setExercisesCategories(categories);
+
+          console.log(categories);
+        }
       };
 
-      request.onsuccess = function (event) {
-
-        const db = request.result;
-        const defaultRecord = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction("preselected-exercises", "readwrite");
-        const store = transaction.objectStore("preselected-exercises");
-        const exerciseCategoryIndex = store.index("exercise_category");
-
-        const categoryQuery = exerciseCategoryIndex.openKeyCursor();
-        const uniqueCategories = new Set<string>(); // Specify string type for the Set
-  
-        categoryQuery.onsuccess = function (event) {
-          const cursor = (event.target as IDBRequest).result;
-          if (cursor) {
-            const category: string = cursor.key; // Specify string type for the category
-            uniqueCategories.add(category);
-            cursor.continue();
-          } else {
-            const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
-            console.log("Categories:", categories);
-  
-            console.log("categories");
-  
-            setExercisesCategories(categories);
-  
-            console.log(categories);
-          }
-        };
-  
-        transaction.oncomplete = function () {
-          db.close()
-        };
+      transaction.oncomplete = function () {
+        db.close();
       };
-}
+    };
+  }
 
   return (
     <Box>

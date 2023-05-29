@@ -23,6 +23,9 @@ interface ExercisesCategoriesProps {
   exercisesCategories: string[];
   setExercisesCategories:Dispatch<
   SetStateAction<string[]>>
+  setSelectedCategoryExercises: Dispatch<
+    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
+  >;
 }
 
 function ExercisesByCategory({
@@ -30,9 +33,12 @@ function ExercisesByCategory({
   selectedCategoryExercises,
   setSelectedExercise,
   exercisesCategories,
-  setExercisesCategories
+  setExercisesCategories,
+  setSelectedCategoryExercises
 }: ExercisesCategoriesProps) {
+
   const navigate = useNavigate();
+
   const handleExerciseClick = (exercise: {
     category: string;
     name: string;
@@ -59,12 +65,14 @@ function ExercisesByCategory({
         height: "100%",
       }}
     >
-
+ 
       <AddNewExerciseModal
-      setExercisesCategories={setExercisesCategories}
+        setExercisesCategories={setExercisesCategories}
         exercisesCategories={exercisesCategories}
         openAddNewExerciseModal={openAddNewExerciseModal}
         setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+        setSelectedCategoryExercises={setSelectedCategoryExercises}
+        selectedCategoryExercises={selectedCategoryExercises}
       />
 
       <AppBar position="fixed" style={{ top: 0 }}>
@@ -107,7 +115,7 @@ function ExercisesByCategory({
                 textDecoration: "none",
               }}
             >
-              Work
+              Log
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>

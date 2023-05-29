@@ -1,9 +1,7 @@
 import React, {
-  useEffect,
   useState,
   Dispatch,
   SetStateAction,
-  useContext,
 } from "react";
 import { AppBar, Divider, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -14,7 +12,6 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
-import { IndexedDBContext } from "../../context/IndexedDB";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
@@ -30,8 +27,7 @@ interface NewWorkoutProps {
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
-  setExercisesCategories:Dispatch<
-  SetStateAction<string[]>>
+  setExercisesCategories: Dispatch<SetStateAction<string[]>>;
 }
 
 function ExercisesCategories({
@@ -40,9 +36,8 @@ function ExercisesCategories({
   selectedCategoryExercises,
   setSelectedCategoryExercises,
   exercisesCategories,
-  setExercisesCategories
+  setExercisesCategories,
 }: NewWorkoutProps) {
-
   const navigate = useNavigate();
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
 
@@ -51,8 +46,6 @@ function ExercisesCategories({
   }
 
   function handleCategoryClick(category: string) {
-    console.log("logging the category inside exercise categories:");
-    console.log(category);
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = function (event) {
@@ -113,6 +106,8 @@ function ExercisesCategories({
         openAddNewExerciseModal={openAddNewExerciseModal}
         setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
         setExercisesCategories={setExercisesCategories}
+        selectedCategoryExercises={selectedCategoryExercises}
+        setSelectedCategoryExercises={setSelectedCategoryExercises}
       />
 
       <AppBar position="fixed" style={{ top: 0 }}>
@@ -155,7 +150,7 @@ function ExercisesCategories({
                 textDecoration: "none",
               }}
             >
-              Work
+              Log
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -220,7 +215,7 @@ function ExercisesCategories({
                 color="inherit"
                 onClick={() => console.log("yes")}
               >
-                <MoreVertIcon sx={{zIndex:-1}} />
+                <MoreVertIcon sx={{ zIndex: -1 }} />
               </IconButton>
             </Box>
             <Divider sx={{ width: "100%" }} />

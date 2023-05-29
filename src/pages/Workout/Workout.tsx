@@ -3,7 +3,7 @@ import React, {
   useEffect,
   Dispatch,
   SetStateAction,
-  useRef,
+  useRef, 
 } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
@@ -50,7 +50,7 @@ function Workout({
 
   const [unitsSystem, setUnitsSystem] = useState("");
   const [weightIncrementPreference, setWeightIncrementPreference] = useState(2.5);
-
+  
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
@@ -236,6 +236,7 @@ function Workout({
                 setExercisesCategories={setExercisesCategories}
                 todayDate={todayDate}
                 selectedCategoryExercises={selectedCategoryExercises}
+                setSelectedCategoryExercises={setSelectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}
                 exercisesCategories={exercisesCategories}
               />

@@ -1,4 +1,4 @@
-import { ChartData, Point } from "chart.js";
+import { ChartData} from "chart.js";
 
 interface DataItem {
   date: Date;
