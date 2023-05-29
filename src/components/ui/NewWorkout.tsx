@@ -575,12 +575,11 @@ function NewWorkout({
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>
                         )}
-                        <Typography></Typography>
 
                         {exercise.distance !== 0 && (
                           <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                         )}
-
+                        <Typography></Typography>
                         {exercise.time !== 0 && (
                           <Typography>
                             {exercise.time !== 0
@@ -588,6 +587,7 @@ function NewWorkout({
                               : ""}
                           </Typography>
                         )}
+
                       </Box>
 
                       <Divider />

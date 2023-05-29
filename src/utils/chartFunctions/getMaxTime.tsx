@@ -2,15 +2,10 @@ import { ChartData } from "chart.js";
 
 interface DataItem {
   date: Date;
-  weight: number;
-  reps: number;
+  time: number;
 }
 
-function getTotalVolume(
-  setInitialRawData: any,
-  selectedExercise: any,
-  timeframe: string
-) {
+function getMaxTime(setInitialRawData: any, selectedExercise: any, timeframe: string) {
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
@@ -19,69 +14,62 @@ function getTotalVolume(
 
   request.onsuccess = (event) => {
     const db = (event.target as IDBRequest).result;
-    const transaction = db.transaction(
-      ["user-exercises-entries"],
-      "readonly"
-    );
+    const transaction = db.transaction(["user-exercises-entries"], "readonly");
     const objectStore = transaction.objectStore("user-exercises-entries");
     const exerciseNameIndex = objectStore.index("exercise_name");
-
     const range = IDBKeyRange.only(selectedExercise.name); // Filter by exercise name
 
     const getDataRequest = exerciseNameIndex.getAll(range);
 
     getDataRequest.onsuccess = () => {
-      const data = getDataRequest.result as DataItem[];
+      const data = getDataRequest.result;
 
-      // Create a map to store unique dates and corresponding total volume
-      const dateTotalVolumeMap = new Map<string, number>();
+      // Create a map to store unique dates and corresponding maximum time
+      const dateTimeMap = new Map<string, number>();
 
-      data.forEach((item) => {
+      data.forEach((item: DataItem) => {
         const currentDate = new Date(item.date).toLocaleDateString();
-        const currentWeight = item.weight;
-        const currentReps = item.reps;
+        const currentTime = item.time / 60; // Convert seconds to minutes
 
         // Check if the current date is within the selected timeframe
         const currentDateObj = new Date(item.date);
-        const startDate = timeframe === "All" ? null : getStartDate(timeframe);
+        const startDate = getStartDate(timeframe);
         const endDate = new Date();
-        if (startDate && (currentDateObj < startDate || currentDateObj > endDate)) {
+        if (currentDateObj < startDate || currentDateObj > endDate) {
           return; // Skip data outside the timeframe
         }
 
-        // Calculate the total volume for the current date
-        const currentVolume = currentWeight * currentReps;
+        // Check if the current date is already present in the map
+        if (dateTimeMap.has(currentDate)) {
+          const existingTime = dateTimeMap.get(currentDate);
 
-        if (dateTotalVolumeMap.has(currentDate)) {
-          const existingTotalVolume = dateTotalVolumeMap.get(currentDate)!;
-          dateTotalVolumeMap.set(
-            currentDate,
-            existingTotalVolume + currentVolume
-          );
+          // Update the time if the current time is higher
+          if (existingTime !== undefined && currentTime > existingTime) {
+            dateTimeMap.set(currentDate, currentTime);
+          }
         } else {
-          dateTotalVolumeMap.set(currentDate, currentVolume);
+          // Add the date to the map if it doesn't exist
+          dateTimeMap.set(currentDate, currentTime);
         }
       });
 
-      const sortedDates = Array.from(dateTotalVolumeMap.keys())
+      const sortedDates = Array.from(dateTimeMap.keys())
         .map((date) => new Date(date))
         .sort((a, b) => a.getTime() - b.getTime());
-      
-        const totalVolume = Array.from(dateTotalVolumeMap.values());
 
-      const totalVolumeValues = sortedDates.map((date) => {
-        const totalVolume = dateTotalVolumeMap.get(date.toLocaleDateString());
-        return totalVolume !== undefined ? totalVolume : null;
+      const timeValues = sortedDates.map((date) => {
+        const time = dateTimeMap.get(date.toLocaleDateString());
+        return time !== undefined ? time : null;
       });
 
-      const chartData: ChartData<"line"> = {
+      const chartData: ChartData = {
         labels: sortedDates.map((date) => date.toLocaleDateString()),
         datasets: [
           {
-            label: "Total Volume",
-            data: totalVolumeValues,
+            label: "Time (minutes)", // Update the label to indicate minutes
+            data: timeValues,
             fill: false,
-            borderColor: "rgba(63,81,181,1)",
+            borderColor: "rgba(63, 81, 181, 1)",
             borderWidth: 2,
           },
         ],
@@ -96,8 +84,7 @@ function getTotalVolume(
   };
 }
 
-function getStartDate(timeframe: string): Date | null {
-
+function getStartDate(timeframe: string): Date {
   const today = new Date();
   switch (timeframe) {
     case "1m":
@@ -109,8 +96,8 @@ function getStartDate(timeframe: string): Date | null {
     case "1y":
       return new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
     default:
-      return new Date(today.getFullYear()-50, today.getMonth(), today.getDate());
+      return new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
   }
 }
 
-export default getTotalVolume;
+export default getMaxTime;

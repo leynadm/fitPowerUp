@@ -100,21 +100,7 @@ function Friends() {
         <Typography>My Text</Typography>
         <Typography>My Text</Typography>
         <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
+
         <IconButton
           size="large"
           aria-label="account of current user"

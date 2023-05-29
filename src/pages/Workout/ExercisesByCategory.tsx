@@ -135,7 +135,7 @@ function ExercisesByCategory({
           </Toolbar>
         </Container>
       </AppBar>
-
+{/* 
       <TextField
         id="standard-basic"
         label="Look for an exercise"
@@ -144,7 +144,7 @@ function ExercisesByCategory({
           width: "100%",
         }}
       />
-
+       */}
       <Box
         sx={{
           width: "100%",
@@ -152,7 +152,11 @@ function ExercisesByCategory({
 
         }}
       >
-        {selectedCategoryExercises.map((exercise, index) => (
+
+        {selectedCategoryExercises
+          .slice() // Create a copy of the array to avoid mutating the original array
+          .sort((a, b) => a.name.localeCompare(b.name)) // Sort the categories alphabetically
+        .map((exercise, index) => (
           <Box key={index}>
             <Box
               sx={{

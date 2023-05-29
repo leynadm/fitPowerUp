@@ -9,7 +9,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
-
+import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
 interface ParentProps {
   exercisesCategories: string[];
   openAddNewExerciseModal: boolean;
@@ -69,7 +69,13 @@ function AddNewExerciseModal({
     value: string[];
   } | null>(null);
 
+
   const saveNewExercise = () => {
+
+    if (!isFormValid()) {
+      return; // If the form is not valid, exit the function without saving
+    }
+
     const measurementValue = measurement ? measurement.value : [];
     const newExercise = {
       name: exerciseName,
@@ -102,7 +108,7 @@ function AddNewExerciseModal({
         // Close the transaction and the database connection
 
         db.close();
-        updateExerciseCategories();
+        updateExerciseCategories(setExercisesCategories);
         handleCategoryClick(category,setSelectedCategoryExercises)
         handleClose();
       };
@@ -117,64 +123,29 @@ function AddNewExerciseModal({
     };
   };
 
-  function updateExerciseCategories() {
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    if (!request) {
-      console.log("request value:");
-      console.log(request);
-      return;
+  const isFormValid = () => {
+    if (exerciseName.trim() === "") {
+      return false;
     }
 
-    // Check if there are any error while opening the Db
-    request.onerror = function (event) {
-      console.error("And error occured with IndexedDb");
-      console.error(event);
-    };
+    if (selectedRadio === "existing" && category === "") {
+      return false;
+    }
 
-    // Check if there are any error while opening the Db
-    request.onerror = function (event) {
-      console.error("And error occured with IndexedDb");
-      console.error(event);
-    };
+    if (selectedRadio === "new" && category.trim() === "") {
+      return false;
+    }
 
-    request.onupgradeneeded = function () {
-      const db = request.result; // Result of our open request
-    };
+    if (
+      !measurement ||
+      measurement.label === "" ||
+      measurement.value.length === 0
+    ) {
+      return false;
+    }
 
-    request.onsuccess = function (event) {
-      const db = request.result;
-      const defaultRecord = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction("preselected-exercises", "readwrite");
-      const store = transaction.objectStore("preselected-exercises");
-      const exerciseCategoryIndex = store.index("exercise_category");
-
-      const categoryQuery = exerciseCategoryIndex.openKeyCursor();
-      const uniqueCategories = new Set<string>(); // Specify string type for the Set
-
-      categoryQuery.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-        if (cursor) {
-          const category: string = cursor.key; // Specify string type for the category
-          uniqueCategories.add(category);
-          cursor.continue();
-        } else {
-          const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
-          console.log("Categories:", categories);
-
-          console.log("categories");
-
-          setExercisesCategories(categories);
-
-          console.log(categories);
-        }
-      };
-
-      transaction.oncomplete = function () {
-        db.close();
-      };
-    };
-  }
+    return true;
+  };
 
   return (
     <Box>
@@ -294,13 +265,16 @@ function AddNewExerciseModal({
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={saveNewExercise}
+              disabled={!isFormValid}
             >
               Save
             </Button>
             <Button
               variant="contained"
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+              onClick={handleClose}
             >
+            
               Cancel
             </Button>
           </Box>

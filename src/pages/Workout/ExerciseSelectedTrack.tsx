@@ -15,6 +15,8 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import ValidationAlert from "../../components/ui/ValidationAlert";
 import Autocomplete from "@mui/material/Autocomplete";
 import formatTime from "../../utils/formatTime";
+import getExistingExercisesByName from "../../utils/CRUDFunctions/getExistingExercisesByName";
+
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
@@ -57,7 +59,7 @@ function ExerciseSelectedTrack({
 
   useEffect(() => {
     getExistingExercises();
-  }, [todayDate]);
+  }, []);
 
 
   useEffect(()=>{
@@ -130,9 +132,6 @@ function ExerciseSelectedTrack({
       );
 
       const exercisesRequest = exerciseNameAndDateIndex.openCursor(range);
-
-      const existingExercises: any[] | ((prevState: Exercise[]) => Exercise[]) =
-        [];
 
       const tempExistingExercises:
         | any[]
@@ -470,7 +469,9 @@ function ExerciseSelectedTrack({
                     console.log(newValue);
                     setDistanceUnit(newValue || "m");
                   }}
+                  disableClearable
                   renderInput={(params) => <TextField {...params} />}
+
                 />
               </Box>
             </Box>
@@ -696,7 +697,6 @@ function ExerciseSelectedTrack({
                 <Typography>{exercise.reps} reps</Typography>
               )}
 
-              <Typography></Typography>
 
               {exercise.distance !== 0 && (
                 <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>

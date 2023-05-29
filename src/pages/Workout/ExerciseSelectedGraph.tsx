@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
@@ -13,6 +13,12 @@ import getMax1RM from "../../utils/chartFunctions/getMax1RM";
 import getTotalReps from "../../utils/chartFunctions/getTotalReps";
 import getTotalVolume from "../../utils/chartFunctions/getTotalVolume";
 import getMaxWeightForReps from "../../utils/chartFunctions/getMaxWeightForReps";
+import getMaxDistance from "../../utils/chartFunctions/getMaxDistance";
+import getTotalDistance from "../../utils/chartFunctions/getTotalDistance";
+import getMaxTime from "../../utils/chartFunctions/getMaxTime";
+import getTotalTime from "../../utils/chartFunctions/getTotalTime";
+import getMaxSpeed from "../../utils/chartFunctions/getMaxSpeed";
+import getMaxPace from "../../utils/chartFunctions/getMaxPace";
 import { ChartOptions } from "chart.js";
 import {
   Chart as ChartJS,
@@ -104,16 +110,129 @@ const callChartFunction = (
         selectedTimeframe
       );
       break;
+    case "Max Distance":
+      getMaxDistance(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
+    case "Workout Distance":
+      getTotalDistance(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
+    case "Max Time":
+      getMaxTime(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
+    case "Workout Time":
+      getTotalTime(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
+    case "Max Speed":
+      getMaxSpeed(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
+    case "Max Pace":
+      getMaxPace(setInitialRawData, selectedExercise, selectedTimeframe);
+      break;
     default:
       break;
   }
 };
 
+interface IStatisticsOption {
+  label: string;
+}
 function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
-  const [selectedOption, setSelectedOption] = useState("Estimated 1RM"); // Initial selected option
+    const [selectedOption, setSelectedOption] = useState(() => {
+      if (
+        selectedExercise.measurement.includes("weight") &&
+        selectedExercise.measurement.includes("reps")
+      ) {
+        return "Estimated 1RM";
+      } else if (
+        selectedExercise.measurement.includes("weight") &&
+        selectedExercise.measurement.includes("distance")
+      ) {
+        return "Max Weight";
+      } else if (
+        selectedExercise.measurement.includes("weight") &&
+        selectedExercise.measurement.includes("time")
+      ) {
+        return "Max Weight";
+      } else if (
+        selectedExercise.measurement.includes("reps") &&
+        selectedExercise.measurement.includes("distance")
+      ) {
+        return "Max Reps";
+      } else if (
+        selectedExercise.measurement.includes("reps") &&
+        selectedExercise.measurement.includes("time")
+      ) {
+        return "Max Reps";
+      } else if (
+        selectedExercise.measurement.includes("distance") &&
+        selectedExercise.measurement.includes("time")
+      ) {
+        return "Max Distance";
+      } else if (selectedExercise.measurement.includes("weight")) {
+        return "Max Weight";
+      } else if (selectedExercise.measurement.includes("reps")) {
+        return "Max Reps";
+      } else if (selectedExercise.measurement.includes("distance")) {
+        return "Max Distance";
+      } else if (selectedExercise.measurement.includes("time")) {
+        return "Max Time";
+      } else {
+        return "Estimated 1RM"; // Default value if no conditions match
+      }
+    });
+    
+  
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
+  const [statisticsOptionsToUse, setStatisticsOptionsToUse] = useState<
+    IStatisticsOption[]
+  >([]);
+  const [defaultOptionToLoad, setDefaultOptionToLoad] = useState<{ label: string }>({ label: "Estimated 1RM" });
+  
+  useEffect(() => {
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("reps")
+      ) {
+      setStatisticsOptionsToUse(statisticsOptions);
+      setDefaultOptionToLoad({label:"Estimated 1RM"})
+    } else if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("distance")
+    ) {
+      setStatisticsOptionsToUse(statisticsOptionsWeightAndDistance);
+      setDefaultOptionToLoad({label:"Max Weight"})
+    } else if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      setStatisticsOptionsToUse(statisticsOptionsWeightAndTime);
+    } else if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("distance")
+    ) {
+      setStatisticsOptionsToUse(statisticsOptionsRepsAndDistance);
+    } else if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      setStatisticsOptionsToUse(statisticsOptionsRepsAndTime);
+    } else if (
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      setStatisticsOptionsToUse(statisticsOptionsDistanceAndTime);
+    } else if (selectedExercise.measurement.includes("weight")) {
+      setStatisticsOptionsToUse(statisticsOptionsWeight);
+    } else if (selectedExercise.measurement.includes("reps")) {
+      setStatisticsOptionsToUse(statisticsOptionsReps);
+    } else if (selectedExercise.measurement.includes("distance")) {
+      setStatisticsOptionsToUse(statisticsOptionsDistance);
+    } else if (selectedExercise.measurement.includes("time")) {
+      setStatisticsOptionsToUse(statisticsOptionsTime);
+    }
+  }, []);
 
   useEffect(() => {
     // Call the chart function when the selected exercise changes or the timeframe changes
@@ -140,6 +259,58 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     { label: "Workout Reps" },
   ];
 
+  const statisticsOptionsReps = [
+    { label: "Max Reps" },
+    { label: "Workout Reps" },
+  ];
+
+  const statisticsOptionsWeight = [{ label: "Max Weight" }];
+
+  const statisticsOptionsDistance = [
+    { label: "Max Distance" },
+    { label: "Workout Distance" },
+  ];
+
+  const statisticsOptionsTime = [
+    { label: "Max Time" },
+    { label: "Workout Time" },
+  ];
+
+  const statisticsOptionsWeightAndDistance = [
+    { label: "Max Weight" },
+    { label: "Max Distance" },
+    { label: "Workout Distance" },
+  ];
+
+  const statisticsOptionsWeightAndTime = [
+    { label: "Max Weight" },
+    { label: "Max Time" },
+    { label: "Workout Time" },
+  ];
+
+  const statisticsOptionsRepsAndDistance = [
+    { label: "Max Reps" },
+    { label: "Max Distance" },
+    { label: "Workout Reps" },
+    { label: "Workout Distance" },
+  ];
+
+  const statisticsOptionsRepsAndTime = [
+    { label: "Max Reps" },
+    { label: "Max Time" },
+    { label: "Workout Reps" },
+    { label: "Workout Time" },
+  ];
+
+  const statisticsOptionsDistanceAndTime = [
+    { label: "Max Distance" },
+    { label: "Max Time" },
+    { label: "Max Speed" },
+    { label: "Max Pace" },
+    { label: "Workout Distance" },
+    { label: "Workout Time" },
+  ];
+
   const timeframeOptions = [
     { label: "1m", value: "1m" },
     { label: "3m", value: "3m" },
@@ -153,7 +324,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: true, // Hide the legend
       },
     },
     scales: {
@@ -213,8 +384,8 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={statisticsOptions}
-        defaultValue={statisticsOptions[0]}
+        options={statisticsOptionsToUse}
+        defaultValue={{label:selectedOption}}
         getOptionLabel={(option) => option.label}
         disableClearable
         isOptionEqualToValue={(option, value) => option.label === value.label} // Customize the equality test
@@ -256,13 +427,19 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
       <Box
         sx={{
           width: "100vw",
-          height:"calc(100vh - 270.5px)",
+          height: "calc(100vh - 270.5px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {initialRawData && (
-          <Line data={initialRawData} options={options as any} />
-        )}
-        {/* options={chartOptions} */}
+        {initialRawData ? (
+          initialRawData.labels && initialRawData.labels.length === 0 ? (
+            <Typography>No data for this exercise yet</Typography>
+          ) : (
+            <Line data={initialRawData} options={options as any} />
+          )
+        ) : null}
       </Box>
     </Box>
   );

@@ -92,6 +92,17 @@ function ExerciseSelectedHistory({
     setExerciseCommentId(exerciseId);
     setOpenViewCommentModal(!openViewCommentModal);
   }
+  
+  if (existingExercises.length === 0) {
+    return (
+      <Box sx={{height:"calc(100vh - 144px)", width:"100%", display:"flex", justifyContent:"center", alignItems:"center"}}>
+        <Typography variant="body1" align="center">
+          No existing exercises found.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <ViewCommentModal
@@ -211,7 +222,7 @@ function ExerciseSelectedHistory({
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}
-                    <Typography></Typography>
+                    
                     {exercise.distance !== 0 && (
                           <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                         )}
