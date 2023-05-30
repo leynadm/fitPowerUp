@@ -9,8 +9,8 @@ import Container from "@mui/material/Container";
 import Box from '@mui/material/Box';
 function Progress() {
   return (
-    <Box sx={{display: "grid", gridTemplateRows: "auto 1fr", height: "100vh"}}>
-    <AppBar position="fixed" style={{ top: 0 }}>
+    <Box  sx={{display: "grid", gridTemplateRows: "auto 1fr", height: "100vh"}}>
+    <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <QueryStatsIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

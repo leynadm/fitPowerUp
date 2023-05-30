@@ -131,7 +131,7 @@ function ExercisesCategories({
         setSelectedCategoryExercises={setSelectedCategoryExercises}
       />
 
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FitnessCenterIcon
@@ -243,7 +243,7 @@ function ExercisesCategories({
                   color="inherit"
                   onClick={(event) => handleOptionsClick(event, category)}
                 >
-                  <MoreVertIcon sx={{ zIndex: -1 }} />
+                  <MoreVertIcon sx={{ zIndex: 0 }} />
                 </IconButton>
               </Box>
 

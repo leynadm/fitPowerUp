@@ -42,7 +42,7 @@ function Home() {
 
     // Check if there are any error while opening the Db
     request.onerror = function (event) {
-      console.error("And error occured with IndexedDb");
+      console.error("And error occured with IndexedDB");
       console.error(event);
     };
 
@@ -60,6 +60,7 @@ function Home() {
       store.createIndex("exercise_name_and_category", ["name", "category"], {
         unique: false,
       });
+
 
       // create second table with its indexes
       const user_entries = db.createObjectStore("user-exercises-entries", {
@@ -81,7 +82,46 @@ function Home() {
         unique: false,
       });
       user_entries.createIndex("exercise_time", "time", { unique: false });
+      user_entries.createIndex("exercise_pr", "pr", { unique: false });
       user_entries.createIndex("exercise_name_and_date", ["exercise", "date"], {
+        unique: false,
+      });
+      user_entries.createIndex("exercise_name_and_pr", ["exercise", "pr"], {
+        unique: false,
+      });
+      user_entries.createIndex("exercise_name_and_weight", ["exercise", "weight"], {
+        unique: false,
+      });
+      user_entries.createIndex("exercise_name_and_reps", ["exercise", "reps"], {
+        unique: false,
+      });
+
+
+      // create the record table with its indexes
+      const user_records = db.createObjectStore("user-records-entries", {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+
+      user_records.createIndex("exercise_date", "date", { unique: false });
+      user_records.createIndex("exercise_name", "exercise", { unique: false });
+      user_records.createIndex("exercise_category", "category", {
+        unique: false,
+      });
+      user_records.createIndex("exercise_weight", "weight", { unique: false });
+      user_records.createIndex("exercise_reps", "reps", { unique: false });
+      user_records.createIndex("exercise_distance", "distance", {
+        unique: false,
+      });
+      user_records.createIndex("exercise_distance_unit", "distance_unit", {
+        unique: false,
+      });
+      user_records.createIndex("exercise_time", "time", { unique: false });
+      user_records.createIndex("exercise_pr", "pr", { unique: false });
+      user_records.createIndex("exercise_name_and_date", ["exercise", "date"], {
+        unique: false,
+      });
+      user_records.createIndex("exercise_name_and_pr", ["exercise", "pr"], {
         unique: false,
       });
 
@@ -226,7 +266,7 @@ function Home() {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100vh",backgroundColor:"aliceblue"
       }}
     >
       <Navbar />
@@ -235,7 +275,6 @@ function Home() {
           path="/*"
           element={
             <Workout
-              
               setExercisesCategories={setExercisesCategories}
               existingExercises={existingExercises}
               selectedCategoryExercises={selectedCategoryExercises}

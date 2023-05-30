@@ -55,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Friends() {
   return (
     <Box sx={{ flexGrow: 1, paddingBottom: "56px" }}>
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
         <Toolbar>
           <IconButton
             size="large"

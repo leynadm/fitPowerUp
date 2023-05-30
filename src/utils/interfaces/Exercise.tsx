@@ -10,6 +10,7 @@ interface Exercise {
     comment?:string
     weekday?:string
     id:number
+    is_pr?:boolean
     // Add other properties here as per your exercise object structure
   }
 

@@ -29,22 +29,21 @@ function Navbar() {
       <CssBaseline />
 
       <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+        sx={{ zIndex:9995, position: "fixed", bottom: 0, left: 0, right: 0,backgroundColor:"white" }}
         elevation={3}
       >
-        <BottomNavigation showLabels onChange={(event, newValue) => {}}>
+        <BottomNavigation sx={{backgroundColor:"white", zIndex:9999}} showLabels onChange={(event, newValue) => {}}>
           <BottomNavigationAction
             label="Workout Log"
             icon={<FitnessCenterIcon />}
             onClick={handleWorkoutClick}
-            sx={{
-              backgroundColor:"white"
-            }}
           />
           <BottomNavigationAction
             label="Your friends"
             icon={<PeopleIcon />}
             onClick={handleFriendsClick}
+            
+
           />
           <BottomNavigationAction
             label="Progress Level"

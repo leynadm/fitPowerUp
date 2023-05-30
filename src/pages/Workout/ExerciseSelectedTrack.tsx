@@ -15,20 +15,36 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import ValidationAlert from "../../components/ui/ValidationAlert";
 import Autocomplete from "@mui/material/Autocomplete";
 import formatTime from "../../utils/formatTime";
-import getExistingExercisesByName from "../../utils/CRUDFunctions/getExistingExercisesByName";
+import checkExercisePR from "../../utils/CRUDFunctions/checkExercisePR";
+import updateExerciseIsPrToFalse from "../../utils/CRUDFunctions/updateExerciseIsPrToFalse";
+import findMaxReps from "../../utils/CRUDFunctions/findMaxReps";
+import findMaxWeight from "../../utils/CRUDFunctions/findMaxWeight";
 
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
   unitsSystem: string;
-  weightIncrementPreference:number
+  weightIncrementPreference: number;
+}
+
+interface ExerciseRecord {
+  date: string;
+  category: string;
+  distance: number;
+  distance_unit: string;
+  exercise: string;
+  id: number;
+  reps: number;
+  time: number;
+  weight: number;
+  is_pr: boolean;
 }
 
 function ExerciseSelectedTrack({
   selectedExercise,
   todayDate,
   unitsSystem,
-  weightIncrementPreference
+  weightIncrementPreference,
 }: ExerciseSelectionProps) {
   const [weightValue, setWeightValue] = useState(0);
   const [repsValue, setRepsValue] = useState(0);
@@ -55,30 +71,28 @@ function ExerciseSelectedTrack({
     distance: distanceValue,
     distance_unit: distanceUnit,
     time: timeValue,
+    is_pr: false,
   });
 
   useEffect(() => {
     getExistingExercises();
   }, []);
 
-
-  useEffect(()=>{
-
+  useEffect(() => {
     if (userUpdatedExerciseData) {
       return;
     }
-    
+
     if (existingExercises.length > 0) {
       const lastExercise = existingExercises[existingExercises.length - 1];
       setWeightValue(lastExercise.weight);
       setRepsValue(lastExercise.reps);
       setDistanceValue(lastExercise.distance);
       setTimeValue(lastExercise.time);
-      
-      setUserUpdatedExerciseData(true);
-    } 
 
-  },[existingExercises])
+      setUserUpdatedExerciseData(true);
+    }
+  }, [existingExercises]);
 
   useEffect(() => {
     setEntryToSave((prevState) => ({
@@ -88,6 +102,7 @@ function ExerciseSelectedTrack({
       distance: distanceValue,
       time: timeValue,
       distance_unit: distanceUnit,
+      is_pr: false,
     }));
   }, [weightValue, repsValue, distanceValue, timeValue, distanceUnit]);
 
@@ -188,62 +203,206 @@ function ExerciseSelectedTrack({
     }
   }
 
-  function saveExerciseEntry() {
-    const checkEntriesValidity = exerciseFieldValidation();
+  async function saveExerciseEntry() {
+    try {
+      const prResult: any = await checkExercisePR(selectedExercise.name);
+      console.log("logging promise result");
+      console.log(prResult);
 
-    if (checkEntriesValidity) {
-      setShowAlert(true);
+      const checkEntriesValidity = exerciseFieldValidation();
 
-      // Clear previous timeout if it exists
-      if (alertTimeoutId) {
-        clearTimeout(alertTimeoutId);
+      if (checkEntriesValidity) {
+        setShowAlert(true);
+
+        // Clear previous timeout if it exists
+        if (alertTimeoutId) {
+          clearTimeout(alertTimeoutId);
+        }
+
+        // Set new timeout to hide the alert after 2 seconds
+        const timeoutId = setTimeout(() => {
+          setShowAlert(false);
+        }, 2000);
+
+        setAlertTimeoutId(timeoutId);
+        return;
       }
 
-      // Set new timeout to hide the alert after 2 seconds
-      const timeoutId = setTimeout(() => {
-        setShowAlert(false);
-      }, 2000);
+      const request = indexedDB.open("fitScouterDb", 1);
 
-      setAlertTimeoutId(timeoutId);
-      return;
-    }
-
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    request.onupgradeneeded = (e) => {
-      const db = (e.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains("user_exercises-entries")) {
-        const userEntries = db.createObjectStore("user_exercises-entries", {
-          keyPath: "id",
-          autoIncrement: true,
-        });
-      }
-    };
-
-    request.onsuccess = function () {
-      const db = request.result;
-
-      console.log(weightValue, repsValue, distanceValue, timeValue);
-      const userEntryTransaction = db.transaction(
-        "user-exercises-entries",
-        "readwrite"
-      );
-
-      const userEntryTransactionStore = userEntryTransaction.objectStore(
-        "user-exercises-entries"
-      );
-
-      userEntryTransactionStore.add(entryToSave);
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-        getExistingExercises();
+      request.onupgradeneeded = (e) => {
+        const db = (e.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains("user_exercises-entries")) {
+          const userEntries = db.createObjectStore("user_exercises-entries", {
+            keyPath: "id",
+            autoIncrement: true,
+          });
+        }
       };
-    };
 
-    request.onerror = function () {
-      console.log("found error:");
-    };
+      request.onsuccess = function () {
+        const db = request.result;
+
+        console.log(weightValue, repsValue, distanceValue, timeValue);
+        const userEntryTransaction = db.transaction(
+          "user-exercises-entries",
+          "readwrite"
+        );
+
+        const userEntryTransactionStore = userEntryTransaction.objectStore(
+          "user-exercises-entries"
+        );
+
+        if (prResult === null) {
+          const transaction = db.transaction(
+            "user-records-entries",
+            "readwrite"
+          );
+          const objectStore = transaction.objectStore("user-records-entries");
+          entryToSave.is_pr = true;
+          userEntryTransactionStore.add(entryToSave);
+          objectStore.add(entryToSave);
+        } else {
+          if (entryToSave.weight > prResult.weight) {
+            prResult.weight = entryToSave.weight;
+            prResult.reps = entryToSave.reps;
+            entryToSave.is_pr = true;
+            userEntryTransactionStore.add(entryToSave);
+
+            const transaction = db.transaction(
+              "user-records-entries",
+              "readwrite"
+            );
+            const objectStore = transaction.objectStore("user-records-entries");
+            const index = objectStore.index("exercise_name");
+            updateExerciseIsPrToFalse(
+              selectedExercise.name,
+              entryToSave.weight,
+              entryToSave.reps
+            );
+            const getRequest = index.get(selectedExercise.name);
+            getRequest.onsuccess = function () {
+              const existingRecord = getRequest.result;
+              if (existingRecord) {
+                existingRecord.weight = entryToSave.weight;
+                const updateRequest = objectStore.put(existingRecord);
+                updateRequest.onsuccess = function () {
+                  console.log("PR updated successfully");
+                };
+                updateRequest.onerror = function () {
+                  console.log("Failed to update PR");
+                };
+              }
+            };
+          } else if (entryToSave.reps > prResult.reps) {
+            prResult.weight = entryToSave.weight;
+            prResult.reps = entryToSave.reps;
+            entryToSave.is_pr = true;
+            userEntryTransactionStore.add(entryToSave);
+
+            const transaction = db.transaction(
+              "user-records-entries",
+              "readwrite"
+            );
+            const objectStore = transaction.objectStore("user-records-entries");
+            const index = objectStore.index("exercise_name");
+            updateExerciseIsPrToFalse(
+              selectedExercise.name,
+              entryToSave.weight,
+              entryToSave.reps
+            );
+            const getRequest = index.get(selectedExercise.name);
+            getRequest.onsuccess = function () {
+              const existingRecord = getRequest.result;
+              if (existingRecord) {
+                existingRecord.reps = entryToSave.reps;
+                const updateRequest = objectStore.put(existingRecord);
+                updateRequest.onsuccess = function () {
+                  console.log("PR updated successfully");
+                };
+                updateRequest.onerror = function () {
+                  console.log("Failed to update PR");
+                };
+              }
+            };
+          } else {
+            entryToSave.is_pr = false;
+            userEntryTransactionStore.add(entryToSave);
+          }
+        }
+
+        userEntryTransaction.oncomplete = function () {
+          db.close();
+          getExistingExercises();
+        };
+      };
+
+      request.onerror = function () {
+        console.log("found error:");
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  async function deleteEntry(id: number, exerciseName: string) {
+  
+  
+    try{
+      const prResult: any = await checkExercisePR(selectedExercise.name);
+      
+      const maxWeightResult:any = await findMaxWeight(selectedExercise.name,id);
+/* 
+      const maxRepsResult:any = await findMaxReps(selectedExercise.name);
+             */
+      
+      
+      const request = indexedDB.open("fitScouterDb", 1);
+      console.log('inside delete with async')
+       
+      console.log(maxWeightResult)
+   /*
+      console.log(maxRepsResult)
+          */
+      request.onsuccess = function (event) {
+        const db = (event.target as IDBRequest).result;
+  
+        const userEntryTransaction = db.transaction(
+          "user-exercises-entries",
+          "readwrite"
+        );
+  
+        const userEntryTransactionStore = userEntryTransaction.objectStore(
+          "user-exercises-entries"
+        );
+        console.log(userEntryTransactionStore);
+  
+        const primaryKeyRequest = userEntryTransactionStore.delete(id);
+          console.log('delete exercise now:')
+        primaryKeyRequest.onsuccess = function () { 
+          console.log("Entry deleted successfully");
+          console.log("logging primaryKeyRequest:");
+          console.log(primaryKeyRequest);
+          getExistingExercises(); // Update the list of existing exercises
+        };
+  
+        primaryKeyRequest.onerror = function () {
+          console.log("Error deleting entry");
+        };
+  
+        userEntryTransaction.oncomplete = function () {
+          db.close();
+        };
+      };
+  
+      request.onerror = function () {
+        console.log("Error opening database");
+      };
+    } catch (error) {
+      console.error(error);
+    }
+    
   }
 
   function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -294,7 +453,9 @@ function ExerciseSelectedTrack({
     setUserDataInput(true);
     switch (selectedExercise.measurement[index]) {
       case "weight":
-        setWeightValue((prevWeight) => (prevWeight > 0 ? prevWeight - weightIncrementPreference : 0));
+        setWeightValue((prevWeight) =>
+          prevWeight > 0 ? prevWeight - weightIncrementPreference : 0
+        );
         break;
       case "reps":
         setRepsValue((prevReps) => (prevReps > 0 ? prevReps - 1 : 0));
@@ -309,46 +470,6 @@ function ExerciseSelectedTrack({
     setRepsValue(0);
     setDistanceValue(0);
     setTimeValue(0);
-  }
-
-  function deleteEntry(id: number) {
-    console.log("Logging the ID of the entry:");
-    console.log(id);
-
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    request.onsuccess = function (event) {
-      const db = (event.target as IDBRequest).result;
-
-      const userEntryTransaction = db.transaction(
-        "user-exercises-entries",
-        "readwrite"
-      );
-
-      const userEntryTransactionStore = userEntryTransaction.objectStore(
-        "user-exercises-entries"
-      );
-      console.log(userEntryTransactionStore);
-
-      const primaryKeyRequest = userEntryTransactionStore.delete(id);
-
-      primaryKeyRequest.onsuccess = function () {
-        console.log("Entry deleted successfully");
-        getExistingExercises(); // Update the list of existing exercises
-      };
-
-      primaryKeyRequest.onerror = function () {
-        console.log("Error deleting entry");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-
-    request.onerror = function () {
-      console.log("Error opening database");
-    };
   }
 
   const handleTimeFieldsChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -429,7 +550,7 @@ function ExerciseSelectedTrack({
                 alignItems: "center",
                 paddingLeft: "0.5rem",
                 paddingRight: "0.5rem",
-                width:"100%"
+                width: "100%",
               }}
             >
               <Typography
@@ -445,7 +566,7 @@ function ExerciseSelectedTrack({
                 {measurementType.toLocaleUpperCase()}
               </Typography>
 
-              <Box sx={{ display: "flex", gap: "8px", width:"100%" }}>
+              <Box sx={{ display: "flex", gap: "8px", width: "100%" }}>
                 <TextField
                   id={measurementType}
                   value={distanceValue}
@@ -454,7 +575,7 @@ function ExerciseSelectedTrack({
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  sx={{ textAlign: "center", width:"100%" }}
+                  sx={{ textAlign: "center", width: "100%" }}
                   variant="filled"
                   onChange={handleTextFieldChange}
                 />
@@ -471,7 +592,6 @@ function ExerciseSelectedTrack({
                   }}
                   disableClearable
                   renderInput={(params) => <TextField {...params} />}
-
                 />
               </Box>
             </Box>
@@ -578,6 +698,7 @@ function ExerciseSelectedTrack({
               }}
             >
               <Button
+                sx={{ backgroundColor: "white" }}
                 variant="outlined"
                 onClick={() => handleSubtractButtonClick(index)}
               >
@@ -600,6 +721,7 @@ function ExerciseSelectedTrack({
               />
 
               <Button
+                sx={{ backgroundColor: "white" }}
                 variant="outlined"
                 onClick={() => handleAddButtonClick(index)}
               >
@@ -659,21 +781,34 @@ function ExerciseSelectedTrack({
               >
                 <AddCommentIcon
                   sx={{
-                    zIndex: -1,
+                    zIndex: 0,
                   }}
                 />
               </IconButton>
 
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                disabled // Placeholder element
-              >
-                <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
-              </IconButton>
+              {exercise.is_pr ? (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                </IconButton>
+              ) : (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                </IconButton>
+              )}
             </Box>
 
             <Box
@@ -684,19 +819,17 @@ function ExerciseSelectedTrack({
                 justifyContent: "center",
               }}
             >
-              {exercise.weight !== 0 ? (
+              {exercise.weight !== 0 && (
                 <Typography>
-                  {exercise.weight.toFixed(2)}{" "}
-                  {unitsSystem === "metric" ? "kgs" : "lbs"}
+                  {`${exercise.weight.toFixed(2)} ${
+                    unitsSystem === "metric" ? "kgs" : "lbs"
+                  }`}
                 </Typography>
-              ) : (
-                <Typography></Typography>
               )}
 
               {exercise.reps !== 0 && (
                 <Typography>{exercise.reps} reps</Typography>
               )}
-                <Typography></Typography>
 
               {exercise.distance !== 0 && (
                 <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
@@ -714,11 +847,11 @@ function ExerciseSelectedTrack({
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={() => deleteEntry(exercise.id)}
+              onClick={() => deleteEntry(exercise.id, exercise.exercise)}
             >
               <DeleteIcon
                 sx={{
-                  zIndex: -1,
+                  zIndex: 0,
                 }}
               />
             </IconButton>

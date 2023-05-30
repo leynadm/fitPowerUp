@@ -177,7 +177,7 @@ function ExerciseSelectedHistory({
                           handleViewCommentModalVisibility(exercise.id)
                         }
                       >
-                        <CommentIcon sx={{zIndex:-1}} />
+                        <CommentIcon sx={{ zIndex: 0 }} />
                       </IconButton>
                     ) : (
                       <IconButton
@@ -192,16 +192,29 @@ function ExerciseSelectedHistory({
                       </IconButton>
                     )}
 
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      color="inherit"
-                      disabled // Placeholder element
-                    >
-                      <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
-                    </IconButton>
+                    {exercise.is_pr ? (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                      </IconButton>
+                    )}
                   </Box>
                   <Box
                     sx={{
@@ -210,26 +223,27 @@ function ExerciseSelectedHistory({
                       justifyItems: "center",
                     }}
                   >
-                    {exercise.weight !== 0 ? (
+                    {exercise.weight !== 0 && (
                       <Typography>
-                        {exercise.weight.toFixed(2)}{" "}
-                        {unitsSystem === "metric" ? "kgs" : "lbs"}
+                        {`${exercise.weight.toFixed(2)} ${
+                          unitsSystem === "metric" ? "kgs" : "lbs"
+                        }`}
                       </Typography>
-                    ) : (
-                      <Typography></Typography>
                     )}
-                <Typography></Typography>
+
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}
-                    
-                    {exercise.distance !== 0 && (
-                          <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                        )}
 
-                        {exercise.time !== 0 && (
-                          <Typography>{exercise.time !== 0 ? formatTime(exercise.time) : ""}</Typography>
-                        )}
+                    {exercise.distance !== 0 && (
+                      <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                    )}
+
+                    {exercise.time !== 0 && (
+                      <Typography>
+                        {exercise.time !== 0 ? formatTime(exercise.time) : ""}
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               ))}

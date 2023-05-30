@@ -187,7 +187,7 @@ function Workout({
   }
 
   return (
-    <Box sx={{ paddingBottom: "56px" }}>
+    <Box sx={{ paddingBottom: "56px", backgroundColor:"aliceblue" }}>
       <Box
         sx={{
           display: "flex",

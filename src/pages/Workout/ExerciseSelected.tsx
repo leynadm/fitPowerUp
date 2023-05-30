@@ -60,7 +60,7 @@ function ExerciseSelected({
       
       <RestTimer showRestTimer={showRestTimer} setShowRestTimer={setShowRestTimer}/>
       
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <LibraryBooksIcon

@@ -16,6 +16,7 @@ function App() {
         <IndexedDBProvider>
         <Router>
           <Routes>
+
             {/* If the user is signed in and tries to access login, reroute him to home */}
             <Route element={<AuthRoute type="home" />}>
             <Route path="/home/*" element={<Home />} />

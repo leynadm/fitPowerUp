@@ -262,7 +262,7 @@ function NewWorkout({
         setOpenViewCommentModal={setOpenViewCommentModal}
         exerciseCommentId={exerciseCommentId}
       />
-      <AppBar position="fixed" style={{ top: 0, width: "100%" }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FitnessCenterIcon
@@ -480,15 +480,9 @@ function NewWorkout({
                   key={index}
                   sx={{
                     borderRadius: "4px",
-
-                    boxShadow:
-                      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
-
-                    /*  
-                    boxShadow:
-                      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
-                    */
+                    boxShadow: 1,
                     margin: "16px",
+                    backgroundColor: "white",
                   }}
                   onClick={() => handleSetClick(group.name)}
                 >
@@ -499,14 +493,11 @@ function NewWorkout({
                     {group.name.toLocaleUpperCase()}
                   </Typography>
 
-                  <Divider sx={{ backgroundColor: "lightblue" }} />
+                  <Divider sx={{ backgroundColor: "aliceblue" }} />
                   {group.exercises.map((exercise, exerciseIndex) => (
                     <Box
                       key={exerciseIndex}
                       sx={{
-                        /* 
-                        display: "flex",
-                         */
                         display: "grid",
                         gridAutoFlow: "column",
                         gridTemplateColumns: "1fr 1fr 4fr",
@@ -528,7 +519,7 @@ function NewWorkout({
                         >
                           <CommentIcon
                             sx={{
-                              zIndex: -1,
+                              zIndex: 0,
                             }}
                           />
                         </IconButton>
@@ -545,25 +536,42 @@ function NewWorkout({
                         </IconButton>
                       )}
 
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                        disabled // Placeholder element
-                      >
-                        <EmojiEventsIcon sx={{ opacity: 0, zIndex: -1 }} />
-                      </IconButton>
+                      {exercise.is_pr ? (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                        </IconButton>
+                      )}
 
                       <Box
                         sx={{
                           display: "grid",
+
                           gridTemplateColumns: "1fr 1fr",
+                          alignItems: "center",
+                          justifyItems: "center",
                           width: "100%",
                           justifyContent: "space-evenly",
                         }}
                       >
+                        {/* 
                         {exercise.weight !== 0 ? (
                           <Typography>
                             {exercise.weight.toFixed(2)}{" "}
@@ -573,10 +581,29 @@ function NewWorkout({
                           <Typography></Typography>
                         )}
 
+              
+                        {exercise.reps !== 0 ? (
+                          <Typography>
+                            {exercise.reps}
+                            
+                          </Typography>
+                        ) : (
+                          <Typography></Typography>
+                        )}
+                         */}
+
+                        {exercise.weight !== 0 && (
+                          <Typography>
+                            {`${exercise.weight.toFixed(2)} ${
+                              unitsSystem === "metric" ? "kgs" : "lbs"
+                            }`}
+                          </Typography>
+                        )}
+
                         {exercise.reps !== 0 && (
                           <Typography>{exercise.reps} reps</Typography>
                         )}
-                        <Typography></Typography>
+
                         {exercise.distance !== 0 && (
                           <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                         )}
@@ -588,7 +615,6 @@ function NewWorkout({
                               : ""}
                           </Typography>
                         )}
-
                       </Box>
 
                       <Divider />
