@@ -263,8 +263,7 @@ function ExerciseSelectedTrack({
           userEntryTransactionStore.add(entryToSave);
           objectStore.add(entryToSave);
         } else {
-          if (entryToSave.weight > prResult.weight) {
-            prResult.weight = entryToSave.weight;
+          if (entryToSave.reps > prResult.reps && entryToSave.weight>prResult.weight) {
             prResult.reps = entryToSave.reps;
             entryToSave.is_pr = true;
             userEntryTransactionStore.add(entryToSave);
@@ -284,6 +283,7 @@ function ExerciseSelectedTrack({
             getRequest.onsuccess = function () {
               const existingRecord = getRequest.result;
               if (existingRecord) {
+                existingRecord.reps = entryToSave.reps;
                 existingRecord.weight = entryToSave.weight;
                 const updateRequest = objectStore.put(existingRecord);
                 updateRequest.onsuccess = function () {
@@ -295,7 +295,6 @@ function ExerciseSelectedTrack({
               }
             };
           } else if (entryToSave.reps > prResult.reps) {
-            prResult.weight = entryToSave.weight;
             prResult.reps = entryToSave.reps;
             entryToSave.is_pr = true;
             userEntryTransactionStore.add(entryToSave);
@@ -325,6 +324,38 @@ function ExerciseSelectedTrack({
                 };
               }
             };
+          } else if (entryToSave.weight > prResult.weight) {
+            prResult.weight = entryToSave.weight;
+            entryToSave.is_pr = true;
+            userEntryTransactionStore.add(entryToSave);
+            console.log('currently checking if entryToSave.weight > prResult.weight')
+            console.log(entryToSave.weight + " > " + prResult.weight)
+            const transaction = db.transaction(
+              "user-records-entries",
+              "readwrite"
+            );
+            const objectStore = transaction.objectStore("user-records-entries");
+            const index = objectStore.index("exercise_name");
+            updateExerciseIsPrToFalse(
+              selectedExercise.name,
+              entryToSave.weight,
+              entryToSave.reps
+            );
+            const getRequest = index.get(selectedExercise.name);
+            getRequest.onsuccess = function () {
+              const existingRecord = getRequest.result;
+              if (existingRecord) {
+                existingRecord.weight = entryToSave.weight;
+                const updateRequest = objectStore.put(existingRecord);
+                updateRequest.onsuccess = function () {
+                  console.log("PR updated successfully");
+                };
+                updateRequest.onerror = function () {
+                  console.log("Failed to update PR");
+                };
+              }
+            };
+        
           } else {
             entryToSave.is_pr = false;
             userEntryTransactionStore.add(entryToSave);
@@ -345,66 +376,147 @@ function ExerciseSelectedTrack({
     }
   }
 
-
   async function deleteEntry(id: number, exerciseName: string) {
-  
-  
-    try{
+    try {
       const prResult: any = await checkExercisePR(selectedExercise.name);
-      
-      const maxWeightResult:any = await findMaxWeight(selectedExercise.name,id);
-/* 
-      const maxRepsResult:any = await findMaxReps(selectedExercise.name);
-             */
-      
-      
+
+      const weightResult = await findMaxWeight(selectedExercise.name, id);
+      const maxWeightResult: any = weightResult.maxWeight;
+      const weightEntryId: number = weightResult.id;
+
+      const repsResult = await findMaxReps(selectedExercise.name, id);
+      const maxRepsResult: any = repsResult.maxReps;
+      const repsEntryId: number = repsResult.id;
+
       const request = indexedDB.open("fitScouterDb", 1);
-      console.log('inside delete with async')
-       
-      console.log(maxWeightResult)
-   /*
-      console.log(maxRepsResult)
-          */
+      console.log("inside delete with async");
+
+      console.log(maxWeightResult);
+      console.log(maxRepsResult);
+
       request.onsuccess = function (event) {
         const db = (event.target as IDBRequest).result;
-  
+
         const userEntryTransaction = db.transaction(
           "user-exercises-entries",
           "readwrite"
         );
-  
+
         const userEntryTransactionStore = userEntryTransaction.objectStore(
           "user-exercises-entries"
         );
-        console.log(userEntryTransactionStore);
-  
-        const primaryKeyRequest = userEntryTransactionStore.delete(id);
-          console.log('delete exercise now:')
-        primaryKeyRequest.onsuccess = function () { 
-          console.log("Entry deleted successfully");
-          console.log("logging primaryKeyRequest:");
-          console.log(primaryKeyRequest);
-          getExistingExercises(); // Update the list of existing exercises
+
+        const getRecordRequest = userEntryTransactionStore.get(id);
+
+        getRecordRequest.onsuccess = function (event: any) {
+          const record = (event.target as IDBRequest).result;
+          console.log("Record before deleting:", record);
+
+          // Access the properties of the record
+          const weight = record.weight;
+          const reps = record.reps;
+
+          const userRecordTransaction = db.transaction(
+            "user-records-entries",
+            "readwrite"
+          );
+          const userRecordObjectStore = userRecordTransaction.objectStore(
+            "user-records-entries"
+          );
+
+          const userRecordIndex = userRecordObjectStore.index("exercise_name");
+
+          const getExerciseRecord = userRecordIndex.get(selectedExercise.name);
+
+          getExerciseRecord.onsuccess = function () {
+            const existingRecord = getExerciseRecord.result;
+            if (existingRecord) {
+              if (existingRecord.weight >= weight) {
+                existingRecord.weight = maxWeightResult;
+              }
+              if (existingRecord.reps >= reps) {
+                existingRecord.reps = maxRepsResult;
+              }
+              const updateRequest = userRecordObjectStore.put(existingRecord);
+              updateRequest.onsuccess = function () {
+                console.log("PR updated successfully");
+              };
+              updateRequest.onerror = function () {
+                console.log("Failed to update PR");
+              };
+            }
+          };
+
+          const weightEntryRequest =
+            userEntryTransactionStore.get(weightEntryId);
+          const repsEntryRequest = userEntryTransactionStore.get(repsEntryId);
+
+          console.log("logging the requests:");
+          console.log(weightEntryRequest);
+          console.log(repsEntryRequest);
+          weightEntryRequest.onsuccess = function (event: any) {
+            const weightEntry = (event.target as IDBRequest).result;
+
+            if (weightEntry !== undefined && weightEntry.weight <= weight) {
+              weightEntry.is_pr = true;
+              const updateWeightEntryRequest =
+                userEntryTransactionStore.put(weightEntry);
+              updateWeightEntryRequest.onsuccess = function () {
+                console.log("Weight Entry updated successfully");
+              };
+              updateWeightEntryRequest.onerror = function () {
+                console.log("Failed to update Weight Entry");
+              };
+            }
+          };
+
+          repsEntryRequest.onsuccess = function (event: any) {
+            const repsEntry = (event.target as IDBRequest).result;
+            console.log("Reps Entry before updating:", repsEntry);
+
+            if (repsEntry !== undefined && repsEntry.reps <= reps) {
+              repsEntry.is_pr = true;
+              const updateRepsEntryRequest =
+                userEntryTransactionStore.put(repsEntry);
+              updateRepsEntryRequest.onsuccess = function () {
+                console.log("Reps Entry updated successfully");
+              };
+              updateRepsEntryRequest.onerror = function () {
+                console.log("Failed to update Reps Entry");
+              };
+            }
+          };
+
+          Promise.all([weightEntryRequest, repsEntryRequest])
+            .then(() => {
+              const primaryKeyRequest = userEntryTransactionStore.delete(id);
+
+              primaryKeyRequest.onsuccess = function () {
+                getExistingExercises(); // Update the list of existing exercises
+              };
+
+              primaryKeyRequest.onerror = function () {
+                console.log("Error deleting entry");
+              };
+
+              userEntryTransaction.oncomplete = function () {
+                db.close();
+              };
+            })
+            .catch((error) => {
+              console.error("An error occurred:", error);
+            });
         };
-  
-        primaryKeyRequest.onerror = function () {
-          console.log("Error deleting entry");
+
+        request.onerror = function () {
+          console.log("Error opening database");
         };
-  
-        userEntryTransaction.oncomplete = function () {
-          db.close();
-        };
-      };
-  
-      request.onerror = function () {
-        console.log("Error opening database");
       };
     } catch (error) {
       console.error(error);
     }
-    
   }
-
+  
   function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
 
