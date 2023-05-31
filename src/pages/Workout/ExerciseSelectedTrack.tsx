@@ -263,7 +263,7 @@ function ExerciseSelectedTrack({
           userEntryTransactionStore.add(entryToSave);
           objectStore.add(entryToSave);
         } else {
-          if (entryToSave.reps > prResult.reps && entryToSave.weight>prResult.weight) {
+          if (entryToSave.reps > prResult.reps && entryToSave.weight>prResult.weight && entryToSave.reps!==0 && entryToSave.weight!==0) {
             prResult.reps = entryToSave.reps;
             entryToSave.is_pr = true;
             userEntryTransactionStore.add(entryToSave);
@@ -294,7 +294,7 @@ function ExerciseSelectedTrack({
                 };
               }
             };
-          } else if (entryToSave.reps > prResult.reps) {
+          } else if (entryToSave.reps > prResult.reps && entryToSave.reps!==0) {
             prResult.reps = entryToSave.reps;
             entryToSave.is_pr = true;
             userEntryTransactionStore.add(entryToSave);
@@ -324,7 +324,7 @@ function ExerciseSelectedTrack({
                 };
               }
             };
-          } else if (entryToSave.weight > prResult.weight) {
+          } else if (entryToSave.weight > prResult.weight && entryToSave.weight!==0) {
             prResult.weight = entryToSave.weight;
             entryToSave.is_pr = true;
             userEntryTransactionStore.add(entryToSave);

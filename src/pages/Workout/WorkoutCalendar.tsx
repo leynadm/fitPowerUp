@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -15,16 +15,23 @@ import getWorkoutDates from "../../utils/CRUDFunctions/getWorkoutDates";
 import CalendarWorkoutModal from "../../components/ui/CalendarWorkoutModal";
 interface WorkoutProps {
   todayDate: Date | undefined;
+  setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
+  unitsSystem: string;
 }
 
-function WorkoutCalendar({todayDate}:WorkoutProps) {
+function WorkoutCalendar({
+  todayDate,
+  setTodayDate,
+  unitsSystem,
+}: WorkoutProps) {
   const [uniqueDates, setUniqueDates] = useState<string[]>([]);
   const [initialValue, setInitialValue] = useState(dayjs(todayDate));
+  const [calendarWorkoutModalVisibility, setCalendarWorkoutModalVisibility] =
+    useState(false);
 
   useEffect(() => {
     getWorkoutDates()
       .then((dates) => {
-        console.log(dates);
         setUniqueDates(dates as string[]);
       })
       .catch((error) => {
@@ -43,17 +50,16 @@ function WorkoutCalendar({todayDate}:WorkoutProps) {
         overlap="circular"
         badgeContent={isUniqueDate ? "✔️" : undefined}
       >
-        <PickersDay {...props} 
-          onClick={() => handleDayClick(day)}
-        />
+        <PickersDay {...props} onClick={() => handleDayClick(day)} />
       </Badge>
     );
   }
 
   const handleDayClick = (clickedDate: Dayjs) => {
-    console.log("Clicked date:", clickedDate.format("YYYY-MM-DD"));
+    setTodayDate(clickedDate.toDate());
+    setCalendarWorkoutModalVisibility(true);
   };
-  
+
   return (
     <Box>
       <AppBar position="fixed" style={{ top: 0 }}>
@@ -113,8 +119,13 @@ function WorkoutCalendar({todayDate}:WorkoutProps) {
         />
       </LocalizationProvider>
 
-      <CalendarWorkoutModal/>
+      <CalendarWorkoutModal
+        unitsSystem={unitsSystem}
+        calendarWorkoutModalVisibility={calendarWorkoutModalVisibility}
+        setCalendarWorkoutModalVisibility={setCalendarWorkoutModalVisibility}
+        todayDate={todayDate}
+      />
     </Box>
   );
 }
-export default WorkoutCalendar
+export default WorkoutCalendar;

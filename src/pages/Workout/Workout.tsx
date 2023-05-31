@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useRef, 
-} from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -14,7 +8,7 @@ import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
 import WorkoutCalendar from "./WorkoutCalendar";
-
+import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   selectedCategoryExercises: {
@@ -50,8 +44,9 @@ function Workout({
   }>({ category: "", name: "", measurement: [] });
 
   const [unitsSystem, setUnitsSystem] = useState("");
-  const [weightIncrementPreference, setWeightIncrementPreference] = useState(2.5);
-  
+  const [weightIncrementPreference, setWeightIncrementPreference] =
+    useState(2.5);
+
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
@@ -62,11 +57,10 @@ function Workout({
 
   useEffect(() => {
     if (todayDate) {
-      getExercisesByDate(todayDate);
+      getExercisesByDate(todayDate, setExistingExercises);
     }
   }, [todayDate]);
 
-  
   /* Use this useEffect to force requerying of data and update state when user navigates with back button */
   useEffect(() => {
     const handlePopstate = () => {
@@ -82,10 +76,10 @@ function Workout({
 
   function handleEffectLogic() {
     if (todayDate) {
-      getExercisesByDate(todayDate);
+      getExercisesByDate(todayDate, setExistingExercises);
       getDataPreferences();
     }
-  } 
+  }
 
   function getDataPreferences() {
     const request = indexedDB.open("fitScouterDb", 1);
@@ -104,91 +98,22 @@ function Workout({
 
       getRequest.onsuccess = function (event) {
         const record = getRequest.result;
-        console.log('logging the record inside getDataPreferences')
-        console.log(record)
+        console.log("logging the record inside getDataPreferences");
+        console.log(record);
         if (record) {
           // Extract the unitsSystem value from the record
           const { unitsSystem, defaultWeightIncrement } = record;
           setUnitsSystem(unitsSystem);
-          setWeightIncrementPreference(defaultWeightIncrement)
-          console.log('logging default weight increment:')
-          console.log(defaultWeightIncrement)
+          setWeightIncrementPreference(defaultWeightIncrement);
+          console.log("logging default weight increment:");
+          console.log(defaultWeightIncrement);
         }
       };
-    };
-  }
-
-  function getExercisesByDate(currentDate: Date) {
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    request.onsuccess = function () {
-      const db = request.result;
-
-      const userEntryTransaction = db.transaction(
-        "user-exercises-entries",
-        "readonly"
-      );
-
-      const userEntryTransactionStore = userEntryTransaction.objectStore(
-        "user-exercises-entries"
-      );
-
-      const dateIndex = userEntryTransactionStore.index("exercise_date");
-
-      const dateToQuery = currentDate;
-      console.log("logging dateToQuery: " + dateToQuery);
-      const range = IDBKeyRange.only(dateToQuery);
-
-      const exercisesRequest = dateIndex.openCursor(range);
-      const groupedExercisesByName: { [name: string]: Exercise[] } = {};
-
-      exercisesRequest.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-
-        if (cursor) {
-          const exercise = cursor.value;
-
-          // Find the group for the current exercise name, or create a new group if it doesn't exist
-          const group = groupedExercisesByName[exercise.exercise];
-          if (group) {
-            group.push(exercise);
-          } else {
-            groupedExercisesByName[exercise.exercise] = [exercise];
-          }
-
-          cursor.continue();
-        } else {
-          const groupedExercises: { name: string; exercises: Exercise[] }[] =
-            [];
-
-          // Create a group for each name and add exercises grouped by name
-          Object.keys(groupedExercisesByName).forEach((name) => {
-            groupedExercises.push({
-              name,
-              exercises: groupedExercisesByName[name],
-            });
-          });
-
-          setExistingExercises(groupedExercises);
-        }
-      };
-
-      exercisesRequest.onerror = function () {
-        console.error("Error retrieving existing exercises");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-
-    request.onerror = function () {
-      console.error("Error opening database");
     };
   }
 
   return (
-    <Box sx={{ paddingBottom: "56px", backgroundColor:"aliceblue" }}>
+    <Box sx={{ paddingBottom: "56px", backgroundColor: "aliceblue" }}>
       <Box
         sx={{
           display: "flex",
@@ -258,12 +183,25 @@ function Workout({
 
           <Route
             path="/settings"
-            element={<Settings unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} weightIncrementPreference={weightIncrementPreference} setWeightIncrementPreference={setWeightIncrementPreference}  />}
+            element={
+              <Settings
+                unitsSystem={unitsSystem}
+                setUnitsSystem={setUnitsSystem}
+                weightIncrementPreference={weightIncrementPreference}
+                setWeightIncrementPreference={setWeightIncrementPreference}
+              />
+            }
           />
 
           <Route
             path="/calendar"
-            element={<WorkoutCalendar todayDate={todayDate} />}
+            element={
+              <WorkoutCalendar
+                todayDate={todayDate}
+                setTodayDate={setTodayDate}
+                unitsSystem={unitsSystem}
+              />
+            }
           />
         </Routes>
       </Box>
