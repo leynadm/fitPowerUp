@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -15,6 +14,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import IconButton from "@mui/material/IconButton";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Divider from "@mui/material/Divider";
 import { auth } from "../../config/firebase";
@@ -125,6 +125,11 @@ function NewWorkout({
   const handleNewWorkout = () => {
     navigate("workout_categories");
   };
+
+  const handleCalendar = () => {
+    navigate("calendar");
+  };
+
 
   const handlePageClick = (page: string) => {
     handleCloseNavMenu();
@@ -329,6 +334,7 @@ function NewWorkout({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
+                  onClick={handleCalendar}
                 >
                   <CalendarMonthIcon sx={{ color: "white" }} />
                 </IconButton>

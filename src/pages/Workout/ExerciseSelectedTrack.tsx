@@ -457,7 +457,7 @@ function ExerciseSelectedTrack({
           weightEntryRequest.onsuccess = function (event: any) {
             const weightEntry = (event.target as IDBRequest).result;
 
-            if (weightEntry !== undefined && weightEntry.weight <= weight) {
+            if (weightEntry !== undefined && weightEntry.weight < weight) {
               weightEntry.is_pr = true;
               const updateWeightEntryRequest =
                 userEntryTransactionStore.put(weightEntry);
@@ -474,7 +474,7 @@ function ExerciseSelectedTrack({
             const repsEntry = (event.target as IDBRequest).result;
             console.log("Reps Entry before updating:", repsEntry);
 
-            if (repsEntry !== undefined && repsEntry.reps <= reps) {
+            if (repsEntry !== undefined && repsEntry.reps < reps) {
               repsEntry.is_pr = true;
               const updateRepsEntryRequest =
                 userEntryTransactionStore.put(repsEntry);

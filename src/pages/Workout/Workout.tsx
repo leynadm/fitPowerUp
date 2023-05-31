@@ -13,6 +13,7 @@ import ExercisesByCategory from "./ExercisesByCategory";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
+import WorkoutCalendar from "./WorkoutCalendar";
 
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -258,6 +259,11 @@ function Workout({
           <Route
             path="/settings"
             element={<Settings unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} weightIncrementPreference={weightIncrementPreference} setWeightIncrementPreference={setWeightIncrementPreference}  />}
+          />
+
+          <Route
+            path="/calendar"
+            element={<WorkoutCalendar todayDate={todayDate} />}
           />
         </Routes>
       </Box>

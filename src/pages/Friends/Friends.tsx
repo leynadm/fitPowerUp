@@ -9,7 +9,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Box } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-
+import UserWorkoutCard from "./UserWorkoutCard";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Friends() {
   return (
-    <Box sx={{ flexGrow: 1, paddingBottom: "56px" }}>
+    <Box sx={{ flexGrow: 1, paddingBottom: "56px", width:"100%", display:"flex",justifyContent:"center",alignItems:"center" }}>
       <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
         <Toolbar>
           <IconButton
@@ -86,33 +86,8 @@ function Friends() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ height: "100%" }}>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-        <Typography>My Text</Typography>
-
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="menu-appbar"
-          aria-haspopup="true"
-        >
-          <AdbIcon
-            sx={{
-              zIndex: -1,
-            }}
-          />
-        </IconButton>
+      <Box sx={{ height: "100%", display:"flex",flexDirection:"column", justifyContent:"center" }}>
+        <UserWorkoutCard/>
       </Box>
     </Box>
   );

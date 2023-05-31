@@ -1,5 +1,5 @@
 import React from "react";
-
+import Calendar from "../Workout/WorkoutCalendar"
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -9,7 +9,11 @@ import Container from "@mui/material/Container";
 import Box from '@mui/material/Box';
 function Progress() {
   return (
-    <Box  sx={{display: "grid", gridTemplateRows: "auto 1fr", height: "100vh"}}>
+    <Box        sx={{
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+    }}>
     <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -56,11 +60,8 @@ function Progress() {
       </Container>
     </AppBar>
     
-    <Box sx={{ overflow: "auto" }}>
-        <Typography sx={{alignSelf:"center",justifySelf:"center"}}>My text</Typography>
-    </Box>
-    
-    
+
+
     </Box>
   );
 }
