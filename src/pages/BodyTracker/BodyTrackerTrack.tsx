@@ -68,17 +68,6 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
           disableClearable
         />
 
-        <TextField
-          disabled
-          id="filled-disabled"
-          defaultValue="H"
-          variant="filled"
-          sx={{
-            paddingTop: "16px",
-            paddingLeft: "8px",
-            paddingRight: "8px",
-          }}
-        />
       </Box>
 
       <Box
