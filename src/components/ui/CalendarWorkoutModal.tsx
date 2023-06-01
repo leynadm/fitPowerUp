@@ -12,6 +12,7 @@ import formatTime from "../../utils/formatTime";
 import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
+import ViewCommentModal from "./ViewCommentModal";
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,
@@ -41,7 +42,6 @@ function CalendarWorkoutModal({
   const handleClose = () => setCalendarWorkoutModalVisibility(false);
 
   useEffect(() => {
-    console.log("logging date query inside calendarworkoutmodal");
     if (todayDate) {
       getExercisesByDate(todayDate, setWorkoutDateExercises);
     }
@@ -210,6 +210,7 @@ function CalendarWorkoutModal({
 
         <Box></Box>
       </Dialog>
+
     </Box>
   );
 }

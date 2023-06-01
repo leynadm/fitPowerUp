@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntries";
 import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
+import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
@@ -51,30 +52,28 @@ function ExercisesByCategory({
     navigate(`selected`);
   };
 
-  useEffect(()=>{
-
-  },[exercisesCategories])
+  useEffect(() => {}, [exercisesCategories]);
 
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState("");
-  const [categoryToRefresh, setCategoryToRefresh] = useState("")
+  const [categoryToRefresh, setCategoryToRefresh] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   function handleOptionsClick(
     event: React.MouseEvent<HTMLButtonElement>,
     exerciseName: string,
-    exerciseCategory:string
+    exerciseCategory: string
   ) {
     setAnchorEl(event.currentTarget);
 
     setExerciseToDelete(exerciseName);
-    setCategoryToRefresh(exerciseCategory)
-  } 
+    setCategoryToRefresh(exerciseCategory);
+  }
   const handleClose = () => {
     console.log("logging exerciseToDelete");
     console.log(exerciseToDelete);
     deleteExerciseEntries(exerciseToDelete);
-    handleCategoryClick(categoryToRefresh,setSelectedCategoryExercises)
+    handleCategoryClick(categoryToRefresh, setSelectedCategoryExercises);
     setAnchorEl(null);
   };
 
@@ -166,16 +165,9 @@ function ExercisesByCategory({
           </Toolbar>
         </Container>
       </AppBar>
-      {/* 
-      <TextField
-        id="standard-basic"
-        label="Look for an exercise"
-        variant="standard"
-        sx={{
-          width: "100%",
-        }}
-      />
-       */}
+
+      <ExerciseSearchBar />
+      <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
           width: "100%",
@@ -215,7 +207,9 @@ function ExercisesByCategory({
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  onClick={(event) => handleOptionsClick(event, exercise.name,exercise.category)}
+                  onClick={(event) =>
+                    handleOptionsClick(event, exercise.name, exercise.category)
+                  }
                 >
                   <MoreVertIcon sx={{ zIndex: 0 }} />
                 </IconButton>

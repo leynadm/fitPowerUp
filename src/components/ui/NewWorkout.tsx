@@ -106,9 +106,7 @@ function NewWorkout({
   };
   const pages = [
     "Settings",
-    "Copy Workout",
     "Comment Workout",
-    "Time Workout",
     "Body Tracker",
     "Analysis",
     "Sign Out",
@@ -138,18 +136,11 @@ function NewWorkout({
     if (page === "Settings") {
       // Handle Settings page click
       navigate("settings");
-    } else if (page === "Copy Workout") {
-      // Handle Copy Workout page click
-      // ...
     } else if (page === "Comment Workout") {
       // Handle Comment Workout page click
       // ...
-    } else if (page === "Time Workout") {
-      // Handle Time Workout page click
-      // ...
     } else if (page === "Body Tracker") {
-      // Handle Body Tracker page click
-      // ...
+      navigate("bodytracker");
     } else if (page === "Analysis") {
       // Handle Analysis page click
       // ...

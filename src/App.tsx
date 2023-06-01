@@ -13,7 +13,9 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
+
         <IndexedDBProvider>
+
         <Router>
           <Routes>
 
@@ -34,8 +36,10 @@ function App() {
           
           </Routes>
         </Router>
+        
         </IndexedDBProvider>
-      </AuthProvider>
+        
+        </AuthProvider>
 
     </div>
   

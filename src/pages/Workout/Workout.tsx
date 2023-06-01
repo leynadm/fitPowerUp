@@ -9,6 +9,7 @@ import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
 import WorkoutCalendar from "./WorkoutCalendar";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
+import BodyTracker from "../BodyTracker/BodyTracker";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   selectedCategoryExercises: {
@@ -203,6 +204,17 @@ function Workout({
               />
             }
           />
+
+          <Route
+            path="/bodytracker/*"
+            element={
+              <BodyTracker
+              todayDate={todayDate}
+                
+              />
+            }
+          />
+
         </Routes>
       </Box>
     </Box>

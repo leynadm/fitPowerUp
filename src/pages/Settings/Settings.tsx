@@ -332,7 +332,7 @@ function Settings({
         flexDirection: "column",
       }}
     >
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <AppBar position="fixed"  elevation={0} style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

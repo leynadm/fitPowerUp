@@ -4,11 +4,10 @@ import Toolbar from "@mui/material/Toolbar";
 import PeopleIcon from "@mui/icons-material/People";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
 import { Box } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import UserWorkoutCard from "./UserWorkoutCard";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

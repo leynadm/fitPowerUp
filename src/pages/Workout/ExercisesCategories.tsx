@@ -14,7 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import deleteEntriesByCategory from "../../utils/CRUDFunctions/deleteEntriesByCategory";
 import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
-
+import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
 interface NewWorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
@@ -41,24 +41,24 @@ function ExercisesCategories({
   const navigate = useNavigate();
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [categoryToDelete, setCategoryToDelete] = useState('')
-  
-  
-  useEffect(()=>{
+  const [categoryToDelete, setCategoryToDelete] = useState("");
 
-  },[exercisesCategories])
+  useEffect(() => {}, [exercisesCategories]);
 
   const open = Boolean(anchorEl);
 
-  function handleOptionsClick (event: React.MouseEvent<HTMLButtonElement>, category:string) {
+  function handleOptionsClick(
+    event: React.MouseEvent<HTMLButtonElement>,
+    category: string
+  ) {
     setAnchorEl(event.currentTarget);
-    console.log('logging category inside handleOptionClick:')
-    console.log(category)
-    setCategoryToDelete(category)
-  };
+    console.log("logging category inside handleOptionClick:");
+    console.log(category);
+    setCategoryToDelete(category);
+  }
   const handleClose = () => {
-    deleteEntriesByCategory(categoryToDelete)
-    populatePreselectedExercises(setExercisesCategories)
+    deleteEntriesByCategory(categoryToDelete);
+    populatePreselectedExercises(setExercisesCategories);
     setAnchorEl(null);
   };
 
@@ -195,16 +195,9 @@ function ExercisesCategories({
           </Toolbar>
         </Container>
       </AppBar>
-      {/* 
-      <TextField
-        id="standard-basic"
-        label="Look for an exercise"
-        variant="standard"
-        sx={{
-          width: "100%",
-        }}
-      />
- */}
+
+      <ExerciseSearchBar />
+      <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
           width: "100%",
