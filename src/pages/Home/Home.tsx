@@ -27,6 +27,7 @@ function Home() {
   useEffect(() => {
     if (preselectedExercises.length > 0) {
       console.log('in HOME: populating preselected exercises')
+      console.log('doing a check on all exercises:')
       populatePreselectedExercises();
     }
   }, [preselectedExercises]);

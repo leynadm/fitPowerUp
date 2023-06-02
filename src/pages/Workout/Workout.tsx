@@ -152,6 +152,7 @@ function Workout({
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedCategoryExercises={setSelectedCategoryExercises}
                 exercisesCategories={exercisesCategories}
+                setSelectedExercise={setSelectedExercise}
               />
             }
           />

@@ -21,6 +21,7 @@
     "dayjs": "^1.11.7",
     "firebase": "^9.22.0",
     "idb": "^7.1.1",
+    "minisearch": "^6.1.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

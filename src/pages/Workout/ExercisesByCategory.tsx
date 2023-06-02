@@ -58,6 +58,7 @@ function ExercisesByCategory({
   const [exerciseToDelete, setExerciseToDelete] = useState("");
   const [categoryToRefresh, setCategoryToRefresh] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [query,setQuery] = useState('')
   const open = Boolean(anchorEl);
   function handleOptionsClick(
     event: React.MouseEvent<HTMLButtonElement>,
@@ -70,8 +71,6 @@ function ExercisesByCategory({
     setCategoryToRefresh(exerciseCategory);
   }
   const handleClose = () => {
-    console.log("logging exerciseToDelete");
-    console.log(exerciseToDelete);
     deleteExerciseEntries(exerciseToDelete);
     handleCategoryClick(categoryToRefresh, setSelectedCategoryExercises);
     setAnchorEl(null);
@@ -166,7 +165,7 @@ function ExercisesByCategory({
         </Container>
       </AppBar>
 
-      <ExerciseSearchBar />
+      <ExerciseSearchBar query={query} setQuery={setQuery} />
       <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
