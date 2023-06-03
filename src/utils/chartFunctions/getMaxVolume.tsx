@@ -33,7 +33,7 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any, timeframe: 
       const dateVolumeMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentReps = item.reps;
         const currentWeight = item.weight;
         const currentVolume = currentReps * currentWeight;
@@ -67,7 +67,7 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any, timeframe: 
       const volumes = Array.from(dateVolumeMap.values());
 */
       const volumeValues = sortedDates.map((date) => {
-        const volume = dateVolumeMap.get(date.toLocaleDateString());
+        const volume = dateVolumeMap.get(date.toDateString());
         return volume !== undefined ? volume : null;
       });
 

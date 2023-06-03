@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -38,6 +38,8 @@ ChartJS.register(
   PointElement,
   LineElement
 );
+
+
 
 interface DataItem {
   date: Date;
@@ -136,6 +138,11 @@ const callChartFunction = (
 interface IStatisticsOption {
   label: string;
 }
+
+interface CustomInputProps {
+  label: string;
+}
+
 function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
@@ -189,7 +196,8 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     IStatisticsOption[]
   >([]);
   const [defaultOptionToLoad, setDefaultOptionToLoad] = useState<{ label: string }>({ label: "Estimated 1RM" });
-  
+  const textFieldRef = useRef(null); // Refer
+
   useEffect(() => {
     if (
       selectedExercise.measurement.includes("weight") &&
@@ -354,7 +362,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
           color: "#999999", // y-axis tick color
           stepSize: 8,
           font: {
-            size: 12, // y-axis tick font size
+            size: 10, // y-axis tick font size
             weight: "bold", // y-axis tick font weight
           },
           maxTicksLimit: 10, // Maximum number of visible tick labels
@@ -382,8 +390,45 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     },
   };
 
+  const handleChange = (event:any) => {
+    const selectedOption = event.target.value;
+    setSelectedOption(selectedOption);
+    callChartFunction(
+      selectedOption,
+      selectedTimeframe,
+      setInitialRawData,
+      selectedExercise
+    );
+  };
+
+
   return (
+
     <Box sx={{ width: "100%", height: "100%" }}>
+
+
+<TextField
+        select
+        value={selectedOption}
+        onChange={handleChange}
+        SelectProps={{
+          native: true,
+        }}
+        sx={{
+          width: "100%",
+          paddingTop: "16px",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+        }}
+      >
+        {statisticsOptionsToUse.map((option) => (
+          <option key={option.label} value={option.label}>
+            {option.label}
+          </option>
+        ))}
+      </TextField>
+
+{/* 
       <Autocomplete
         disablePortal
         id="combo-box-demo"
@@ -392,6 +437,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         getOptionLabel={(option) => option.label}
         disableClearable
         isOptionEqualToValue={(option, value) => option.label === value.label} // Customize the equality test
+        
         sx={{
           width: "100%",
           paddingTop: "16px",
@@ -399,6 +445,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
           paddingRight: "8px",
         }}
         onChange={(event, value) => {
+          
           if (value) {
             const selectedOption = value.label;
             setSelectedOption(selectedOption); // Update selected option
@@ -410,8 +457,24 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
             );
           }
         }}
-        renderInput={(params) => <TextField {...params} label="Graph" />}
+
+
+        renderInput={(params) =>         
+        <TextField 
+          {...params} label="Graph"
+          inputMode="none"
+          disabled
+        /> }
+         
+
+
       />
+
+      */}
+
+
+
+
       <ButtonGroup
         variant="outlined"
         aria-label="outlined primary button group"

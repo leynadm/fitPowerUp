@@ -34,7 +34,7 @@ function getBodyTrackerKPIValues(
       const dateValueMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const measurementValue = item.value; // Change to the appropriate field for your measurement
 
         // Check if the current date is within the selected timeframe
@@ -54,7 +54,7 @@ function getBodyTrackerKPIValues(
         .sort((a, b) => a.getTime() - b.getTime());
 
       const measurementValues = sortedDates.map((date) => {
-        const value = dateValueMap.get(date.toLocaleDateString());
+        const value = dateValueMap.get(date.toDateString());
         return value !== undefined ? value : null;
       });
 

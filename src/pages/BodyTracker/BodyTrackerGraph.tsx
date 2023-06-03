@@ -8,6 +8,8 @@ import { Typography } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import { ChartOptions } from "chart.js";
+import Select from "@mui/material/Select";
+import MenuItem from '@mui/material/MenuItem';
 import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
 import {
   Chart as ChartJS,
@@ -174,6 +176,35 @@ function BodyTrackerGraph() {
 
   return (
     <Box>
+
+<Select
+
+  id="combo-box-demo"
+  value={selectedOption}
+  onChange={(event) => {
+    const selectedOption = event.target.value;
+    setSelectedOption(selectedOption);
+    callChartFunction(
+      selectedOption,
+      selectedTimeframe,
+      setInitialRawData
+    );
+  }}
+  sx={{
+    width: "100%",
+    marginTop: "16px", 
+  }}
+>
+  {measurementOptions.map((option) => (
+    <MenuItem key={option.label} value={option.label}>
+      {option.label}
+    </MenuItem>
+  ))}
+</Select>
+
+{/* 
+
+ 
       <Autocomplete
         disablePortal
         id="combo-box-demo"
@@ -203,6 +234,7 @@ function BodyTrackerGraph() {
         }}
         renderInput={(params) => <TextField {...params} label="Graph" />}
       />
+  */}
 
 <ButtonGroup
   variant="outlined"

@@ -29,7 +29,7 @@ function getMaxPace(setInitialRawData: any, selectedExercise: any, timeframe: st
       const datePaceMap = new Map<string, number>();
 
       data.forEach((item: DataItem) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const distance = item.distance;
         const time = item.time / 3600; // Convert seconds to hours
 
@@ -63,7 +63,7 @@ function getMaxPace(setInitialRawData: any, selectedExercise: any, timeframe: st
         .sort((a, b) => a.getTime() - b.getTime());
 
       const paceValues = sortedDates.map((date) => {
-        const pace = datePaceMap.get(date.toLocaleDateString());
+        const pace = datePaceMap.get(date.toDateString());
         return pace !== undefined ? pace : null;
       });
 

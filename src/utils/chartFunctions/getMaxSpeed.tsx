@@ -29,7 +29,7 @@ function getMaxSpeed(setInitialRawData: any, selectedExercise: any, timeframe: s
       const dateSpeedMap = new Map<string, number>();
 
       data.forEach((item: DataItem) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const distance = item.distance;
         const time = item.time / 3600; // Convert seconds to hours
 
@@ -63,7 +63,7 @@ function getMaxSpeed(setInitialRawData: any, selectedExercise: any, timeframe: s
         .sort((a, b) => a.getTime() - b.getTime());
 
       const speedValues = sortedDates.map((date) => {
-        const speed = dateSpeedMap.get(date.toLocaleDateString());
+        const speed = dateSpeedMap.get(date.toDateString());
         return speed !== undefined ? speed : null;
       });
 

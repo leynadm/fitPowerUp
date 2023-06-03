@@ -1,13 +1,21 @@
 import React from "react";
-import Calendar from "../Workout/WorkoutCalendar"
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import Typography from "@mui/material/Typography";
-
 import Container from "@mui/material/Container";
 import Box from '@mui/material/Box';
+
+function generate(element: React.ReactElement) {
+  return [0, 1, 2].map((value) =>
+    React.cloneElement(element, {
+      key: value,
+    }),
+  );
+}
+
 function Progress() {
+
   return (
     <Box        sx={{
       width: "100%",

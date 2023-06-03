@@ -1,4 +1,5 @@
 import { ChartData} from "chart.js";
+import { DateTime } from "luxon";
 
 interface DataItem {
   date: Date;
@@ -30,19 +31,31 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
       const dateMaxMap = new Map<string, number | undefined>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        console.log('logging the item:')
+        console.log(item)
+        const currentDate = new Date(item.date).toDateString();
         const currentWeight = item.weight;
         const currentReps = item.reps;
         const currentMax = Math.round((currentWeight * (1 + currentReps / 30)) * 10) / 10; // Calculate 1 Rep Max
-
+        console.log('loggging current date:')
+        console.log(currentDate)
+      
         // Check if the current date is within the selected timeframe
         const currentDateObj = new Date(item.date);
         const startDate = getStartDate(timeframe);
         const endDate = new Date();
+        console.log('logging currentDateObj')
+        console.log(currentDateObj)
+        console.log('logging the start date:')
+        console.log(startDate)
+        console.log('logging the endDate')
+        console.log(endDate)
         if (currentDateObj < startDate || currentDateObj > endDate) {
           return; // Skip data outside the timeframe
         }
 
+        console.log('logging dateMaxpMap:')
+        console.log(dateMaxMap)
         // Check if the current date is already present in the map
         if (dateMaxMap.has(currentDate)) {
           const existingMax = dateMaxMap.get(currentDate);
@@ -56,13 +69,17 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
           dateMaxMap.set(currentDate, currentMax);
         }
       });
+ 
+      const sortedDatesLog = Array.from(dateMaxMap)
+      console.log(sortedDatesLog)
 
       const sortedDates = Array.from(dateMaxMap.keys())
+      
         .map((date) => new Date(date))
         .sort((a, b) => a.getTime() - b.getTime());
-
+          
       const maxValues = sortedDates.map((date) => {
-        const max = dateMaxMap.get(date.toLocaleDateString());
+        const max = dateMaxMap.get(date.toDateString());
         return max !== undefined ? max : null;
       });
 

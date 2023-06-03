@@ -37,7 +37,7 @@ function getTotalVolume(
       const dateTotalVolumeMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentWeight = item.weight;
         const currentReps = item.reps;
 
@@ -70,7 +70,7 @@ function getTotalVolume(
         const totalVolume = Array.from(dateTotalVolumeMap.values());
 
       const totalVolumeValues = sortedDates.map((date) => {
-        const totalVolume = dateTotalVolumeMap.get(date.toLocaleDateString());
+        const totalVolume = dateTotalVolumeMap.get(date.toDateString());
         return totalVolume !== undefined ? totalVolume : null;
       });
 

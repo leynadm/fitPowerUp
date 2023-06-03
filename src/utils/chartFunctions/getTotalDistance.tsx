@@ -34,7 +34,7 @@ function getTotalDistance(
       const dateTotalDistanceMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentDistance = item.distance;
 
         // Check if the current date is within the selected timeframe
@@ -66,7 +66,7 @@ function getTotalDistance(
 
       const totalDistanceValues = sortedDates.map((date) => {
         const totalDistance = dateTotalDistanceMap.get(
-          date.toLocaleDateString()
+          date.toDateString()
         );
         return totalDistance !== undefined ? totalDistance : null;
       });

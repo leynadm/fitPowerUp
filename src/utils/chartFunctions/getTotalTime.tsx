@@ -38,7 +38,7 @@ function getTotalTime(
         const dateTotalTimeMap = new Map<string, number>();
   
         data.forEach((item) => {
-          const currentDate = new Date(item.date).toLocaleDateString();
+          const currentDate = new Date(item.date).toDateString();
           const currentTimeInSeconds = item.time;
   
           // Check if the current date is within the selected timeframe
@@ -66,7 +66,7 @@ function getTotalTime(
           .sort((a, b) => a.getTime() - b.getTime());
         
         const totalTimeValues = sortedDates.map((date) => {
-          const totalTime = dateTotalTimeMap.get(date.toLocaleDateString());
+          const totalTime = dateTotalTimeMap.get(date.toDateString());
           return totalTime !== undefined ? totalTime : null;
         });
   

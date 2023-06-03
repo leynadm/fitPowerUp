@@ -37,7 +37,7 @@ function getTotalReps(
       const dateTotalRepsMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentReps = item.reps;
 
         // Check if the current date is within the selected timeframe
@@ -67,7 +67,7 @@ function getTotalReps(
       const totalReps = Array.from(dateTotalRepsMap.values());
       */
       const totalRepsValues = sortedDates.map((date) => {
-        const totalReps = dateTotalRepsMap.get(date.toLocaleDateString());
+        const totalReps = dateTotalRepsMap.get(date.toDateString());
         return totalReps !== undefined ? totalReps : null;
       });
 

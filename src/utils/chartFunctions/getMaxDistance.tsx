@@ -28,7 +28,7 @@ getDataRequest.onsuccess = () => {
   const dateDistanceMap = new Map<string, number>();
 
   data.forEach((item: DataItem) => {
-    const currentDate = new Date(item.date).toLocaleDateString();
+    const currentDate = new Date(item.date).toDateString();
     const currentDistance = item.distance;
 
     // Check if the current date is within the selected timeframe
@@ -58,7 +58,7 @@ getDataRequest.onsuccess = () => {
     .sort((a, b) => a.getTime() - b.getTime());
 
   const distanceValues = sortedDates.map((date) => {
-    const distance = dateDistanceMap.get(date.toLocaleDateString());
+    const distance = dateDistanceMap.get(date.toDateString());
     return distance !== undefined ? distance : null;
   });
 

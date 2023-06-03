@@ -31,7 +31,7 @@ function getMaxWeight(setInitialRawData:any, selectedExercise:any, timeframe: st
       const dateWeightMap = new Map<string, number>();
 
       data.forEach((item) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentWeight = item.weight;
 
         // Check if the current date is within the selected timeframe
@@ -63,7 +63,7 @@ function getMaxWeight(setInitialRawData:any, selectedExercise:any, timeframe: st
       const weights = Array.from(dateWeightMap.values());
       */
       const weightValues = sortedDates.map((date) => {
-        const weight = dateWeightMap.get(date.toLocaleDateString());
+        const weight = dateWeightMap.get(date.toDateString());
         return weight !== undefined ? weight : null;
       });
 

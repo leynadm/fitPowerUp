@@ -28,7 +28,7 @@ function getMaxTime(setInitialRawData: any, selectedExercise: any, timeframe: st
       const dateTimeMap = new Map<string, number>();
 
       data.forEach((item: DataItem) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentTime = item.time / 60; // Convert seconds to minutes
 
         // Check if the current date is within the selected timeframe
@@ -58,7 +58,7 @@ function getMaxTime(setInitialRawData: any, selectedExercise: any, timeframe: st
         .sort((a, b) => a.getTime() - b.getTime());
 
       const timeValues = sortedDates.map((date) => {
-        const time = dateTimeMap.get(date.toLocaleDateString());
+        const time = dateTimeMap.get(date.toDateString());
         return time !== undefined ? time : null;
       });
 

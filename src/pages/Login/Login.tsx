@@ -19,13 +19,13 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   getAdditionalUserInfo,
+  signInAnonymously
 } from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../config/firebase"
 import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
-import IconButton from '@mui/material/IconButton';
 
 function Copyright(props: any) {
   return (
@@ -90,6 +90,17 @@ export default function SignIn() {
       });
   }
 
+  function signInAsGuest() {
+    signInAnonymously(auth)
+      .then(() => {
+        // Signed in..
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ...
+      });
+  }
   async function createUserDoc(userID: string, fullname: string | null) {
     const userDoc = await getDoc(doc(db, "users", userID));
 
@@ -199,7 +210,7 @@ export default function SignIn() {
               fullWidth
               variant="outlined"
               sx={{ mb: 2, color:"black",gap:1}}
-              onClick={SignInWithGoogle}
+              onClick={signInAsGuest}
             >
               <PersonIcon/>LOG IN AS GUEST ONLY
             </Button>

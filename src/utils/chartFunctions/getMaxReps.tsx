@@ -28,7 +28,7 @@ const exerciseNameIndex = objectStore.index("exercise_name");
       const dateRepsMap = new Map<string, number>();
 
       data.forEach((item: any) => {
-        const currentDate = new Date(item.date).toLocaleDateString();
+        const currentDate = new Date(item.date).toDateString();
         const currentReps = item.reps;
 
         // Check if the current date is within the selected timeframe
@@ -60,7 +60,7 @@ const exerciseNameIndex = objectStore.index("exercise_name");
         const reps = Array.from(dateRepsMap.values());
  */
       const repsValues = sortedDates.map((date) => {
-        const reps = dateRepsMap.get(date.toLocaleDateString());
+        const reps = dateRepsMap.get(date.toDateString());
         return reps !== undefined ? reps : null;
       });
 
