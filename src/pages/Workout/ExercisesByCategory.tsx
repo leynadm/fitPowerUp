@@ -16,6 +16,8 @@ import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntri
 import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
+import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
+
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
@@ -59,6 +61,23 @@ function ExercisesByCategory({
   const [categoryToRefresh, setCategoryToRefresh] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [query,setQuery] = useState('')
+  const [exercisesToSearch, setExercisesToSearch] = useState<
+  { category: string; name: string; measurement: any[]; id:number }[]
+>([]);
+
+useEffect(() => {
+  if (query === '' || exercisesToSearch.length===0) {
+    getAllExercises((exercises:any) => {
+      setExercisesToSearch(exercises);
+    });
+  } else {
+    const filteredExercises = exercisesToSearch.filter((exercise) =>
+      exercise.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setExercisesToSearch(filteredExercises);
+  }
+}, [query]);
+
   const open = Boolean(anchorEl);
   function handleOptionsClick(
     event: React.MouseEvent<HTMLButtonElement>,
@@ -70,6 +89,7 @@ function ExercisesByCategory({
     setExerciseToDelete(exerciseName);
     setCategoryToRefresh(exerciseCategory);
   }
+  
   const handleClose = () => {
     deleteExerciseEntries(exerciseToDelete);
     handleCategoryClick(categoryToRefresh, setSelectedCategoryExercises);
@@ -173,6 +193,90 @@ function ExercisesByCategory({
           height: "100%",
         }}
       >
+
+
+{query !== ''
+          ? exercisesToSearch.map((exercise, index) => (
+            <Box>
+              <Box
+              sx={{                     display: "flex",
+              justifyContent: "center",
+              alignItems: "center"}}
+              >
+                <Typography
+                  key={index}
+                  sx={{
+                    width: "100%",
+                    fontSize: "larger",
+                    margin: "0.15rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={()=>handleExerciseClick(exercise)}
+                >
+                  {exercise.name}
+                </Typography>
+                <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      color="inherit"
+                    
+                    >
+                      <MoreVertIcon sx={{ zIndex: 0 }} />
+                    </IconButton>
+              </Box>
+              <Divider sx={{ width: "100%" }} />
+            </Box>
+            )): selectedCategoryExercises
+            .slice() // Create a copy of the array to avoid mutating the original array
+            .sort((a, b) => a.name.localeCompare(b.name)) // Sort the categories alphabetically
+            .map((exercise, index) => (
+              <Box key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Typography
+                    key={index}
+                    sx={{
+                      width: "100%",
+                      fontSize: "larger",
+                      margin: "0.15rem",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleExerciseClick(exercise)}
+                  >
+                    {exercise.name.charAt(0).toUpperCase() +
+                      exercise.name.slice(1)}
+                  </Typography>
+  
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={(event) =>
+                      handleOptionsClick(event, exercise.name, exercise.category)
+                    }
+                  >
+                    <MoreVertIcon sx={{ zIndex: 0 }} />
+                  </IconButton>
+                </Box>
+                <Divider sx={{ width: "100%" }} />
+              </Box>
+            ))}
+
+
+
+
+
+        {/* 
         {selectedCategoryExercises
           .slice() // Create a copy of the array to avoid mutating the original array
           .sort((a, b) => a.name.localeCompare(b.name)) // Sort the categories alphabetically
@@ -216,6 +320,7 @@ function ExercisesByCategory({
               <Divider sx={{ width: "100%" }} />
             </Box>
           ))}
+           */}
       </Box>
 
       <Menu

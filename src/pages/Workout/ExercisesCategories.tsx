@@ -59,12 +59,14 @@ const [query,setQuery] = useState('')
   useEffect(()=>{
     getAllExercises(setExercisesToSearch)
   },[])
+
+  
   useEffect(() => {
 
   }, [exercisesCategories]);
  
   useEffect(() => {
-    if (query === '') {
+    if (query === '' || exercisesToSearch.length===0) {
       getAllExercises((exercises:any) => {
         setExercisesToSearch(exercises);
       });
