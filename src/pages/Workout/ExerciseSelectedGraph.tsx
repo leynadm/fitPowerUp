@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -20,6 +20,8 @@ import getTotalTime from "../../utils/chartFunctions/getTotalTime";
 import getMaxSpeed from "../../utils/chartFunctions/getMaxSpeed";
 import getMaxPace from "../../utils/chartFunctions/getMaxPace";
 import { ChartOptions } from "chart.js";
+import { Select, MenuItem } from "@mui/material";
+
 import {
   Chart as ChartJS,
   Tooltip,
@@ -38,8 +40,6 @@ ChartJS.register(
   PointElement,
   LineElement
 );
-
-
 
 interface DataItem {
   date: Date;
@@ -146,71 +146,72 @@ interface CustomInputProps {
 function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
-    const [selectedOption, setSelectedOption] = useState(() => {
-      if (
-        selectedExercise.measurement.includes("weight") &&
-        selectedExercise.measurement.includes("reps")
-      ) {
-        return "Estimated 1RM";
-      } else if (
-        selectedExercise.measurement.includes("weight") &&
-        selectedExercise.measurement.includes("distance")
-      ) {
-        return "Max Weight";
-      } else if (
-        selectedExercise.measurement.includes("weight") &&
-        selectedExercise.measurement.includes("time")
-      ) {
-        return "Max Weight";
-      } else if (
-        selectedExercise.measurement.includes("reps") &&
-        selectedExercise.measurement.includes("distance")
-      ) {
-        return "Max Reps";
-      } else if (
-        selectedExercise.measurement.includes("reps") &&
-        selectedExercise.measurement.includes("time")
-      ) {
-        return "Max Reps";
-      } else if (
-        selectedExercise.measurement.includes("distance") &&
-        selectedExercise.measurement.includes("time")
-      ) {
-        return "Max Distance";
-      } else if (selectedExercise.measurement.includes("weight")) {
-        return "Max Weight";
-      } else if (selectedExercise.measurement.includes("reps")) {
-        return "Max Reps";
-      } else if (selectedExercise.measurement.includes("distance")) {
-        return "Max Distance";
-      } else if (selectedExercise.measurement.includes("time")) {
-        return "Max Time";
-      } else {
-        return "Estimated 1RM"; // Default value if no conditions match
-      }
-    });
-    
-  
+  const [selectedOption, setSelectedOption] = useState(() => {
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("reps")
+    ) {
+      return "Estimated 1RM";
+    } else if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("distance")
+    ) {
+      return "Max Weight";
+    } else if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      return "Max Weight";
+    } else if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("distance")
+    ) {
+      return "Max Reps";
+    } else if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      return "Max Reps";
+    } else if (
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.includes("time")
+    ) {
+      return "Max Distance";
+    } else if (selectedExercise.measurement.includes("weight")) {
+      return "Max Weight";
+    } else if (selectedExercise.measurement.includes("reps")) {
+      return "Max Reps";
+    } else if (selectedExercise.measurement.includes("distance")) {
+      return "Max Distance";
+    } else if (selectedExercise.measurement.includes("time")) {
+      return "Max Time";
+    } else {
+      return "Estimated 1RM"; // Default value if no conditions match
+    }
+  });
+
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
   const [statisticsOptionsToUse, setStatisticsOptionsToUse] = useState<
     IStatisticsOption[]
   >([]);
-  const [defaultOptionToLoad, setDefaultOptionToLoad] = useState<{ label: string }>({ label: "Estimated 1RM" });
+  const [defaultOptionToLoad, setDefaultOptionToLoad] = useState<{
+    label: string;
+  }>({ label: "Estimated 1RM" });
   const textFieldRef = useRef(null); // Refer
 
   useEffect(() => {
     if (
       selectedExercise.measurement.includes("weight") &&
       selectedExercise.measurement.includes("reps")
-      ) {
+    ) {
       setStatisticsOptionsToUse(statisticsOptions);
-      setDefaultOptionToLoad({label:"Estimated 1RM"})
+      setDefaultOptionToLoad({ label: "Estimated 1RM" });
     } else if (
       selectedExercise.measurement.includes("weight") &&
       selectedExercise.measurement.includes("distance")
     ) {
       setStatisticsOptionsToUse(statisticsOptionsWeightAndDistance);
-      setDefaultOptionToLoad({label:"Max Weight"})
+      setDefaultOptionToLoad({ label: "Max Weight" });
     } else if (
       selectedExercise.measurement.includes("weight") &&
       selectedExercise.measurement.includes("time")
@@ -240,7 +241,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     } else if (selectedExercise.measurement.includes("time")) {
       setStatisticsOptionsToUse(statisticsOptionsTime);
     }
-    console.log('loading first use effect')
+    console.log("loading first use effect");
   }, []);
 
   useEffect(() => {
@@ -251,13 +252,13 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
       setInitialRawData,
       selectedExercise
     );
-    console.log('loading second use effect')
+    console.log("loading second use effect");
   }, [selectedExercise, selectedTimeframe, selectedOption]);
 
   useEffect(() => {
     console.log("logging initial Raw Data");
     console.log(initialRawData);
-    console.log('loading third use effect')
+    console.log("loading third use effect");
   }, [initialRawData]);
 
   const statisticsOptions = [
@@ -390,7 +391,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     },
   };
 
-  const handleChange = (event:any) => {
+  const handleChange = (event: any) => {
     const selectedOption = event.target.value;
     setSelectedOption(selectedOption);
     callChartFunction(
@@ -401,13 +402,34 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     );
   };
 
-
   return (
-
     <Box sx={{ width: "100%", height: "100%" }}>
 
-
-<TextField
+<Select
+  value={selectedOption}
+  onChange={(event) => {
+    const selectedOption = event.target.value;
+    setSelectedOption(selectedOption);
+    callChartFunction(
+      selectedOption,
+      selectedTimeframe,
+      setInitialRawData,
+      selectedExercise
+    );
+  }}
+  sx={{
+    width: "100%",
+    marginTop: "16px",
+  }}
+>
+  {statisticsOptionsToUse.map((option) => (
+    <MenuItem key={option.label} value={option.label}>
+      {option.label}
+    </MenuItem>
+  ))}
+</Select>
+{/* 
+      <TextField
         select
         value={selectedOption}
         onChange={handleChange}
@@ -427,54 +449,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
           </option>
         ))}
       </TextField>
-
-{/* 
-      <Autocomplete
-        disablePortal
-        id="combo-box-demo"
-        options={statisticsOptionsToUse}
-        defaultValue={{label:selectedOption}}
-        getOptionLabel={(option) => option.label}
-        disableClearable
-        isOptionEqualToValue={(option, value) => option.label === value.label} // Customize the equality test
-        
-        sx={{
-          width: "100%",
-          paddingTop: "16px",
-          paddingLeft: "8px",
-          paddingRight: "8px",
-        }}
-        onChange={(event, value) => {
-          
-          if (value) {
-            const selectedOption = value.label;
-            setSelectedOption(selectedOption); // Update selected option
-            callChartFunction(
-              selectedOption,
-              selectedTimeframe,
-              setInitialRawData,
-              selectedExercise
-            );
-          }
-        }}
-
-
-        renderInput={(params) =>         
-        <TextField 
-          {...params} label="Graph"
-          inputMode="none"
-          disabled
-        /> }
-         
-
-
-      />
-
-      */}
-
-
-
-
+ */}
       <ButtonGroup
         variant="outlined"
         aria-label="outlined primary button group"

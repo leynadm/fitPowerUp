@@ -9,7 +9,7 @@ import { Line } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import { ChartOptions } from "chart.js";
 import Select from "@mui/material/Select";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
 import {
   Chart as ChartJS,
@@ -66,7 +66,11 @@ const callChartFunction = (
 ) => {
   switch (selectedOption) {
     case "Bodyweight":
-      getBodyTrackerKPIValues("Bodyweight", selectedTimeframe, setInitialRawData);
+      getBodyTrackerKPIValues(
+        "Bodyweight",
+        selectedTimeframe,
+        setInitialRawData
+      );
       break;
     case "Body Fat":
       getBodyTrackerKPIValues("Body Fat", selectedTimeframe, setInitialRawData);
@@ -100,18 +104,14 @@ function BodyTrackerGraph() {
 
   useEffect(() => {
     // Call the chart function when the selected exercise changes or the timeframe changes
-    callChartFunction(
-      selectedOption,
-      selectedTimeframe,
-      setInitialRawData,
-    );
-    console.log('loading second use effect')
+    callChartFunction(selectedOption, selectedTimeframe, setInitialRawData);
+    console.log("loading second use effect");
   }, [selectedTimeframe, selectedOption]);
 
   useEffect(() => {
     console.log("logging initial Raw Data");
     console.log(initialRawData);
-    console.log('loading third use effect')
+    console.log("loading third use effect");
   }, [initialRawData]);
 
   const options: ChartOptions<"line"> = {
@@ -176,84 +176,52 @@ function BodyTrackerGraph() {
 
   return (
     <Box>
-
-<Select
-
-  id="combo-box-demo"
-  value={selectedOption}
-  onChange={(event) => {
-    const selectedOption = event.target.value;
-    setSelectedOption(selectedOption);
-    callChartFunction(
-      selectedOption,
-      selectedTimeframe,
-      setInitialRawData
-    );
-  }}
-  sx={{
-    width: "100%",
-    marginTop: "16px", 
-  }}
->
-  {measurementOptions.map((option) => (
-    <MenuItem key={option.label} value={option.label}>
-      {option.label}
-    </MenuItem>
-  ))}
-</Select>
-
-{/* 
-
- 
-      <Autocomplete
-        disablePortal
+      <Select
         id="combo-box-demo"
-        options={measurementOptions}
-
-        value={{ label: selectedOption }}
-        defaultValue={{ label: selectedOption }}
-        getOptionLabel={(option) => option.label}
-        disableClearable
-        isOptionEqualToValue={(option, value) => option.label === value.label} // Customize the equality test
+        value={selectedOption}
+        onChange={(event) => {
+          const selectedOption = event.target.value;
+          setSelectedOption(selectedOption);
+          callChartFunction(
+            selectedOption,
+            selectedTimeframe,
+            setInitialRawData
+          );
+        }}
         sx={{
           width: "100%",
-          paddingTop: "16px",
-          paddingLeft: "8px",
-          paddingRight: "8px",
+          marginTop: "16px",
         }}
-        onChange={(event, value) => {
-          if (value) {
-            const selectedOption = value.label;
-            setSelectedOption(selectedOption); // Update selecteed option
-            callChartFunction(
-              selectedOption,
-              selectedTimeframe,
-              setInitialRawData
-            );
-          }
-        }}
-        renderInput={(params) => <TextField {...params} label="Graph" />}
-      />
-  */}
+      >
+        {measurementOptions.map((option) => (
+          <MenuItem key={option.label} value={option.label}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
 
-<ButtonGroup
-  variant="outlined"
-  aria-label="outlined primary button group"
-  sx={{ width: "100%", display: "flex", padding: "8px" }}
->
-  {timeframeOptions.map((option) => (
-    <Button
-      key={option.label}
-      style={{ flexGrow: 1, fontWeight: "bolder" }}
-      onClick={() => {
-        setSelectedTimeframe(option.value); // Update selected timeframe
-        callChartFunction(selectedOption, option.value, setInitialRawData); // Call chart function with updated timeframe
-      }}
-    >
-      {option.label}
-    </Button>
-  ))}
-</ButtonGroup>
+      <ButtonGroup
+        variant="outlined"
+        aria-label="outlined primary button group"
+        sx={{ width: "100%", display: "flex", padding: "8px" }}
+      >
+        {timeframeOptions.map((option) => (
+          <Button
+            key={option.label}
+            style={{ flexGrow: 1, fontWeight: "bolder" }}
+            onClick={() => {
+              setSelectedTimeframe(option.value); // Update selected timeframe
+              callChartFunction(
+                selectedOption,
+                option.value,
+                setInitialRawData
+              ); // Call chart function with updated timeframe
+            }}
+          >
+            {option.label}
+          </Button>
+        ))}
+      </ButtonGroup>
       <Box
         sx={{
           width: "100vw",
@@ -263,13 +231,13 @@ function BodyTrackerGraph() {
           alignItems: "center",
         }}
       >
-      {initialRawData ? (
-        initialRawData.labels && initialRawData.labels.length === 0 ? (
-          <Typography>No data for this exercise yet.</Typography>
-        ) : (
-          <Line data={initialRawData} options={options as any} />
-        )
-      ) : null}
+        {initialRawData ? (
+          initialRawData.labels && initialRawData.labels.length === 0 ? (
+            <Typography>No data for this exercise yet.</Typography>
+          ) : (
+            <Line data={initialRawData} options={options as any} />
+          )
+        ) : null}
       </Box>
     </Box>
   );

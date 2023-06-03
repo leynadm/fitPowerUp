@@ -26,7 +26,7 @@ import { auth, db } from "../../config/firebase"
 import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
-
+import createUserDoc from "../../utils/socialFunctions/createUserDoc";
 function Copyright(props: any) {
   return (
     <Typography
@@ -35,9 +35,9 @@ function Copyright(props: any) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {/* {"Copyright © "} */}
       <Link color="inherit" href="https://mui.com/">
-        Solid Vision Technologies
+        Developed by Daniel Matei
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -63,14 +63,20 @@ export default function SignIn() {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-
+        console.log('logging credential')
+        console.log(credential)
         if (credential) {
           const token = credential.accessToken;
           // The signed-in user info.
           const user = result.user;
+          console.log(user)
           const newUserCheck = getAdditionalUserInfo(result);
+          console.log(newUserCheck)
+          console.log('about to create new user:')
           if (newUserCheck?.isNewUser) {
+            console.log('creating new user')
             createUserDoc(user.uid, user.displayName);
+            console.log('user created')
           }
           // Query the users collection to retrieve the document with the given userID
 
@@ -101,23 +107,7 @@ export default function SignIn() {
         // ...
       });
   }
-  async function createUserDoc(userID: string, fullname: string | null) {
-    const userDoc = await getDoc(doc(db, "users", userID));
 
-    if (!userDoc.exists()) {
-      await setDoc(doc(db, "users", userID), {
-        name: fullname,
-        surname: "",
-        bio: "",
-        verified: false,
-        fullname: ["", "", fullname],
-        profileImage:
-          "",
-        coverImage:
-          "",
-      });
-    }
-  }
 
   function handleLogIn(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();

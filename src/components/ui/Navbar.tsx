@@ -39,7 +39,7 @@ function Navbar() {
             onClick={handleWorkoutClick}
           />
           <BottomNavigationAction
-            label="Your friends"
+            label="Friends"
             icon={<PeopleIcon />}
             onClick={handleFriendsClick}
             

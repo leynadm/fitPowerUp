@@ -152,12 +152,6 @@ function NewWorkout({
 
   function handleSetClick(groupName: string) {
     handleGroupNameClick(groupName);
-
-    /* 
-    forwardToExerciseMenuClick(groupName, selectedExercise);
-     */
-    console.log("logging selected exercise inside handleSetClick");
-    console.log(selectedExercise);
   }
 
   function forwardToExerciseMenuClick(
@@ -168,15 +162,11 @@ function NewWorkout({
       measurement: any[];
     }
   ) {
-    console.log("logging myExercise");
-    console.log(myExercise);
     const selectedState = {
       category: myExercise.category,
       name: myExercise.name,
       measurement: myExercise.measurement,
     };
-    console.log("logging Selected State");
-    console.log(selectedState);
     setSelectedExercise(myExercise);
     navigate(`workout_categories/exercises/selected`, {
       state: { todayDate, selectedExercise: selectedState, unitsSystem },
@@ -184,8 +174,6 @@ function NewWorkout({
   }
 
   function handleGroupNameClick(category: string) {
-    console.log("logging the category");
-    console.log(category);
 
     const request = indexedDB.open("fitScouterDb", 1);
 
@@ -215,18 +203,10 @@ function NewWorkout({
           selectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
-          console.log("logging selectedCategoryExercises:");
-          console.log(selectedCategoryExercises);
           setSelectedCategoryExercises(selectedCategoryExercises);
-          console.log("logging the type of selectedCategoryExercises:");
-          console.log(selectedCategoryExercises);
-
+          
           forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
 
-          console.log(
-            "Selected Category Exercises:",
-            selectedCategoryExercises
-          );
         }
       };
 
