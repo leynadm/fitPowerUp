@@ -22,6 +22,10 @@ import {
 } from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../config/firebase"
+import GoogleIcon from '@mui/icons-material/Google';
+import PersonIcon from '@mui/icons-material/Person';
+import LoginIcon from '@mui/icons-material/Login';
+import IconButton from '@mui/material/IconButton';
 
 function Copyright(props: any) {
   return (
@@ -174,19 +178,30 @@ export default function SignIn() {
               type="button"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2,gap:1 }}
             >
-              Sign In
+              <LoginIcon sx={{marginRight:"8px"}}/> Sign In
             </Button>
 
             <Button
               type="button"
               fullWidth
               variant="outlined"
-              sx={{ mb: 2 }}
+              sx={{ mb: 2,gap:1 }}
+              onClick={SignInWithGoogle}
+              
+            >
+              <GoogleIcon/>LOG IN WITH GOOGLE
+            </Button>
+
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              sx={{ mb: 2, color:"black",gap:1}}
               onClick={SignInWithGoogle}
             >
-              LOG IN WITH GOOGLE
+              <PersonIcon/>LOG IN AS GUEST ONLY
             </Button>
 
             <Grid container>
