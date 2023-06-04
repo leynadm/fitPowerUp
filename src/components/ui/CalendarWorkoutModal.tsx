@@ -208,7 +208,6 @@ function CalendarWorkoutModal({
           </Box>
         </Box>
 
-        <Box></Box>
       </Dialog>
 
     </Box>

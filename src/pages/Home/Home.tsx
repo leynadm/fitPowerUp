@@ -178,7 +178,7 @@ function Home() {
           }
           index
         />
-        <Route path="friends" element={<Friends />} />
+        <Route path="friends/*" element={<Friends />} />
         <Route path="progress" element={<Progress />} />
       </Routes>
     </Box>
