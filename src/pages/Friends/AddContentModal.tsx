@@ -113,7 +113,7 @@ function AddContentModal({
       if (selectedFile) {
         imageRef = ref(
           storage,
-          `images/${currentUser.uid}/${currentUser.uid}_${uuid()}`
+          `images/${currentUser.uid}/preview/${currentUser.uid}_${uuid()}_450x450`
         );
         await uploadBytes(imageRef, selectedFile);
         imageUrl = await getDownloadURL(imageRef);

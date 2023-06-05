@@ -6,10 +6,10 @@ async function createUserDoc(userID: string, fullname: string | null) {
     if (!userDoc.exists()) {
       await setDoc(doc(db, "users", userID), {
         name: fullname,
-        surname: "",
-        sex: "",
+        surname: fullname,
+        sex: "male",
         verified: false,
-        fullname: ["", "", fullname], 
+        fullname: [fullname, fullname, fullname], 
         profileImage:
           "",
         coverImage:

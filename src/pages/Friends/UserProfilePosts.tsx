@@ -1,70 +1,78 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/Auth";
-import Button from "@mui/material/Button";
 import {
-  doc,
-  getDoc,
   query,
   collection,
   where,
   getDocs,
   orderBy,
-  Timestamp,
-  updateDoc,
-  limit,
   startAfter,
+  limit,
 } from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
+import { Button, Typography } from "@mui/material";
 
 function UserProfilePosts() {
   const { currentUser, currentUserData } = useContext(AuthContext);
-  const [userPosts, setUserPosts] = useState<any>([]);
+  const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
-  const containerRef = useRef<any>(null);
 
   useEffect(() => {
     getUserPosts();
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
 
-      if (scrollTop + clientHeight >= scrollHeight) {
-        console.log("Reached the bottom!");
-        getUserPosts();
-      }
-    };
-
-    // Attach scroll event listener to the window
+    /* 
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
-    };
+    }; */
   }, []);
 
+  /* 
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 56) {
+      fetchMore();
+    }
+  };  */
+
   async function getUserPosts() {
-    const q = query(
-      collection(db, "posts"),
-      where("userId", "==", currentUser.uid),
-      orderBy("createdAt", "desc"),
-      limit(3)
-    );
+    let q;
+    if (latestDoc) {
+      q = query(
+        collection(db, "posts"),
+        where("userId", "==", currentUser.uid),
+        orderBy("createdAt", "desc"),
+        startAfter(latestDoc),
+        limit(2)
+      );
+    } else {
+      q = query(
+        collection(db, "posts"),
+        where("userId", "==", currentUser.uid),
+        orderBy("createdAt", "desc"),
+        limit(2)
+      );
+    }
 
     const querySnapshot = await getDocs(q);
 
-    const userPosts = querySnapshot.docs.map((doc) => doc.data());
+    const userData = querySnapshot.docs.map((doc) => doc.data());
 
-    setUserPosts(userPosts);
-    console.log("logging in userPosts query snapshot map result");
-    console.log(userPosts);
+    /* setUserPosts(userData); */
+    if (latestDoc) {
+      setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
+    } else {
+      setUserPosts(userData);
+    }
+
     if (querySnapshot.docs.length > 0) {
       setLatestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
     }
+
     if (querySnapshot.empty) {
-      // detach the event listener from the loading process
-      window.removeEventListener("scroll", handleScroll);
     }
   }
 
@@ -82,6 +90,12 @@ function UserProfilePosts() {
           postCreatedAt={post.createdAt}
         />
       ))}
+      <Button
+        onClick={getUserPosts}
+        sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+      >
+        Load More
+      </Button>
     </Box>
   );
 }

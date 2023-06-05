@@ -35,7 +35,7 @@ function UserProfile() {
 
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
 
-  const { currentUserData } = useContext(AuthContext);
+  const {currentUser, currentUserData } = useContext(AuthContext);
 
   return (
     <Box >
