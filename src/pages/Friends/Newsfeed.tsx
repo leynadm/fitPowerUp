@@ -12,7 +12,7 @@ function Newsfeed() {
         alignItems: "center",
       }}
     >
-      <UserWorkoutCard />
+
     </Box>
   );
 }

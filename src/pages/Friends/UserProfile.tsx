@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext,useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -19,6 +19,11 @@ import CardMedia from "@mui/material/CardMedia";
 import { Routes, Route } from "react-router-dom";
 import UserProfilePosts from "./UserProfilePosts";
 import EditUserProfileModal from "./EditUserProfileModal";
+import { AuthContext } from "../../context/Auth";
+import FeedIcon from '@mui/icons-material/Feed';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -30,8 +35,10 @@ function UserProfile() {
 
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
 
+  const { currentUserData } = useContext(AuthContext);
+
   return (
-    <Container>
+    <Box >
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -82,22 +89,30 @@ function UserProfile() {
         </Container>
       </AppBar>
 
-      <Box
+      <Box 
         sx={{
           display: "flex",
           flexDirection: "column",
-          margin: "none",
-          padding: "none",
         }}
       >
         <Box sx={{ display: "flex" }}>
-          <Stack direction="row" spacing={2}>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 56, height: 56, alignSelf: "center" }}
-            />
-          </Stack>
+          {currentUserData.profileImage !== '' ? (
+            <Stack direction="row" spacing={2}>
+              <Avatar
+                alt="Remy Sharp"
+                src={currentUserData.profileImage}
+                sx={{ width: 56, height: 56, alignSelf: "center" }}
+              />
+            </Stack>
+          ) : (
+            <Stack direction="row" spacing={2}>
+              <Avatar
+                alt="Remy Sharp"
+                src="/static/images/avatar/1.jpg"
+                sx={{ width: 56, height: 56, alignSelf: "center" }}
+              />
+            </Stack>
+          )}
 
           <Box
             sx={{
@@ -117,7 +132,7 @@ function UserProfile() {
                 fontSize: "large",
               }}
             >
-              Leynad
+              {currentUserData.fullname[2]}
             </Typography>
             <Button
               variant="outlined"
@@ -163,28 +178,37 @@ function UserProfile() {
             size="large"
             aria-label="large button group"
           >
-            <Button sx={{ flexGrow: 1, padding: 0, fontSize:"smaller" }} key="posts">
+            <Button
+              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
+              key="posts"
+            >
               SEE Posts
             </Button>
-            <Button sx={{ flexGrow: 1, padding: 0, fontSize:"smaller" }} key="followers">
+            <Button
+              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
+              key="followers"
+            >
               Followers
             </Button>
-            <Button sx={{ flexGrow: 1, padding: 0,fontSize:"smaller" }} key="following">
+            <Button
+              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
+              key="following"
+            >
               Following
             </Button>
           </ButtonGroup>
         </Box>
-        <Divider sx={{ width: "100%" }} />
+        <Divider sx={{ width: "100%",marginBottom:"16px" }} />
       </Box>
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
         setEditProfileModalOpen={setEditProfileModalOpen}
       />
+
       <Routes>
         <Route path="" element={<UserProfilePosts />} />
-        <Route path="profile/*" element={<UserProfile />} />
       </Routes>
-    </Container>
+    </Box>
   );
 }
 

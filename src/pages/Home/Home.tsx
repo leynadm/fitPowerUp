@@ -20,14 +20,14 @@ function Home() {
   >([]);
   const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
   useEffect(() => {
-    console.log('IN HOME: Setting up preselected exercises')
+    console.log("IN HOME: Setting up preselected exercises");
     setPreselectedExercises(importedPreselectedExercises);
   }, []);
 
   useEffect(() => {
     if (preselectedExercises.length > 0) {
-      console.log('in HOME: populating preselected exercises')
-      console.log('doing a check on all exercises:')
+      console.log("in HOME: populating preselected exercises");
+      console.log("doing a check on all exercises:");
       populatePreselectedExercises();
     }
   }, [preselectedExercises]);
@@ -159,7 +159,8 @@ function Home() {
   return (
     <Box
       sx={{
-        height: "100vh",backgroundColor:"aliceblue"
+        height: "calc(100vh - 56px)",
+        backgroundColor: "aliceblue",
       }}
     >
       <Navbar />
@@ -178,7 +179,10 @@ function Home() {
           }
           index
         />
-        <Route path="friends/*" element={<Friends />} />
+        <Route
+          path="friends/*"
+          element={<Friends existingExercises={existingExercises} />}
+        />
         <Route path="progress" element={<Progress />} />
       </Routes>
     </Box>

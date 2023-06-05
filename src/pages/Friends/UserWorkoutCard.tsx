@@ -1,19 +1,35 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import Avatar from "@mui/material/Avatar";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import formatTime from "../../utils/formatTime";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import Divider from "@mui/material/Divider";
+import CommentIcon from "@mui/icons-material/Comment";
+import Box from "@mui/material/Box";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
+import { Timestamp } from "firebase/firestore";
+interface UserProfileProps {
+  postText: any;
+  postImage: any;
+  currentUserDataName: any;
+  workoutData: any;
+  currentUserDataImage: any;
+  postTimestamp: any;
+  postCreatedAt: any;
+}
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -23,49 +39,85 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
 }));
 
-export default function UserWorkoutCard() {
-  const [expanded, setExpanded] = React.useState(false);
+function getTimeDifference(createdAt: any) {
+  if (createdAt instanceof Timestamp) {
+    // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
+    createdAt = createdAt.toDate();
+  } else if (!(createdAt instanceof Date)) {
+    // If the createdAt value is not a Date object or a Timestamp object, try to parse it as a string
+    const parsedDate = Date.parse(createdAt);
+    if (!isNaN(parsedDate)) {
+      // If the parsed value is a valid date, create a new Date object from it
+      createdAt = new Date(parsedDate);
+    } else {
+      // Otherwise, throw an error
+      throw new Error(`Invalid createdAt value: ${createdAt}`);
+    }
+  }
 
+  const now = new Date();
+  const diffMs = now.getTime() - createdAt.getTime();
+
+  // Convert milliseconds to minutes, hours, and days
+  const diffMinutes = Math.round(diffMs / (1000 * 60));
+  const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  // Determine the appropriate format based on the time difference
+  if (diffMinutes < 60) {
+    return `${diffMinutes} minutes ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours} hours ago`;
+  } else {
+    return `${diffDays} days ago`;
+  }
+}
+export default function UserWorkoutCard({
+  postText,
+  postImage,
+  currentUserDataName,
+  workoutData,
+  currentUserDataImage,
+  postTimestamp,
+  postCreatedAt,
+}: UserProfileProps) {
+  const [expanded, setExpanded] = React.useState(false);
+  const [unitsSystem, setUnitsSystem] = React.useState("kgs");
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: "100%", marginBottom: "16px" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
+          <Avatar
+            aria-label="recipe"
+            src={currentUserDataImage}
+            alt="user image"
+          />
         }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={currentUserDataName}
+        subheader={getTimeDifference(postCreatedAt)}
       />
-      {/* 
-      <CardMedia
 
-        component="img"
-        height="194"
-        image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
-      /> */}
+      <CardMedia component="img" image={postImage} alt="post image" />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          {postText}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -73,7 +125,7 @@ export default function UserWorkoutCard() {
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <InsertCommentIcon />
         </IconButton>
         <ExpandMore
           expand={expanded}
@@ -84,33 +136,146 @@ export default function UserWorkoutCard() {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Divider sx={{ width: "100%" }} />
         <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-            aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-            large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-            stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is absorbed,
-            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-            mussels, tucking them down into the rice, and cook again without
-            stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
+          <Box>
+            {workoutData
+              /* 
+              .sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              ) */
+              .map((group: any, index: number) => (
+                <Box
+                  key={index}
+                  sx={{
+                    borderRadius: "4px",
+                    boxShadow: 1,
+                    margin: "16px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      textAlign: "center",
+                      fontSize: "medium",
+                      backgroundColor: "aliceblue",
+                    }}
+                  >
+                    {group.name.toLocaleUpperCase()}
+                  </Typography>
+
+                  <Divider sx={{ backgroundColor: "aliceblue" }} />
+                  {group.exercises.map(
+                    (exercise: any, exerciseIndex: number) => (
+                      <Box
+                        key={exerciseIndex}
+                        sx={{
+                          display: "grid",
+                          gridAutoFlow: "column",
+                          gridTemplateColumns: "1fr 1fr 4fr",
+                          justifyContent: "space-evenly",
+                          justifyItems: "center",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        {exercise.comment ? ( // Check if 'comment' property exists
+                          <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                          >
+                            <CommentIcon
+                              sx={{
+                                zIndex: 0,
+                              }}
+                            />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            color="inherit"
+                            disabled // Placeholder element
+                          >
+                            <CommentIcon style={{ opacity: 0 }} />
+                          </IconButton>
+                        )}
+
+                        {exercise.is_pr ? (
+                          <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            color="inherit"
+                            disabled // Placeholder element
+                          >
+                            <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            color="inherit"
+                            disabled // Placeholder element
+                          >
+                            <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                          </IconButton>
+                        )}
+
+                        <Box
+                          sx={{
+                            display: "grid",
+
+                            gridTemplateColumns: "1fr 1fr",
+                            alignItems: "center",
+                            justifyItems: "center",
+                            width: "100%",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          {exercise.weight !== 0 && (
+                            <Typography>
+                              {`${exercise.weight.toFixed(2)} ${
+                                unitsSystem === "metric" ? "kgs" : "lbs"
+                              }`}
+                            </Typography>
+                          )}
+
+                          {exercise.reps !== 0 && (
+                            <Typography>{exercise.reps} reps</Typography>
+                          )}
+
+                          {exercise.distance !== 0 && (
+                            <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                          )}
+
+                          {exercise.time !== 0 && (
+                            <Typography>
+                              {exercise.time !== 0
+                                ? formatTime(exercise.time)
+                                : ""}
+                            </Typography>
+                          )}
+                        </Box>
+
+                        <Divider />
+                      </Box>
+                    )
+                  )}
+                </Box>
+              ))}
+          </Box>
         </CardContent>
       </Collapse>
     </Card>

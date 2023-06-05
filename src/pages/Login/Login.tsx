@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent } from "react";
+import React, {useState, ChangeEvent,useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -27,6 +27,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
+import { CurrentUserDataContext } from "../../context/CurrentUserData"
+
 function Copyright(props: any) {
   return (
     <Typography
@@ -48,6 +50,9 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+  
+  const { setContext } = useContext(CurrentUserDataContext);
+
   const navigate = useNavigate();
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -58,7 +63,8 @@ export default function SignIn() {
     navigate("/signup");
   };
 
-  function SignInWithGoogle() {
+    function SignInWithGoogle() {
+    
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -74,9 +80,7 @@ export default function SignIn() {
           console.log(newUserCheck)
           console.log('about to create new user:')
           if (newUserCheck?.isNewUser) {
-            console.log('creating new user')
             createUserDoc(user.uid, user.displayName);
-            console.log('user created')
           }
           // Query the users collection to retrieve the document with the given userID
 

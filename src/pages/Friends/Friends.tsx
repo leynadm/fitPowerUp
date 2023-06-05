@@ -21,6 +21,7 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Newsfeed from "./Newsfeed";
 import Container from "@mui/material/Container";
+import Exercise from "../../utils/interfaces/Exercise";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,7 +63,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function Friends() {
+interface HomeProps{
+  existingExercises: { name: string; exercises: Exercise[] }[];
+}
+
+function Friends({existingExercises}:HomeProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -92,13 +97,6 @@ function Friends() {
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-  const { currentUser } = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log("logging Current User:");
-    console.log(currentUser);
-  });
 
   const [addContentModalOpen, setAddContentModalOpen] = useState(false);
 
@@ -173,7 +171,7 @@ function Friends() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{width:"100%",backgroundColor:"aliceblue" }}>
       <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
         <Toolbar>
           {/* 
@@ -254,9 +252,11 @@ function Friends() {
       <AddContentModal
         addContentModalOpen={addContentModalOpen}
         setAddContentModalOpen={setAddContentModalOpen}
+        existingExercises={existingExercises}
       />
 
-      <Container sx={{ marginTop: "8px" }}>
+      {/* This is the container that I might have to check if it reached to bottom */}
+      <Container sx={{height:"100%" }}>
         <Routes>
           <Route path="" element={<Newsfeed />} />
           <Route path="profile/*" element={<UserProfile />} />

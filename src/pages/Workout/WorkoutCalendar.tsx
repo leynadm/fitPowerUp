@@ -49,6 +49,7 @@ function WorkoutCalendar({
         key={day.toString()}
         overlap="circular"
         badgeContent={isUniqueDate ? "✔️" : undefined}
+        showZero={false}
       >
         <PickersDay {...props} onClick={() => handleDayClick(day)} />
       </Badge>
@@ -112,6 +113,8 @@ function WorkoutCalendar({
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
+          showDaysOutsideCurrentMonth
+          fixedWeekNumber={6} 
           defaultValue={initialValue}
           slots={{
             day: ServerDay,
