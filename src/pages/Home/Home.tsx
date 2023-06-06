@@ -7,6 +7,7 @@ import Workout from "../Workout/Workout";
 import Box from "@mui/material/Box";
 import importedPreselectedExercises from "../../utils/preselectedExercises";
 import Exercise from "../../utils/interfaces/Exercise";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 function Home() {
   const [preselectedExercises, setPreselectedExercises] = useState<
@@ -155,12 +156,30 @@ function Home() {
       };
     };
   }
-
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#1976d2',
+      },
+    },
+  });
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: '#000000',
+      },
+      secondary: {
+        main: '#808080',
+      },
+    },
+  });
   return (
+    <ThemeProvider theme={theme}>
     <Box
       sx={{
         height: "calc(100vh - 56px)",
-        backgroundColor: "aliceblue",
+        backgroundColor: "#F0F2F5",
       }}
     >
       <Navbar />
@@ -186,6 +205,7 @@ function Home() {
         <Route path="progress" element={<Progress />} />
       </Routes>
     </Box>
+    </ThemeProvider>
   );
 }
 

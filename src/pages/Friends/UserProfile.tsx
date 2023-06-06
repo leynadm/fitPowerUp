@@ -23,7 +23,9 @@ import { AuthContext } from "../../context/Auth";
 import FeedIcon from '@mui/icons-material/Feed';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-
+import UserProfileFollowers from "./UserProfileFollowers";
+import UserProfileFollowing from "./UserProfileFollowing";
+import { useNavigate } from "react-router-dom";
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -36,9 +38,21 @@ function UserProfile() {
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
 
   const {currentUser, currentUserData } = useContext(AuthContext);
+  const navigate = useNavigate()
+  function handleUserProfilePostsBtn(){
+    navigate("")
+  }
+
+  function handleUserProfileFollowersBtn(){
+    navigate("followers")
+  }
+
+  function handleUserProfileFollowingBtn(){
+    navigate("following")
+  }
 
   return (
-    <Box >
+    <Box>
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -89,14 +103,14 @@ function UserProfile() {
         </Container>
       </AppBar>
 
-      <Box 
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
         }}
       >
         <Box sx={{ display: "flex" }}>
-          {currentUserData.profileImage !== '' ? (
+          {currentUserData.profileImage !== "" ? (
             <Stack direction="row" spacing={2}>
               <Avatar
                 alt="Remy Sharp"
@@ -162,7 +176,9 @@ function UserProfile() {
 
         <Divider sx={{ width: "100%" }} />
 
-        <Box>
+
+        <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
+          {/* 
           <ButtonGroup
             variant="text"
             sx={{
@@ -177,28 +193,84 @@ function UserProfile() {
             }}
             size="large"
             aria-label="large button group"
+          >  */}
+
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              color: "black",
+              flexGrow: 1,
+              margin: 1,
+              fontSize: "small",
+              backgroundColor: "white",
+              border: "none",
+              borderRadius: 2,
+              paddingLeft: "4px",
+              paddingRight: "4px",
+            }}
+            key="posts"
+            variant="contained"
+            onClick={handleUserProfilePostsBtn}
           >
-            <Button
-              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
-              key="posts"
-            >
-              SEE Posts
-            </Button>
-            <Button
-              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
-              key="followers"
-            >
-              Followers
-            </Button>
-            <Button
-              sx={{ flexGrow: 1, padding: 0, fontSize: "smaller" }}
-              key="following"
-            >
-              Following
-            </Button>
+            <FeedIcon />
+          </Button>
+
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              color: "black",
+              flexGrow: 1,
+              margin: 1,
+              fontSize: "small",
+              backgroundColor: "white",
+              border: "none",
+              borderRadius: 2,
+              paddingLeft: "4px",
+              paddingRight: "4px",
+            }}
+            key="followers"
+            variant="contained"
+            onClick={handleUserProfileFollowersBtn}
+          >
+            <FavoriteIcon />
+          </Button>
+
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              color: "black",
+              flexGrow: 1,
+              margin: 1,
+              fontSize: "small",
+              backgroundColor: "white",
+              border: "none",
+              borderRadius: 2,
+              paddingLeft: "4px",
+              paddingRight: "4px",
+            }}
+            key="following"
+            variant="contained"
+            onClick={handleUserProfileFollowingBtn}
+          >
+            <FavoriteBorderIcon />
+          </Button>
+
+          {/* 
           </ButtonGroup>
+            */}
         </Box>
+        {/* 
         <Divider sx={{ width: "100%",marginBottom:"16px" }} />
+            */}
       </Box>
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
@@ -207,6 +279,8 @@ function UserProfile() {
 
       <Routes>
         <Route path="" element={<UserProfilePosts />} />
+        <Route path="followers" element={<UserProfileFollowers />} />
+        <Route path="following" element={<UserProfileFollowing />} />
       </Routes>
     </Box>
   );

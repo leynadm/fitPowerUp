@@ -49,6 +49,15 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
+
 export default function SignIn() {
   
   const { setContext } = useContext(CurrentUserDataContext);

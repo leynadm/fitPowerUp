@@ -155,7 +155,7 @@ function ExerciseSelected({
           alignItems: "center",
           height: "32px",
           width: "100vw",
-          backgroundColor: "#3f51b5"
+          backgroundColor: "#808080"
         }}
       > 
         <Button

@@ -171,7 +171,7 @@ function Friends({existingExercises}:HomeProps) {
   }
 
   return (
-    <Box sx={{width:"100%",backgroundColor:"aliceblue" }}>
+    <Box sx={{width:"100%",backgroundColor:"#F0F2F5" }}>
       <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
         <Toolbar>
           {/* 

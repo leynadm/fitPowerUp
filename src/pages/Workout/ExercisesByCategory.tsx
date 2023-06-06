@@ -195,7 +195,7 @@ function ExercisesByCategory({
       >
         {query !== ""
           ? exercisesToSearch.map((exercise, index) => (
-              <Box>
+              <Box key={index}>
                 <Box
                   sx={{
                     display: "flex",

@@ -162,7 +162,7 @@ export default function UserWorkoutCard({
                     sx={{
                       textAlign: "center",
                       fontSize: "medium",
-                      backgroundColor: "aliceblue",
+                      backgroundColor: "#F0F2F5",
                     }}
                   >
                     {group.name.toLocaleUpperCase()}

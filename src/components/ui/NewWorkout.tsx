@@ -225,6 +225,8 @@ function NewWorkout({
     setOpenViewCommentModal(!openViewCommentModal);
   }
 
+  
+
   return (
     <Box
       sx={{
@@ -369,7 +371,7 @@ function NewWorkout({
           justifyContent: "space-between",
           alignItems: "center",
           height: "32px",
-          backgroundColor: "#3f51b5",
+          backgroundColor: "#808080",
           width: "100%",
         }}
       >
