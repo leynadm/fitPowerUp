@@ -59,6 +59,7 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
   const resetQuery = () => {
     setQuery("");
   };
+
   return (
     <Search>
       <SearchIconWrapper>
@@ -71,7 +72,7 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
         onChange={onChange}
         value={query}
       />
-            {query !== "" && (
+      {query !== "" && (
         <IconButton
           aria-label="clear search"
           onClick={resetQuery}
@@ -80,7 +81,6 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
           <ClearIcon />
         </IconButton>
       )}
-
     </Search>
   );
 }

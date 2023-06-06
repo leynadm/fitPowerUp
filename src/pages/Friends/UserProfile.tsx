@@ -109,13 +109,13 @@ function UserProfile() {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex",gap:2 }}>
           {currentUserData.profileImage !== "" ? (
             <Stack direction="row" spacing={2}>
               <Avatar
                 alt="Remy Sharp"
                 src={currentUserData.profileImage}
-                sx={{ width: 56, height: 56, alignSelf: "center" }}
+                sx={{ width: 64, height: 64, alignSelf: "center" }}
               />
             </Stack>
           ) : (
@@ -136,6 +136,7 @@ function UserProfile() {
               width: "100%",
               justifyContent: "center",
               justifyItems: "center",
+              
             }}
           >
             <Typography
@@ -144,13 +145,16 @@ function UserProfile() {
                 width: "100%",
                 alignSelf: "center",
                 fontSize: "large",
+                fontWeight:"bold"
               }}
             >
-              {currentUserData.fullname[2]}
+              {`${currentUserData.name} ${currentUserData.surname}` }
             </Typography>
+            
             <Button
-              variant="outlined"
-              sx={{ backgroundColor: "white", color: "black", width: "100%" }}
+              variant="contained"
+              color="success"
+              sx={{ width: "80%" }}
               onClick={() => setEditProfileModalOpen(true)}
             >
               Edit Profile
@@ -205,17 +209,17 @@ function UserProfile() {
               flexGrow: 1,
               margin: 1,
               fontSize: "small",
-              backgroundColor: "white",
               border: "none",
               borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
+              backgroundColor: "white",
             }}
             key="posts"
             variant="contained"
             onClick={handleUserProfilePostsBtn}
           >
-            <FeedIcon />
+            <FeedIcon sx={{color:"#FF8C00"}} />
           </Button>
 
           <Button
@@ -224,7 +228,6 @@ function UserProfile() {
               alignItems: "center",
               justifyContent: "center",
               width: "100%",
-              color: "black",
               flexGrow: 1,
               margin: 1,
               fontSize: "small",
@@ -238,7 +241,7 @@ function UserProfile() {
             variant="contained"
             onClick={handleUserProfileFollowersBtn}
           >
-            <FavoriteIcon />
+            <FavoriteIcon sx={{color:"#FF8C00"}} />
           </Button>
 
           <Button
@@ -261,7 +264,7 @@ function UserProfile() {
             variant="contained"
             onClick={handleUserProfileFollowingBtn}
           >
-            <FavoriteBorderIcon />
+            <FavoriteBorderIcon sx={{color:"#FF8C00"}} />
           </Button>
 
           {/* 

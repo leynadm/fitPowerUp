@@ -96,7 +96,7 @@ function BodyTracker({todayDate}:WorkoutProps) {
           alignItems: "center",
           height: "32px",
           width: "100vw",
-          backgroundColor: "#3f51b5",
+          backgroundColor: "#FF8C00",
         }}
       >
         <Button

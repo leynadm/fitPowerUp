@@ -181,6 +181,7 @@ function AddContentModal({
                 />
               }
               title={currentUserData.fullname[2]}
+              titleTypographyProps={{variant:'h6',padding:0,margin:0 }}
               subheader={postDate.toDateString()}
             />
 
@@ -222,7 +223,7 @@ function AddContentModal({
                   padding: "0",
                 }}
               >
-                <Box sx={{ display: "flex" }}>
+                <Box sx={{ display: "flex",gap:1 }}>
                   <ImageIcon />
                   <p>Add a photo to your post</p>
                   <input
@@ -264,7 +265,6 @@ function AddContentModal({
 
             <Box sx={{ display: "flex" }}>
               <Button
-                disableElevation
                 variant="contained"
                 color="success"
                 sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
@@ -273,7 +273,6 @@ function AddContentModal({
                 POST
               </Button>
               <Button
-                disableElevation
                 variant="contained"
                 sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
                 onClick={handleClose}
@@ -311,7 +310,7 @@ function AddContentModal({
                       >
                         <Typography
                           variant="h6"
-                          sx={{ textAlign: "center", fontSize: "medium" }}
+                          sx={{ textAlign: "center", fontSize: "medium",backgroundColor:"#F0F2F5" }}
                         >
                           {group.name.toLocaleUpperCase()}
                         </Typography>
@@ -394,7 +393,7 @@ function AddContentModal({
                               }}
                             >
                               {exercise.weight !== 0 && (
-                                <Typography>
+                                <Typography sx={{fontSize:"small"}}>
                                   {`${exercise.weight.toFixed(2)} ${
                                     unitsSystem === "metric" ? "kgs" : "lbs"
                                   }`}
@@ -402,15 +401,15 @@ function AddContentModal({
                               )}
 
                               {exercise.reps !== 0 && (
-                                <Typography>{exercise.reps} reps</Typography>
+                                <Typography sx={{fontSize:"small"}}>{exercise.reps} reps</Typography>
                               )}
 
                               {exercise.distance !== 0 && (
-                                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                                <Typography sx={{fontSize:"small"}}>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                               )}
 
                               {exercise.time !== 0 && (
-                                <Typography>
+                                <Typography sx={{fontSize:"small"}}>
                                   {exercise.time !== 0
                                     ? formatTime(exercise.time)
                                     : ""}

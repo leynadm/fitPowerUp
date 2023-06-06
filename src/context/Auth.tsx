@@ -41,7 +41,10 @@ export const AuthProvider = ({ children}:AuthProviderProps ) => {
           sex: "male",
           surname: "User",
           profileImage:"",
-          verified:false});
+          verified:false,
+          privateAccount:false
+        
+        });
       }
     });
 

@@ -131,17 +131,6 @@ function ExerciseSelected({
                   <EmojiEventsIcon />
                 </IconButton>
 
-                
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={() => console.log("yes")}
-                >
-                  <AddOutlinedIcon />
-                </IconButton>
               </Box>
             </Box>
           </Toolbar>
@@ -155,7 +144,7 @@ function ExerciseSelected({
           alignItems: "center",
           height: "32px",
           width: "100vw",
-          backgroundColor: "#808080"
+          backgroundColor: "#FF8C00"
         }}
       > 
         <Button

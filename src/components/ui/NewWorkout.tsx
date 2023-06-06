@@ -371,7 +371,7 @@ function NewWorkout({
           justifyContent: "space-between",
           alignItems: "center",
           height: "32px",
-          backgroundColor: "#808080",
+          backgroundColor: "#FF8C00",
           width: "100%",
         }}
       >

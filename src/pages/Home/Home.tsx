@@ -172,8 +172,19 @@ function Home() {
       secondary: {
         main: '#808080',
       },
+      success: {
+        main: '#FF8C00',
+      },
     },
+    typography: {
+
+      button: { // Here is where you can customise the button
+        fontWeight: "bold", 
+      },
+    }    
   });
+
+
   return (
     <ThemeProvider theme={theme}>
     <Box

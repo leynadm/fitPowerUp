@@ -678,7 +678,7 @@ function ExerciseSelectedTrack({
                 {measurementType.toLocaleUpperCase()}
               </Typography>
 
-              <Box sx={{ display: "flex", gap: "8px", width: "100%" }}>
+              <Box sx={{ display: "flex", gap: "8px", width: "100%",height:"100%" }}>
                 <TextField
                   id={measurementType}
                   value={distanceValue}
@@ -686,6 +686,9 @@ function ExerciseSelectedTrack({
                   type="number"
                   InputLabelProps={{
                     shrink: true,
+                  }}
+                  inputProps={{
+                    style: { fontSize: "1.5rem", textAlign: "center",padding:"10px" },
                   }}
                   sx={{ textAlign: "center", width: "100%" }}
                   variant="filled"
@@ -745,6 +748,10 @@ function ExerciseSelectedTrack({
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  inputProps={{
+                    style: { fontSize: "1.5rem", textAlign: "center",
+                    padding:"8px" },
+                  }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
                   onChange={handleTimeFieldsChange}
@@ -757,6 +764,10 @@ function ExerciseSelectedTrack({
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  inputProps={{
+                    style: { fontSize: "1.5rem", textAlign: "center",
+                    padding:"8px" },
+                  }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
                   onChange={handleTimeFieldsChange}
@@ -768,6 +779,10 @@ function ExerciseSelectedTrack({
                   type="number"
                   InputLabelProps={{
                     shrink: true,
+                  }}
+                  inputProps={{
+                    style: { fontSize: "1.5rem", textAlign: "center",
+                    padding:"8px" },
                   }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
@@ -822,7 +837,8 @@ function ExerciseSelectedTrack({
                 id={measurementType}
                 variant="filled"
                 inputProps={{
-                  style: { fontSize: "large", textAlign: "center" },
+                  style: { fontSize: "1.5rem", textAlign: "center",height:"100%",
+                  padding:"8px" },
                 }}
                 value={
                   measurementType === "weight"
@@ -854,14 +870,14 @@ function ExerciseSelectedTrack({
         <Button
           variant="contained"
           color="success"
-          sx={{ width: "100%", margin: "0.25rem" }}
+          sx={{ width: "100%", margin: "0.25rem",fontWeight:"bold" }}
           onClick={saveExerciseEntry}
         >
           SAVE
         </Button>
         <Button
           variant="contained"
-          sx={{ width: "100%", margin: "0.25rem" }}
+          sx={{ width: "100%", margin: "0.25rem",fontWeight:"bold" }}
           onClick={handleClearButtonClick}
         >
           CLEAR

@@ -30,6 +30,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import uuid from "react-uuid";
 import User from "../../utils/interfaces/User";
+import Switch from '@mui/material/Switch';
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -229,7 +230,7 @@ function EditUserProfileModal({
               />
             </Box>
             <Box>
-              <FormControl>
+              <FormControl sx={{display:"flex",justifyContent:"center",width:"100%",alignItems:"center"}}>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   /* 
@@ -252,6 +253,7 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
+                <FormControlLabel control={<Switch />} label="Private Account" />
               </FormControl>
             </Box>
 

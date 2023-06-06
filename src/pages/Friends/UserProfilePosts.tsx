@@ -83,7 +83,7 @@ function UserProfilePosts() {
           key={index}
           postText={post.postText}
           postImage={post.postImage}
-          currentUserDataName={currentUserData.fullname[2]}
+          currentUserDataName={`${currentUserData.name} ${currentUserData.surname}`}
           workoutData={post.workoutData}
           currentUserDataImage={currentUserData.profileImage}
           postTimestamp={post.postTimestamp}
