@@ -23,6 +23,7 @@ function UsersListItem({ usersFound }: ParentProps) {
     <Box>
       {usersFound.map((user, index) => (
         <Box
+          key={index}
           sx={{
             paddingTop: "8px",
             margin: 0,
@@ -44,7 +45,6 @@ function UsersListItem({ usersFound }: ParentProps) {
               alignSelf: "center",
               justifySelf: "center",
             }}
-            key={index}
           >
             <ListItem
               alignItems="flex-start"
@@ -58,14 +58,14 @@ function UsersListItem({ usersFound }: ParentProps) {
                 />
               </ListItemAvatar>
 
-              <Link to={`u/${user.id}`} style={{ textDecoration: 'none' }}>
+              <Link to={`u/${user.id}`} style={{ textDecoration: "none" }}>
                 <Typography
                   sx={{
                     flexGrow: 1,
                     alignSelf: "center",
                     fontSize: "large",
                     fontWeight: "bold",
-                    color:"black"
+                    color: "black",
                   }}
                 >{`${user.name} ${user.surname}`}</Typography>
               </Link>
@@ -83,6 +83,8 @@ function UsersListItem({ usersFound }: ParentProps) {
           </List>
         </Box>
       ))}
+
+      
     </Box>
   );
 }

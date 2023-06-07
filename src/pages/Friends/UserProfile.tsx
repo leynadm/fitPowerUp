@@ -1,4 +1,4 @@
-import React, { useState,useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -17,15 +17,16 @@ import Divider from "@mui/material/Divider";
 import powerLevelImg from "../../assets/powerlevel.svg";
 import CardMedia from "@mui/material/CardMedia";
 import { Routes, Route } from "react-router-dom";
-import UserProfilePosts from "./UserProfilePosts";
 import EditUserProfileModal from "./EditUserProfileModal";
 import { AuthContext } from "../../context/Auth";
-import FeedIcon from '@mui/icons-material/Feed';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FeedIcon from "@mui/icons-material/Feed";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import UserProfilePosts from "./UserProfilePosts";
 import UserProfileFollowers from "./UserProfileFollowers";
 import UserProfileFollowing from "./UserProfileFollowing";
 import { useNavigate } from "react-router-dom";
+import VerifiedIcon from "@mui/icons-material/Verified";
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,20 +38,21 @@ function UserProfile() {
 
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
 
-  const {currentUser, currentUserData } = useContext(AuthContext);
-  const navigate = useNavigate()
-  function handleUserProfilePostsBtn(){
-    navigate("")
+  const { currentUser, currentUserData } = useContext(AuthContext);
+  const [userIndividualFollowers, setUserIndividualFollowers] = useState([])
+  const navigate = useNavigate();
+  function handleUserProfilePostsBtn() {
+    navigate("");
   }
 
-  function handleUserProfileFollowersBtn(){
-    navigate("followers")
+  function handleUserProfileFollowersBtn() {
+    navigate("followers",{state:{userIndividualFollowers:userIndividualFollowers}});
   }
 
-  function handleUserProfileFollowingBtn(){
-    navigate("following")
+  function handleUserProfileFollowingBtn() {
+    navigate("following");
   }
-
+ 
   return (
     <Box>
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
@@ -92,12 +94,12 @@ function UserProfile() {
                 flexGrow: 1,
                 fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: ".3rem",
+                letterSpacing: ".1rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
             >
-              Profile
+              {`${currentUserData.name} ${currentUserData.surname}`}
             </Typography>
           </Toolbar>
         </Container>
@@ -109,7 +111,7 @@ function UserProfile() {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ display: "flex",gap:2 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
           {currentUserData.profileImage !== "" ? (
             <Stack direction="row" spacing={2}>
               <Avatar
@@ -136,7 +138,6 @@ function UserProfile() {
               width: "100%",
               justifyContent: "center",
               justifyItems: "center",
-              
             }}
           >
             <Typography
@@ -145,12 +146,16 @@ function UserProfile() {
                 width: "100%",
                 alignSelf: "center",
                 fontSize: "large",
-                fontWeight:"bold"
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}
             >
-              {`${currentUserData.name} ${currentUserData.surname}` }
+              {`${currentUserData.name} ${currentUserData.surname}`}
+              {currentUserData.verified && <VerifiedIcon />}
             </Typography>
-            
+
             <Button
               variant="contained"
               color="success"
@@ -180,25 +185,7 @@ function UserProfile() {
 
         <Divider sx={{ width: "100%" }} />
 
-
         <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
-          {/* 
-          <ButtonGroup
-            variant="text"
-            sx={{
-              display: "flex",
-              justifyItems: "center",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              gap: 1,
-              marginTop: "8px",
-              marginBottom: "8px",
-            }}
-            size="large"
-            aria-label="large button group"
-          >  */}
-
           <Button
             sx={{
               display: "flex",
@@ -219,7 +206,7 @@ function UserProfile() {
             variant="contained"
             onClick={handleUserProfilePostsBtn}
           >
-            <FeedIcon sx={{color:"#FF8C00"}} />
+            <FeedIcon sx={{ color: "#FF8C00" }} />
           </Button>
 
           <Button
@@ -241,7 +228,7 @@ function UserProfile() {
             variant="contained"
             onClick={handleUserProfileFollowersBtn}
           >
-            <FavoriteIcon sx={{color:"#FF8C00"}} />
+            <FavoriteIcon sx={{ color: "#FF8C00" }} />
           </Button>
 
           <Button
@@ -264,16 +251,10 @@ function UserProfile() {
             variant="contained"
             onClick={handleUserProfileFollowingBtn}
           >
-            <FavoriteBorderIcon sx={{color:"#FF8C00"}} />
+            <FavoriteBorderIcon sx={{ color: "#FF8C00" }} />
           </Button>
-
-          {/* 
-          </ButtonGroup>
-            */}
         </Box>
-        {/* 
-        <Divider sx={{ width: "100%",marginBottom:"16px" }} />
-            */}
+
       </Box>
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
@@ -282,7 +263,9 @@ function UserProfile() {
 
       <Routes>
         <Route path="" element={<UserProfilePosts />} />
+{/* 
         <Route path="followers" element={<UserProfileFollowers />} />
+     */}    
         <Route path="following" element={<UserProfileFollowing />} />
       </Routes>
     </Box>

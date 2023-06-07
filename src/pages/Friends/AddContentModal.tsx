@@ -32,9 +32,6 @@ import {
   doc,
   Timestamp,
   serverTimestamp,
-  arrayUnion,
-  updateDoc,
-  getDoc,
 } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import uuid from "react-uuid";
@@ -224,7 +221,7 @@ function AddContentModal({
                 }}
               >
                 <Box sx={{ display: "flex",gap:1 }}>
-                  <ImageIcon />
+                  <ImageIcon sx={{margin:0,padding:0}} />
                   <p>Add a photo to your post</p>
                   <input
                     type="file"
@@ -242,7 +239,7 @@ function AddContentModal({
                 )}
               </Box>
             </Box>
-
+              <Box>
             <FormControl component="fieldset">
               <FormGroup
                 aria-label="position"
@@ -262,7 +259,7 @@ function AddContentModal({
                 />
               </FormGroup>
             </FormControl>
-
+            </Box>
             <Box sx={{ display: "flex" }}>
               <Button
                 variant="contained"

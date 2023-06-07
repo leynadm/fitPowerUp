@@ -24,11 +24,12 @@ import Container from "@mui/material/Container";
 import Exercise from "../../utils/interfaces/Exercise";
 import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
-interface HomeProps{
+import SearchUserProfile from "./SearchUserProfile";
+interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
 }
 
-function Friends({existingExercises}:HomeProps) {
+function Friends({ existingExercises }: HomeProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -132,7 +133,7 @@ function Friends({existingExercises}:HomeProps) {
   }
 
   return (
-    <Box sx={{width:"100%",backgroundColor:"#F0F2F5" }}>
+    <Box sx={{ width: "100%", backgroundColor: "#F0F2F5" }}>
       <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
         <Toolbar>
           {/* 
@@ -155,8 +156,7 @@ function Friends({existingExercises}:HomeProps) {
             MUI
           </Typography>
 
-
-<SocialSearchBar/>
+          <SocialSearchBar />
           <IconButton
             size="large"
             aria-label="show 17 new notifications"
@@ -211,11 +211,12 @@ function Friends({existingExercises}:HomeProps) {
       />
 
       {/* This is the container that I might have to check if it reached to bottom */}
-      <Container sx={{height:"100%" }}>
+      <Container sx={{ height: "100%" }}>
         <Routes>
           <Route path="" element={<Newsfeed />} />
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
+          <Route path="results/u/:id" element={<SearchUserProfile />} />
         </Routes>
       </Container>
     </Box>
