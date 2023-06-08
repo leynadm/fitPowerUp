@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
@@ -7,6 +7,7 @@ import { db } from "../../config/firebase";
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
+import { AuthContext } from "../../context/Auth";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -51,7 +52,7 @@ function SocialSearchBar() {
   const navigate = useNavigate();
   const [userToSearch, setUserToSearch] = useState("");
   const [usersFound, setUsersFound] = useState<any>({});
-
+  const {currentUser,currentUserData} = useContext(AuthContext)
   async function getUsers() {
     console.log("User to search is: " + userToSearch);
 
@@ -68,7 +69,7 @@ function SocialSearchBar() {
       q = query(
         collection(db, "users"),
         where("privateAccount", "==", false),
-        limit(25)
+        limit(10)
       );
     }
 
@@ -81,7 +82,9 @@ function SocialSearchBar() {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data();
       user.id = doc.id; // Add this line to set the 'id' property
-      userResults.push(user);
+      if(user.id !== currentUser.uid){
+        userResults.push(user);
+      }
     });
 
     console.log(userResults);

@@ -94,10 +94,10 @@ export default function UserWorkoutCard({
     setExpanded(!expanded);
   };
 
-useEffect(()=>{
-  console.log('logging postImate')
-  console.log(postImage)
-},[])
+  useEffect(() => {
+    console.log("logging postImate");
+    console.log(postImage);
+  }, []);
   return (
     <Card sx={{ width: "100%", marginBottom: "16px" }}>
       <CardHeader
@@ -117,8 +117,10 @@ useEffect(()=>{
         subheader={getTimeDifference(postCreatedAt)}
       />
 
-        {postImage!==null&&      <CardMedia component="img" image={postImage} alt="post image" />}
-      
+      {postImage !== null && (
+        <CardMedia component="img" image={postImage} alt="post image" />
+      )}
+
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {postText}
@@ -247,7 +249,7 @@ useEffect(()=>{
                           }}
                         >
                           {exercise.weight !== 0 && (
-                            <Typography sx={{fontSize:"small"}}>
+                            <Typography sx={{ fontSize: "small" }}>
                               {`${exercise.weight.toFixed(2)} ${
                                 unitsSystem === "metric" ? "kgs" : "lbs"
                               }`}
@@ -255,15 +257,19 @@ useEffect(()=>{
                           )}
 
                           {exercise.reps !== 0 && (
-                            <Typography sx={{fontSize:"small"}}>{exercise.reps} reps</Typography>
+                            <Typography sx={{ fontSize: "small" }}>
+                              {exercise.reps} reps
+                            </Typography>
                           )}
 
                           {exercise.distance !== 0 && (
-                            <Typography sx={{fontSize:"small"}}>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                            <Typography
+                              sx={{ fontSize: "small" }}
+                            >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                           )}
 
                           {exercise.time !== 0 && (
-                            <Typography sx={{fontSize:"small"}}>
+                            <Typography sx={{ fontSize: "small" }}>
                               {exercise.time !== 0
                                 ? formatTime(exercise.time)
                                 : ""}

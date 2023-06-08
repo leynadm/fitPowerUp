@@ -216,7 +216,7 @@ function Friends({ existingExercises }: HomeProps) {
           <Route path="" element={<Newsfeed />} />
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
-          <Route path="results/u/:id" element={<SearchUserProfile />} />
+          <Route path="results/u/:id/*" element={<SearchUserProfile />} />
         </Routes>
       </Container>
     </Box>

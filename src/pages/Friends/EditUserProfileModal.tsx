@@ -230,7 +230,8 @@ function EditUserProfileModal({
               />
             </Box>
             <Box>
-              <FormControl sx={{display:"flex",justifyContent:"center",width:"100%",alignItems:"center"}}>
+              <FormControl sx={{display:"flex",width:"100%"}}>
+                
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   /* 
@@ -253,7 +254,10 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
-                <FormControlLabel control={<Switch />} label="Private Account" />
+                <FormControlLabel control={<Switch />} label="Hide account" />
+                <FormControlLabel control={<Switch />} label="Hide Power Level" />                
+                <FormControlLabel control={<Switch />} label="Hide my followers" />
+                <FormControlLabel control={<Switch />} label="Hide who I'm following" />
               </FormControl>
             </Box>
 

@@ -38,8 +38,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Routes, Route } from "react-router-dom";
 import SearchProfilePosts from "./SearchProfilePosts";
-import UserProfileFollowers from "./UserProfileFollowers";
-import UserProfileFollowing from "./UserProfileFollowing";
+import { useNavigate } from "react-router-dom";
+import SearchUserProfileFollowers from "./SearchUserProfileFollowers";
+import SearchUserProfileFollowing from "./SearchUserProfileFollowing";
+
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
   const { currentUser, currentUserData } = useContext(AuthContext);
@@ -47,14 +49,21 @@ function SearchUserProfile() {
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();
-  
+  const [userIndividualFollowers, setUserIndividualFollowers] = useState([]);
+  const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
+  const [userFollowing, setUserFollowing] = useState<number>(0);
+
+
   useEffect(() => {
     getProfileData();
     getRelationshipStatus();
     getUsersPosts();
+    getSearchProfileFollowers()
     console.log("logging queried user:");
     console.log(queriedUser);
   }, []); 
+  
+  const navigate = useNavigate();
 
   async function getRelationshipStatus() {
     if (!id) {
@@ -174,6 +183,37 @@ function SearchUserProfile() {
     await updateDoc(currentUserfollowersFeedRef, {
       following: arrayRemove(id),
     });
+  }
+
+  function handleSearchUserProfilePostsBtn() {
+    navigate("");
+  }
+
+  function handleSearchUserProfileFollowersBtn() {
+    navigate("followers", {
+      state: { userIndividualFollowers: userIndividualFollowers },
+    });
+  }
+
+  function handleSearchUserProfileFollowingBtn() {
+    navigate("following", {
+      state: { userIndividualFollowing: userIndividualFollowing },
+    });
+  }
+
+  async function getSearchProfileFollowers() {
+    const followersFeedRef = doc(db, "followers-feed", `${id}`);
+    const documentSnapshot = await getDoc(followersFeedRef);
+
+    if (documentSnapshot.exists()) {
+      const data = documentSnapshot.data();
+      const users = data.users || [];
+      const following = data.following || [];
+      setUserFollowers(users.length);
+      setUserFollowing(following.length);
+      setUserIndividualFollowers(users);
+      setUserIndividualFollowing(following);
+    }
   }
 
   return (
@@ -305,79 +345,130 @@ function SearchUserProfile() {
       </Box>
 
       <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
-          <Button
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              width: "100%",
-              color: "black",
-              flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              border: "none",
-              borderRadius: 2,
-              paddingLeft: "4px",
-              paddingRight: "4px",
-              backgroundColor: "white",
-            }}
-            key="posts"
-            variant="contained"
-
-          >
-            <FeedIcon sx={{ color: "#FF8C00" }} />
-          </Button>
-
-          <Button
-            sx={{
-              display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
               flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
             }}
-            key="followers"
-            variant="contained"
-
           >
-            <FavoriteIcon sx={{ color: "#FF8C00" }} />
-          </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="posts"
+              variant="contained"
+              onClick={handleSearchUserProfilePostsBtn}
+            >
+              <FeedIcon sx={{ color: "#000000" }} />
+            </Button>
 
-          <Button
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+              Newsfeed
+            </Typography>
+          </Box>
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              width: "100%",
-              color: "black",
+              alignItems: "center",
               flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
             }}
-            key="following"
-            variant="contained"
-
           >
-            <FavoriteBorderIcon sx={{ color: "#FF8C00" }} />
-          </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                flexGrow: 1,
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="followers"
+              variant="contained"
+              onClick={handleSearchUserProfileFollowersBtn}
+            >
+              <FavoriteIcon sx={{ color: "#000000" }} />
+            </Button>
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+              {userFollowers} Followers
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1,
+              paddingLeft: "4px",
+              paddingRight: "4px",
+            }}
+          >
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                color: "black",
+                flexGrow: 1,
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="following"
+              variant="contained"
+              onClick={handleSearchUserProfileFollowingBtn}
+            >
+              <FavoriteBorderIcon sx={{ color: "#000000" }} />
+            </Button>
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+            {userFollowing} Following
+            </Typography>
+          </Box>
         </Box>
 
         <Routes>
+
         <Route path="" element={<SearchProfilePosts queriedUser={queriedUser}  />} />
-        <Route path="followers" element={<UserProfileFollowers />} />
-        <Route path="following" element={<UserProfileFollowing />} />
+        <Route path="followers" element={<SearchUserProfileFollowers />} />
+                 
+        <Route path="following" element={<SearchUserProfileFollowing />} />
       </Routes>
        
     </Box>

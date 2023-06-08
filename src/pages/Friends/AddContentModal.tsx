@@ -32,6 +32,9 @@ import {
   doc,
   Timestamp,
   serverTimestamp,
+  arrayUnion,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import uuid from "react-uuid";
@@ -131,13 +134,40 @@ function AddContentModal({
 
         workoutData: existingExercises,
       });
-    }
 
+      const newFollowersFeedRef = doc(
+        collection(db, "followers-feed"),
+        currentUser.uid
+      );
+
+      const followersFeedDoc = await getDoc(newFollowersFeedRef);
+
+      const recentPosts = {
+        postId: newPostRef.id,
+        published: timestamp,
+        postText: postText,
+      };
+
+      if (!followersFeedDoc.exists()) {
+        // create the document if it doesn't exist
+        await setDoc(newFollowersFeedRef, {
+          lastPost: serverTimestampObj,
+          recentPosts: arrayUnion(recentPosts),
+          users: [],
+        });
+      } else {
+        await updateDoc(newFollowersFeedRef, {
+          lastPost: serverTimestampObj,
+          recentPosts: arrayUnion(recentPosts),
+        });
+      }
+    }
     setPostText("");
     setSelectedFile(null);
     setFileSource(null);
     handleClose();
     navigate("profile");
+
   }
 
   function removeFile() {
