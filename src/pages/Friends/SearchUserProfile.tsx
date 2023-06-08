@@ -54,7 +54,7 @@ function SearchUserProfile() {
     getUsersPosts();
     console.log("logging queried user:");
     console.log(queriedUser);
-  }, []);
+  }, []); 
 
   async function getRelationshipStatus() {
     if (!id) {
@@ -96,10 +96,9 @@ function SearchUserProfile() {
   
 
   async function followUser() {
+
     const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
-
     const followersFeedDoc = await getDoc(followersFeedRef);
-
     if (!followersFeedDoc.exists()) {
       await setDoc(followersFeedRef, {
         lastPost: null,
@@ -114,6 +113,13 @@ function SearchUserProfile() {
 
     setFollow("Unfollow");
     setUserFollowers(userFollowers + 1);
+
+    const currentUserfollowersFeedRef = doc(collection(db, "followers-feed"), `${currentUser.uid}`);
+    await updateDoc(currentUserfollowersFeedRef, {
+      following: arrayUnion(id),
+    });
+
+
   }
 
   async function getUsersPosts() {
@@ -146,16 +152,13 @@ function SearchUserProfile() {
 
   async function unfollowUser() {
     const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
-
     const followersFeedDoc = await getDoc(followersFeedRef);
-
     if (!followersFeedDoc.exists()) {
       // If the followers feed document doesn't exist, there's nothing to unfollow
       return;
     }
 
     const followersFeedData = followersFeedDoc.data();
-
     if (!followersFeedData.users.includes(currentUser.uid)) {
       // If the current user is not in the users array, they're not following this user
       return;
@@ -164,9 +167,13 @@ function SearchUserProfile() {
     await updateDoc(followersFeedRef, {
       users: arrayRemove(currentUser.uid),
     });
-
     setFollow("Follow");
     setUserFollowers(userFollowers - 1);
+  
+    const currentUserfollowersFeedRef = doc(collection(db, "followers-feed"), `${currentUser.uid}`);
+    await updateDoc(currentUserfollowersFeedRef, {
+      following: arrayRemove(id),
+    });
   }
 
   return (
@@ -372,7 +379,7 @@ function SearchUserProfile() {
         <Route path="followers" element={<UserProfileFollowers />} />
         <Route path="following" element={<UserProfileFollowing />} />
       </Routes>
-      
+       
     </Box>
   );
 }

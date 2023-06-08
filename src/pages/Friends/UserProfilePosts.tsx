@@ -18,7 +18,7 @@ function UserProfilePosts() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
-
+  const [loadButtonStatus, setLoadButtonStatus] = useState(false)
   useEffect(() => {
     getUserPosts();
 
@@ -73,6 +73,7 @@ function UserProfilePosts() {
     }
 
     if (querySnapshot.empty) {
+      setLoadButtonStatus(true)
     }
   }
 
@@ -93,8 +94,10 @@ function UserProfilePosts() {
       <Button
         onClick={getUserPosts}
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-      >
+        disabled={loadButtonStatus}
+>
         Load More
+
       </Button>
     </Box>
   );

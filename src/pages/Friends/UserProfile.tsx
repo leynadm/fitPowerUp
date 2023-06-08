@@ -27,6 +27,10 @@ import UserProfileFollowers from "./UserProfileFollowers";
 import UserProfileFollowing from "./UserProfileFollowing";
 import { useNavigate } from "react-router-dom";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import { doc, getDoc } from "firebase/firestore";
+import { db, storage } from "../../config/firebase";
+import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
+
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,22 +41,50 @@ function UserProfile() {
   }));
 
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
-
+  const [uploadCount, setUploadCount] = useState(0);
   const { currentUser, currentUserData } = useContext(AuthContext);
-  const [userIndividualFollowers, setUserIndividualFollowers] = useState([])
+  const [userIndividualFollowers, setUserIndividualFollowers] = useState([]);
+  const [userFollowers, setUserFollowers] = useState<number>(0);
+  const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
+  const [userFollowing, setUserFollowing] = useState<number>(0);
+
+  useEffect(() => {
+    getProfileFollowers();
+  }, [uploadCount]);
+
   const navigate = useNavigate();
   function handleUserProfilePostsBtn() {
     navigate("");
   }
 
   function handleUserProfileFollowersBtn() {
-    navigate("followers",{state:{userIndividualFollowers:userIndividualFollowers}});
+    navigate("followers", {
+      state: { userIndividualFollowers: userIndividualFollowers },
+    });
   }
 
   function handleUserProfileFollowingBtn() {
-    navigate("following");
+    navigate("following", {
+      state: { userIndividualFollowing: userIndividualFollowing },
+    });
   }
- 
+
+  async function getProfileFollowers() {
+    const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
+    const documentSnapshot = await getDoc(followersFeedRef);
+
+    if (documentSnapshot.exists()) {
+      const data = documentSnapshot.data();
+      const users = data.users || [];
+      const following = data.following || [];
+      setUserFollowers(users.length);
+      setUserFollowing(following.length);
+      setUserIndividualFollowers(users);
+      setUserIndividualFollowing(following);
+    }
+  }
+
+
   return (
     <Box>
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
@@ -186,75 +218,123 @@ function UserProfile() {
         <Divider sx={{ width: "100%" }} />
 
         <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
-          <Button
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              width: "100%",
-              color: "black",
+              alignItems: "center",
               flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              border: "none",
-              borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
-              backgroundColor: "white",
             }}
-            key="posts"
-            variant="contained"
-            onClick={handleUserProfilePostsBtn}
           >
-            <FeedIcon sx={{ color: "#FF8C00" }} />
-          </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="posts"
+              variant="contained"
+              onClick={handleUserProfilePostsBtn}
+            >
+              <FeedIcon sx={{ color: "#000000" }} />
+            </Button>
 
-          <Button
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+              Newsfeed
+            </Typography>
+          </Box>
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              width: "100%",
+              alignItems: "center",
               flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
             }}
-            key="followers"
-            variant="contained"
-            onClick={handleUserProfileFollowersBtn}
           >
-            <FavoriteIcon sx={{ color: "#FF8C00" }} />
-          </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                flexGrow: 1,
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="followers"
+              variant="contained"
+              onClick={handleUserProfileFollowersBtn}
+            >
+              <FavoriteIcon sx={{ color: "#000000" }} />
+            </Button>
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+              {userFollowers} Followers
+            </Typography>
+          </Box>
 
-          <Button
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              width: "100%",
-              color: "black",
+              alignItems: "center",
               flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: 2,
               paddingLeft: "4px",
               paddingRight: "4px",
             }}
-            key="following"
-            variant="contained"
-            onClick={handleUserProfileFollowingBtn}
           >
-            <FavoriteBorderIcon sx={{ color: "#FF8C00" }} />
-          </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                color: "black",
+                flexGrow: 1,
+                margin: 1,
+                fontSize: "small",
+                border: "none",
+                borderRadius: 2,
+                backgroundColor: "white",
+                ":hover": {
+                  bgcolor: "success.main", // theme.palette.primary.main
+                  border: "none",
+                },
+              }}
+              key="following"
+              variant="contained"
+              onClick={handleUserProfileFollowingBtn}
+            >
+              <FavoriteBorderIcon sx={{ color: "#000000" }} />
+            </Button>
+            <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+            {userFollowing} Following
+            </Typography>
+          </Box>
         </Box>
-
       </Box>
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
@@ -263,9 +343,9 @@ function UserProfile() {
 
       <Routes>
         <Route path="" element={<UserProfilePosts />} />
-{/* 
+
         <Route path="followers" element={<UserProfileFollowers />} />
-     */}    
+
         <Route path="following" element={<UserProfileFollowing />} />
       </Routes>
     </Box>

@@ -26,7 +26,10 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
   const [latestDoc, setLatestDoc] = useState<any>(null);
 
   useEffect(() => {
-    getUserPosts();
+    if(queriedUser){
+      getUserPosts();
+    }
+    
     console.log('logging queried user:')
     console.log(queriedUser)
     /* 
@@ -47,9 +50,6 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
 
   async function getUserPosts() {
 
-    if (!queriedUser || !queriedUser.id) {
-      return;
-    }
     
     let q;
 
@@ -88,23 +88,23 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
     if (querySnapshot.empty) {
     }
   }
-
-
+  
   return (
     <Box sx={{ paddingBottom: "56px" }}>
+
       {userPosts.map((post: any, index: number) => (
         <UserWorkoutCard
           key={index}
           postText={post.postText}
           postImage={post.postImage}
-          currentUserDataName={`${queriedUser.name} ${queriedUser.surname}`}
+          currentUserDataName={`${queriedUser?.name} ${queriedUser?.surname}`}
           workoutData={post.workoutData}
-          currentUserDataImage={queriedUser.profileImage}
+          currentUserDataImage={queriedUser?.profileImage}
           postTimestamp={post.postTimestamp}
           postCreatedAt={post.createdAt}
         />
       ))}
-      <Button
+      <Button 
         onClick={getUserPosts}
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
       >
