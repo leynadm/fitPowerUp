@@ -262,7 +262,7 @@ function NewWorkout({
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Log
             </Typography>
 
             <FitnessCenterIcon
@@ -365,7 +365,7 @@ function NewWorkout({
         </Container>
       </AppBar>
 
-      <Box
+      <Box 
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -402,7 +402,7 @@ function NewWorkout({
         </IconButton>
       </Box>
 
-      <Box sx={{ height: "calc(100% - 56px)" }}>
+      <Container sx={{ height: "calc(100% - 56px)", padding:0 }}>
         {existingExercises.length === 0 ? (
           <Box>
             <Box
@@ -603,7 +603,7 @@ function NewWorkout({
               ))}
           </Box>
         )}
-      </Box>
+      </Container>
     </Box>
   );
 }

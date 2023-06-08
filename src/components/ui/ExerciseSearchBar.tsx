@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
+import Box from "@mui/material/Box";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -61,26 +62,25 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
   };
 
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
+    <Search>      
+        <SearchIconWrapper>
+          <SearchIcon/>
+        </SearchIconWrapper>
 
-      <StyledInputBase
-        placeholder="Search for an exercise..."
-        inputProps={{ "aria-label": "search" }}
-        onChange={onChange}
-        value={query}
-      />
-      {query !== "" && (
-        <IconButton
-          aria-label="clear search"
-          onClick={resetQuery}
-          sx={{ position: "absolute", right: 8 }}
-        >
-          <ClearIcon />
-        </IconButton>
-      )}
+        <StyledInputBase
+          placeholder="Search for an exercise..."
+          inputProps={{ "aria-label": "search" }}
+          onChange={onChange}
+          value={query}
+          sx={{ width: "100%" }}
+        />
+      <Box>
+        {query !== "" && (
+          <IconButton aria-label="clear search" onClick={resetQuery}>
+            <ClearIcon />
+          </IconButton>
+        )}
+      </Box>
     </Search>
   );
 }

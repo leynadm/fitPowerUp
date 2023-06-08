@@ -59,8 +59,11 @@ function UserProfilePosts() {
 
     const querySnapshot = await getDocs(q);
 
-    const userData = querySnapshot.docs.map((doc) => doc.data());
-
+    const userData = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return { ...data, postId: doc.id };
+    });
+    
     /* setUserPosts(userData); */
     if (latestDoc) {
       setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
@@ -89,6 +92,8 @@ function UserProfilePosts() {
           currentUserDataImage={currentUserData.profileImage}
           postTimestamp={post.postTimestamp}
           postCreatedAt={post.createdAt}
+          postId={post.postId}
+          comments={post.comments}
         />
       ))}
       <Button

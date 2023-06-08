@@ -33,7 +33,7 @@ function Newsfeed() {
       followedUsersRef,
       where("users", "array-contains", currentUser.uid),
       orderBy("lastPost", "desc"),
-      limit(2)
+      limit(10)
     );
 
     // Retrieve the documents that matched the query above
@@ -41,6 +41,7 @@ function Newsfeed() {
 
     // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following
     let feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
+    console.log('logging feed data:')
     console.log(feedData);
     // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
     const feedCuratedPosts = feedData.reduce(
@@ -54,14 +55,30 @@ function Newsfeed() {
       const dateB = new Date(b.published);
       return dateA.getTime() - dateB.getTime();
     });
+    
+    const currentDate = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+    const filteredFeedCuratedPosts = sortedFeedCuratedPosts.filter((post: any) => {
+      const postTimestamp = post.published; // Assuming it's a Firebase Timestamp object
+      const postDate = postTimestamp.toDate(); // Convert Firebase Timestamp to JavaScript Date
+      return postDate >= sevenDaysAgo && postDate <= currentDate;
+    });
+    /* 
+    const filteredFeedCuratedPosts = sortedFeedCuratedPosts.slice(0, 5);
+     */
+
     // This line creates an array of post IDs from the sortedFeedCuratedPosts array.
-    const postIds = sortedFeedCuratedPosts.map((post: any) => post.postId);
+    const postIds = filteredFeedCuratedPosts.map((post: any) => post.postId);
 
     const documentIds: string[] = [];
 
     followedUsersSnapshot.forEach((doc) => {
       documentIds.push(doc.id);
     });
+    console.log('loggind document ids:')
+    console.log(documentIds)
 
     // Slice the postIds array into chunks of 10 or less
     const chunks = [];
@@ -83,6 +100,8 @@ function Newsfeed() {
         usersData.push(userData);
       });
     }
+
+    console.log('logging usersData');
     console.log(usersData);
     if (postIds.length > 0) {
       const batchedPostIds = [];
@@ -112,6 +131,7 @@ function Newsfeed() {
         const userId = userData.id;
         userIdToUserData[userId] = userData;
       });
+      console.log('logging batchedPostsData:')
       console.log(batchedPostsData);
       const postsDataBatch: any = batchedPostsData.map(async (post: any) => {
         const userID = post.userId;
@@ -136,12 +156,14 @@ function Newsfeed() {
         (a: any, b: any) => b.createdAt - a.createdAt
       );
       setUserFeed(sortedFeedBatchPostData);
+      console.log('logging sortedFeedBatchPostData')
       console.log(sortedFeedBatchPostData);
     }
   }
 
   return (
     <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
+      <Typography sx={{fontSize:"small",opacity:'50%', textAlign:"right"}}>Last 7 days</Typography>
       {userFeed.map((post: PostData, index: number) => (
         <UserWorkoutCard
           key={index}
@@ -152,6 +174,8 @@ function Newsfeed() {
           currentUserDataImage={post.profileImage}
           postTimestamp={post.timestamp}
           postCreatedAt={post.createdAt}
+          postId={post.postId}
+          comments={post?.comments}
         />
       ))}
 

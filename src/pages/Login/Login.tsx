@@ -124,7 +124,7 @@ export default function SignIn() {
 
   function handleLogIn(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-
+    console.log('clicking log in:')
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -156,12 +156,14 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
           <Box
             component="form"
             onSubmit={handleLogIn}
             noValidate
             sx={{ mt: 1 }}
           >
+
             <TextField
               margin="normal"
               fullWidth
@@ -187,10 +189,11 @@ export default function SignIn() {
               label="Remember me"
             />
             <Button
-              type="button"
+              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2,gap:1 }}
+
             >
               <LoginIcon sx={{marginRight:"8px"}}/> Sign In
             </Button>

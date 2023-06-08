@@ -254,7 +254,7 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
-                <FormControlLabel control={<Switch />} label="Hide account" />
+                <FormControlLabel control={<Switch />} label="Hide profile" />
                 <FormControlLabel control={<Switch />} label="Hide Power Level" />                
                 <FormControlLabel control={<Switch />} label="Hide my followers" />
                 <FormControlLabel control={<Switch />} label="Hide who I'm following" />

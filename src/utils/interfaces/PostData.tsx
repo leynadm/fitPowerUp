@@ -10,4 +10,5 @@ export type PostData = {
     workoutData?:any
     profileImage:string
     postImage:string
+    comments?:any
   };

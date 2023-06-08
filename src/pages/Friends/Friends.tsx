@@ -25,6 +25,7 @@ import Exercise from "../../utils/interfaces/Exercise";
 import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
 }
@@ -113,6 +114,18 @@ function Friends({ existingExercises }: HomeProps) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
+
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 17 new notifications"
+          color="inherit"
+        >
+                    <ManageAccountsIcon />
+        </IconButton>
+        <p>Account</p>
+      </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -9,9 +9,7 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import formatTime from "../../utils/formatTime";
@@ -21,6 +19,31 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { Timestamp } from "firebase/firestore";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import SendIcon from "@mui/icons-material/Send";
+import ReplyIcon from "@mui/icons-material/Reply";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import PostComment from "./PostComment";
+import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
+import {
+  collection,
+  setDoc,
+  doc,
+  serverTimestamp,
+  arrayUnion,
+  updateDoc,
+  getDoc,
+  onSnapshot
+} from "firebase/firestore";
+import { db } from "../../config/firebase";
+import { AuthContext } from "../../context/Auth";
 interface UserProfileProps {
   postText: any;
   postImage: any;
@@ -29,10 +52,16 @@ interface UserProfileProps {
   currentUserDataImage: any;
   postTimestamp: any;
   postCreatedAt: any;
+  postId: string;
+  comments:any
 }
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+
+interface ExpandMoreCommentProps extends IconButtonProps {
+  expandComment: boolean;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -46,39 +75,19 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-function getTimeDifference(createdAt: any) {
-  if (createdAt instanceof Timestamp) {
-    // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
-    createdAt = createdAt.toDate();
-  } else if (!(createdAt instanceof Date)) {
-    // If the createdAt value is not a Date object or a Timestamp object, try to parse it as a string
-    const parsedDate = Date.parse(createdAt);
-    if (!isNaN(parsedDate)) {
-      // If the parsed value is a valid date, create a new Date object from it
-      createdAt = new Date(parsedDate);
-    } else {
-      // Otherwise, throw an error
-      throw new Error(`Invalid createdAt value: ${createdAt}`);
-    }
-  }
+const ExpandMoreComment = styled((props: ExpandMoreCommentProps) => {
+  const { expandComment, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expandComment }) => ({
+  transform: !expandComment ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
-  const now = new Date();
-  const diffMs = now.getTime() - createdAt.getTime();
 
-  // Convert milliseconds to minutes, hours, and days
-  const diffMinutes = Math.round(diffMs / (1000 * 60));
-  const diffHours = Math.round(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
-  // Determine the appropriate format based on the time difference
-  if (diffMinutes < 60) {
-    return `${diffMinutes} minutes ago`;
-  } else if (diffHours < 24) {
-    return `${diffHours} hours ago`;
-  } else {
-    return `${diffDays} days ago`;
-  }
-}
 export default function UserWorkoutCard({
   postText,
   postImage,
@@ -87,17 +96,67 @@ export default function UserWorkoutCard({
   currentUserDataImage,
   postTimestamp,
   postCreatedAt,
+  postId,
+  comments:initialComments
 }: UserProfileProps) {
-  const [expanded, setExpanded] = React.useState(false);
-  const [unitsSystem, setUnitsSystem] = React.useState("kgs");
+  const { currentUser, currentUserData } = useContext(AuthContext);
+  const [commentExpanded, setCommentExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [unitsSystem, setUnitsSystem] = useState("kgs");
+  const [commentText, setCommentText] = useState("");
+  const [fetchedComments, setFetchedComments] = useState(initialComments);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   useEffect(() => {
-    console.log("logging postImate");
-    console.log(postImage);
-  }, []);
+    const postDocRef = doc(db, "posts", postId);
+
+    const unsubscribe = onSnapshot(postDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const updatedComments = docSnapshot.data().comments;
+        setFetchedComments(updatedComments); // Update the fetched comments state
+      }
+    });
+
+    return () => unsubscribe();
+  }, [postId]);
+
+
+  const handleCommentExpandClick = () => {
+    setCommentExpanded(!commentExpanded);
+  };
+
+  function addComment() {
+    if (commentText !== "") {
+      const postRef = doc(db, "posts", postId);
+
+      const serverTimestampObj = serverTimestamp();
+      const timestamp = Timestamp.fromMillis(Date.now());
+
+      updateDoc(postRef, {
+        comments: arrayUnion({
+          content: commentText,
+          userId: currentUser.uid,
+          timestamp: timestamp,
+          name: currentUserData.name,
+          surname: currentUserData.surname,
+          profileImage:currentUserData.profileImage
+        }),
+
+      })
+        .then(() => {
+          // Comment added successfully
+          console.log("Comment added");
+          setCommentText(""); // Clear the comment text
+        })
+        .catch((error) => {
+          // Error occurred while adding comment
+          console.error("Error adding comment:", error);
+        });
+    }
+  }
+
   return (
     <Card sx={{ width: "100%", marginBottom: "16px" }}>
       <CardHeader
@@ -126,13 +185,32 @@ export default function UserWorkoutCard({
           {postText}
         </Typography>
       </CardContent>
+
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
+        {/* 
+          <IconButton aria-label="share">
+        
+        
           <InsertCommentIcon />
-        </IconButton>
+        
+        
+          </IconButton>
+
+  */}
+
+        <ExpandMoreComment
+          expandComment={commentExpanded}
+          onClick={handleCommentExpandClick}
+          aria-expanded={commentExpanded}
+          aria-label="show more"
+        >
+          <InsertCommentIcon />
+        </ExpandMoreComment>
+        <Typography >{fetchedComments.length}</Typography>
+        
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -149,10 +227,10 @@ export default function UserWorkoutCard({
           <Box>
             {workoutData
               /* 
-              .sort(
-                (a, b) =>
-                  new Date(b.date).getTime() - new Date(a.date).getTime()
-              ) */
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                ) */
               .map((group: any, index: number) => (
                 <Box
                   key={index}
@@ -283,6 +361,41 @@ export default function UserWorkoutCard({
                   )}
                 </Box>
               ))}
+          </Box>
+        </CardContent>
+      </Collapse>
+
+      <Collapse in={commentExpanded} timeout="auto" unmountOnExit>
+        <Divider sx={{ width: "100%" }} />
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <TextField
+              multiline
+              id="input-with-sx"
+              label="Write a comment"
+              variant="standard"
+              sx={{ width: "100%" }}
+              onChange={(e) => setCommentText(e.target.value)}
+              value={commentText}
+            />
+            <IconButton onClick={addComment}>
+              <ReplyIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+            </IconButton>
+          </Box>
+
+          <Box sx={{margin:0,padding:0}}>
+            {fetchedComments.slice().reverse().map((comment: any, index: number) => (
+              <Box sx={{margin:0,padding:0}} key={index}>
+                <PostComment comment={comment} />
+              </Box>
+            ))}
           </Box>
         </CardContent>
       </Collapse>

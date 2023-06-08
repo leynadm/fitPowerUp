@@ -19,7 +19,7 @@ import checkExercisePR from "../../utils/CRUDFunctions/checkExercisePR";
 import updateExerciseIsPrToFalse from "../../utils/CRUDFunctions/updateExerciseIsPrToFalse";
 import findMaxReps from "../../utils/CRUDFunctions/findMaxReps";
 import findMaxWeight from "../../utils/CRUDFunctions/findMaxWeight";
-
+import Container from '@mui/material/Container';
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   todayDate: Date | undefined;
@@ -614,7 +614,7 @@ function ExerciseSelectedTrack({
   };
 
   return (
-    <Box
+    <Container
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -986,7 +986,7 @@ function ExerciseSelectedTrack({
           </Box>
         ))}
       </Box>
-    </Box>
+    </Container>
   );
 }
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+
+import { AuthContext } from "../../context/Auth";
+import { auth, db } from "../../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc, arrayUnion, Timestamp } from "firebase/firestore";
 
 function Copyright(props: any) {
   return (
@@ -30,8 +35,14 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
+
+
 export default function SignUp() {
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -47,6 +58,48 @@ export default function SignUp() {
     navigate("/");
   };
   
+  const handleSignUp = async (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+      await setDoc(doc(db, "users", user.uid), {
+        sex: "male",
+        name: name,
+        surname: surname,
+        verified: false,
+        fullname: arrayUnion(name, surname, `${name} ${surname}`),
+        profileImage:"",
+        privateAccount:false
+      });
+    } catch (error) {
+      if (isFirebaseError(error)) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(email, password);
+      } else {
+        console.log("An unknown error occurred:", error);
+      }
+    }
+  };
+
+  function isFirebaseError(
+    error: unknown
+  ): error is { code: string; message: string } {
+    return (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      "message" in error &&
+      typeof (error as any).code === "string" &&
+      typeof (error as any).message === "string"
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,7 +119,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -77,6 +130,7 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -87,6 +141,7 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={(e) => setSurname(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -97,6 +152,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -108,6 +164,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

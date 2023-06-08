@@ -10,6 +10,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "../../components/ui/ViewCommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
+import Container from "@mui/material/Container";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   unitsSystem: string;
@@ -123,9 +124,9 @@ function ExerciseSelectedHistory({
       >
         {selectedExercise.name.toLocaleUpperCase()}
       </Typography>
-      <Divider sx={{ width: "100vw" }}></Divider>
+      <Divider sx={{ width: "100vw" }}/>
 
-      <Box
+      <Container
         sx={{
           width: "100vw",
         }}
@@ -249,7 +250,7 @@ function ExerciseSelectedHistory({
               ))}
             </Box>
           ))}
-      </Box>
+      </Container>
     </Box>
   );
 }
