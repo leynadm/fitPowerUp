@@ -54,6 +54,7 @@ interface FriendsProps {
   setAddContentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
   existingExercises: { name: string; exercises: Exercise[] }[];
+  unitsSystem:string
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -69,21 +70,23 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+
 }
 
 function AddContentModal({
   addContentModalOpen,
   setAddContentModalOpen,
   existingExercises,
+  unitsSystem
 }: FriendsProps) {
   const handleClose = () => setAddContentModalOpen(false);
   const [postDate, setPostDate] = useState(new Date());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
   const [expanded, setExpanded] = React.useState(false);
-  const [unitsSystem, setUnitsSystem] = useState("kgs");
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
+  const [addWorkout, setAddWorkout] = useState(false)
 
   const navigate = useNavigate();
 
@@ -131,8 +134,9 @@ function AddContentModal({
         postImage: imageUrl,
         timestamp: timestamp,
         commentsCount: 0,
-
+        showWorkout:addWorkout,
         workoutData: existingExercises,
+        unitsSystem:unitsSystem
       });
 
       const newFollowersFeedRef = doc(
@@ -275,16 +279,20 @@ function AddContentModal({
                 aria-label="position"
                 sx={{ display: "flex", flexDirection: "row" }}
               >
+                {/* 
                 <FormControlLabel
                   value="end"
                   control={<Checkbox />}
                   label="Add Power Level"
                   labelPlacement="end"
-                />
+                /> */}
                 <FormControlLabel
                   value="end"
-                  control={<Checkbox />}
-                  label="Add workout"
+                  control={<Checkbox 
+                  value={addWorkout}
+                  onChange={()=>setAddWorkout(!addWorkout)}
+                  />}
+                  label="Show workout in post"
                   labelPlacement="end"
                 />
               </FormGroup>

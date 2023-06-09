@@ -11,4 +11,6 @@ export type PostData = {
     profileImage:string
     postImage:string
     comments?:any
+    showWorkout:boolean
+    unitsSystem:string
   };

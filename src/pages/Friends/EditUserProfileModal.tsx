@@ -114,7 +114,7 @@ function EditUserProfileModal({
     if (selectedFile) {
       imageRef = ref(
         storage,
-        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_450x450`
+        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
       );
       await uploadBytes(imageRef, selectedFile);
       imageUrl = await getDownloadURL(imageRef);

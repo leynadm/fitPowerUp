@@ -20,6 +20,8 @@ function Home() {
     { category: string; name: string; measurement: any[] }[]
   >([]);
   const [exercisesCategories, setExercisesCategories] = useState<string[]>([]);
+  const [unitsSystem, setUnitsSystem] = useState("");
+
   useEffect(() => {
     console.log("IN HOME: Setting up preselected exercises");
     setPreselectedExercises(importedPreselectedExercises);
@@ -192,7 +194,7 @@ function Home() {
         height: "calc(100vh - 56px)",
         backgroundColor: "#F0F2F5",
       }}
-    >
+    > 
       <Navbar />
       <Routes>
         <Route
@@ -205,13 +207,19 @@ function Home() {
               exercisesCategories={exercisesCategories}
               setSelectedCategoryExercises={setSelectedCategoryExercises}
               setExistingExercises={setExistingExercises}
+              unitsSystem={unitsSystem}
+              setUnitsSystem={setUnitsSystem}
             />
           }
           index
         />
         <Route
           path="friends/*"
-          element={<Friends existingExercises={existingExercises} />}
+          element={<Friends 
+            existingExercises={existingExercises}
+            unitsSystem={unitsSystem}
+            setUnitsSystem={setUnitsSystem}
+            />}
         />
         <Route path="progress" element={<Progress />} />
       </Routes>

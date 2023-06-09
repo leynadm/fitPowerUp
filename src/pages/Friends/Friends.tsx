@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,Dispatch,SetStateAction } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -28,9 +28,11 @@ import SearchUserProfile from "./SearchUserProfile";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
+  unitsSystem: string;
+  setUnitsSystem: Dispatch<SetStateAction<string>>;
 }
 
-function Friends({ existingExercises }: HomeProps) {
+function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -221,6 +223,7 @@ function Friends({ existingExercises }: HomeProps) {
         addContentModalOpen={addContentModalOpen}
         setAddContentModalOpen={setAddContentModalOpen}
         existingExercises={existingExercises}
+        unitsSystem={unitsSystem}
       />
 
       {/* This is the container that I might have to check if it reached to bottom */}

@@ -26,6 +26,9 @@ interface HomeProps {
   setSelectedCategoryExercises: Dispatch<
     SetStateAction<{ category: string; name: string; measurement: any[] }[]>
   >;
+  unitsSystem: string;
+  setUnitsSystem: Dispatch<SetStateAction<string>>;
+
 }
 
 function Workout({
@@ -35,6 +38,8 @@ function Workout({
   setExercisesCategories,
   setSelectedCategoryExercises,
   setExistingExercises,
+  unitsSystem,
+  setUnitsSystem
 }: HomeProps) {
   const [todayDate, setTodayDate] = useState<Date>();
 
@@ -44,7 +49,7 @@ function Workout({
     measurement: any[];
   }>({ category: "", name: "", measurement: [] });
 
-  const [unitsSystem, setUnitsSystem] = useState("");
+
   const [weightIncrementPreference, setWeightIncrementPreference] =
     useState(2.5);
 

@@ -94,6 +94,8 @@ function UserProfilePosts() {
           postCreatedAt={post.createdAt}
           postId={post.postId}
           comments={post.comments}
+          showWorkout={post.showWorkout}
+          unitsSystem={post.unitsSystem}
         />
       ))}
       <Button
