@@ -18,6 +18,7 @@ import { db } from "../../config/firebase";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { deleteDoc } from "firebase/firestore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteCommentModal from "../../components/ui/DeleteCommentModal";
 import {
   collection,
   setDoc,
@@ -66,9 +67,7 @@ function PostComment({
     setExpandedReplies(!expandedReplies);
   };
 
-  useEffect(() => {
-    console.log(comment);
-  }, []);
+  const [deleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false)
 
   function addReply() {
     if (replyText !== "") {
@@ -77,7 +76,6 @@ function PostComment({
       const timestamp = Timestamp.fromMillis(Date.now());
       const commentsCollectionRef = collection(postRef, "comments");
       const commentDocRef = doc(commentsCollectionRef, "commentDoc"); // Provide the desired ID for the comment document
-
       const mapFieldToUpdate = commentId;
       const arrayFieldToAdd = "replies";
 
@@ -121,8 +119,13 @@ function PostComment({
       });
   }
 
+  function handleDeleteCommentClick(){
+    setDeleteCommentModalOpen(!deleteCommentModalOpen)
+  }
+
   return (
     <div>
+      <DeleteCommentModal deleteCommentModalOpen={deleteCommentModalOpen} setDeleteCommentModalOpen={setDeleteCommentModalOpen} deleteComment={deleteComment}/>
       <Paper elevation={0} style={{ padding: "1rem 0 0" }}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -141,7 +144,7 @@ function PostComment({
                 {comment.name} {comment.surname}
               </h6>
               {comment.userId === currentUser.uid && (
-                <IconButton onClick={deleteComment}>
+                <IconButton onClick={handleDeleteCommentClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>
               )}
@@ -227,7 +230,7 @@ function PostComment({
           </Grid>
         </Grid>
       </Paper>
-      <Divider variant="fullWidth" style={{ margin: "1px 0" }} />
+      <Divider variant="fullWidth" style={{ margin: "0px 0 " }} />
     </div>
   );
 }

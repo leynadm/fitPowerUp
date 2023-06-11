@@ -30,7 +30,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import uuid from "react-uuid";
 import User from "../../utils/interfaces/User";
-import Switch from '@mui/material/Switch';
+import Switch from "@mui/material/Switch";
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -230,8 +230,7 @@ function EditUserProfileModal({
               />
             </Box>
             <Box>
-              <FormControl sx={{display:"flex",width:"100%"}}>
-                
+              <FormControl sx={{ display: "flex", width: "100%" }}>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   /* 
@@ -255,9 +254,18 @@ function EditUserProfileModal({
                   />
                 </RadioGroup>
                 <FormControlLabel control={<Switch />} label="Hide profile" />
-                <FormControlLabel control={<Switch />} label="Hide Power Level" />                
-                <FormControlLabel control={<Switch />} label="Hide my followers" />
-                <FormControlLabel control={<Switch />} label="Hide who I'm following" />
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Hide Power Level"
+                />
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Hide my followers"
+                />
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Hide who I'm following"
+                />
               </FormControl>
             </Box>
 
@@ -284,11 +292,7 @@ function EditUserProfileModal({
             </Box>
           </Box>
         ) : (
-          <Box
-
-
-            sx={style}
-          >
+          <Box sx={style}>
             <IconButton>
               <InfoIcon />
               Info
@@ -303,7 +307,6 @@ function EditUserProfileModal({
               Once authenticated, you can proceed to edit your post.
             </Typography>
           </Box>
-          
         )}
       </Modal>
     </div>

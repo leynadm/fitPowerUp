@@ -22,7 +22,7 @@ function UserProfilePosts() {
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
   useEffect(() => {
     getUserPosts();
-
+    console.log('gettingUserPosts')
     /* 
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -100,9 +100,12 @@ function UserProfilePosts() {
           showWorkout={post.showWorkout}
           unitsSystem={post.unitsSystem}
           postAppreciation={post.postAppreciation}
+          documentId={post.documentId}
+          postUserId={post.userId}
+          getUserPosts={getUserPosts}
         />
-      ))}
-      <Button
+      ))} 
+      <Button 
         onClick={getUserPosts}
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
         disabled={loadButtonStatus}

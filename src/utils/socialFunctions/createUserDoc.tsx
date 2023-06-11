@@ -12,8 +12,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
         fullname: [fullname, fullname, fullname], 
         profileImage:
           "",
-        coverImage:
-          "",
+        privateAccount:false
       });
     }
   }

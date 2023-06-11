@@ -47,9 +47,16 @@ function Newsfeed() {
       )
     );
 
+
+
     // Extract the document IDs of the followed users
     const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
     console.log("logging documentIds of the followed users:");
+    if (documentIds.length === 0) {
+      console.log('No post IDs found.');
+      // Handle the empty postIds array (e.g., display a message to the user)
+      return;
+    }  
     console.log(documentIds);
 
     let usersQuery;
@@ -87,8 +94,17 @@ function Newsfeed() {
       return sortedPostIds;
     });
 
+    console.log('logging postsIds.length')
+    console.log(postIds.length)
+    if (postIds.length === 0) {
+      console.log('No post IDs found.');
+      // Handle the empty postIds array (e.g., display a message to the user)
+      return;
+    }  
+
     // Retrieve the post data based on the extracted post IDs
     setPostIDsCache(postIds);
+
 
     let postsQuery;
     if (postIds.length > 0) {
@@ -159,6 +175,7 @@ function Newsfeed() {
       } else {
         setUserFeed(feedData);
       }
+       
     }
   }
 
@@ -184,6 +201,8 @@ function Newsfeed() {
           showWorkout={post.showWorkout}
           unitsSystem={post.unitsSystem}
           postAppreciation={post.postAppreciation}
+          documentId={post.documentId}
+          postUserId={post.userId}
         />
       ))}
 

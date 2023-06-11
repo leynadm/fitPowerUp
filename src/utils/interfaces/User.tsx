@@ -6,7 +6,7 @@ export interface User {
     surname: string;
     profileImage:string
     verified:boolean
-    privateAccount:false
+    privateAccount:boolean
   }
 
   export default User

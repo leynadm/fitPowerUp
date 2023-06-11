@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import User from "../../utils/interfaces/User";
 import {
   getAuth,
   signInWithPopup,
@@ -27,8 +28,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
-import { CurrentUserDataContext } from "../../context/CurrentUserData"
-
+import { AuthContext } from "../../context/Auth";
 function Copyright(props: any) {
   return (
     <Typography
@@ -60,13 +60,13 @@ const darkTheme = createTheme({
 
 export default function SignIn() {
   
-  const { setContext } = useContext(CurrentUserDataContext);
-
   const navigate = useNavigate();
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const {currentUser, setCurrentUserData} = useContext(AuthContext)
 
   const handleSignUpClick = () => {
     navigate("/signup");

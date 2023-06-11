@@ -17,6 +17,7 @@ import { Timestamp } from "firebase/firestore";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteReplyModal from "../../components/ui/DeleteReplyModal";
 import {
   collection,
   setDoc,
@@ -44,6 +45,8 @@ function PostReply({
 }: PostCommentProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
+  const [deleteReplyModalOpen, setDeleteReplyModalOpen] = useState(false)
+
   function deleteReply() {
     const postRef = doc(db, "posts", postId);
     const commentDocRef = doc(postRef, "comments", "commentDoc");
@@ -60,8 +63,13 @@ function PostReply({
       });
   }
 
+  function handleDeleteReplyClick(){
+    setDeleteReplyModalOpen(!deleteReplyModalOpen)
+  }
+
   return (
     <div>
+    <DeleteReplyModal deleteReplyModalOpen={deleteReplyModalOpen} setDeleteReplyModalOpen={setDeleteReplyModalOpen} deleteReply={deleteReply}/>
       <Paper elevation={0} style={{ padding: "1rem 0.25rem 0.25rem 0.25rem" }}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -80,7 +88,7 @@ function PostReply({
                 {reply.name} {reply.surname}
               </h6>
               {reply.userId === currentUser.uid && (
-                <IconButton onClick={deleteReply}>
+                <IconButton onClick={handleDeleteReplyClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>
               )}

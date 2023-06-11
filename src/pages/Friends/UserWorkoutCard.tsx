@@ -20,32 +20,22 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { Timestamp } from "firebase/firestore";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import EditIcon from "@mui/icons-material/Edit";
-import SendIcon from "@mui/icons-material/Send";
 import ReplyIcon from "@mui/icons-material/Reply";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import PostComment from "./PostComment";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import uuid from "react-uuid";
+import DeletePostModal from "../../components/ui/DeletePostModal";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   setDoc,
-  addDoc,
   doc,
   serverTimestamp,
-  arrayUnion,
   updateDoc,
   getDoc,
-  arrayRemove,
-  onSnapshot,
-  getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
@@ -62,6 +52,9 @@ interface UserProfileProps {
   showWorkout: boolean;
   unitsSystem: string;
   postAppreciation: any;
+  documentId: string;
+  postUserId: string;
+  getUserPosts?: () => void;
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -106,15 +99,20 @@ export default function UserWorkoutCard({
   unitsSystem,
   comments: initialComments,
   postAppreciation,
+  documentId,
+  postUserId,
+  getUserPosts,
 }: UserProfileProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const [fetchedComments, setFetchedComments] = useState(initialComments);
   const [comments, setComments] = useState<any>([]);
-  const [repliesLength, setRepliesLength] = useState(0)
-  const [commentReplyTrigger,setCommentReplyTrigger] = useState(0)
+  const [repliesLength, setRepliesLength] = useState(0);
+  const [deletePostModalOpen, setDeletePostModalOpen] = useState(false);
+  const [postDeleteTrigger, setPostDeleteTrigger] = useState(0);
+  const navigate = useNavigate();
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -123,10 +121,6 @@ export default function UserWorkoutCard({
     getPostComments();
     setCommentExpanded(!commentExpanded);
   };
-
-  useEffect(()=>{
-    
-  },[commentReplyTrigger])
 
   function getPostComments() {
     const postRef = doc(db, "posts", postId);
@@ -208,8 +202,29 @@ export default function UserWorkoutCard({
     }
   }
 
+  async function deletePost() {
+    try {
+      const postRef = doc(db, "posts", postId);
+      await deleteDoc(postRef);
+      setPostDeleteTrigger((prevTrigger) => prevTrigger + 1);
+      navigate("/home");
+      console.log("Post deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  }
+
+  function handleDeletePostClick() {
+    setDeletePostModalOpen(!deletePostModalOpen);
+  }
+
   return (
     <Card sx={{ width: "100%", marginBottom: "16px" }}>
+      <DeletePostModal
+        deletePostModalOpen={deletePostModalOpen}
+        setDeletePostModalOpen={setDeletePostModalOpen}
+        deletePost={deletePost}
+      />
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">
@@ -227,9 +242,11 @@ export default function UserWorkoutCard({
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          postUserId === currentUser.uid && (
+            <IconButton aria-label="settings" onClick={handleDeletePostClick}>
+              <MoreVertIcon />
+            </IconButton>
+          )
         }
         title={currentUserDataName}
         subheader={getTimeDifference(postCreatedAt)}

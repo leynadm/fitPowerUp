@@ -8,51 +8,70 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-
-
 export const AuthContext = createContext<any>({
-  currentUser:null,
-  userCredential:null
+  currentUser: auth.currentUser,
+  userCredential: null,
 });
 
-export const AuthProvider = ({ children}:AuthProviderProps ) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
-  const [currentUserData,setCurrentUserData] = useState<User|null>(null)
+  const [currentUserData, setCurrentUserData] = useState<User | null>(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
-      console.log('logging how many times this runs;')
-     
-      if (user?.isAnonymous===false) {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
+      console.log("logging how many times this runs;");
+      console.log("logging user:");
+      console.log(user);
 
-        if (docSnap.exists()) {
-          const userData = docSnap.data() as User;
-          setCurrentUserData(userData);
-        }
+      console.log("checking if user is anonymous");
 
-      } else { 
-        setCurrentUserData({    
-          fullname: ["Guest","User","Guest User"],
+      if (user && user.isAnonymous === false) {
+        console.log("fetching the data");
+        fetchData();
+        console.log("logging currentUserData");
+        console.log(currentUserData);
+      } else {
+        console.log("we are in the else statement:");
+        setCurrentUserData({
+          fullname: ["Guest", "User", "Guest User"],
           name: "Guest",
           sex: "male",
           surname: "User",
-          profileImage:"",
-          verified:false,
-          privateAccount:false
-        
+          profileImage: "",
+          verified: false,
+          privateAccount: false,
         });
       }
     });
-
     return unsubscribe;
   }, []);
 
+  async function fetchData() {
+    if (currentUser === null) {
+      return;
+    }
+
+    if (currentUser.isAnonymous === false) {
+      const docRef = doc(db, "users", currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as User;
+        setCurrentUserData(userData);
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [currentUserData]);
+
   return (
-    <AuthContext.Provider value={{ currentUser,currentUserData }}>
+    <AuthContext.Provider
+      value={{ currentUser, currentUserData, setCurrentUserData }}
+    >
       {children}
     </AuthContext.Provider>
   );

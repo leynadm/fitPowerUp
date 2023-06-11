@@ -110,6 +110,8 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
           showWorkout={post.showWorkout}
           unitsSystem={post.unitsSystem}
           postAppreciation={post.postAppreciation}
+          documentId={post.documentId}
+          postUserId={post.userId}
         />
       ))}
       <Button 
