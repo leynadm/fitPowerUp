@@ -12,9 +12,12 @@ import { styled } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, deleteField } from "firebase/firestore";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { deleteDoc } from "firebase/firestore";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   collection,
   setDoc,
@@ -22,16 +25,18 @@ import {
   serverTimestamp,
   arrayUnion,
   updateDoc,
+  FieldValue,
   getDoc,
   arrayRemove,
   onSnapshot,
 } from "firebase/firestore";
-
+import PostReply from "./PostReply";
 interface UserWorkoutCardProps {
   comment: any;
   commentIndex: number;
   postId: string;
-  commentId:string
+  commentId: string;
+  getPostComments: () => void;
 }
 
 interface ExpandRepliesProps extends IconButtonProps {
@@ -47,7 +52,13 @@ const ExpandReplies = styled((props: ExpandRepliesProps) => {
   }),
 }));
 
-function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCardProps) {
+function PostComment({
+  comment,
+  commentIndex,
+  postId,
+  commentId,
+  getPostComments,
+}: UserWorkoutCardProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [expandedReplies, setExpandedReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -56,11 +67,8 @@ function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCar
   };
 
   useEffect(() => {
-    console.log('logging comment')
-    console.log(commentIndex)
-    console.log(commentId);
+    console.log(comment);
   }, []);
-
 
   function addReply() {
     if (replyText !== "") {
@@ -72,8 +80,7 @@ function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCar
 
       const mapFieldToUpdate = commentId;
       const arrayFieldToAdd = "replies";
-      const valueToAdd = ["value1", "value2", "value3"];
-      
+
       const newReply = {
         content: replyText,
         userId: currentUser.uid,
@@ -82,18 +89,15 @@ function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCar
         surname: currentUserData.surname,
         profileImage: currentUserData.profileImage,
       };
-/* 
-      updateDoc(commentDocRef, {
-        replies: arrayUnion(newReply)
-      })
- */
-    
+
       // Update the document to add the new array field to the map field
       updateDoc(commentDocRef, {
         [`${mapFieldToUpdate}.${arrayFieldToAdd}`]: arrayUnion(newReply),
-      }) 
+      })
         .then(() => {
           console.log("Array field added to the map successfully");
+          setReplyText("");
+          getPostComments();
         })
         .catch((error) => {
           console.error("Error adding array field to the map:", error);
@@ -101,22 +105,53 @@ function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCar
     }
   }
 
+  function deleteComment() {
+    const postRef = doc(db, "posts", postId);
+    const commentDocRef = doc(postRef, "comments", "commentDoc");
+
+    updateDoc(commentDocRef, {
+      [commentId]: deleteField(),
+    })
+      .then(() => {
+        console.log("Comment deleted successfully");
+        getPostComments();
+      })
+      .catch((error) => {
+        console.error("Error deleting comment:", error);
+      });
+  }
+
   return (
     <div>
-      <Paper elevation={0} style={{ padding: "1rem 0.25rem" }}>
+      <Paper elevation={0} style={{ padding: "1rem 0 0" }}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
             <Avatar alt="Remy Sharp" src={comment.profileImage} />
           </Grid>
           <Grid justifyContent="left" item xs zeroMinWidth>
-            <h6 style={{ margin: 0, textAlign: "left" }}>
-              {comment.name} {comment.surname}
-            </h6>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h6 style={{ margin: 0, textAlign: "left" }}>
+                {comment.name} {comment.surname}
+              </h6>
+              {comment.userId === currentUser.uid && (
+                <IconButton onClick={deleteComment}>
+                  <MoreVertIcon sx={{ fontSize: "smaller" }} />
+                </IconButton>
+              )}
+            </Box>
+
             <p style={{ textAlign: "left", fontSize: "medium" }}>
               {comment.content}
             </p>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Box sx={{ display: "flex", gap: 3 }}>
+              <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
                 <p
                   style={{
                     textAlign: "left",
@@ -176,10 +211,12 @@ function PostComment({ comment, commentIndex, postId,commentId }: UserWorkoutCar
                           .reverse()
                           .map((reply: any, index: number) => (
                             <Box sx={{ margin: 0, padding: 0 }} key={index}>
-                              <p>{reply.content}</p>
-                              {/*   
-                    <PostReply comment={comment} />
-                   */}
+                              <PostReply
+                                reply={reply}
+                                postId={postId}
+                                commentId={commentId}
+                                getPostComments={getPostComments}
+                              />
                             </Box>
                           ))}
                     </Box>
