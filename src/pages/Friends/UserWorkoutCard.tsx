@@ -3,9 +3,11 @@ import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -14,7 +16,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import formatTime from "../../utils/formatTime";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
@@ -23,7 +24,6 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
@@ -33,16 +33,19 @@ import Grid from "@mui/material/Grid";
 import PostComment from "./PostComment";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
+import uuid from "react-uuid";
 import {
   collection,
   setDoc,
+  addDoc,
   doc,
   serverTimestamp,
   arrayUnion,
   updateDoc,
   getDoc,
+  arrayRemove,
   onSnapshot,
+  getDocs
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
@@ -58,6 +61,7 @@ interface UserProfileProps {
   comments: any;
   showWorkout: boolean;
   unitsSystem: string;
+  postAppreciation:any
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -67,6 +71,17 @@ interface ExpandMoreProps extends IconButtonProps {
 interface ExpandMoreCommentProps extends IconButtonProps {
   expandComment: boolean;
 }
+const ExpandMoreComment = styled((props: ExpandMoreCommentProps) => {
+  const { expandComment, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expandComment }) => ({
+  transform: !expandComment ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
@@ -79,16 +94,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-const ExpandMoreComment = styled((props: ExpandMoreCommentProps) => {
-  const { expandComment, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expandComment }) => ({
-  transform: !expandComment ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default function UserWorkoutCard({
   postText,
@@ -102,12 +107,15 @@ export default function UserWorkoutCard({
   showWorkout,
   unitsSystem,
   comments: initialComments,
+  postAppreciation
 }: UserProfileProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [fetchedComments, setFetchedComments] = useState(initialComments);
+  const [comments, setComments] = useState<any>([]);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -125,10 +133,16 @@ export default function UserWorkoutCard({
     return () => unsubscribe();
   }, [postId]);
 
+  useEffect(()=>{
+    console.log('logging comments:')
+    console.log(comments)
+  },[comments])
+
   const handleCommentExpandClick = () => {
+    getPostComments()
     setCommentExpanded(!commentExpanded);
   };
-
+/* 
   function addComment() {
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
@@ -144,6 +158,7 @@ export default function UserWorkoutCard({
           name: currentUserData.name,
           surname: currentUserData.surname,
           profileImage: currentUserData.profileImage,
+          replies:[]
         }),
       })
         .then(() => {
@@ -156,7 +171,124 @@ export default function UserWorkoutCard({
           console.error("Error adding comment:", error);
         });
     }
+  } */
+
+
+  function getPostComments() {
+    const postRef = doc(db, "posts", postId);
+    const commentsDocRef = doc(collection(postRef, "comments"), "commentDoc");
+  
+    getDoc(commentsDocRef)
+      .then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const commentsData = [];
+  
+          const commentData = docSnapshot.data();
+          for (const field in commentData) {
+            console.log(field)
+            const fieldValue = commentData[field];
+            commentsData.push(fieldValue);
+          }
+  
+          console.log("Comments document data:", commentsData);
+          setComments(commentsData);
+        } else {
+          console.log("Comments document does not exist");
+          setComments([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting comments document:", error);
+        setComments([]);
+      });
   }
+  
+  
+  
+  function addComment() {
+    if (commentText !== "") {
+      const postRef = doc(db, "posts", postId);
+      const commentsCollectionRef = collection(postRef, "comments");
+  
+      const serverTimestampObj = serverTimestamp();
+      const timestamp = Timestamp.fromMillis(Date.now());
+  
+      const commentId = uuid(); // Generate a unique identifier for the comment
+  
+      const commentData = {
+        content: commentText,
+        userId: currentUser.uid,
+        timestamp: timestamp,
+        name: currentUserData.name,
+        surname: currentUserData.surname,
+        profileImage: currentUserData.profileImage,
+        commentId:commentId
+      };
+  
+      const commentDocRef = doc(commentsCollectionRef, "commentDoc"); // Provide the desired ID for the comment document
+  
+      getDoc(commentDocRef)
+        .then((doc) => {
+          if (doc.exists()) {
+            // Comment document already exists, update the document
+            return updateDoc(commentDocRef, {
+              [commentId]: commentData, // Use the comment ID as the field name within the document
+            });
+          } else {
+            // Comment document doesn't exist, create a new document
+            return setDoc(commentDocRef, {
+              [commentId]: commentData, // Use the comment ID as the field name within the document
+            });
+          }
+        })
+        .then(() => {
+          // Comment added successfully
+          console.log("Comment added");
+          setCommentText(""); // Clear the comment text
+        })
+        .catch((error) => {
+          // Error occurred while adding comment
+          console.error("Error adding comment:", error);
+        });
+    }
+  }
+  
+  
+
+/* 
+  function appreciatePost() {
+    const postRef = doc(db, "posts", postId);
+    const serverTimestampObj = serverTimestamp();
+    const timestamp = Timestamp.fromMillis(Date.now());
+
+    // Check if the user is already in the array
+    const isUserIncluded = postAppreciation.includes(currentUser.uid);
+
+    let updatedUserArray;
+
+    if (isUserIncluded) {
+      // User is already in the array, remove the user
+      updatedUserArray = arrayRemove(currentUser.uid);
+    } else {
+      // User is not in the array, add the user
+      updatedUserArray = arrayUnion(currentUser.uid);
+    }
+
+    updateDoc(postRef, {
+      postAppreciation: updatedUserArray,
+    })
+      .then(() => {
+        // Appreciation updated successfully
+        console.log("Appreciation updated");
+      })
+      .catch((error) => {
+        // Error occurred while updating appreciation
+        console.error("Error updating appreciation:", error);
+      });
+  }
+  
+  
+   */
 
   return (
     <Card sx={{ width: "100%", marginBottom: "16px" }}>
@@ -206,19 +338,21 @@ export default function UserWorkoutCard({
       </CardContent>
 
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="add to favorites"
+        /* 
+        onClick={appreciatePost}
+        
+        style={{ color: postAppreciation.includes(currentUser.uid) ? 'red' : undefined }}
+        
+        */
+        >
+         
+          
+          <FavoriteIcon  />
         </IconButton>
-        {/* 
-          <IconButton aria-label="share">
-        
-        
-          <InsertCommentIcon />
-        
-        
-          </IconButton>
-
-  */}
+        {postAppreciation && ( // Add conditional check
+          <Typography>{postAppreciation.length}</Typography>
+        )}
 
         <ExpandMoreComment
           expandComment={commentExpanded}
@@ -413,15 +547,17 @@ export default function UserWorkoutCard({
           </Box>
 
           <Box sx={{ margin: 0, padding: 0 }}>
-            {fetchedComments &&
-              fetchedComments
+            
+            {comments &&
+              comments
                 .slice()
                 .reverse()
                 .map((comment: any, index: number) => (
                   <Box sx={{ margin: 0, padding: 0 }} key={index}>
-                    <PostComment comment={comment} />
+                    <PostComment comment={comment} commentIndex={index} postId={postId} commentId={comment.commentId}/>
                   </Box>
                 ))}
+        
           </Box>
         </CardContent>
       </Collapse>

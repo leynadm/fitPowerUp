@@ -37,7 +37,7 @@ function SearchUserProfileFollowers() {
   const [userIndividualFollowersData, setUserIndividualFollowersData] =
     useState<UserData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 1;
+  const resultsPerPage = 5;
 
   useEffect(() => {
     fetchUserIndividualFollowersData();

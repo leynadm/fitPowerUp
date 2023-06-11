@@ -36,11 +36,11 @@ function UserProfileFollowing() {
   const [userIndividualFollowingData, setUserIndividualFollowingData] =
     useState<UserData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 1;
+  const resultsPerPage = 5;
 
   useEffect(() => {
     fetchUserIndividualFollowingData();
-  }, []);
+  }, [currentPage]);
 
   async function getUserDocumentById(documentId: any) {
     const documentRef = doc(db, "users", documentId); // Replace with your collection name
@@ -134,14 +134,14 @@ function UserProfileFollowing() {
                 {user.verified && <VerifiedIcon />}
               </Box>
             </ListItem>
-          </List>
+          </List> 
         </Box>
-      ))}
+      ))} 
 
       <Button
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
         onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-        disabled={userIndividualFollowingData.length <= currentPage * resultsPerPage}
+        disabled={userIndividualFollowing.length <= currentPage * resultsPerPage}
       >
         Load More
       </Button>

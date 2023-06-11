@@ -8,6 +8,7 @@ import {
   orderBy,
   startAfter,
   limit,
+  doc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
@@ -68,6 +69,7 @@ function UserProfilePosts() {
     if (latestDoc) {
       setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
     } else {
+      console.log(userData)
       setUserPosts(userData);
     }
 
@@ -79,6 +81,7 @@ function UserProfilePosts() {
       setLoadButtonStatus(true)
     }
   }
+
 
   return (
     <Box sx={{ paddingBottom: "56px" }}>
@@ -96,6 +99,7 @@ function UserProfilePosts() {
           comments={post.comments}
           showWorkout={post.showWorkout}
           unitsSystem={post.unitsSystem}
+          postAppreciation={post.postAppreciation}
         />
       ))}
       <Button

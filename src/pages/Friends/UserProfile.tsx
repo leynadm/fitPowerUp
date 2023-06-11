@@ -83,7 +83,7 @@ function UserProfile() {
       setUserIndividualFollowing(following);
     }
   }
-
+ 
 
   return (
     <Box>

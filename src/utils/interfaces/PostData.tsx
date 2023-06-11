@@ -13,4 +13,6 @@ export type PostData = {
     comments?:any
     showWorkout:boolean
     unitsSystem:string
+    documentId:string
+    postAppreciation?:any
   };

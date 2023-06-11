@@ -136,7 +136,8 @@ function AddContentModal({
         commentsCount: 0,
         showWorkout:addWorkout,
         workoutData: existingExercises,
-        unitsSystem:unitsSystem
+        unitsSystem:unitsSystem,
+        documentId:newPostRef.id
       });
 
       const newFollowersFeedRef = doc(

@@ -8,139 +8,135 @@ import {
   query,
   where,
   getDocs,
-  orderBy,
+  orderBy,  
+  startAfter,
   limit,
   documentId,
+  startAt
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import User from "../../utils/interfaces/User";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
+import { CommitSharp } from "@mui/icons-material";
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
+  const [batchSize, setBatchSize] = useState(2); // Number of posts to load per batch
+  const [lastVisiblePost, setLastVisiblePost] = useState(null); // Track the last visible post to paginate
+  const [latestDoc, setLatestDoc] = useState<any>(null);
+  const [postIDsCache, setPostIDsCache] = useState<any>([]);
+  const [usersDataCache, setUsersDataCache] = useState<any>([]);
 
   useEffect(() => {
     getFeed();
   }, []);
 
   async function getFeed() {
-    // Get a reference to the followers-feed collection
     const followedUsersRef = collection(db, "followers-feed");
+    const usersRef = collection(db, "users");
+    const postsRef = collection(db, "posts");
 
-    // Create a query to get all the documents of the users in the followers-feed collection followed by the logged in user (the recentPosts field should be limited to 10)
-    const q = query(
-      followedUsersRef,
-      where("users", "array-contains", currentUser.uid),
-      orderBy("lastPost", "desc"),
-      limit(10)
+    // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
+    const followedUsersSnapshot = await getDocs(
+      query(
+        followedUsersRef,
+        where("users", "array-contains", currentUser.uid),
+        orderBy("lastPost", "desc"),
+        limit(10)
+      )
     );
 
-    // Retrieve the documents that matched the query above
-    const followedUsersSnapshot = await getDocs(q);
+    // Extract the document IDs of the followed users
+    const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
+    console.log("logging documentIds of the followed users:");
+    console.log(documentIds);
 
-    // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following
-    let feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
-    console.log('logging feed data:')
-    console.log(feedData);
-    // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
-    const feedCuratedPosts = feedData.reduce(
-      (accumulator, currentElement) =>
-        accumulator.concat(currentElement.recentPosts),
-      []
-    );
+    let usersQuery;
+    let usersSnapshot;
+    let usersData;
+    if (usersDataCache.length === 0) {
+      // Retrieve the user data of the followed users
+      usersQuery = query(usersRef, where(documentId(), "in", documentIds));
+      usersSnapshot = await getDocs(usersQuery);
 
-    const sortedFeedCuratedPosts = feedCuratedPosts.sort((a: any, b: any) => {
-      const dateA = new Date(a.published);
-      const dateB = new Date(b.published);
-      return dateA.getTime() - dateB.getTime();
-    });
-    
-    const currentDate = new Date();
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(currentDate.getDate() - 7);
-
-    const filteredFeedCuratedPosts = sortedFeedCuratedPosts.filter((post: any) => {
-      const postTimestamp = post.published; // Assuming it's a Firebase Timestamp object
-      const postDate = postTimestamp.toDate(); // Convert Firebase Timestamp to JavaScript Date
-      return postDate >= sevenDaysAgo && postDate <= currentDate;
-    });
-    /* 
-    const filteredFeedCuratedPosts = sortedFeedCuratedPosts.slice(0, 5);
-     */
-
-    // This line creates an array of post IDs from the sortedFeedCuratedPosts array.
-    const postIds = filteredFeedCuratedPosts.map((post: any) => post.postId);
-
-    const documentIds: string[] = [];
-
-    followedUsersSnapshot.forEach((doc) => {
-      documentIds.push(doc.id);
-    });
-    console.log('loggind document ids:')
-    console.log(documentIds)
-
-    // Slice the postIds array into chunks of 10 or less
-    const chunks = [];
-    for (let i = 0; i < documentIds.length; i += 10) {
-      chunks.push(documentIds.slice(i, i + 10));
-    }
-
-    const usersData: any[] = [];
-
-    for (const chunk of chunks) {
-      const usersQuery = query(
-        collection(db, "users"),
-        where(documentId(), "in", chunk)
-      );
-      const usersSnapshot = await getDocs(usersQuery);
-
-      usersSnapshot.forEach((doc) => {
-        const userData = { id: doc.id, ...doc.data() }; // Include the document ID
-        usersData.push(userData);
+      // Extract the user data from the query snapshot
+      usersData = usersSnapshot.docs.map((doc) => {
+        const userData = { id: doc.id, ...doc.data() };
+        return userData;
       });
+
+      setUsersDataCache(usersData);
+      console.log("usersData:");
+      console.log(usersData);
     }
 
-    console.log('logging usersData');
-    console.log(usersData);
-    if (postIds.length > 0) {
-      const batchedPostIds = [];
+    let postIds;
+    // Extract the post IDs from the "recentPosts" field of the followed users' documents
 
-      for (let i = 0; i < postIds.length; i += 10) {
-        batchedPostIds.push(postIds.slice(i, i + 10));
+    postIds = followedUsersSnapshot.docs.flatMap((doc) => {
+      console.log("logging data:");
+      console.log(doc.data());
+
+      const recentPosts = (doc.data() as { recentPosts: any }).recentPosts;
+      const filteredPosts = recentPosts.filter((post: any) => post.published);
+      const sortedPostIds = filteredPosts
+        .sort((a: any, b: any) => b.published - a.published)
+        .map((post: any) => post.postId);
+
+      return sortedPostIds;
+    });
+
+    // Retrieve the post data based on the extracted post IDs
+    setPostIDsCache(postIds);
+
+    let postsQuery;
+    if (postIds.length > 0) {
+      if (latestDoc) {
+        postsQuery = query(
+          postsRef,
+          orderBy("createdAt", "desc"),
+          where("documentId", "in", postIds),
+          startAfter(latestDoc),
+          limit(5)
+        );
+      } else {
+        postsQuery = query(
+          postsRef,
+          orderBy("createdAt", "desc"),
+          where("documentId", "in", postIds),
+          limit(5)
+        );
       }
 
-      const batchedPostsData: PostData[] = [];
+      const postsSnapshot = await getDocs(postsQuery);
 
-      for (const batch of batchedPostIds) {
-        const postsQuery = query(
-          collection(db, "posts"),
-          where(documentId(), "in", batch)
-        );
+      if (postsSnapshot.docs.length > 0) {
+        setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
+      }
 
-        const postsSnapshot = await getDocs(postsQuery);
+      // Extract the post data from the query snapshot
+      const postsData = postsSnapshot.docs.map((doc) => {
+        const postData = { ...doc.data(), postId: doc.id };
+        return postData;
+      });
 
-        postsSnapshot.forEach((doc) => {
-          const postData = { ...doc.data(), postId: doc.id } as PostData;
-          batchedPostsData.push(postData);
+      console.log("logging postsData:");
+      console.log(postsData);
+      // Create a mapping from user ID to user data for efficient lookup
+      const userIdToUserData: { [key: string]: any } = {};
+      if (usersData) {
+        usersData.forEach((userData) => {
+          const userId = userData.id;
+          userIdToUserData[userId] = userData;
         });
       }
 
-      const userIdToUserData: { [key: string]: any } = {};
-      usersData.forEach((userData) => {
-        const userId = userData.id;
-        userIdToUserData[userId] = userData;
-      });
-      console.log('logging batchedPostsData:')
-      console.log(batchedPostsData);
-      const postsDataBatch: any = batchedPostsData.map(async (post: any) => {
+      // Combine post data with user data to enrich the feed data
+      const feedData = postsData.map((post: any) => {
         const userID = post.userId;
-
-        // Check if the user data is available in the mapping
         if (userIdToUserData.hasOwnProperty(userID)) {
           const { name, surname, profileImage } = userIdToUserData[userID];
-
-          // Add the name, surname, and profileImage properties to the postData object
           return {
             ...post,
             name,
@@ -148,22 +144,31 @@ function Newsfeed() {
             profileImage,
           };
         }
+        return null; // Add a default return value, such as null, for cases where userId is not found
       });
 
-      const feedBatchPostData = await Promise.all(postsDataBatch);
+      console.log("logging feed data:");
+      console.log(feedData);
 
-      const sortedFeedBatchPostData = feedBatchPostData.sort(
-        (a: any, b: any) => b.createdAt - a.createdAt
-      );
-      setUserFeed(sortedFeedBatchPostData);
-      console.log('logging sortedFeedBatchPostData')
-      console.log(sortedFeedBatchPostData);
+      // Update the userFeed state with the sorted feed data
+      if (latestDoc) {
+        setUserFeed((prevUserFeed: PostData[]) => [
+          ...prevUserFeed,
+          ...feedData,
+        ]);
+      } else {
+        setUserFeed(feedData);
+      }
     }
   }
 
   return (
     <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
-      <Typography sx={{fontSize:"small",opacity:'50%', textAlign:"right"}}>Last 7 days</Typography>
+      <Typography
+        sx={{ fontSize: "small", opacity: "50%", textAlign: "right" }}
+      >
+        Last 7 days
+      </Typography>
       {userFeed.map((post: PostData, index: number) => (
         <UserWorkoutCard
           key={index}
@@ -178,10 +183,14 @@ function Newsfeed() {
           comments={post?.comments}
           showWorkout={post.showWorkout}
           unitsSystem={post.unitsSystem}
+          postAppreciation={post.postAppreciation}
         />
       ))}
 
-      <Button sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}>
+      <Button
+        sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+        onClick={getFeed}
+      >
         Load More
       </Button>
     </Box>
