@@ -56,7 +56,6 @@ function Workout({
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
-      console.log(currentDate)
       setTodayDate(currentDate);
     }
     getDataPreferences();
@@ -105,15 +104,11 @@ function Workout({
 
       getRequest.onsuccess = function (event) {
         const record = getRequest.result;
-        console.log("logging the record inside getDataPreferences");
-        console.log(record);
         if (record) {
           // Extract the unitsSystem value from the record
           const { unitsSystem, defaultWeightIncrement } = record;
           setUnitsSystem(unitsSystem);
           setWeightIncrementPreference(defaultWeightIncrement);
-          console.log("logging default weight increment:");
-          console.log(defaultWeightIncrement);
         }
       };
     };

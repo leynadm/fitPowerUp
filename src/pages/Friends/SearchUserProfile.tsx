@@ -106,6 +106,10 @@ function SearchUserProfile() {
 
   async function followUser() {
 
+    if(currentUser.isAnonymous===true){
+      return
+    }
+
     const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
     const followersFeedDoc = await getDoc(followersFeedRef);
     if (!followersFeedDoc.exists()) {

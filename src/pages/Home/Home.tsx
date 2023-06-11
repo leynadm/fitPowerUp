@@ -23,14 +23,11 @@ function Home() {
   const [unitsSystem, setUnitsSystem] = useState("");
 
   useEffect(() => {
-    console.log("IN HOME: Setting up preselected exercises");
     setPreselectedExercises(importedPreselectedExercises);
   }, []);
 
   useEffect(() => {
     if (preselectedExercises.length > 0) {
-      console.log("in HOME: populating preselected exercises");
-      console.log("doing a check on all exercises:");
       populatePreselectedExercises();
     }
   }, [preselectedExercises]);
@@ -75,13 +72,7 @@ function Home() {
           cursor.continue();
         } else {
           const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
-          console.log("Categories:", categories);
-
-          console.log("categories");
-
           setExercisesCategories(categories);
-
-          console.log(categories);
         }
       };
 

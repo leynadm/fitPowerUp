@@ -9,69 +9,81 @@ interface AuthProviderProps {
 }
 
 export const AuthContext = createContext<any>({
-  currentUser: auth.currentUser,
+  currentUser: null,
   userCredential: null,
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
-  const [currentUserData, setCurrentUserData] = useState<User | null>(null);
-
+  const [currentUserData, setCurrentUserData] = useState<User | undefined>(undefined);
+  const [loginFetchTrigger, setLoginFetchTrigger] = useState(false)
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user);
-      console.log("logging how many times this runs;");
-      console.log("logging user:");
+      console.log('inside unsubscribe, logging user:');
       console.log(user);
+  
+      if (user) {
+        if (user?.isAnonymous === false) {
+          console.log('now inside user?.isAnonymous === false:');
+          console.log(user?.isAnonymous)
 
-      console.log("checking if user is anonymous");
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          console.log('checking if DocRef exists:')
+          console.log(docRef)
+          if (docSnap.exists()) {
+            const userData = docSnap.data() as User;
+            setCurrentUserData(userData);
+          } 
+        } else {
 
-      if (user && user.isAnonymous === false) {
-        console.log("fetching the data");
-        fetchData();
-        console.log("logging currentUserData");
-        console.log(currentUserData);
-      } else {
-        console.log("we are in the else statement:");
-        setCurrentUserData({
-          fullname: ["Guest", "User", "Guest User"],
-          name: "Guest",
-          sex: "male",
-          surname: "User",
-          profileImage: "",
-          verified: false,
-          privateAccount: false,
-        });
+          setCurrentUserData({
+            fullname: ["Guest", "User", "Guest User"],
+            name: "Guest",
+            sex: "male",
+            surname: "User",
+            profileImage: "",
+            verified: false,
+            privateAccount: false,
+          });
+
+        }
       }
+      setLoginFetchTrigger(!loginFetchTrigger)
     });
+  
     return unsubscribe;
   }, []);
+  
 
-  async function fetchData() {
-    if (currentUser === null) {
-      return;
-    }
+   
+    async function fetchData() {
+      if (currentUser === null) {
+        return;
+      }
 
-    if (currentUser.isAnonymous === false) {
-      const docRef = doc(db, "users", currentUser.uid);
-      const docSnap = await getDoc(docRef);
+      if (currentUser.isAnonymous === false) {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data() as User;
-        setCurrentUserData(userData);
+        if (docSnap.exists()) {
+          const userData = docSnap.data() as User;
+          setCurrentUserData(userData);
+          return(userData)
+        }
       }
     }
-  }
 
-  useEffect(() => {
-    fetchData();
-  }, [currentUserData]);
 
+  useEffect(()=>{
+
+    fetchData()
+  },[currentUser])
+  
   return (
-    <AuthContext.Provider
-      value={{ currentUser, currentUserData, setCurrentUserData }}
-    >
+    <AuthContext.Provider value={{ currentUser, currentUserData }}>
       {children}
     </AuthContext.Provider>
   );

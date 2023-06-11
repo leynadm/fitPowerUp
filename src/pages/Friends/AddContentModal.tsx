@@ -205,13 +205,17 @@ function AddContentModal({
         {currentUser.isAnonymous === false ? (
           <Box sx={style}>
             <CardHeader
+
               avatar={
                 <Avatar
                   alt="Remy Sharp"
+
                   src={currentUserData.profileImage}
+                  
                   sx={{ width: 48, height: 48, alignSelf: "center" }}
                 />
               }
+              
               title={currentUserData.fullname[2]}
               titleTypographyProps={{variant:'h6',padding:0,margin:0 }}
               subheader={postDate.toDateString()}

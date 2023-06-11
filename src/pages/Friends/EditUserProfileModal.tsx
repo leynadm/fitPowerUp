@@ -17,6 +17,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { AuthContext } from "../../context/Auth";
+import { auth } from "../../config/firebase";
 import {
   arrayUnion,
   doc,
@@ -28,7 +29,6 @@ import { db, storage } from "../../config/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import uuid from "react-uuid";
 import User from "../../utils/interfaces/User";
 import Switch from "@mui/material/Switch";
 interface UserProfilePosts {
@@ -301,11 +301,25 @@ function EditUserProfileModal({
               As a guest, you are welcome to use all workout log features, but
               editing the guest profile is restricted.
               <br></br>
-              To access your profile features, please create an account or
+              To access your full profile features, please create an account or
               authenticate using Google Login.
               <br></br>
               Once authenticated, you can proceed to edit your post.
             </Typography>
+          
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                onClick={()=> auth.signOut()}
+              >
+                Log out
+              </Button>
+            </Box>        
           </Box>
         )}
       </Modal>

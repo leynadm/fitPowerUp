@@ -28,6 +28,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import uuid from "react-uuid";
 import DeletePostModal from "../../components/ui/DeletePostModal";
 import { useNavigate } from "react-router-dom";
+import GuestProfileModal from "../../components/ui/GuestProfileModal";
+
 import {
   collection,
   setDoc,
@@ -111,6 +113,9 @@ export default function UserWorkoutCard({
   const [repliesLength, setRepliesLength] = useState(0);
   const [deletePostModalOpen, setDeletePostModalOpen] = useState(false);
   const [postDeleteTrigger, setPostDeleteTrigger] = useState(0);
+  const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
+  
+  
   const navigate = useNavigate();
 
   const handleExpandClick = () => {
@@ -118,6 +123,11 @@ export default function UserWorkoutCard({
   };
 
   const handleCommentExpandClick = () => {
+    
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
     getPostComments();
     setCommentExpanded(!commentExpanded);
   };
@@ -154,6 +164,7 @@ export default function UserWorkoutCard({
   }
 
   function addComment() {
+
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
       const commentsCollectionRef = collection(postRef, "comments");
@@ -219,283 +230,287 @@ export default function UserWorkoutCard({
   }
 
   return (
-    <Card sx={{ width: "100%", marginBottom: "16px" }}>
-      <DeletePostModal
-        deletePostModalOpen={deletePostModalOpen}
-        setDeletePostModalOpen={setDeletePostModalOpen}
-        deletePost={deletePost}
-      />
-      <CardHeader
-        avatar={
-          <Avatar aria-label="recipe">
-            {currentUserDataImage ? (
-              <LazyLoadImage
-                src={currentUserDataImage}
-                alt="user image"
-                effect="blur" // optional blur effect, you can remove it if not needed
-                style={{ width: "100%", height: "100%" }} // match the LazyLoadImage size to the Avatar
-              />
-            ) : (
-              // Placeholder avatar content if currentUserDataImage is not available
-              <AccountCircle />
-            )}
-          </Avatar>
-        }
-        action={
-          postUserId === currentUser.uid && (
-            <IconButton aria-label="settings" onClick={handleDeletePostClick}>
-              <MoreVertIcon />
-            </IconButton>
-          )
-        }
-        title={currentUserDataName}
-        subheader={getTimeDifference(postCreatedAt)}
-      />
 
-      {postImage !== null && (
-        <LazyLoadImage
-          src={postImage}
-          alt="post image"
-          effect="blur" // optional blur effect, you can remove it if not needed
-          style={{ width: "100%", height: "100%" }}
-          wrapperProps={{ style: { width: "100%", height: "100%" } }}
+    <div>
+      <GuestProfileModal guestProfileModalOpen={guestProfileModalOpen} setGuestProfileModalOpen={setGuestProfileModalOpen}/>
+      <Card sx={{ width: "100%", marginBottom: "16px" }}>
+        <DeletePostModal
+          deletePostModalOpen={deletePostModalOpen}
+          setDeletePostModalOpen={setDeletePostModalOpen}
+          deletePost={deletePost}
         />
-      )}
+        <CardHeader
+          avatar={
+            <Avatar aria-label="recipe">
+              {currentUserDataImage ? (
+                <LazyLoadImage
+                  src={currentUserDataImage}
+                  alt="user image"
+                  effect="blur" // optional blur effect, you can remove it if not needed
+                  style={{ width: "100%", height: "100%" }} // match the LazyLoadImage size to the Avatar
+                />
+              ) : (
+                // Placeholder avatar content if currentUserDataImage is not available
+                <AccountCircle />
+              )}
+            </Avatar>
+          }
+          action={
+            postUserId === currentUser.uid && (
+              <IconButton aria-label="settings" onClick={handleDeletePostClick}>
+                <MoreVertIcon />
+              </IconButton>
+            )
+          }
+          title={currentUserDataName}
+          subheader={getTimeDifference(postCreatedAt)}
+        />
 
-      <CardContent>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ whiteSpace: "pre-line" }}
-        >
-          {postText}
-        </Typography>
-      </CardContent>
-
-      <CardActions disableSpacing>
-        <IconButton
-          aria-label="add to favorites"
-          /* 
-        onClick={appreciatePost}
-        
-        style={{ color: postAppreciation.includes(currentUser.uid) ? 'red' : undefined }}
-        
-        */
-        >
-          <FavoriteIcon />
-        </IconButton>
-        {postAppreciation && ( // Add conditional check
-          <Typography>{postAppreciation.length}</Typography>
+        {postImage !== null && (
+          <LazyLoadImage
+            src={postImage}
+            alt="post image"
+            effect="blur" // optional blur effect, you can remove it if not needed
+            style={{ width: "100%", height: "100%" }}
+            wrapperProps={{ style: { width: "100%", height: "100%" } }}
+          />
         )}
 
-        <ExpandMoreComment
-          expandComment={commentExpanded}
-          onClick={handleCommentExpandClick}
-          aria-expanded={commentExpanded}
-          aria-label="show more"
-        >
-          <InsertCommentIcon />
-        </ExpandMoreComment>
-
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Divider sx={{ width: "100%" }} />
         <CardContent>
-          <Box>
-            {showWorkout &&
-              workoutData
-                /* 
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
-                ) */
-                .map((group: any, index: number) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      borderRadius: "4px",
-                      boxShadow: 1,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ whiteSpace: "pre-line" }}
+          >
+            {postText}
+          </Typography>
+        </CardContent>
+
+        <CardActions disableSpacing>
+          <IconButton
+            aria-label="add to favorites"
+            /* 
+          onClick={appreciatePost}
+          
+          style={{ color: postAppreciation.includes(currentUser.uid) ? 'red' : undefined }}
+          
+          */
+          >
+            <FavoriteIcon />
+          </IconButton>
+          {postAppreciation && ( // Add conditional check
+            <Typography>{postAppreciation.length}</Typography>
+          )}
+
+          <ExpandMoreComment
+            expandComment={commentExpanded}
+            onClick={handleCommentExpandClick}
+            aria-expanded={commentExpanded}
+            aria-label="show more"
+          >
+            <InsertCommentIcon />
+          </ExpandMoreComment>
+
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </CardActions>
+
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Divider sx={{ width: "100%" }} />
+          <CardContent>
+            <Box>
+              {showWorkout &&
+                workoutData
+                  /* 
+                  .sort(
+                    (a, b) =>
+                      new Date(b.date).getTime() - new Date(a.date).getTime()
+                  ) */
+                  .map((group: any, index: number) => (
+                    <Box
+                      key={index}
                       sx={{
-                        textAlign: "center",
-                        fontSize: "medium",
-                        backgroundColor: "#F0F2F5",
+                        borderRadius: "4px",
+                        boxShadow: 1,
+                        backgroundColor: "white",
                       }}
                     >
-                      {group.name.toLocaleUpperCase()}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          textAlign: "center",
+                          fontSize: "medium",
+                          backgroundColor: "#F0F2F5",
+                        }}
+                      >
+                        {group.name.toLocaleUpperCase()}
+                      </Typography>
 
-                    <Divider sx={{ backgroundColor: "aliceblue" }} />
-                    {group.exercises.map(
-                      (exercise: any, exerciseIndex: number) => (
-                        <Box
-                          key={exerciseIndex}
-                          sx={{
-                            display: "grid",
-                            gridAutoFlow: "column",
-                            gridTemplateColumns: "1fr 1fr 4fr",
-                            justifyContent: "space-evenly",
-                            justifyItems: "center",
-                            alignItems: "center",
-                            width: "100%",
-                          }}
-                        >
-                          {exercise.comment ? ( // Check if 'comment' property exists
-                            <IconButton
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                            >
-                              <CommentIcon
-                                sx={{
-                                  zIndex: 0,
-                                }}
-                              />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                              color="inherit"
-                              disabled // Placeholder element
-                            >
-                              <CommentIcon style={{ opacity: 0 }} />
-                            </IconButton>
-                          )}
-
-                          {exercise.is_pr ? (
-                            <IconButton
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                              color="inherit"
-                              disabled // Placeholder element
-                            >
-                              <EmojiEventsIcon sx={{ zIndex: 0 }} />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                              color="inherit"
-                              disabled // Placeholder element
-                            >
-                              <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
-                            </IconButton>
-                          )}
-
+                      <Divider sx={{ backgroundColor: "aliceblue" }} />
+                      {group.exercises.map(
+                        (exercise: any, exerciseIndex: number) => (
                           <Box
+                            key={exerciseIndex}
                             sx={{
                               display: "grid",
-                              gridTemplateColumns: "1fr 1fr",
-                              alignItems: "center",
-                              justifyItems: "center",
-                              width: "100%",
+                              gridAutoFlow: "column",
+                              gridTemplateColumns: "1fr 1fr 4fr",
                               justifyContent: "space-evenly",
+                              justifyItems: "center",
+                              alignItems: "center",
+                              width: "100%",
                             }}
                           >
-                            {exercise.weight !== 0 && (
-                              <Typography sx={{ fontSize: "small" }}>
-                                {`${exercise.weight.toFixed(2)} ${
-                                  unitsSystem === "metric" ? "kgs" : "lbs"
-                                }`}
-                              </Typography>
+                            {exercise.comment ? ( // Check if 'comment' property exists
+                              <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                              >
+                                <CommentIcon
+                                  sx={{
+                                    zIndex: 0,
+                                  }}
+                                />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                color="inherit"
+                                disabled // Placeholder element
+                              >
+                                <CommentIcon style={{ opacity: 0 }} />
+                              </IconButton>
                             )}
 
-                            {exercise.reps !== 0 && (
-                              <Typography sx={{ fontSize: "small" }}>
-                                {exercise.reps} reps
-                              </Typography>
+                            {exercise.is_pr ? (
+                              <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                color="inherit"
+                                disabled // Placeholder element
+                              >
+                                <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                color="inherit"
+                                disabled // Placeholder element
+                              >
+                                <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                              </IconButton>
                             )}
 
-                            {exercise.distance !== 0 && (
-                              <Typography
-                                sx={{ fontSize: "small" }}
-                              >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                            )}
+                            <Box
+                              sx={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr",
+                                alignItems: "center",
+                                justifyItems: "center",
+                                width: "100%",
+                                justifyContent: "space-evenly",
+                              }}
+                            >
+                              {exercise.weight !== 0 && (
+                                <Typography sx={{ fontSize: "small" }}>
+                                  {`${exercise.weight.toFixed(2)} ${
+                                    unitsSystem === "metric" ? "kgs" : "lbs"
+                                  }`}
+                                </Typography>
+                              )}
 
-                            {exercise.time !== 0 && (
-                              <Typography sx={{ fontSize: "small" }}>
-                                {exercise.time !== 0
-                                  ? formatTime(exercise.time)
-                                  : ""}
-                              </Typography>
-                            )}
+                              {exercise.reps !== 0 && (
+                                <Typography sx={{ fontSize: "small" }}>
+                                  {exercise.reps} reps
+                                </Typography>
+                              )}
+
+                              {exercise.distance !== 0 && (
+                                <Typography
+                                  sx={{ fontSize: "small" }}
+                                >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                              )}
+
+                              {exercise.time !== 0 && (
+                                <Typography sx={{ fontSize: "small" }}>
+                                  {exercise.time !== 0
+                                    ? formatTime(exercise.time)
+                                    : ""}
+                                </Typography>
+                              )}
+                            </Box>
+
+                            <Divider />
                           </Box>
+                        )
+                      )}
+                    </Box>
+                  ))}
+            </Box>
+          </CardContent>
+        </Collapse>
 
-                          <Divider />
-                        </Box>
-                      )
-                    )}
-                  </Box>
-                ))}
-          </Box>
-        </CardContent>
-      </Collapse>
+        <Collapse in={commentExpanded} timeout="auto" unmountOnExit>
+          <Divider sx={{ width: "100%" }} />
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <TextField
+                multiline
+                id="input-with-sx"
+                label="Write a comment"
+                variant="standard"
+                sx={{ width: "100%" }}
+                onChange={(e) => setCommentText(e.target.value)}
+                value={commentText}
+              />
+              <IconButton onClick={addComment}>
+                <ReplyIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+              </IconButton>
+            </Box>
 
-      <Collapse in={commentExpanded} timeout="auto" unmountOnExit>
-        <Divider sx={{ width: "100%" }} />
-        <CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <TextField
-              multiline
-              id="input-with-sx"
-              label="Write a comment"
-              variant="standard"
-              sx={{ width: "100%" }}
-              onChange={(e) => setCommentText(e.target.value)}
-              value={commentText}
-            />
-            <IconButton onClick={addComment}>
-              <ReplyIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-            </IconButton>
-          </Box>
-
-          <Box sx={{ margin: 0, padding: 0 }}>
-            {comments &&
-              comments
-                .slice()
-                .reverse()
-                .map((comment: any, index: number) => (
-                  <Box sx={{ margin: 0, padding: 0 }} key={index}>
-                    <PostComment
-                      comment={comment}
-                      commentIndex={index}
-                      postId={postId}
-                      commentId={comment.commentId}
-                      getPostComments={getPostComments}
-                    />
-                  </Box>
-                ))}
-          </Box>
-        </CardContent>
-      </Collapse>
-    </Card>
+            <Box sx={{ margin: 0, padding: 0 }}>
+              {comments &&
+                comments
+                  .slice()
+                  .reverse()
+                  .map((comment: any, index: number) => (
+                    <Box sx={{ margin: 0, padding: 0 }} key={index}>
+                      <PostComment
+                        comment={comment}
+                        commentIndex={index}
+                        postId={postId}
+                        commentId={comment.commentId}
+                        getPostComments={getPostComments}
+                      />
+                    </Box>
+                  ))}
+            </Box>
+          </CardContent>
+        </Collapse>
+      </Card>
+    </div>
   );
 }

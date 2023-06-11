@@ -50,6 +50,8 @@ function UserProfile() {
 
   useEffect(() => {
     getProfileFollowers();
+    console.log('logging current user data inside user profile:')
+    console.log(currentUserData)
   }, [uploadCount]);
 
   const navigate = useNavigate();

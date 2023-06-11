@@ -8,11 +8,11 @@ import {
   query,
   where,
   getDocs,
-  orderBy,  
+  orderBy,
   startAfter,
   limit,
   documentId,
-  startAt
+  startAt,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import User from "../../utils/interfaces/User";
@@ -47,16 +47,14 @@ function Newsfeed() {
       )
     );
 
-
-
     // Extract the document IDs of the followed users
     const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
     console.log("logging documentIds of the followed users:");
     if (documentIds.length === 0) {
-      console.log('No post IDs found.');
+      console.log("No post IDs found.");
       // Handle the empty postIds array (e.g., display a message to the user)
       return;
-    }  
+    }
     console.log(documentIds);
 
     let usersQuery;
@@ -94,17 +92,16 @@ function Newsfeed() {
       return sortedPostIds;
     });
 
-    console.log('logging postsIds.length')
-    console.log(postIds.length)
+    console.log("logging postsIds.length");
+    console.log(postIds.length);
     if (postIds.length === 0) {
-      console.log('No post IDs found.');
+      console.log("No post IDs found.");
       // Handle the empty postIds array (e.g., display a message to the user)
       return;
-    }  
+    }
 
     // Retrieve the post data based on the extracted post IDs
     setPostIDsCache(postIds);
-
 
     let postsQuery;
     if (postIds.length > 0) {
@@ -175,7 +172,6 @@ function Newsfeed() {
       } else {
         setUserFeed(feedData);
       }
-       
     }
   }
 
