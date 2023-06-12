@@ -235,6 +235,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
           <Route path="results/u/:id/*" element={<SearchUserProfile />} />
+      
         </Routes>
 
       

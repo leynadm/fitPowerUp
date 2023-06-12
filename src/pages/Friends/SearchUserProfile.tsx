@@ -44,7 +44,9 @@ import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
 function SearchUserProfile() {
+
   const { id } = useParams<{ id: string }>();
+  
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [userFollowers, setUserFollowers] = useState<number>(0);
@@ -71,7 +73,7 @@ function SearchUserProfile() {
     getSearchProfileFollowers();
     console.log("logging queried user:");
     console.log(queriedUser);
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate();
 

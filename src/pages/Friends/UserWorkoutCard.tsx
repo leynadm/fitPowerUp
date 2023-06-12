@@ -313,7 +313,7 @@ export default function UserWorkoutCard({
           title={
             <Link
               to={`/home/friends/results/u/${postUserId}`}
-              style={{ textDecoration: "none",color:"black",fontWeight:"bolder" }}
+              style={{ textDecoration: "none",color:"black" }}
             >
               {currentUserDataName}
             </Link>
