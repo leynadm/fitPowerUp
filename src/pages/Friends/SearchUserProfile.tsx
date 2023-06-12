@@ -43,6 +43,7 @@ import SearchUserProfileFollowing from "./SearchUserProfileFollowing";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
+import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
 function SearchUserProfile() {
 
   const { id } = useParams<{ id: string }>();
@@ -57,7 +58,7 @@ function SearchUserProfile() {
   const [userFollowing, setUserFollowing] = useState<number>(0);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const [followersLimitModalOpen,setFollowersLimitModalOpen] = useState(false)
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -122,6 +123,7 @@ function SearchUserProfile() {
     }
 
     const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
+
     const followersFeedDoc = await getDoc(followersFeedRef);
     if (!followersFeedDoc.exists()) {
       await setDoc(followersFeedRef, {
@@ -129,22 +131,34 @@ function SearchUserProfile() {
         recentPosts: [],
         users: arrayUnion(currentUser.uid),
       });
+
+      setFollow("Unfollow");
+      setUserFollowers(userFollowers + 1);
+    } else {
+      const followersFeedData = followersFeedDoc.data();
+      console.log(followersFeedData);
+      // Access specific fields:
+      const users = followersFeedData.users;
+
+      if (users.length <50) {
+        await updateDoc(followersFeedRef, {
+          users: arrayUnion(currentUser.uid),
+        });
+
+        const currentUserfollowersFeedRef = doc(
+          collection(db, "followers-feed"),
+          `${currentUser.uid}`
+        );
+        await updateDoc(currentUserfollowersFeedRef, {
+          following: arrayUnion(id),
+        });
+
+        setFollow("Unfollow");
+        setUserFollowers(userFollowers + 1);
+      } else {
+        setFollowersLimitModalOpen(!followersLimitModalOpen)
+      }
     }
-
-    await updateDoc(followersFeedRef, {
-      users: arrayUnion(currentUser.uid),
-    });
-
-    setFollow("Unfollow");
-    setUserFollowers(userFollowers + 1);
-
-    const currentUserfollowersFeedRef = doc(
-      collection(db, "followers-feed"),
-      `${currentUser.uid}`
-    );
-    await updateDoc(currentUserfollowersFeedRef, {
-      following: arrayUnion(id),
-    });
   }
 
   async function getUsersPosts() {
@@ -257,6 +271,13 @@ function SearchUserProfile() {
         guestProfileModalOpen={guestProfileModalOpen}
         setGuestProfileModalOpen={setGuestProfileModalOpen}
       />
+
+      <FollowersLimitModal
+      followersLimitModalOpen={followersLimitModalOpen}
+      setFollowersLimitModalOpen={setFollowersLimitModalOpen}
+      />
+
+
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>

@@ -26,6 +26,7 @@ import formatTime from "../../utils/formatTime";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
+
 import {
   collection,
   setDoc,
@@ -35,6 +36,9 @@ import {
   arrayUnion,
   updateDoc,
   getDoc,
+  getDocs,
+  where,
+  query,
 } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import uuid from "react-uuid";
@@ -54,7 +58,7 @@ interface FriendsProps {
   setAddContentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
   existingExercises: { name: string; exercises: Exercise[] }[];
-  unitsSystem:string
+  unitsSystem: string;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -70,14 +74,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
-
 }
 
 function AddContentModal({
   addContentModalOpen,
   setAddContentModalOpen,
   existingExercises,
-  unitsSystem
+  unitsSystem,
 }: FriendsProps) {
   const handleClose = () => setAddContentModalOpen(false);
   const [postDate, setPostDate] = useState(new Date());
@@ -86,8 +89,8 @@ function AddContentModal({
   const [expanded, setExpanded] = React.useState(false);
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
-  const [addWorkout, setAddWorkout] = useState(false)
-
+  const [addWorkout, setAddWorkout] = useState(false);
+  const [limitInfo, setLimitInfo] = useState("")
   const navigate = useNavigate();
 
   const handleExpandClick = () => {
@@ -109,14 +112,39 @@ function AddContentModal({
     }
   }
 
+  async function checkUserPosts() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set the time to the beginning of the day
+
+    const postsRef = collection(db, "posts");
+    const q = query(
+      postsRef,
+      where("userId", "==", currentUser.uid),
+      where("createdAt", ">=", Timestamp.fromDate(today))
+    );
+
+    const querySnapshot = await getDocs(q);
+    const postCount = querySnapshot.size;
+
+    return postCount >= 3;
+  }
+
   async function addPost() {
+    const hasThreePosts = await checkUserPosts();
+    if (hasThreePosts) {
+      setLimitInfo("You've reach the current daily limit of 3 new posts a day. ")
+      return;
+    }
+
     if (postText !== "") {
       let imageUrl: string | null = null;
       let imageRef = null;
       if (selectedFile) {
         imageRef = ref(
           storage,
-          `images/${currentUser.uid}/preview/${currentUser.uid}_${uuid()}_450x450`
+          `images/${currentUser.uid}/preview/${
+            currentUser.uid
+          }_${uuid()}_450x450`
         );
         await uploadBytes(imageRef, selectedFile);
         imageUrl = await getDownloadURL(imageRef);
@@ -134,11 +162,11 @@ function AddContentModal({
         postImage: imageUrl,
         timestamp: timestamp,
         commentsCount: 0,
-        showWorkout:addWorkout,
+        showWorkout: addWorkout,
         workoutData: existingExercises,
-        unitsSystem:unitsSystem,
-        documentId:newPostRef.id,
-        postAppreciation:[]
+        unitsSystem: unitsSystem,
+        documentId: newPostRef.id,
+        postAppreciation: [],
       });
 
       const newFollowersFeedRef = doc(
@@ -173,7 +201,6 @@ function AddContentModal({
     setFileSource(null);
     handleClose();
     navigate("profile");
-
   }
 
   function removeFile() {
@@ -206,19 +233,15 @@ function AddContentModal({
         {currentUser.isAnonymous === false ? (
           <Box sx={style}>
             <CardHeader
-
               avatar={
                 <Avatar
                   alt="Remy Sharp"
-
                   src={currentUserData.profileImage}
-                  
                   sx={{ width: 48, height: 48, alignSelf: "center" }}
                 />
               }
-              
               title={currentUserData.fullname[2]}
-              titleTypographyProps={{variant:'h6',padding:0,margin:0 }}
+              titleTypographyProps={{ variant: "h6", padding: 0, margin: 0 }}
               subheader={postDate.toDateString()}
             />
 
@@ -231,7 +254,6 @@ function AddContentModal({
                 sx={{ borderRadius: 1 }}
               />
             )}
-
             <TextField
               id="standard-textarea"
               label="Share your thoughts..."
@@ -260,8 +282,8 @@ function AddContentModal({
                   padding: "0",
                 }}
               >
-                <Box sx={{ display: "flex",gap:1 }}>
-                  <ImageIcon sx={{margin:0,padding:0}} />
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <ImageIcon sx={{ margin: 0, padding: 0 }} />
                   <p>Add a photo to your post</p>
                   <input
                     type="file"
@@ -279,30 +301,25 @@ function AddContentModal({
                 )}
               </Box>
             </Box>
-              <Box>
-            <FormControl component="fieldset">
-              <FormGroup
-                aria-label="position"
-                sx={{ display: "flex", flexDirection: "row" }}
-              >
-                {/* 
-                <FormControlLabel
-                  value="end"
-                  control={<Checkbox />}
-                  label="Add Power Level"
-                  labelPlacement="end"
-                /> */}
-                <FormControlLabel
-                  value="end"
-                  control={<Checkbox 
-                  value={addWorkout}
-                  onChange={()=>setAddWorkout(!addWorkout)}
-                  />}
-                  label="Show workout in post"
-                  labelPlacement="end"
-                />
-              </FormGroup>
-            </FormControl>
+            <Box>
+              <FormControl component="fieldset">
+                <FormGroup
+                  aria-label="position"
+                  sx={{ display: "flex", flexDirection: "row" }}
+                >
+                  <FormControlLabel
+                    value="end"
+                    control={
+                      <Checkbox
+                        value={addWorkout}
+                        onChange={() => setAddWorkout(!addWorkout)}
+                      />
+                    }
+                    label="Show workout in post"
+                    labelPlacement="end"
+                  />
+                </FormGroup>
+              </FormControl>
             </Box>
             <Box sx={{ display: "flex" }}>
               <Button
@@ -321,6 +338,7 @@ function AddContentModal({
                 Cancel
               </Button>
             </Box>
+            <Typography sx={{fontSize:"small", textAlign:"center",paddingTop:"0.25rem"}}>{limitInfo}</Typography>
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -351,7 +369,11 @@ function AddContentModal({
                       >
                         <Typography
                           variant="h6"
-                          sx={{ textAlign: "center", fontSize: "medium",backgroundColor:"#F0F2F5" }}
+                          sx={{
+                            textAlign: "center",
+                            fontSize: "medium",
+                            backgroundColor: "#F0F2F5",
+                          }}
                         >
                           {group.name.toLocaleUpperCase()}
                         </Typography>
@@ -434,7 +456,7 @@ function AddContentModal({
                               }}
                             >
                               {exercise.weight !== 0 && (
-                                <Typography sx={{fontSize:"small"}}>
+                                <Typography sx={{ fontSize: "small" }}>
                                   {`${exercise.weight.toFixed(2)} ${
                                     unitsSystem === "metric" ? "kgs" : "lbs"
                                   }`}
@@ -442,15 +464,19 @@ function AddContentModal({
                               )}
 
                               {exercise.reps !== 0 && (
-                                <Typography sx={{fontSize:"small"}}>{exercise.reps} reps</Typography>
+                                <Typography sx={{ fontSize: "small" }}>
+                                  {exercise.reps} reps
+                                </Typography>
                               )}
 
                               {exercise.distance !== 0 && (
-                                <Typography sx={{fontSize:"small"}}>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                                <Typography
+                                  sx={{ fontSize: "small" }}
+                                >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                               )}
 
                               {exercise.time !== 0 && (
-                                <Typography sx={{fontSize:"small"}}>
+                                <Typography sx={{ fontSize: "small" }}>
                                   {exercise.time !== 0
                                     ? formatTime(exercise.time)
                                     : ""}
