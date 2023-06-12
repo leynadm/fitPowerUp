@@ -8,7 +8,6 @@ import {
   orderBy,
   startAfter,
   limit,
-  doc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";

@@ -7,6 +7,11 @@ export interface User {
     profileImage:string
     verified:boolean
     privateAccount:boolean
+    blocked:[]
+    hideProfile:boolean,
+    hidePowerLevel:boolean,
+    hideFollowers:boolean,
+    hideFollowing:boolean
   }
 
   export default User

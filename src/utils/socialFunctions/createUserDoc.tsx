@@ -12,7 +12,12 @@ async function createUserDoc(userID: string, fullname: string | null) {
         fullname: [fullname, fullname, fullname], 
         profileImage:
           "",
-        privateAccount:false
+        privateAccount:false,
+        blocked:[],
+        hideProfile:false,
+        hidePowerLevel:false,
+        hideFollowers:false,
+        hideFollowing:false
       });
     }
   }

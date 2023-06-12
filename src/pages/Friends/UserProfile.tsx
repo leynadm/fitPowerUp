@@ -70,7 +70,7 @@ function UserProfile() {
       state: { userIndividualFollowing: userIndividualFollowing },
     });
   }
-
+ 
   async function getProfileFollowers() {
     const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
     const documentSnapshot = await getDoc(followersFeedRef);

@@ -49,9 +49,9 @@ export default function DeleteCommentModal({
             <WarningIcon /> Warning
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            You are about to delete your comment, which is an irreversible
+            You are about to delete this comment, which is an irreversible
             action.<br></br> Once the comment is deleted, it cannot be recovered.<br></br> Please
-            ensure that you want to proceed with deleting your comment before
+            ensure that you want to proceed with deleting this comment before
             taking this action!
           </Typography>
           <Box

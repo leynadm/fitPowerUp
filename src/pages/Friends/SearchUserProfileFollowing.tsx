@@ -30,7 +30,11 @@ interface UserData {
   [key: string]: any; // Add this if there are other properties in the user data object.
 }
 
-function SearchUserProfileFollowing() {
+interface SearchProfileProps {
+  queriedUser: User | undefined;
+}
+
+function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
   const location = useLocation();
   const userIndividualFollowing = location.state.userIndividualFollowing;
   const [userIndividualFollowingData, setUserIndividualFollowingData] =
@@ -62,89 +66,112 @@ function SearchUserProfileFollowing() {
 
     for (const docId of userIndividualFollowing.slice(startIdx, endIdx)) {
       const documentData = await getUserDocumentById(docId);
-      console.log('logging docId')
-      console.log(docId)
+      console.log("logging docId");
+      console.log(docId);
       if (documentData) {
         tempData.push(documentData);
       }
     }
-    console.log('logging temporary data:')
-    console.log(tempData)
+    console.log("logging temporary data:");
+    console.log(tempData);
     setUserIndividualFollowingData(tempData);
   }
 
   return (
     <Box>
-      {userIndividualFollowingData.map((user, index) => (
+      {queriedUser?.hideFollowing ? (
         <Box
-          key={index}
           sx={{
-            paddingTop: "8px",
-            margin: 0,
             display: "flex",
             width: "100%",
             justifyContent: "center",
-            flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <List
-            sx={{
-              width: "100%",
-              bgcolor: "background.paper",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              alignSelf: "center",
-              justifySelf: "center",
-            }}
-          >
-            <ListItem
-              alignItems="flex-start"
-              sx={{ display: "flex", alignItems: "center" }}
+          <Typography sx={{ textAlign: "center"}}>
+            {queriedUser.name} {queriedUser.surname} has decided to keep its
+            followed users private.
+          </Typography>
+        </Box>
+      ) : (
+        <Box>
+          {userIndividualFollowingData.map((user, index) => (
+            <Box
+              key={index}
+              sx={{
+                paddingTop: "8px",
+                margin: 0,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ flexGrow: 1 }}
-                  alt="Remy Sharp"
-                  src={user.profileImage}
-                />
-              </ListItemAvatar>
-
-              <Link to={`u/${user.id}`} style={{ textDecoration: "none" }}>
-                <Typography
-                  sx={{
-                    flexGrow: 1,
-                    alignSelf: "center",
-                    fontSize: "large",
-                    fontWeight: "bold",
-                    color: "black",
-                  }}
-                >{`${user.name} ${user.surname}`}</Typography>
-              </Link>
-              <Box
+              <List
                 sx={{
-                  flexGrow: 1,
+                  width: "100%",
+                  bgcolor: "background.paper",
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   textAlign: "center",
+                  alignSelf: "center",
+                  justifySelf: "center",
                 }}
               >
-                {user.verified && <VerifiedIcon />}
-              </Box>
-            </ListItem>
-          </List>
-        </Box>
-      ))}
+                <ListItem
+                  alignItems="flex-start"
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      sx={{ flexGrow: 1 }}
+                      alt="Remy Sharp"
+                      src={user.profileImage}
+                    />
+                  </ListItemAvatar>
 
-      <Button
-        sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-        onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-        disabled={userIndividualFollowing.length <= currentPage * resultsPerPage}
-      >
-        Load More
-      </Button>
+                  <Link
+                    to={`/home/friends/results/u/${user.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Typography
+                      sx={{
+                        flexGrow: 1,
+                        alignSelf: "center",
+                        fontSize: "large",
+                        fontWeight: "bold",
+                        color: "black",
+                      }}
+                    >{`${user.name} ${user.surname}`}</Typography>
+                  </Link>
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {user.verified && <VerifiedIcon />}
+                  </Box>
+                </ListItem>
+              </List>
+            </Box>
+          ))}
+
+          <Button
+            sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+            disabled={
+              userIndividualFollowing.length <= currentPage * resultsPerPage
+            }
+          >
+            Load More
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }

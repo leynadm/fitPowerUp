@@ -26,6 +26,7 @@ import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { RelationProvider } from "../../context/Relation";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   unitsSystem: string;
@@ -228,12 +229,15 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
 
       {/* This is the container that I might have to check if it reached to bottom */}
       <Container sx={{ height: "100%" }}>
+
         <Routes>
           <Route path="" element={<Newsfeed />} />
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
           <Route path="results/u/:id/*" element={<SearchUserProfile />} />
         </Routes>
+
+      
       </Container>
     </Box>
   );

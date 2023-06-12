@@ -32,7 +32,6 @@ export default function GuestProfileModal({
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
         open={guestProfileModalOpen}
         onClose={handleClose}
@@ -51,7 +50,7 @@ export default function GuestProfileModal({
             To access your full profile features, please create an account or
             authenticate using Google Login.
             <br></br>
-            Once authenticated, you can proceed to edit your post.
+            Once authenticated, you can proceed with all social functionalities.
           </Typography>
         
           <Box

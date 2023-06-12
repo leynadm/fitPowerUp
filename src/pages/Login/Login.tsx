@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
 import User from "../../utils/interfaces/User";
 import {
   getAuth,
@@ -82,6 +83,10 @@ export default function SignIn() {
         profileImage: "",
         verified: false,
         privateAccount: false,
+        hideProfile:false,
+        hidePowerLevel:false,
+        hideFollowers:false,
+        hideFollowing:false
       }
 
     signInWithPopup(userAuth, provider)
@@ -100,6 +105,7 @@ export default function SignIn() {
           console.log('about to create new user:')
           if (newUserCheck?.isNewUser) {
             createUserDoc(user.uid, user.displayName);
+            createFollowersFeedDoc(user.uid)
           }
 
           // Query the users collection to retrieve the document with the given userID

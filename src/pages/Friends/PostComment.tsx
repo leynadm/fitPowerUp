@@ -38,6 +38,7 @@ interface UserWorkoutCardProps {
   postId: string;
   commentId: string;
   getPostComments: () => void;
+  postUserId:string
 }
 
 interface ExpandRepliesProps extends IconButtonProps {
@@ -59,6 +60,7 @@ function PostComment({
   postId,
   commentId,
   getPostComments,
+  postUserId
 }: UserWorkoutCardProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [expandedReplies, setExpandedReplies] = useState(false);
@@ -113,6 +115,7 @@ function PostComment({
       .then(() => {
         console.log("Comment deleted successfully");
         getPostComments();
+        setDeleteCommentModalOpen(!deleteCommentModalOpen)
       })
       .catch((error) => {
         console.error("Error deleting comment:", error);
@@ -143,11 +146,11 @@ function PostComment({
               <h6 style={{ margin: 0, textAlign: "left" }}>
                 {comment.name} {comment.surname}
               </h6>
-              {comment.userId === currentUser.uid && (
+              {(comment.userId === currentUser.uid || postUserId===currentUser.uid) && (
                 <IconButton onClick={handleDeleteCommentClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>
-              )}
+              )} 
             </Box>
 
             <p style={{ textAlign: "left", fontSize: "medium" }}>
@@ -219,6 +222,7 @@ function PostComment({
                                 postId={postId}
                                 commentId={commentId}
                                 getPostComments={getPostComments}
+                                postUserId={postUserId}
                               />
                             </Box>
                           ))}

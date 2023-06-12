@@ -63,12 +63,12 @@ function SocialSearchBar() {
       q = query(
         collection(db, "users"),
         where("fullname", "array-contains", userToSearch),
-        where("privateAccount", "==", false)
+        where("hideProfile", "==", false)
       );
     } else {
       q = query(
         collection(db, "users"),
-        where("privateAccount", "==", false),
+        where("hideProfile", "==", false),
         limit(10)
       );
     }
@@ -82,7 +82,7 @@ function SocialSearchBar() {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data();
       user.id = doc.id; // Add this line to set the 'id' property
-      if(user.id !== currentUser.uid){
+      if(user.id !== currentUser.uid && !user.blocked.includes(currentUser.uid)){
         userResults.push(user);
       }
     });

@@ -11,19 +11,10 @@ import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
+import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
+import { doc, getDoc } from "firebase/firestore";
 
-import {
-  doc,
-  getDoc,
-  query,
-  collection,
-  where,
-  getDocs,
-  orderBy,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import { Link } from "react-router-dom";
 
 interface UserData {
@@ -31,7 +22,11 @@ interface UserData {
   [key: string]: any; // Add this if there are other properties in the user data object.
 }
 
-function SearchUserProfileFollowers() {
+interface SearchProfileProps {
+  queriedUser: User | undefined;
+}
+
+function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
   const location = useLocation();
   const userIndividualFollowers = location.state.userIndividualFollowers;
   const [userIndividualFollowersData, setUserIndividualFollowersData] =
@@ -73,76 +68,101 @@ function SearchUserProfileFollowers() {
 
   return (
     <Box>
-      {userIndividualFollowersData.map((user, index) => (
+      {queriedUser?.hideFollowers ? (
         <Box
-          key={index}
           sx={{
-            paddingTop: "8px",
-            margin: 0,
             display: "flex",
             width: "100%",
             justifyContent: "center",
-            flexDirection: "column",
             alignItems: "center",
+            flexDirection:"column",
+            gap:2
           }}
         >
-          <List
-            sx={{
-              width: "100%",
-              bgcolor: "background.paper",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              alignSelf: "center",
-              justifySelf: "center",
-            }}
-          >
-            <ListItem
-              alignItems="flex-start"
-              sx={{ display: "flex", alignItems: "center" }}
+          <Typography sx={{ textAlign: "center" }}>
+            {queriedUser.name} {queriedUser.surname} has decided to keep its
+            followers private.
+          </Typography>
+        </Box>
+      ) : (
+        <Box>
+          {userIndividualFollowersData.map((user, index) => (
+            <Box
+              key={index}
+              sx={{
+                paddingTop: "8px",
+                margin: 0,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ flexGrow: 1 }}
-                  alt="Remy Sharp"
-                  src={user.profileImage}
-                />
-              </ListItemAvatar>
-
-              <Link to={`u/${user.id}`} style={{ textDecoration: "none" }}>
-                <Typography
-                  sx={{
-                    flexGrow: 1,
-                    alignSelf: "center",
-                    fontSize: "large",
-                    fontWeight: "bold",
-                    color: "black",
-                  }}
-                >{`${user.name} ${user.surname}`}</Typography>
-              </Link>
-              <Box
+              <List
                 sx={{
-                  flexGrow: 1,
+                  width: "100%",
+                  bgcolor: "background.paper",
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   textAlign: "center",
+                  alignSelf: "center",
+                  justifySelf: "center",
                 }}
               >
-                {user.verified && <VerifiedIcon />}
-              </Box>
-            </ListItem>
-          </List>
-        </Box>
-      ))}
+                <ListItem
+                  alignItems="flex-start"
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      sx={{ flexGrow: 1 }}
+                      alt="Remy Sharp"
+                      src={user.profileImage}
+                    />
+                  </ListItemAvatar>
 
-      <Button
-        sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-        onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-        disabled={userIndividualFollowers.length <= currentPage * resultsPerPage}
-      >
-        Load More
-      </Button>
+                  <Link
+                    to={`/home/friends/results/u/${user.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Typography
+                      sx={{
+                        flexGrow: 1,
+                        alignSelf: "center",
+                        fontSize: "large",
+                        fontWeight: "bold",
+                        color: "black",
+                      }}
+                    >{`${user.name} ${user.surname}`}</Typography>
+                  </Link>
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {user.verified && <VerifiedIcon />}
+                  </Box>
+                </ListItem>
+              </List>
+            </Box>
+          ))}
+
+          <Button
+            sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+            disabled={
+              userIndividualFollowers.length <= currentPage * resultsPerPage
+            }
+          >
+            Load More
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }

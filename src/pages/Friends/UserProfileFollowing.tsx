@@ -112,7 +112,7 @@ function UserProfileFollowing() {
                 />
               </ListItemAvatar>
 
-              <Link to={`u/${user.id}`} style={{ textDecoration: "none" }}>
+              <Link to={`/home/friends/results/u/${user.id}`} style={{ textDecoration: "none" }}>
                 <Typography
                   sx={{
                     flexGrow: 1,

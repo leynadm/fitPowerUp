@@ -106,10 +106,10 @@ function UserProfileFollowers() {
                   sx={{ flexGrow: 1 }}
                   alt="Remy Sharp"
                   src={user.profileImage}
-                />
+                /> 
               </ListItemAvatar>
 
-              <Link to={`u/${user.id}`} style={{ textDecoration: "none" }}>
+              <Link to={`/home/friends/results/u/${user.id}`} style={{ textDecoration: "none" }}>
                 <Typography
                   sx={{
                     flexGrow: 1,

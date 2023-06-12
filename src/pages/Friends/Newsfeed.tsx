@@ -18,12 +18,9 @@ import { db } from "../../config/firebase";
 import User from "../../utils/interfaces/User";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
-import { CommitSharp } from "@mui/icons-material";
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
-  const [batchSize, setBatchSize] = useState(2); // Number of posts to load per batch
-  const [lastVisiblePost, setLastVisiblePost] = useState(null); // Track the last visible post to paginate
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
   const [usersDataCache, setUsersDataCache] = useState<any>([]);

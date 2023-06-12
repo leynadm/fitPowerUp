@@ -35,6 +35,7 @@ interface PostCommentProps {
   postId: string;
   commentId: string;
   getPostComments: () => void;
+  postUserId:string
 }
 
 function PostReply({
@@ -42,6 +43,7 @@ function PostReply({
   postId,
   commentId,
   getPostComments,
+  postUserId
 }: PostCommentProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
@@ -57,6 +59,7 @@ function PostReply({
       .then(() => {
         console.log("Reply deleted successfully");
         getPostComments();
+        setDeleteReplyModalOpen(!deleteReplyModalOpen)
       })
       .catch((error) => {
         console.error("Error deleting reply:", error);
@@ -87,7 +90,7 @@ function PostReply({
               <h6 style={{ margin: 0, textAlign: "left" }}>
                 {reply.name} {reply.surname}
               </h6>
-              {reply.userId === currentUser.uid && (
+              {(reply.userId === currentUser.uid || postUserId===currentUser.uid) && (
                 <IconButton onClick={handleDeleteReplyClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>

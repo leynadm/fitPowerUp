@@ -19,7 +19,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, arrayRemove } from "firebase/firestore";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ReplyIcon from "@mui/icons-material/Reply";
 import PostComment from "./PostComment";
@@ -29,7 +29,8 @@ import uuid from "react-uuid";
 import DeletePostModal from "../../components/ui/DeletePostModal";
 import { useNavigate } from "react-router-dom";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
-
+import { Link } from "react-router-dom";
+import Stack from "@mui/material/Stack";
 import {
   collection,
   setDoc,
@@ -38,6 +39,7 @@ import {
   updateDoc,
   getDoc,
   deleteDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
@@ -114,8 +116,16 @@ export default function UserWorkoutCard({
   const [deletePostModalOpen, setDeletePostModalOpen] = useState(false);
   const [postDeleteTrigger, setPostDeleteTrigger] = useState(0);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
-  
-  
+  const [postAppreciationStatus, setPostAppreciationStatus] = useState(
+    postAppreciation.length !== 0
+      ? postAppreciation.includes(currentUser.uid)
+      : false
+  );
+
+  const [postAppreciationNumber, setPostAppreciationNumber] = useState<number>(
+    postAppreciation.length !== 0 ? postAppreciation.length : 0
+  );
+
   const navigate = useNavigate();
 
   const handleExpandClick = () => {
@@ -123,7 +133,6 @@ export default function UserWorkoutCard({
   };
 
   const handleCommentExpandClick = () => {
-    
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
@@ -164,7 +173,6 @@ export default function UserWorkoutCard({
   }
 
   function addComment() {
-
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
       const commentsCollectionRef = collection(postRef, "comments");
@@ -229,10 +237,44 @@ export default function UserWorkoutCard({
     setDeletePostModalOpen(!deletePostModalOpen);
   }
 
-  return (
+  function appreciatePost() {
+    const postRef = doc(db, "posts", postId);
 
+    if (postAppreciationStatus) {
+      updateDoc(postRef, {
+        postAppreciation: arrayRemove(currentUser.uid),
+      })
+        .then(() => {
+          setPostAppreciationStatus(!postAppreciationStatus);
+          setPostAppreciationNumber((prevNumber) => prevNumber - 1);
+
+          console.log("Post not appreciated");
+        })
+        .catch((error) => {
+          console.error("Error appreciating post:", error);
+        });
+    } else {
+      updateDoc(postRef, {
+        postAppreciation: arrayUnion(currentUser.uid),
+      })
+        .then(() => {
+          setPostAppreciationStatus(!postAppreciationStatus);
+          setPostAppreciationNumber((prevNumber) => prevNumber + 1);
+          console.log("Post appreciated");
+        })
+        .catch((error) => {
+          console.error("Error appreciating post:", error);
+        });
+    }
+    // Add the current user's UID to the "appreciations" array in the Firestore document
+  }
+
+  return (
     <div>
-      <GuestProfileModal guestProfileModalOpen={guestProfileModalOpen} setGuestProfileModalOpen={setGuestProfileModalOpen}/>
+      <GuestProfileModal
+        guestProfileModalOpen={guestProfileModalOpen}
+        setGuestProfileModalOpen={setGuestProfileModalOpen}
+      />
       <Card sx={{ width: "100%", marginBottom: "16px" }}>
         <DeletePostModal
           deletePostModalOpen={deletePostModalOpen}
@@ -241,7 +283,7 @@ export default function UserWorkoutCard({
         />
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe">
+            <Avatar aria-label="recipe" sx={{ bgcolor: "white" }}>
               {currentUserDataImage ? (
                 <LazyLoadImage
                   src={currentUserDataImage}
@@ -251,7 +293,13 @@ export default function UserWorkoutCard({
                 />
               ) : (
                 // Placeholder avatar content if currentUserDataImage is not available
-                <AccountCircle />
+                <Stack direction="row" spacing={2}>
+                <Avatar
+                  alt="Remy Sharp"
+                  
+                  sx={{ width: 42, height: 42, alignSelf: "center" }}
+                /> 
+              </Stack>
               )}
             </Avatar>
           }
@@ -262,7 +310,14 @@ export default function UserWorkoutCard({
               </IconButton>
             )
           }
-          title={currentUserDataName}
+          title={
+            <Link
+              to={`/home/friends/results/u/${postUserId}`}
+              style={{ textDecoration: "none",color:"black",fontWeight:"bolder" }}
+            >
+              {currentUserDataName}
+            </Link>
+          }
           subheader={getTimeDifference(postCreatedAt)}
         />
 
@@ -289,17 +344,13 @@ export default function UserWorkoutCard({
         <CardActions disableSpacing>
           <IconButton
             aria-label="add to favorites"
-            /* 
-          onClick={appreciatePost}
-          
-          style={{ color: postAppreciation.includes(currentUser.uid) ? 'red' : undefined }}
-          
-          */
+            onClick={appreciatePost}
+            style={{ color: postAppreciationStatus ? "red" : undefined }}
           >
             <FavoriteIcon />
           </IconButton>
           {postAppreciation && ( // Add conditional check
-            <Typography>{postAppreciation.length}</Typography>
+            <Typography>{postAppreciationNumber}</Typography>
           )}
 
           <ExpandMoreComment
@@ -413,7 +464,9 @@ export default function UserWorkoutCard({
                                 color="inherit"
                                 disabled // Placeholder element
                               >
-                                <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                                <EmojiEventsIcon
+                                  sx={{ opacity: 0, zIndex: 0 }}
+                                />
                               </IconButton>
                             )}
 
@@ -504,6 +557,7 @@ export default function UserWorkoutCard({
                         postId={postId}
                         commentId={comment.commentId}
                         getPostComments={getPostComments}
+                        postUserId={postUserId}
                       />
                     </Box>
                   ))}

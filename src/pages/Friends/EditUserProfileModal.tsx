@@ -63,6 +63,26 @@ function EditUserProfileModal({
   const [profileImage, setProfileImage] = useState(
     currentUserData.profileImage
   );
+  const [hideProfile, setHideProfile] = useState<boolean>(
+    currentUserData.hideProfile
+  );
+  const [hidePowerLevel, setHidePowerLevel] = useState<boolean>(
+    currentUserData.hidePowerLevel
+  );
+  const [hideFollowers, setHideFollowers] = useState<boolean>(
+    currentUserData.hideFollowers
+  );
+  const [hideFollowing, setHideFollowing] = useState<boolean>(
+    currentUserData.hideFollowing
+  );
+
+  useEffect(() => {
+    console.log("currentUserData:");
+    console.log(hideProfile);
+    console.log(hidePowerLevel);
+    console.log(hideFollowers);
+    console.log(hideFollowing);
+  }, []);
 
   async function getUserData() {
     const docRef = doc(db, "users", currentUser.uid);
@@ -128,11 +148,31 @@ function EditUserProfileModal({
       sex: sex,
       fullname: [firstName, lastName, `${firstName} ${lastName}`],
       profileImage: imageUrl,
+      hideProfile: hideProfile,
+      hidePowerLevel: hidePowerLevel,
+      hideFollowers: hideFollowers,
+      hideFollowing: hideFollowing,
     });
 
     getUserData().then(() => {
       handleClose();
     });
+
+    auth.signOut();
+  }
+
+  function hideProfileToggle() {
+    setHideProfile((prevHideProfile) => !prevHideProfile);
+  }
+
+  function hidePowerLevelToggle() {
+    setHidePowerLevel((prevHidePowerLevel) => !prevHidePowerLevel);
+  }
+  function hideFollowersToggle() {
+    setHideFollowers((prevHideFollowers) => !prevHideFollowers);
+  }
+  function hideFollowingToggle() {
+    setHideFollowing((prevHideFollowing) => !prevHideFollowing);
   }
 
   return (
@@ -253,22 +293,47 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
-                <FormControlLabel control={<Switch />} label="Hide profile" />
                 <FormControlLabel
-                  control={<Switch />}
+                  control={
+                    <Switch checked={hideProfile} onClick={hideProfileToggle} />
+                  }
+                  label="Hide profile from search results"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={hidePowerLevel}
+                      onClick={hidePowerLevelToggle}
+                    />
+                  }
                   label="Hide Power Level"
                 />
                 <FormControlLabel
-                  control={<Switch />}
+                  control={
+                    <Switch
+                      checked={hideFollowers}
+                      onClick={hideFollowersToggle}
+                    />
+                  }
                   label="Hide my followers"
                 />
                 <FormControlLabel
-                  control={<Switch />}
+                  control={
+                    <Switch
+                      checked={hideFollowing}
+                      onClick={hideFollowingToggle}
+                    />
+                  }
                   label="Hide who I'm following"
                 />
               </FormControl>
             </Box>
-
+            <Typography
+              sx={{ fontSize: "small", textAlign: "center", marginTop: "8px" }}
+            >
+              Note: Applying these settings will sign you out. Please log in
+              again to see the updated changes.
+            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -306,7 +371,7 @@ function EditUserProfileModal({
               <br></br>
               Once authenticated, you can proceed to edit your post.
             </Typography>
-          
+
             <Box
               sx={{
                 display: "flex",
@@ -315,11 +380,11 @@ function EditUserProfileModal({
               <Button
                 variant="contained"
                 sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                onClick={()=> auth.signOut()}
+                onClick={() => auth.signOut()}
               >
                 Log out
               </Button>
-            </Box>        
+            </Box>
           </Box>
         )}
       </Modal>
