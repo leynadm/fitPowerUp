@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         } else {
           setCurrentUserData({
-            fullname: ["Guest", "User", "Guest User"],
-            name: "Guest",
+            fullname: ["guest", "user", "guest user"],
+            name: "guest",
             sex: "male",
-            surname: "User",
+            surname: "user",
             profileImage: "",
             verified: false,
             privateAccount: false,

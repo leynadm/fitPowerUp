@@ -13,10 +13,8 @@ import TextField from "@mui/material/TextField";
 import { AuthContext } from "../../context/Auth";
 import { auth } from "../../config/firebase";
 import {
-  arrayUnion,
   doc,
   getDoc,
-  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
@@ -25,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import User from "../../utils/interfaces/User";
 import Switch from "@mui/material/Switch";
+import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,7 +46,7 @@ function EditUserProfileModal({
   setEditProfileModalOpen,
 }: UserProfilePosts) {
   const { currentUser, currentUserData } = useContext(AuthContext);
-  const handleClose = () => setEditProfileModalOpen(false);
+ 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -55,6 +54,8 @@ function EditUserProfileModal({
   const [lastName, setLastName] = useState(currentUserData.surname);
   const [sex, setSex] = useState(currentUserData.sex);
   const [profileImageURL, setProfileImageURL] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [noteDisplayStatus, setNoteDisplayStatus] = useState(false)
 
   const [profileImage, setProfileImage] = useState(
     currentUserData.profileImage
@@ -133,9 +134,9 @@ function EditUserProfileModal({
     let imageUrl: string | null = null;
     let imageRef = null;
     let imageUrlResized = null;
-    console.log("logging selected file:");
-    console.log(selectedFile);
+
     if (selectedFile) {
+      setSaving(true);
       imageRef = ref(
         storage,
         `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
@@ -174,8 +175,12 @@ function EditUserProfileModal({
       }
     }
 
-    console.log({ imageUrl });
-    console.log({ imageUrlResized });
+    // Check if any of the hide options have been changed
+    const hideOptionsChanged =
+      hideProfile !== currentUserData.hideProfile ||
+      hidePowerLevel !== currentUserData.hidePowerLevel ||
+      hideFollowers !== currentUserData.hideFollowers ||
+      hideFollowing !== currentUserData.hideFollowing;
 
     const docRef = doc(db, "users", currentUser.uid);
 
@@ -183,7 +188,11 @@ function EditUserProfileModal({
       name: firstName,
       surname: lastName,
       sex: sex,
-      fullname: [firstName, lastName, `${firstName} ${lastName}`],
+      fullname: [
+        firstName.toLocaleLowerCase(),
+        lastName.toLocaleLowerCase(),
+        `${firstName.toLocaleLowerCase()} ${lastName.toLocaleLowerCase()}`,
+      ],
       profileImage: imageUrlResized,
       hideProfile: hideProfile,
       hidePowerLevel: hidePowerLevel,
@@ -191,9 +200,22 @@ function EditUserProfileModal({
       hideFollowing: hideFollowing,
     });
 
+    currentUserData.profileImage = imageUrlResized;
+
+    // If hide options changed, show the note and log out the user
+    if (hideOptionsChanged) {
+      console.log("Note: Applying these settings will sign you out.");
+      auth.signOut();
+      
+      return;
+    }
+
     getUserData().then(() => {
       handleClose();
     });
+
+    setSaving(false);
+
     /* 
     auth.signOut();
    */
@@ -201,16 +223,26 @@ function EditUserProfileModal({
 
   function hideProfileToggle() {
     setHideProfile((prevHideProfile) => !prevHideProfile);
+    setNoteDisplayStatus(true)
   }
 
   function hidePowerLevelToggle() {
     setHidePowerLevel((prevHidePowerLevel) => !prevHidePowerLevel);
+    setNoteDisplayStatus(true)
   }
   function hideFollowersToggle() {
     setHideFollowers((prevHideFollowers) => !prevHideFollowers);
+    setNoteDisplayStatus(true)
   }
   function hideFollowingToggle() {
     setHideFollowing((prevHideFollowing) => !prevHideFollowing);
+    setNoteDisplayStatus(true)
+  }
+
+  function handleClose (){
+    setSaving(false)
+    setNoteDisplayStatus(false)
+    setEditProfileModalOpen(false);
   }
 
   return (
@@ -307,12 +339,7 @@ function EditUserProfileModal({
                 onChange={(e) => setLastName(e.target.value)}
               />
             </Box>
-            <Typography
-              sx={{ fontSize: "small", textAlign: "center", marginTop: "8px" }}
-            >
-              Note: Applying these settings will sign you out. Please log in
-              again to see the updated changes.
-            </Typography>
+
             <Box>
               <FormControl sx={{ display: "flex", width: "100%" }}>
                 <RadioGroup
@@ -337,6 +364,12 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
+                {noteDisplayStatus && (
+              <Typography sx={{ fontSize: "small", textAlign: "center" }}>
+                Note: Changing the settings below will sign you out. Please log
+                in again to see the updated changes.
+              </Typography>
+            )}
                 <FormControlLabel
                   control={
                     <Switch checked={hideProfile} onClick={hideProfileToggle} />
@@ -372,14 +405,8 @@ function EditUserProfileModal({
                 />
               </FormControl>
             </Box>
-            {/* 
-            <Typography
-              sx={{ fontSize: "small", textAlign: "center", marginTop: "8px" }}
-            >
-              Note: Applying these settings will sign you out. Please log in
-              again to see the updated changes.
-            </Typography>
-             */}
+
+
             <Box
               sx={{
                 display: "flex",
@@ -401,6 +428,7 @@ function EditUserProfileModal({
                 Cancel
               </Button>
             </Box>
+            {saving && <LinearWithValueLabel />}
           </Box>
         ) : (
           <Box sx={style}>

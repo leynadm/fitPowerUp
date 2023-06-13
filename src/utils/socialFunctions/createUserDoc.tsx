@@ -9,7 +9,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
         surname: fullname,
         sex: "male",
         verified: false,
-        fullname: [fullname, fullname, fullname], 
+        fullname: [fullname?.toLocaleLowerCase(), fullname?.toLocaleLowerCase(), fullname?.toLocaleLowerCase()], 
         profileImage:
           "",
         privateAccount:false,

@@ -26,7 +26,6 @@ import formatTime from "../../utils/formatTime";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
-import CircularStatic from "../../components/ui/CircularStatic";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
 
