@@ -164,7 +164,7 @@ function Home() {
               />
             }
           />
-          <Route path="progress" element={<Progress />} />
+          <Route path="progress/*" element={<Progress />} />
         </Routes>
       </Box>
     </ThemeProvider>

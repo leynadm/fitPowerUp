@@ -4,9 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import TimerIcon from "@mui/icons-material/Timer";
 import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
@@ -15,23 +13,22 @@ import { useNavigate } from "react-router-dom";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Routes, Route } from "react-router-dom";
 import RestTimer from "../../components/ui/RestTimer";
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 interface ExerciseSelectionProps {
   todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
   unitsSystem: string;
-  weightIncrementPreference:number
+  weightIncrementPreference: number;
 }
 
 function ExerciseSelected({
   todayDate,
   selectedExercise,
   unitsSystem,
-  weightIncrementPreference
+  weightIncrementPreference,
 }: ExerciseSelectionProps) {
-
-  const [showRestTimer, setShowRestTimer] = useState(false)
-  const [countdownValue, setCountdownValue] = useState(120)
+  const [showRestTimer, setShowRestTimer] = useState(false);
+  const [countdownValue, setCountdownValue] = useState(120);
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
     navigate("");
@@ -45,8 +42,8 @@ function ExerciseSelected({
     navigate("graph");
   };
 
-  function handleShowRestTimer(){
-    setShowRestTimer(!showRestTimer)
+  function handleShowRestTimer() {
+    setShowRestTimer(!showRestTimer);
   }
 
   useEffect(() => {
@@ -56,10 +53,12 @@ function ExerciseSelected({
   }, []);
 
   return (
-    <Box sx={{height:"100%"}}>
-      
-      <RestTimer showRestTimer={showRestTimer} setShowRestTimer={setShowRestTimer}/>
-      
+    <Box sx={{ height: "100%" }}>
+      <RestTimer
+        showRestTimer={showRestTimer}
+        setShowRestTimer={setShowRestTimer}
+      />
+
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -130,7 +129,6 @@ function ExerciseSelected({
                 >
                   <EmojiEventsIcon />
                 </IconButton>
-
               </Box>
             </Box>
           </Toolbar>
@@ -144,9 +142,9 @@ function ExerciseSelected({
           alignItems: "center",
           height: "32px",
           width: "100vw",
-          backgroundColor: "#FF8C00"
+          backgroundColor: "#FF8C00",
         }}
-      > 
+      >
         <Button
           sx={{
             color: "white",
@@ -201,9 +199,12 @@ function ExerciseSelected({
             />
           }
         />
-        <Route path="graph" element={<ExerciseSelectedGraph
-          selectedExercise={selectedExercise}
-        />} />
+        <Route
+          path="graph"
+          element={
+            <ExerciseSelectedGraph selectedExercise={selectedExercise} />
+          }
+        />
       </Routes>
     </Box>
   );
