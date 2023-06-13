@@ -8,14 +8,10 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import Divider from "@mui/material/Divider";
-import powerLevelImg from "../../assets/powerlevel.svg";
-import CardMedia from "@mui/material/CardMedia";
 import { Routes, Route } from "react-router-dom";
 import EditUserProfileModal from "./EditUserProfileModal";
 import { AuthContext } from "../../context/Auth";
@@ -50,8 +46,7 @@ function UserProfile() {
 
   useEffect(() => {
     getProfileFollowers();
-    console.log('logging current user data inside user profile:')
-    console.log(currentUserData)
+
   }, [uploadCount]);
 
   const navigate = useNavigate();
@@ -293,7 +288,7 @@ function UserProfile() {
               <FavoriteIcon sx={{ color: "#000000" }} />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-              {userFollowers} Followers
+            {userFollowers === 1 ? userFollowers + ' Spotter' : userFollowers + ' Spotters'} 
             </Typography>
           </Box>
 
@@ -333,7 +328,7 @@ function UserProfile() {
               <FavoriteBorderIcon sx={{ color: "#000000" }} />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowing} Following
+            {userFollowing === 1 ? ' Spotting' + userFollowing : 'Spotting ' + userFollowing }
             </Typography>
           </Box>
         </Box>

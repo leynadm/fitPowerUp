@@ -26,6 +26,9 @@ import formatTime from "../../utils/formatTime";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
+import CircularStatic from "../../components/ui/CircularStatic";
+import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
+import { getApp } from "firebase/app";
 
 import {
   collection,
@@ -42,7 +45,7 @@ import {
 } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import uuid from "react-uuid";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 const style = {
@@ -82,7 +85,6 @@ function AddContentModal({
   existingExercises,
   unitsSystem,
 }: FriendsProps) {
-  const handleClose = () => setAddContentModalOpen(false);
   const [postDate, setPostDate] = useState(new Date());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
@@ -90,8 +92,12 @@ function AddContentModal({
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
   const [addWorkout, setAddWorkout] = useState(false);
-  const [limitInfo, setLimitInfo] = useState("")
+  const [limitInfo, setLimitInfo] = useState("");
+  const [saving, setSaving] = useState(false);
+
   const navigate = useNavigate();
+  const firebaseApp = getApp();
+  const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -129,25 +135,62 @@ function AddContentModal({
     return postCount >= 3;
   }
 
+  function handleClose() {
+    setSaving(false);
+    setAddContentModalOpen(false);
+  }
+
   async function addPost() {
     const hasThreePosts = await checkUserPosts();
     if (hasThreePosts) {
-      setLimitInfo("You've reach the current daily limit of 3 new posts a day. ")
+      setLimitInfo(
+        "You've reach the current daily limit of 3 new posts a day. "
+      );
       return;
     }
 
-    if (postText !== "") {
-      let imageUrl: string | null = null;
+    if (postText !== "" || fileSource !== "") {
+      setSaving(true);
+      let imageUrl = null;
       let imageRef = null;
+      let imageUrlResized = null;
+      const uniqueImageId = uuid();
       if (selectedFile) {
         imageRef = ref(
-          storage,
-          `images/${currentUser.uid}/preview/${
-            currentUser.uid
-          }_${uuid()}_450x450`
+          postsStorage,
+          `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}`
         );
         await uploadBytes(imageRef, selectedFile);
         imageUrl = await getDownloadURL(imageRef);
+        const imageRefResized = ref(
+          postsStorage,
+          `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}_1024x1024`
+        );
+
+        try {
+          imageUrlResized = await getDownloadURL(imageRefResized);
+        } catch (error) {
+          console.error("Error fetching resized image:", error);
+
+          // Retry logic
+          let retryAttempts = 9;
+          while (retryAttempts > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 3 seconds
+
+            try {
+              imageUrlResized = await getDownloadURL(imageRefResized);
+              break; // If successful, break out of the loop
+            } catch (error) {
+              console.error("Error fetching resized image after retry:", error);
+              retryAttempts--;
+            }
+          }
+
+          if (retryAttempts === 0) {
+            console.error("Retries exhausted. Unable to fetch resized image.");
+            // Handle the error and display an error message to the user
+          }
+        }
       }
 
       const newPostRef = doc(collection(db, "posts"));
@@ -159,7 +202,7 @@ function AddContentModal({
         createdAt: serverTimestampObj,
         postText: postText,
         userId: currentUser.uid,
-        postImage: imageUrl,
+        postImage: imageUrlResized,
         timestamp: timestamp,
         commentsCount: 0,
         showWorkout: addWorkout,
@@ -199,6 +242,7 @@ function AddContentModal({
     setPostText("");
     setSelectedFile(null);
     setFileSource(null);
+    setSaving(false);
     handleClose();
     navigate("profile");
   }
@@ -254,6 +298,7 @@ function AddContentModal({
                 sx={{ borderRadius: 1 }}
               />
             )}
+
             <TextField
               id="standard-textarea"
               label="Share your thoughts..."
@@ -293,6 +338,7 @@ function AddContentModal({
                   />
                 </Box>
               </Button>
+
               <Box>
                 {fileSource && (
                   <IconButton onClick={removeFile}>
@@ -338,7 +384,20 @@ function AddContentModal({
                 Cancel
               </Button>
             </Box>
-            <Typography sx={{fontSize:"small", textAlign:"center",paddingTop:"0.25rem"}}>{limitInfo}</Typography>
+            <Box
+              sx={{ padding: "8px", display: "flex", justifyContent: "center" }}
+            >
+              {saving && <LinearWithValueLabel />}
+            </Box>
+            <Typography
+              sx={{
+                fontSize: "small",
+                textAlign: "center",
+                paddingTop: "0.25rem",
+              }}
+            >
+              {limitInfo}
+            </Typography>
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}

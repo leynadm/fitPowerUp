@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction,useCallback } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -80,28 +80,28 @@ function Workout({
     };
   }, [todayDate]);
 
-  function handleEffectLogic() {
+  const handleEffectLogic = useCallback(() => {
     if (todayDate) {
       getExercisesByDate(todayDate, setExistingExercises);
       getDataPreferences();
     }
-  }
+  }, [todayDate, setExistingExercises]);
 
-  function getDataPreferences() {
+  const getDataPreferences = useCallback(() => {
     const request = indexedDB.open("fitScouterDb", 1);
-
+  
     request.onerror = function (event) {
       // Handle errors
     };
-
+  
     request.onsuccess = function (event) {
       const db = request.result;
-
+  
       // Retrieve the record with id 1 from the object store
       const transaction = db.transaction("user-data-preferences", "readonly");
       const objectStore = transaction.objectStore("user-data-preferences");
       const getRequest = objectStore.get(1);
-
+  
       getRequest.onsuccess = function (event) {
         const record = getRequest.result;
         if (record) {
@@ -112,7 +112,7 @@ function Workout({
         }
       };
     };
-  }
+  }, [setUnitsSystem, setWeightIncrementPreference]);
 
   return (
     <Box sx={{ paddingBottom: "56px", backgroundColor: "#F0F2F5" }}>

@@ -46,7 +46,7 @@ export default function FollowersLimitModal({
           <Typography sx={{ padding: "8px" }}>
           Scalability Testing Limitation. 
             <br></br>
-            Please note that for scalability testing reasons, there is a temporary maximum limit of 50 followers per user. 
+            Please note that for scalability testing reasons, there is a temporary maximum limit of 50 followed users per account. 
             <br></br>
             Thank you for your cooperation and understanding during this phase.<br></br> 
             There will be further updates in order to enhance the platform for a better user experience. 

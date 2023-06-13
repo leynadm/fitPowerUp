@@ -100,16 +100,18 @@ function SocialSearchBar() {
 
   return (
     <Box>
-      <Search sx={{ display: "flex" }}>
-        <IconButton onClick={getUsers}>
+      <Search sx={{ display: "flex",padding:"0",margin:"0" }}>
+        <IconButton onClick={getUsers} sx={{display:"flex", justifyContent:"center"}}>
           <SearchIcon sx={{ color: "white" }} />
         </IconButton>
+        
         <StyledInputBase
           placeholder="Search for someone…"
-          inputProps={{ "aria-label": "search" }}
           onChange={onChange}
           value={userToSearch}
+          inputProps={{ "aria-label": "search" }}
         />
+
       </Search>
     </Box>
   );

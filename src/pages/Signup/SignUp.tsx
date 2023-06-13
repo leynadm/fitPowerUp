@@ -13,8 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-
-import { AuthContext } from "../../context/Auth";
+import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
 import { auth, db } from "../../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, arrayUnion, Timestamp } from "firebase/firestore";
@@ -35,24 +34,12 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-
-
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-
   const navigate = useNavigate();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
   const handleLoginClick = () => {
     navigate("/");
@@ -75,8 +62,15 @@ export default function SignUp() {
         verified: false,
         fullname: arrayUnion(name, surname, `${name} ${surname}`),
         profileImage:"",
-        privateAccount:false
+        privateAccount:false,
+        blocked:[],
+        hideProfile:false,
+        hidePowerLevel:false,
+        hideFollowers:false,
+        hideFollowing:false
       });
+
+      createFollowersFeedDoc(user.uid)
     } catch (error) {
       if (isFirebaseError(error)) {
         const errorCode = error.code;

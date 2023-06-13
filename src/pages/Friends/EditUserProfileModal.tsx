@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useContext,
-  ChangeEvent,
-  useEffect,
-} from "react";
+import React, { useState, useRef, useContext, ChangeEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -60,6 +54,8 @@ function EditUserProfileModal({
   const [firstName, setFirstName] = useState(currentUserData.name);
   const [lastName, setLastName] = useState(currentUserData.surname);
   const [sex, setSex] = useState(currentUserData.sex);
+  const [profileImageURL, setProfileImageURL] = useState("");
+
   const [profileImage, setProfileImage] = useState(
     currentUserData.profileImage
   );
@@ -75,14 +71,6 @@ function EditUserProfileModal({
   const [hideFollowing, setHideFollowing] = useState<boolean>(
     currentUserData.hideFollowing
   );
-
-  useEffect(() => {
-    console.log("currentUserData:");
-    console.log(hideProfile);
-    console.log(hidePowerLevel);
-    console.log(hideFollowers);
-    console.log(hideFollowing);
-  }, []);
 
   async function getUserData() {
     const docRef = doc(db, "users", currentUser.uid);
@@ -100,6 +88,21 @@ function EditUserProfileModal({
       currentUserData.profileImage = userData.profileImage;
       currentUserData.sex = userData.sex;
       currentUserData.fullname = userData.fullname;
+
+      const profileImageRef = ref(
+        storage,
+        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
+      );
+
+      try {
+        const profileImageURL = await getDownloadURL(profileImageRef);
+        setProfileImageURL(profileImageURL);
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+        if (userData.profileImage) {
+          setProfileImageURL(userData.profileImage);
+        }
+      }
     }
   }
 
@@ -129,16 +132,50 @@ function EditUserProfileModal({
   async function updateUserData() {
     let imageUrl: string | null = null;
     let imageRef = null;
+    let imageUrlResized = null;
     console.log("logging selected file:");
     console.log(selectedFile);
     if (selectedFile) {
       imageRef = ref(
         storage,
-        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
+        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
       );
+
       await uploadBytes(imageRef, selectedFile);
       imageUrl = await getDownloadURL(imageRef);
+
+      const imageRefResized = ref(
+        storage,
+        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
+      );
+      try {
+        imageUrlResized = await getDownloadURL(imageRefResized);
+      } catch (error) {
+        console.error("Error fetching resized image:", error);
+
+        // Retry logic
+        let retryAttempts = 9;
+        while (retryAttempts > 0) {
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 3 seconds
+
+          try {
+            imageUrlResized = await getDownloadURL(imageRefResized);
+            break; // If successful, break out of the loop
+          } catch (error) {
+            console.error("Error fetching resized image after retry:", error);
+            retryAttempts--;
+          }
+        }
+
+        if (retryAttempts === 0) {
+          console.error("Retries exhausted. Unable to fetch resized image.");
+          // Handle the error and display an error message to the user
+        }
+      }
     }
+
+    console.log({ imageUrl });
+    console.log({ imageUrlResized });
 
     const docRef = doc(db, "users", currentUser.uid);
 
@@ -147,7 +184,7 @@ function EditUserProfileModal({
       surname: lastName,
       sex: sex,
       fullname: [firstName, lastName, `${firstName} ${lastName}`],
-      profileImage: imageUrl,
+      profileImage: imageUrlResized,
       hideProfile: hideProfile,
       hidePowerLevel: hidePowerLevel,
       hideFollowers: hideFollowers,
@@ -157,8 +194,9 @@ function EditUserProfileModal({
     getUserData().then(() => {
       handleClose();
     });
-
+    /* 
     auth.signOut();
+   */
   }
 
   function hideProfileToggle() {
@@ -269,6 +307,12 @@ function EditUserProfileModal({
                 onChange={(e) => setLastName(e.target.value)}
               />
             </Box>
+            <Typography
+              sx={{ fontSize: "small", textAlign: "center", marginTop: "8px" }}
+            >
+              Note: Applying these settings will sign you out. Please log in
+              again to see the updated changes.
+            </Typography>
             <Box>
               <FormControl sx={{ display: "flex", width: "100%" }}>
                 <RadioGroup
@@ -328,12 +372,14 @@ function EditUserProfileModal({
                 />
               </FormControl>
             </Box>
+            {/* 
             <Typography
               sx={{ fontSize: "small", textAlign: "center", marginTop: "8px" }}
             >
               Note: Applying these settings will sign you out. Please log in
               again to see the updated changes.
             </Typography>
+             */}
             <Box
               sx={{
                 display: "flex",

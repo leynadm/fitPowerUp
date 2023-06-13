@@ -124,12 +124,12 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-                    <ManageAccountsIcon />
+          <ManageAccountsIcon />
         </IconButton>
         <p>Account</p>
       </MenuItem>
 
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={handleProfile}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -141,6 +141,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+
     </Menu>
   );
 

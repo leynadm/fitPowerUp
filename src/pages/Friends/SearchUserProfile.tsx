@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext,useMemo } from "react";
 import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
@@ -44,6 +44,8 @@ import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
 import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+
 function SearchUserProfile() {
 
   const { id } = useParams<{ id: string }>();
@@ -59,6 +61,8 @@ function SearchUserProfile() {
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [followersLimitModalOpen,setFollowersLimitModalOpen] = useState(false)
+
+  
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -67,13 +71,14 @@ function SearchUserProfile() {
     setAnchorEl(null);
   };
 
+
   useEffect(() => {
+
     getProfileData();
     getRelationshipStatus();
     getUsersPosts();
     getSearchProfileFollowers();
-    console.log("logging queried user:");
-    console.log(queriedUser);
+
   }, [id]);
 
   const navigate = useNavigate();
@@ -92,12 +97,12 @@ function SearchUserProfile() {
       const users = data.users || [];
       setUserFollowers(users.length);
       if (users.includes(currentUser.uid)) {
-        setFollow("Unfollow");
+        setFollow("Stop Spotting");
       } else {
-        setFollow("Follow");
+        setFollow("Start Spotting");
       }
     } else {
-      setFollow("Follow");
+      setFollow("Start Spotting");
     }
   }
 
@@ -132,7 +137,7 @@ function SearchUserProfile() {
         users: arrayUnion(currentUser.uid),
       });
 
-      setFollow("Unfollow");
+      setFollow("Stop Spotting");
       setUserFollowers(userFollowers + 1);
     } else {
       const followersFeedData = followersFeedDoc.data();
@@ -153,8 +158,11 @@ function SearchUserProfile() {
           following: arrayUnion(id),
         });
 
-        setFollow("Unfollow");
+        setFollow("Stop Spotting");
         setUserFollowers(userFollowers + 1);
+
+        getSearchProfileFollowers()
+        navigate("")
       } else {
         setFollowersLimitModalOpen(!followersLimitModalOpen)
       }
@@ -182,7 +190,7 @@ function SearchUserProfile() {
   }
 
   function handleFollowerClick() {
-    if (follow === "Follow") {
+    if (follow === "Start Spotting") {
       followUser();
     } else {
       unfollowUser();
@@ -206,7 +214,7 @@ function SearchUserProfile() {
     await updateDoc(followersFeedRef, {
       users: arrayRemove(currentUser.uid),
     });
-    setFollow("Follow");
+    setFollow("Start Spotting");
     setUserFollowers(userFollowers - 1);
 
     const currentUserfollowersFeedRef = doc(
@@ -216,6 +224,9 @@ function SearchUserProfile() {
     await updateDoc(currentUserfollowersFeedRef, {
       following: arrayRemove(id),
     });
+
+    getSearchProfileFollowers()
+    navigate("")
   }
 
   function handleSearchUserProfilePostsBtn() {
@@ -385,7 +396,9 @@ function SearchUserProfile() {
               sx={{ width: "80%" }}
               onClick={handleFollowerClick}
             >
-              {follow} <FavoriteIcon />
+              {follow} 
+              {follow==="Start Spotting"?(<FavoriteIcon />):(<HeartBrokenIcon/>)}
+              
             </Button>
 
             <IconButton
@@ -503,7 +516,8 @@ function SearchUserProfile() {
             <FavoriteIcon sx={{ color: "#000000" }} />
           </Button>
           <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowers} Followers
+          {userFollowers === 1 ? userFollowers + ' Spotter' : userFollowers + ' Spotters'} 
+            
           </Typography>
         </Box>
 
@@ -543,7 +557,7 @@ function SearchUserProfile() {
             <FavoriteBorderIcon sx={{ color: "#000000" }} />
           </Button>
           <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowing} Following
+          {userFollowing === 1 ? ' Spotting ' + userFollowing : 'Spotting ' + userFollowing }
           </Typography>
         </Box>
       </Box>

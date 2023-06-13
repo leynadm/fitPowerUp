@@ -62,7 +62,7 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
   };
 
   return (
-    <Search>      
+    <Search sx={{display:"flex"}}>      
         <SearchIconWrapper>
           <SearchIcon/>
         </SearchIconWrapper>
@@ -73,14 +73,14 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
           onChange={onChange}
           value={query}
           sx={{ width: "100%" }}
-        />
-      <Box>
+/>      <Box>
         {query !== "" && (
           <IconButton aria-label="clear search" onClick={resetQuery}>
             <ClearIcon />
           </IconButton>
         )}
       </Box>
+
     </Search>
   );
 }

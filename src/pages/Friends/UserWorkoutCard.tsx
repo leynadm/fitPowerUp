@@ -221,12 +221,39 @@ export default function UserWorkoutCard({
     }
   }
 
+
+
+  async function deleteFollowersFeedEntry() {
+  // Remove the object from the recentPosts array in the followers collection
+  const followersRef = doc(db, "followers-feed", currentUser.uid);
+  const followersDoc = await getDoc(followersRef);
+  if (followersDoc.exists()) {
+    const followersData = followersDoc.data();
+    const recentPosts = followersData.recentPosts;
+
+    console.log("logging recentPosts:");
+    console.log({ recentPosts });
+    // Filter out the object with the matching postId
+    const updatedPosts = recentPosts.filter(
+      (post: any) => post.postId !== postId
+    );
+    console.log("logging updated posts:");
+    console.log({ updatedPosts });
+    // Update the followers collection document with the modified recentPosts array
+    await updateDoc(followersRef, { recentPosts: updatedPosts });
+  }
+  }
+
   async function deletePost() {
+    
+    await deleteFollowersFeedEntry()
+
     try {
       const postRef = doc(db, "posts", postId);
       await deleteDoc(postRef);
+
       setPostDeleteTrigger((prevTrigger) => prevTrigger + 1);
-      navigate("/home");
+      navigate("/home/friends");
       console.log("Post deleted successfully!");
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -294,12 +321,11 @@ export default function UserWorkoutCard({
               ) : (
                 // Placeholder avatar content if currentUserDataImage is not available
                 <Stack direction="row" spacing={2}>
-                <Avatar
-                  alt="Remy Sharp"
-                  
-                  sx={{ width: 42, height: 42, alignSelf: "center" }}
-                /> 
-              </Stack>
+                  <Avatar
+                    alt="Remy Sharp"
+                    sx={{ width: 42, height: 42, alignSelf: "center" }}
+                  />
+                </Stack>
               )}
             </Avatar>
           }
@@ -313,7 +339,7 @@ export default function UserWorkoutCard({
           title={
             <Link
               to={`/home/friends/results/u/${postUserId}`}
-              style={{ textDecoration: "none",color:"black" }}
+              style={{ textDecoration: "none", color: "black" }}
             >
               {currentUserDataName}
             </Link>
@@ -374,8 +400,8 @@ export default function UserWorkoutCard({
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Divider sx={{ width: "100%" }} />
-          <CardContent>
-            <Box>
+          <CardContent sx={{ padding: "0", margin: "0" }}>
+            <Box sx={{ padding: "0", margin: "0" }}>
               {showWorkout &&
                 workoutData
                   /* 
@@ -390,6 +416,8 @@ export default function UserWorkoutCard({
                         borderRadius: "4px",
                         boxShadow: 1,
                         backgroundColor: "white",
+                        padding: "0",
+                        margin: "0",
                       }}
                     >
                       <Typography
@@ -416,6 +444,8 @@ export default function UserWorkoutCard({
                               justifyItems: "center",
                               alignItems: "center",
                               width: "100%",
+                              padding: "0",
+                              margin: "0",
                             }}
                           >
                             {exercise.comment ? ( // Check if 'comment' property exists
