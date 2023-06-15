@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 function Progress() {
 
   const [powerLevel, setPowerLevel] = useState<number>(0);
+  const [strengthPowerLevel, setStrengthPowerLevel] = useState<number>(0);
+  const [experiencePowerLevel, setExperiencePowerLevel] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -134,7 +136,7 @@ function Progress() {
       </Box>
 
       <Routes>
-        <Route path="" element={<ProgressLevel powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
+        <Route path="" element={<ProgressLevel powerLevel={powerLevel} setPowerLevel={setPowerLevel} setStrengthPowerLevel={setStrengthPowerLevel} strengthPowerLevel={strengthPowerLevel} experiencePowerLevel={experiencePowerLevel} setExperiencePowerLevel={setExperiencePowerLevel}/>} />
         <Route path="path" element={<ProgressPath powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
         <Route path="progress-graph" element={<ProgressGraph />} />
       </Routes>

@@ -1,16 +1,8 @@
-import React, {
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useRef,
-} from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import PathCarousel from "./PathCarousel";
 import Container from "@mui/material/Container";
 import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
-import Box from '@mui/material/Box';
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -20,7 +12,7 @@ function ProgressPath({ powerLevel, setPowerLevel }: ProgressProps) {
   const firebaseApp = getApp();
   const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
   const [imageMatched, setImageMatched] = useState("");
-
+  const [imageIndex, setImageIndex] = useState(0);
   const [powerLevelImageMatchArr, setPowerLevelImageMatchArr] = useState([
     0, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525,
     550, 575, 600, 625, 650, 675, 695, 715, 735, 755, 775, 795, 815, 835, 855,
@@ -42,12 +34,10 @@ function ProgressPath({ powerLevel, setPowerLevel }: ProgressProps) {
     for (let index = 0; index < powerLevelImageMatchArr.length; index++) {
       const currentLevel: number = powerLevelImageMatchArr[index];
       const nextLevel: number = powerLevelImageMatchArr[index + 1];
-
       if (currentLevel <= powerLevel && powerLevel < nextLevel) {
-        console.log("found current level");
-        console.log(currentLevel);
-
+        setImageIndex(index);
         getPowerLevelImage(currentLevel);
+        break;
       }
     }
   }
@@ -68,8 +58,16 @@ function ProgressPath({ powerLevel, setPowerLevel }: ProgressProps) {
   }
 
   return (
-    <Container sx={{height:"100%", width: "100%" }}>
-      <PathCarousel imageMatched={imageMatched} />
+    <Container sx={{ height: "100%", width: "100%" }}>
+      <PathCarousel
+        setImageMatched={setImageMatched}
+        imageMatched={imageMatched}
+        powerLevel={powerLevel}
+        imageIndex={imageIndex}
+        setImageIndex={setImageIndex}
+        powerLevelImageMatchArr={powerLevelImageMatchArr}
+        getPowerLevelImage={getPowerLevelImage}
+      />
     </Container>
   );
 }

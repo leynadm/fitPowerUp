@@ -1,4 +1,4 @@
-import React, { useState, useEffect,Dispatch,SetStateAction } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import PowerLevelSelect from "./PowerLevelSelect";
 import Container from "@mui/material/Container";
@@ -9,10 +9,15 @@ import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
 import { useSpring, animated } from "react-spring";
 import savePowerLevelEntry from "../../utils/CRUDFunctions/savePowerLevelEntry";
 import getLastPowerLevelEntry from "./getLastPowerLevelEntry";
-
-interface ProgressProps{
-  powerLevel:number;
+import countUniqueEntriesByDate from "../../utils/progressFunctions/countUniqueEntriesByDate";
+import { Typography } from "@mui/material";
+interface ProgressProps {
+  powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
+  strengthPowerLevel: number;
+  setStrengthPowerLevel: Dispatch<SetStateAction<number>>;
+  experiencePowerLevel: number;
+  setExperiencePowerLevel: Dispatch<SetStateAction<number>>;
 }
 
 interface PowerLevelNumberProps {
@@ -34,13 +39,19 @@ function PowerLevelNumber({ n }: PowerLevelNumberProps) {
   );
 }
 
-function ProgressLevel({powerLevel,setPowerLevel}:ProgressProps) {
+function ProgressLevel({
+  powerLevel,
+  setPowerLevel,
+  strengthPowerLevel,
+  setStrengthPowerLevel,
+  experiencePowerLevel,
+  setExperiencePowerLevel,
+}: ProgressProps) {
   const [weight, setWeight] = useState(0);
   const [firstExerciseSelected, setFirstExerciseSelected] = useState<any>(null);
   const [secondExerciseSelected, setSecondExerciseSelected] =
     useState<any>(null);
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
-
 
   function calculatePowerLevel() {
     console.log(
@@ -76,47 +87,64 @@ function ProgressLevel({powerLevel,setPowerLevel}:ProgressProps) {
         .then(([firstExercise, secondExercise, thirdExercise]) => {
           const total: number = firstExercise + secondExercise + thirdExercise;
           const finalNumber = calculateDOTS(weight, total, false);
-          setPowerLevel(finalNumber);
-          const currentDate = new Date();
-          currentDate.setHours(0, 0, 0, 0);
-          savePowerLevelEntry(
-            finalNumber,
-            weight,
-            firstExerciseSelected.name,
-            secondExerciseSelected.name,
-            thirdExerciseSelected.name,
-            currentDate
-          );
+
+          countUniqueEntriesByDate()
+            .then((count: number) => {
+              const finalPowerLevel = finalNumber + count;
+              console.log("Number of unique entries:", count);
+              setPowerLevel(finalPowerLevel);
+              console.log({finalNumber})
+              console.log({count})
+              setStrengthPowerLevel(finalNumber);
+              setExperiencePowerLevel(count);
+              const currentDate = new Date();
+              currentDate.setHours(0, 0, 0, 0);
+              savePowerLevelEntry(
+                finalPowerLevel,
+                weight,
+                firstExerciseSelected.name,
+                secondExerciseSelected.name,
+                thirdExerciseSelected.name,
+                currentDate
+              );
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         })
         .catch((error) => {
           console.error("Error occurred:", error);
         });
-
- 
-
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getLastPowerLevelEntry()
-    .then((lastEntry:any) => {
-      if (lastEntry) {
-        // Handle the last entry
-        setPowerLevel(lastEntry.score)
-        setFirstExerciseSelected(lastEntry.first !== undefined ? lastEntry.first : "Deadlift");
-        setSecondExerciseSelected(lastEntry.second !== undefined ? lastEntry.second : "Barbell Squat");
-        setThirdExerciseSelected(lastEntry.third !== undefined ? lastEntry.third : "Flat Barbell Bench Press");
-        setWeight(lastEntry.bodyweight)
-      } else {
-        // No entries found
-        console.log("No entries found");
-      }
-    })
-    .catch((error) => {
-      console.error("Error occurred:", error);
-    });
-  },[])
-
+      .then((lastEntry: any) => {
+        if (lastEntry) {
+          // Handle the last entry
+          setPowerLevel(lastEntry.score);
+          setFirstExerciseSelected(
+            lastEntry.first !== undefined ? lastEntry.first : "Deadlift"
+          );
+          setSecondExerciseSelected(
+            lastEntry.second !== undefined ? lastEntry.second : "Barbell Squat"
+          );
+          setThirdExerciseSelected(
+            lastEntry.third !== undefined
+              ? lastEntry.third
+              : "Flat Barbell Bench Press"
+          );
+          setWeight(lastEntry.bodyweight);
+        } else {
+          // No entries found
+          console.log("No entries found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error);
+      });
+  }, []);
 
   return (
     <Container
@@ -126,8 +154,19 @@ function ProgressLevel({powerLevel,setPowerLevel}:ProgressProps) {
         flexDirection: "column",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          alignItems:"center"
+        }}
+      >
         <PowerLevelNumber n={powerLevel} />
+        <Box sx={{display:"flex", justifyContent:"space-around", width:"100%"}}>
+          <Typography>{strengthPowerLevel}</Typography>
+          <Typography>{experiencePowerLevel}</Typography>
+        </Box>
       </Box>
 
       <TextField
@@ -139,9 +178,18 @@ function ProgressLevel({powerLevel,setPowerLevel}:ProgressProps) {
         sx={{ marginTop: "8px", marginBottom: "8px", textAlign: "center" }}
         onChange={(e) => setWeight(parseInt(e.target.value))}
       />
-      <PowerLevelSelect exerciseSelected={firstExerciseSelected} setSelectedExercise={setFirstExerciseSelected} />
-      <PowerLevelSelect exerciseSelected={secondExerciseSelected} setSelectedExercise={setSecondExerciseSelected} />
-      <PowerLevelSelect exerciseSelected={thirdExerciseSelected} setSelectedExercise={setThirdExerciseSelected} />
+      <PowerLevelSelect
+        exerciseSelected={firstExerciseSelected}
+        setSelectedExercise={setFirstExerciseSelected}
+      />
+      <PowerLevelSelect
+        exerciseSelected={secondExerciseSelected}
+        setSelectedExercise={setSecondExerciseSelected}
+      />
+      <PowerLevelSelect
+        exerciseSelected={thirdExerciseSelected}
+        setSelectedExercise={setThirdExerciseSelected}
+      />
 
       <Button
         variant="contained"
