@@ -97,6 +97,7 @@ function EditUserProfileModal({
 
       try {
         const profileImageURL = await getDownloadURL(profileImageRef);
+        console.log(profileImageURL)
         setProfileImageURL(profileImageURL);
       } catch (error) {
         console.error("Error fetching profile image:", error);

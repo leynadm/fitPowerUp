@@ -45,6 +45,7 @@ function Home() {
     setInitialCategoriesLoaded(true);
   }
 
+
   function populatePreselectedExercises() {
     const request = indexedDB.open("fitScouterDb", 1);
 

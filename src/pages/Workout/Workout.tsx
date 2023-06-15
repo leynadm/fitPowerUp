@@ -56,6 +56,8 @@ function Workout({
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
+      console.log('logging current date:')
+      console.log(currentDate)
       setTodayDate(currentDate);
     }
     getDataPreferences();

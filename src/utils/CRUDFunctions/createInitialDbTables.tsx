@@ -87,6 +87,26 @@ function createInitialDbTables(): Promise<void> {
           ["name", "date"],
           { unique: false }
         );
+
+        // create the power level tracker table with its indexes
+        const power_level = db.createObjectStore("user-power-level", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+  
+        power_level.createIndex("powerlevel_score", "score", { unique: false });
+        power_level.createIndex("powerlevel_date", "date", { unique: true });
+        power_level.createIndex("powerlevel_bodyweight", "bodyweight", { unique: false });
+        power_level.createIndex("powerlevel_first_exercise", "first", { unique: false });
+        power_level.createIndex("powerlevel_second_exercise", "second", { unique: false });
+        power_level.createIndex("powerlevel_third_exercise", "third", { unique: false });
+        power_level.createIndex(
+          "powerlevel_score_and_date",
+          ["score", "date"],
+          { unique: false }
+        );
+  
+
   
         // create the record table with its indexes
         const user_records = db.createObjectStore("user-records-entries", {

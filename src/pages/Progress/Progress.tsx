@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -14,6 +14,9 @@ import ProgressGraph from "./ProgressGraph";
 import { useNavigate } from "react-router-dom";
 
 function Progress() {
+
+  const [powerLevel, setPowerLevel] = useState<number>(0);
+
   const navigate = useNavigate();
 
   const handleNavigateLevel = () => {
@@ -34,6 +37,8 @@ function Progress() {
         width: "100%",
         display: "flex",
         flexDirection: "column",
+        height:"100%",
+        paddingBottom:"56px"
       }}
     >
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
@@ -129,8 +134,8 @@ function Progress() {
       </Box>
 
       <Routes>
-        <Route path="" element={<ProgressLevel />} />
-        <Route path="path" element={<ProgressPath />} />
+        <Route path="" element={<ProgressLevel powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
+        <Route path="path" element={<ProgressPath powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
         <Route path="progress-graph" element={<ProgressGraph />} />
       </Routes>
     </Box>
