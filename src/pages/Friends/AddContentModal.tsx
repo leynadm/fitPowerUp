@@ -101,7 +101,7 @@ function AddContentModal({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+ 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 

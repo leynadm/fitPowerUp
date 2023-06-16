@@ -106,10 +106,13 @@ function UserProfileFollowers() {
                   sx={{ flexGrow: 1 }}
                   alt="Remy Sharp"
                   src={user.profileImage}
-                /> 
+                />
               </ListItemAvatar>
 
-              <Link to={`/home/friends/results/u/${user.id}`} style={{ textDecoration: "none" }}>
+              <Link
+                to={`/home/friends/results/u/${user.id}`}
+                style={{ textDecoration: "none" }}
+              >
                 <Typography
                   sx={{
                     flexGrow: 1,
@@ -119,6 +122,15 @@ function UserProfileFollowers() {
                     color: "black",
                   }}
                 >{`${user.name} ${user.surname}`}</Typography>
+                <Typography
+                  sx={{
+                    flexGrow: 1,
+                    alignSelf: "center",
+                    color: "black",
+                  }}
+                >
+                  {user.hidePowerLevel ? "Unknow Power Level" : user.powerLevel}
+                </Typography>
               </Link>
               <Box
                 sx={{
@@ -138,7 +150,9 @@ function UserProfileFollowers() {
       <Button
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
         onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-        disabled={userIndividualFollowers.length <= currentPage * resultsPerPage}
+        disabled={
+          userIndividualFollowers.length <= currentPage * resultsPerPage
+        }
       >
         Load More
       </Button>

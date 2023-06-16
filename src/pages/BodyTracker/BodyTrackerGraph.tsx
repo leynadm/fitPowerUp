@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -83,9 +81,6 @@ const callChartFunction = (
 
 function BodyTrackerGraph() {
   const measurementOptions = [{ label: "Bodyweight" }, { label: "Body Fat" }];
-  const [selectedMeasurement, setSelectedMeasurement] = useState<{
-    label: string;
-  }>(measurementOptions[0]);
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
   const [selectedOption, setSelectedOption] = useState(
     measurementOptions[0].label

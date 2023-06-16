@@ -68,6 +68,10 @@ function UsersListItem({ usersFound }: ParentProps) {
                     color: "black",
                   }}
                 >{`${user.name} ${user.surname}`}</Typography>
+
+                <Typography>
+                  {user.hidePowerLevel ? "Unknow Power Level" : user.powerLevel}
+                </Typography>
               </Link>
               <Box
                 sx={{
@@ -83,8 +87,6 @@ function UsersListItem({ usersFound }: ParentProps) {
           </List>
         </Box>
       ))}
-
-      
     </Box>
   );
 }

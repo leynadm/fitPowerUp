@@ -17,7 +17,14 @@ async function createUserDoc(userID: string, fullname: string | null) {
         hideProfile:false,
         hidePowerLevel:false,
         hideFollowers:false,
-        hideFollowing:false
+        hideFollowing:false,
+        powerLevel:0,
+        strengthLevel:0,
+        experienceLevel:0,
+        firstPowerExercise:"No Exercise Selected Yet",
+        secondPowerExercise:"No Exercise Selected Yet",
+        thirdPowerExercise:"No Exercise Selected Yet",
+        weight:0
       });
     }
   }

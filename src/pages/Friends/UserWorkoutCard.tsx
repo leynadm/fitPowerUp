@@ -221,32 +221,29 @@ export default function UserWorkoutCard({
     }
   }
 
-
-
   async function deleteFollowersFeedEntry() {
-  // Remove the object from the recentPosts array in the followers collection
-  const followersRef = doc(db, "followers-feed", currentUser.uid);
-  const followersDoc = await getDoc(followersRef);
-  if (followersDoc.exists()) {
-    const followersData = followersDoc.data();
-    const recentPosts = followersData.recentPosts;
+    // Remove the object from the recentPosts array in the followers collection
+    const followersRef = doc(db, "followers-feed", currentUser.uid);
+    const followersDoc = await getDoc(followersRef);
+    if (followersDoc.exists()) {
+      const followersData = followersDoc.data();
+      const recentPosts = followersData.recentPosts;
 
-    console.log("logging recentPosts:");
-    console.log({ recentPosts });
-    // Filter out the object with the matching postId
-    const updatedPosts = recentPosts.filter(
-      (post: any) => post.postId !== postId
-    );
-    console.log("logging updated posts:");
-    console.log({ updatedPosts });
-    // Update the followers collection document with the modified recentPosts array
-    await updateDoc(followersRef, { recentPosts: updatedPosts });
-  }
+      console.log("logging recentPosts:");
+      console.log({ recentPosts });
+      // Filter out the object with the matching postId
+      const updatedPosts = recentPosts.filter(
+        (post: any) => post.postId !== postId
+      );
+      console.log("logging updated posts:");
+      console.log({ updatedPosts });
+      // Update the followers collection document with the modified recentPosts array
+      await updateDoc(followersRef, { recentPosts: updatedPosts });
+    }
   }
 
   async function deletePost() {
-    
-    await deleteFollowersFeedEntry()
+    await deleteFollowersFeedEntry();
 
     try {
       const postRef = doc(db, "posts", postId);
@@ -400,9 +397,9 @@ export default function UserWorkoutCard({
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Divider sx={{ width: "100%" }} />
-          <CardContent sx={{ padding: "0", margin: "0" }}>
-            <Box sx={{ padding: "0", margin: "0" }}>
-              {showWorkout &&
+          <CardContent sx={{  }}>
+            <Box sx={{  }}>
+              {showWorkout && 
                 workoutData
                   /* 
                   .sort(
@@ -416,8 +413,8 @@ export default function UserWorkoutCard({
                         borderRadius: "4px",
                         boxShadow: 1,
                         backgroundColor: "white",
-                        padding: "0",
-                        margin: "0",
+                        marginTop: "8px",
+                        marginBottom:"16px"
                       }}
                     >
                       <Typography

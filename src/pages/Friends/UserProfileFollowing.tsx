@@ -62,14 +62,14 @@ function UserProfileFollowing() {
 
     for (const docId of userIndividualFollowing.slice(startIdx, endIdx)) {
       const documentData = await getUserDocumentById(docId);
-      console.log('logging docId')
-      console.log(docId)
+      console.log("logging docId");
+      console.log(docId);
       if (documentData) {
         tempData.push(documentData);
       }
     }
-    console.log('logging temporary data:')
-    console.log(tempData)
+    console.log("logging temporary data:");
+    console.log(tempData);
     setUserIndividualFollowingData(tempData);
   }
 
@@ -112,7 +112,10 @@ function UserProfileFollowing() {
                 />
               </ListItemAvatar>
 
-              <Link to={`/home/friends/results/u/${user.id}`} style={{ textDecoration: "none" }}>
+              <Link
+                to={`/home/friends/results/u/${user.id}`}
+                style={{ textDecoration: "none" }}
+              >
                 <Typography
                   sx={{
                     flexGrow: 1,
@@ -122,6 +125,16 @@ function UserProfileFollowing() {
                     color: "black",
                   }}
                 >{`${user.name} ${user.surname}`}</Typography>
+
+                <Typography
+                  sx={{
+                    flexGrow: 1,
+                    alignSelf: "center",
+                    color: "black",
+                  }}
+                >
+                  {user.hidePowerLevel ? "Unknow Power Level" : user.powerLevel}
+                </Typography>
               </Link>
               <Box
                 sx={{
@@ -134,14 +147,16 @@ function UserProfileFollowing() {
                 {user.verified && <VerifiedIcon />}
               </Box>
             </ListItem>
-          </List> 
+          </List>
         </Box>
-      ))} 
+      ))}
 
       <Button
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
         onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-        disabled={userIndividualFollowing.length <= currentPage * resultsPerPage}
+        disabled={
+          userIndividualFollowing.length <= currentPage * resultsPerPage
+        }
       >
         Load More
       </Button>

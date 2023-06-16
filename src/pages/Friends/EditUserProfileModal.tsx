@@ -53,6 +53,14 @@ function EditUserProfileModal({
   const [firstName, setFirstName] = useState(currentUserData.name);
   const [lastName, setLastName] = useState(currentUserData.surname);
   const [sex, setSex] = useState(currentUserData.sex);
+  const [powerLevel,setPowerLevel] = useState(currentUserData.powerLevel)
+  const [strengthLevel, setStrengthLevel] = useState(currentUserData.strengthLevel)
+  const [experienceLevel, setExperienceLevel] = useState(currentUserData.experienceLevel)
+  const [firstPowerExercise, setFirstPowerExercise] = useState(currentUserData.firstPowerExercise)
+  const [secondPowerExercise, setSecondPowerExercise] = useState(currentUserData.secondPowerExercise)
+  const [thirdPowerExercise, setThirdPowerExercise] = useState(currentUserData.thirdPowerExercise)
+  const [weight,setWeight] = useState(currentUserData.weight)
+
   const [profileImageURL, setProfileImageURL] = useState("");
   const [saving, setSaving] = useState(false);
   const [noteDisplayStatus, setNoteDisplayStatus] = useState(false)
@@ -89,7 +97,14 @@ function EditUserProfileModal({
       currentUserData.profileImage = userData.profileImage;
       currentUserData.sex = userData.sex;
       currentUserData.fullname = userData.fullname;
-
+      currentUserData.powerLevel = userData.powerLevel;
+      currentUserData.strengthLevel = userData.strengthLevel;
+      currentUserData.experienceLevel = userData.experienceLevel;
+      currentUserData.firstPowerExercise = userData.firstPowerExercise
+      currentUserData.secondPowerExercise = userData.secondPowerExercise
+      currentUserData.thirdPowerExercise = userData.thirdPowerExercise;
+      currentUserData.weight = userData.weight;      
+      
       const profileImageRef = ref(
         storage,
         `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`

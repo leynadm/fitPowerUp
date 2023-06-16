@@ -45,6 +45,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
 import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
+import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 
 function SearchUserProfile() {
 
@@ -284,10 +286,9 @@ function SearchUserProfile() {
       />
 
       <FollowersLimitModal
-      followersLimitModalOpen={followersLimitModalOpen}
-      setFollowersLimitModalOpen={setFollowersLimitModalOpen}
+        followersLimitModalOpen={followersLimitModalOpen}
+        setFollowersLimitModalOpen={setFollowersLimitModalOpen}
       />
-
 
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
@@ -360,7 +361,7 @@ function SearchUserProfile() {
                 alt="Remy Sharp"
                 src="/static/images/avatar/1.jpg"
                 sx={{ width: 56, height: 56, alignSelf: "center" }}
-              /> 
+              />
             </Stack>
           )}
 
@@ -396,9 +397,12 @@ function SearchUserProfile() {
               sx={{ width: "80%" }}
               onClick={handleFollowerClick}
             >
-              {follow} 
-              {follow==="Start Spotting"?(<FavoriteIcon />):(<HeartBrokenIcon/>)}
-              
+              {follow}
+              {follow === "Start Spotting" ? (
+                <FavoriteIcon />
+              ) : (
+                <HeartBrokenIcon />
+              )}
             </Button>
 
             <IconButton
@@ -428,15 +432,60 @@ function SearchUserProfile() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-evenly",
             alignItems: "center",
+            width: "100%",
+            justifyItems: "center",
           }}
         >
-          <Typography
-            sx={{ padding: "8px", fontSize: "large", fontWeight: "bold" }}
-          >
-            1445
-          </Typography>
+          {queriedUser?.hidePowerLevel ? (
+            <Typography
+              sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+            >
+              Unknown Power Level
+            </Typography>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100%",
+                justifyItems: "center",
+              }}
+            >
+              
+              <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+                {queriedUser?.powerLevel}
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+                  {queriedUser?.strengthLevel}
+                </Typography>
+                <StrengthIcon width="1.25rem" height="1.25rem" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+                  {queriedUser?.experienceLevel}
+                </Typography>
+                <ExperienceIcon width="1.25rem" height="1.25rem" />
+              </Box>
+            </Box>
+          )}
         </Box>
 
         <Divider sx={{ width: "100%" }} />
@@ -516,8 +565,9 @@ function SearchUserProfile() {
             <FavoriteIcon sx={{ color: "#000000" }} />
           </Button>
           <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-          {userFollowers === 1 ? userFollowers + ' Spotter' : userFollowers + ' Spotters'} 
-            
+            {userFollowers === 1
+              ? userFollowers + " Spotter"
+              : userFollowers + " Spotters"}
           </Typography>
         </Box>
 
@@ -557,7 +607,9 @@ function SearchUserProfile() {
             <FavoriteBorderIcon sx={{ color: "#000000" }} />
           </Button>
           <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-          {userFollowing === 1 ? ' Spotting ' + userFollowing : 'Spotting ' + userFollowing }
+            {userFollowing === 1
+              ? " Spotting " + userFollowing
+              : "Spotting " + userFollowing}
           </Typography>
         </Box>
       </Box>

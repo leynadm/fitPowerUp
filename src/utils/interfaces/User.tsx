@@ -11,7 +11,14 @@ export interface User {
     hideProfile:boolean,
     hidePowerLevel:boolean,
     hideFollowers:boolean,
-    hideFollowing:boolean
+    hideFollowing:boolean,
+    powerLevel:number,
+    strengthLevel:number,
+    experienceLevel:number,
+    firstPowerExercise:string,
+    secondPowerExercise:string,
+    thirdPowerExercise:string,
+    weight:number
   }
 
   export default User

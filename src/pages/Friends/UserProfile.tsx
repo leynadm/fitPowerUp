@@ -24,8 +24,10 @@ import UserProfileFollowing from "./UserProfileFollowing";
 import { useNavigate } from "react-router-dom";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { doc, getDoc } from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
-import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
+import { db} from "../../config/firebase";
+import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
+import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+
 
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -197,20 +199,63 @@ function UserProfile() {
         </Box>
 
         <Divider sx={{ width: "100%", marginTop: "8px" }} />
-
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            sx={{ padding: "8px", fontSize: "large", fontWeight: "bold" }}
-          >
-            1395
-          </Typography>
-        </Box>
+  sx={{
+    display: "flex",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    justifyItems: "center",
+  }}
+>
+  {currentUserData.hidePowerLevel ? (
+    <Typography
+      sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+    >
+      Unknown Power Level
+    </Typography>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        width: "100%",
+        justifyItems: "center",
+      }}
+    >
+      <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+        {currentUserData.powerLevel}
+      </Typography>
+      
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+          {currentUserData.strengthLevel}
+        </Typography>
+        <StrengthIcon width="1.25rem" height="1.25rem" />
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+          {currentUserData.experienceLevel}
+        </Typography>
+        <ExperienceIcon width="1.25rem" height="1.25rem" />
+      </Box>
+    </Box>
+  )}
+</Box>
 
         <Divider sx={{ width: "100%" }} />
 
@@ -288,7 +333,9 @@ function UserProfile() {
               <FavoriteIcon sx={{ color: "#000000" }} />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowers === 1 ? userFollowers + ' Spotter' : userFollowers + ' Spotters'} 
+              {userFollowers === 1
+                ? userFollowers + " Spotter"
+                : userFollowers + " Spotters"}
             </Typography>
           </Box>
 
@@ -328,7 +375,9 @@ function UserProfile() {
               <FavoriteBorderIcon sx={{ color: "#000000" }} />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowing === 1 ? ' Spotting' + userFollowing : 'Spotting ' + userFollowing }
+              {userFollowing === 1
+                ? "Spotting " + userFollowing
+                : "Spotting " + userFollowing}
             </Typography>
           </Box>
         </Box>

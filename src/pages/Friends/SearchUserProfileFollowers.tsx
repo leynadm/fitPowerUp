@@ -11,7 +11,7 @@ import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
-import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
+import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import { doc, getDoc } from "firebase/firestore";
 
 import { db } from "../../config/firebase";
@@ -75,8 +75,8 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection:"column",
-            gap:2
+            flexDirection: "column",
+            gap: 2,
           }}
         >
           <Typography sx={{ textAlign: "center" }}>
@@ -136,6 +136,17 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
                         color: "black",
                       }}
                     >{`${user.name} ${user.surname}`}</Typography>
+                    <Typography
+                      sx={{
+                        flexGrow: 1,
+                        alignSelf: "center",
+                        color: "black",
+                      }}
+                    >
+                      {user.hidePowerLevel
+                        ? "Unknow Power Level"
+                        : user.powerLevel}
+                    </Typography>
                   </Link>
                   <Box
                     sx={{

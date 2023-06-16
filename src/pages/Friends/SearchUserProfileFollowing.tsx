@@ -88,7 +88,7 @@ function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ textAlign: "center"}}>
+          <Typography sx={{ textAlign: "center" }}>
             {queriedUser.name} {queriedUser.surname} has decided to keep its
             followed users private.
           </Typography>
@@ -145,6 +145,17 @@ function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
                         color: "black",
                       }}
                     >{`${user.name} ${user.surname}`}</Typography>
+                    <Typography
+                      sx={{
+                        flexGrow: 1,
+                        alignSelf: "center",
+                        color: "black",
+                      }}
+                    >
+                      {user.hidePowerLevel
+                        ? "Unknow Power Level"
+                        : user.powerLevel}
+                    </Typography>
                   </Link>
                   <Box
                     sx={{

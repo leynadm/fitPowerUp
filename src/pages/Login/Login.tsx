@@ -75,20 +75,6 @@ export default function SignIn() {
 
     function SignInWithGoogle() {
     
-      const guestUser ={
-        fullname: ["Guest", "User", "Guest User"],
-        name: "Guest",
-        sex: "male",
-        surname: "User",
-        profileImage: "",
-        verified: false,
-        privateAccount: false,
-        hideProfile:false,
-        hidePowerLevel:false,
-        hideFollowers:false,
-        hideFollowing:false
-      }
-
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
 import Box from "@mui/material/Box";
 import PowerLevelSelect from "./PowerLevelSelect";
 import Container from "@mui/material/Container";
@@ -10,7 +16,12 @@ import { useSpring, animated } from "react-spring";
 import savePowerLevelEntry from "../../utils/CRUDFunctions/savePowerLevelEntry";
 import getLastPowerLevelEntry from "./getLastPowerLevelEntry";
 import countUniqueEntriesByDate from "../../utils/progressFunctions/countUniqueEntriesByDate";
-import { Typography } from "@mui/material";
+import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
+import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+import { doc, updateDoc } from "firebase/firestore";
+import { AuthContext } from "../../context/Auth";
+import { db } from "../../config/firebase";
+
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -33,7 +44,22 @@ function PowerLevelNumber({ n }: PowerLevelNumberProps) {
   });
 
   return (
-    <animated.div style={{ fontSize: "5rem", color: "black" }}>
+    <animated.div style={{ fontSize: "4rem", color: "black" }}>
+      {number.to((n) => n.toFixed(0))}
+    </animated.div>
+  );
+}
+
+function SecondaryPowerLevelNumber({ n }: PowerLevelNumberProps) {
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: n,
+    delay: 50,
+    config: { mass: 1, tension: 30, friction: 25 },
+  });
+
+  return (
+    <animated.div style={{ fontSize: "2rem", color: "black" }}>
       {number.to((n) => n.toFixed(0))}
     </animated.div>
   );
@@ -52,7 +78,7 @@ function ProgressLevel({
   const [secondExerciseSelected, setSecondExerciseSelected] =
     useState<any>(null);
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
-
+  const { currentUser } = useContext(AuthContext);
   function calculatePowerLevel() {
     console.log(
       { firstExerciseSelected },
@@ -91,10 +117,7 @@ function ProgressLevel({
           countUniqueEntriesByDate()
             .then((count: number) => {
               const finalPowerLevel = finalNumber + count;
-              console.log("Number of unique entries:", count);
               setPowerLevel(finalPowerLevel);
-              console.log({finalNumber})
-              console.log({count})
               setStrengthPowerLevel(finalNumber);
               setExperiencePowerLevel(count);
               const currentDate = new Date();
@@ -102,10 +125,12 @@ function ProgressLevel({
               savePowerLevelEntry(
                 finalPowerLevel,
                 weight,
-                firstExerciseSelected.name,
-                secondExerciseSelected.name,
-                thirdExerciseSelected.name,
-                currentDate
+                firstExerciseSelected,
+                secondExerciseSelected,
+                thirdExerciseSelected,
+                currentDate,
+                finalNumber,
+                count
               );
             })
             .catch((error) => {
@@ -118,6 +143,28 @@ function ProgressLevel({
     }
   }
 
+  const uploadPowerLevelToProfile = async (powerLevelData: any) => {
+    const docRef = doc(db, "users", currentUser.uid);
+
+    await updateDoc(docRef, powerLevelData);
+  };
+
+  const handleUploadToProfile = async () => {
+    const count = await countUniqueEntriesByDate();
+
+    const powerLevelData = {
+      powerLevel: strengthPowerLevel + count,
+      weight: weight,
+      firstPowerExercise: firstExerciseSelected,
+      secondPowerExercise: secondExerciseSelected,
+      thirdPowerExercise: thirdExerciseSelected,
+      strengthLevel: strengthPowerLevel,
+      experienceLevel: count,
+    };
+
+    await uploadPowerLevelToProfile(powerLevelData);
+  };
+
   useEffect(() => {
     getLastPowerLevelEntry()
       .then((lastEntry: any) => {
@@ -125,17 +172,21 @@ function ProgressLevel({
           // Handle the last entry
           setPowerLevel(lastEntry.score);
           setFirstExerciseSelected(
-            lastEntry.first !== undefined ? lastEntry.first : "Deadlift"
+            lastEntry.first !== undefined || null ? lastEntry.first : "Deadlift"
           );
           setSecondExerciseSelected(
-            lastEntry.second !== undefined ? lastEntry.second : "Barbell Squat"
+            lastEntry.second !== undefined || null
+              ? lastEntry.second
+              : "Barbell Squat"
           );
           setThirdExerciseSelected(
-            lastEntry.third !== undefined
+            lastEntry.third !== undefined || null
               ? lastEntry.third
               : "Flat Barbell Bench Press"
           );
           setWeight(lastEntry.bodyweight);
+          setStrengthPowerLevel(lastEntry.strength);
+          setExperiencePowerLevel(lastEntry.experience);
         } else {
           // No entries found
           console.log("No entries found");
@@ -150,8 +201,10 @@ function ProgressLevel({
     <Container
       sx={{
         display: "flex",
-        justifyContent: "center",
         flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        paddingBottom: "56px",
       }}
     >
       <Box
@@ -159,45 +212,75 @@ function ProgressLevel({
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
-          alignItems:"center"
+          alignItems: "center",
+          gap: 1,
         }}
       >
         <PowerLevelNumber n={powerLevel} />
-        <Box sx={{display:"flex", justifyContent:"space-around", width:"100%"}}>
-          <Typography>{strengthPowerLevel}</Typography>
-          <Typography>{experiencePowerLevel}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            width: "100%",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+            <SecondaryPowerLevelNumber n={strengthPowerLevel} />
+            <StrengthIcon width="2rem" height="2rem" />
+          </Box>
+          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+            <SecondaryPowerLevelNumber n={experiencePowerLevel} />
+            <ExperienceIcon width="2rem" height="2rem" />
+          </Box>
         </Box>
       </Box>
 
-      <TextField
-        type="number"
-        id="outlined-basic"
-        label="Add your weight"
-        value={weight}
-        variant="filled"
-        sx={{ marginTop: "8px", marginBottom: "8px", textAlign: "center" }}
-        onChange={(e) => setWeight(parseInt(e.target.value))}
-      />
-      <PowerLevelSelect
-        exerciseSelected={firstExerciseSelected}
-        setSelectedExercise={setFirstExerciseSelected}
-      />
-      <PowerLevelSelect
-        exerciseSelected={secondExerciseSelected}
-        setSelectedExercise={setSecondExerciseSelected}
-      />
-      <PowerLevelSelect
-        exerciseSelected={thirdExerciseSelected}
-        setSelectedExercise={setThirdExerciseSelected}
-      />
+      <Box sx={{ width: "100%" }}>
+        <TextField
+          type="number"
+          id="outlined-basic"
+          label="Add your weight"
+          value={weight}
+          variant="filled"
+          sx={{
+            marginTop: "8px",
+            marginBottom: "8px",
+            textAlign: "center",
+            width: "100%",
+          }}
+          onChange={(e) => setWeight(parseInt(e.target.value))}
+        />
+        <PowerLevelSelect
+          exerciseSelected={firstExerciseSelected}
+          setSelectedExercise={setFirstExerciseSelected}
+        />
+        <PowerLevelSelect
+          exerciseSelected={secondExerciseSelected}
+          setSelectedExercise={setSecondExerciseSelected}
+        />
+        <PowerLevelSelect
+          exerciseSelected={thirdExerciseSelected}
+          setSelectedExercise={setThirdExerciseSelected}
+        />
+      </Box>
+      <Box>
+        <Button
+          variant="contained"
+          sx={{ width: "100%", marginTop: "8px", marginBottom: "8px" }}
+          onClick={calculatePowerLevel}
+          color="success"
+        >
+          Calculate Power Level
+        </Button>
 
-      <Button
-        variant="contained"
-        sx={{ width: "100%", marginTop: "8px" }}
-        onClick={calculatePowerLevel}
-      >
-        Calculate Power Level
-      </Button>
+        <Button
+          variant="contained"
+          sx={{ width: "100%", marginTop: "8px", marginBottom: "8px" }}
+          onClick={handleUploadToProfile}
+        >
+          Upload to profile
+        </Button>
+      </Box>
     </Container>
   );
 }

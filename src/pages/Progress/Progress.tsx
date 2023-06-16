@@ -40,7 +40,7 @@ function Progress() {
         display: "flex",
         flexDirection: "column",
         height:"100%",
-        paddingBottom:"56px"
+        backgroundColor: "#F0F2F5"
       }}
     >
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
@@ -140,6 +140,7 @@ function Progress() {
         <Route path="path" element={<ProgressPath powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
         <Route path="progress-graph" element={<ProgressGraph />} />
       </Routes>
+
     </Box>
   );
 }

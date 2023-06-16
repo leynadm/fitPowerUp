@@ -1,4 +1,4 @@
-function savePowerLevelEntry(finalNumber:number, weight:number, first:string, second:string, third:string, todayDate:any) {
+function savePowerLevelEntry(finalPowerLevel:number, weight:number, first:string, second:string, third:string, todayDate:any,finalNumber:number,count:number) {
     return new Promise<void>((resolve, reject) => {
       const request = window.indexedDB.open("fitScouterDb", 1);
   
@@ -20,12 +20,13 @@ function savePowerLevelEntry(finalNumber:number, weight:number, first:string, se
           const existingEntry = getRequest.result;
           if (existingEntry) {
             // Update the existing entry
-            existingEntry.score = finalNumber;
+            existingEntry.score = finalPowerLevel;
             existingEntry.bodyweight = weight;
             existingEntry.first = first;
             existingEntry.second = second;
             existingEntry.third = third;
-  
+            existingEntry.strength = finalNumber;
+            existingEntry.experience = count;
             const updateRequest = store.put(existingEntry);
   
             updateRequest.onsuccess = () => {
@@ -45,6 +46,8 @@ function savePowerLevelEntry(finalNumber:number, weight:number, first:string, se
               second: second,
               third: third,
               date: todayDate,
+              strength:finalNumber,
+              experience:count
             };
   
             const addRequest = store.add(record);
