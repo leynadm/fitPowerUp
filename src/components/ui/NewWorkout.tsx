@@ -142,8 +142,7 @@ function NewWorkout({
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
     } else if (page === "Analysis") {
-      // Handle Analysis page click
-      // ...
+      navigate("analysis");
     } else if (page === "Sign Out") {
       auth.signOut();
       // ...
@@ -373,6 +372,7 @@ function NewWorkout({
           height: "32px",
           backgroundColor: "#FF8C00",
           width: "100%",
+          borderBottom:"2px black solid"
         }}
       >
         <IconButton aria-label="left arrow" onClick={subtractDays}>

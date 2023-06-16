@@ -1,50 +1,48 @@
-import React, { useState, Dispatch, SetStateAction } from "react";
-import Box from "@mui/material/Box";
-import { AppBar, Toolbar } from "@mui/material";
-import Container from "@mui/material/Container";
+import React, { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
-import AccessibilityIcon from "@mui/icons-material/Accessibility";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import BodyTrackerTrack from "./BodyTrackerTrack";
-import BodyTrackerHistory from "./BodyTrackerHistory";
-import BodyTrackerGraph from "./BodyTrackerGraph";
 import { Routes, Route } from "react-router-dom";
+import Breakdown from "./Breakdown";
+import ExerciseAnalysis from "./ExerciseAnalysis";
+import CategoryAnalysis from "./CategoryAnalysis";
+import InsertChartIcon from '@mui/icons-material/InsertChart';
 import { useNavigate } from "react-router-dom";
 
-interface WorkoutProps{
-  todayDate: Date | undefined;
-}
+function Analysis() {
+  const navigate = useNavigate();
 
-function BodyTracker({todayDate}:WorkoutProps) {
+  const handleNavigateCategoryAnalysis = () => {
+    navigate("");
+  };
 
-    const navigate = useNavigate()
-    
-    const handleNavigateTrack = () => {
-        navigate("");
-      };
-    
-      const handleNavigateHistory = () => {
-        navigate("history");
-      };
-    
-      const handleNavigateGraph = () => {
-        navigate("graph");
-      };
+  const handleNavigateBreakdown = () => {
+    navigate("breakdown");
+  };
+
+  const handleNavigateProgressRecords = () => {
+    navigate("exercise-analysis");
+  };
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "100%",
         display: "flex",
         flexDirection: "column",
+        height: "100%",
+        backgroundColor: "#F0F2F5",
       }}
     >
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <InsertChartIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -63,7 +61,7 @@ function BodyTracker({todayDate}:WorkoutProps) {
               LOGO
             </Typography>
 
-            <AccessibilityIcon
+            <InsertChartIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
             />
 
@@ -83,12 +81,11 @@ function BodyTracker({todayDate}:WorkoutProps) {
                 textDecoration: "none",
               }}
             >
-              Tracker
+              Analysis
             </Typography>
           </Toolbar>
         </Container>
       </AppBar>
-
       <Box
         sx={{
           display: "flex",
@@ -97,7 +94,6 @@ function BodyTracker({todayDate}:WorkoutProps) {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
-          borderBottom:"2px black solid"
         }}
       >
         <Button
@@ -106,9 +102,9 @@ function BodyTracker({todayDate}:WorkoutProps) {
             fontWeight: "bold",
             width: "100%",
           }}
-          onClick={handleNavigateTrack}
+          onClick={handleNavigateCategoryAnalysis}
         >
-          TRACK
+          Category
         </Button>
 
         <Button
@@ -117,29 +113,32 @@ function BodyTracker({todayDate}:WorkoutProps) {
             fontWeight: "bold",
             width: "100%",
           }}
-          onClick={handleNavigateHistory}
+          onClick={handleNavigateProgressRecords}
         >
-          HISTORY
+          Exercise
         </Button>
+
         <Button
           sx={{
             color: "white",
             fontWeight: "bold",
             width: "100%",
           }}
-          onClick={handleNavigateGraph}
+          onClick={handleNavigateBreakdown}
         >
-          GRAPH
+          Breakdown
         </Button>
+
       </Box>
 
       <Routes>
-        <Route path="" element={<BodyTrackerTrack todayDate={todayDate} />} />
-        <Route path="history" element={<BodyTrackerHistory />} />
-        <Route path="graph" element={<BodyTrackerGraph />} />
+        <Route path="" element={<CategoryAnalysis />} />
+        <Route path="exercise-analysis" element={<ExerciseAnalysis />} />
+        <Route path="breakdown" element={<Breakdown />} />
+
       </Routes>
     </Box>
   );
 }
 
-export default BodyTracker;
+export default Analysis;

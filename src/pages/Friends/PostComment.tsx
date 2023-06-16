@@ -142,7 +142,7 @@ function PostComment({
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
-            >
+            > 
               <h6 style={{ margin: 0, textAlign: "left" }}>
                 {comment.name} {comment.surname}
               </h6>

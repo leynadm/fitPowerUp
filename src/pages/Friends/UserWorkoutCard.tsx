@@ -307,14 +307,17 @@ export default function UserWorkoutCard({
         />
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" sx={{ bgcolor: "white" }}>
+            <Avatar aria-label="recipe" sx={{ bgcolor: "white", display:"flex",  justifyContent:"center",alignItems:"center" }}>
+              
               {currentUserDataImage ? (
                 <LazyLoadImage
                   src={currentUserDataImage}
                   alt="user image"
                   effect="blur" // optional blur effect, you can remove it if not needed
-                  style={{ width: "100%", height: "100%" }} // match the LazyLoadImage size to the Avatar
+                  style={{ width: 42, height: 42, alignSelf: "center" }} // match the LazyLoadImage size to the Avatar
+
                 />
+
               ) : (
                 // Placeholder avatar content if currentUserDataImage is not available
                 <Stack direction="row" spacing={2}>

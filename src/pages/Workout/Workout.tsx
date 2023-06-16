@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Dispatch, SetStateAction,useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+} from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
@@ -10,6 +16,7 @@ import Exercise from "../../utils/interfaces/Exercise";
 import WorkoutCalendar from "./WorkoutCalendar";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import BodyTracker from "../BodyTracker/BodyTracker";
+import Analysis from "../Analysis/Analysis";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   selectedCategoryExercises: {
@@ -28,7 +35,6 @@ interface HomeProps {
   >;
   unitsSystem: string;
   setUnitsSystem: Dispatch<SetStateAction<string>>;
-
 }
 
 function Workout({
@@ -39,7 +45,7 @@ function Workout({
   setSelectedCategoryExercises,
   setExistingExercises,
   unitsSystem,
-  setUnitsSystem
+  setUnitsSystem,
 }: HomeProps) {
   const [todayDate, setTodayDate] = useState<Date>();
 
@@ -49,15 +55,14 @@ function Workout({
     measurement: any[];
   }>({ category: "", name: "", measurement: [] });
 
-
   const [weightIncrementPreference, setWeightIncrementPreference] =
     useState(2.5);
 
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
-      console.log('logging current date:')
-      console.log(currentDate)
+      console.log("logging current date:");
+      console.log(currentDate);
       setTodayDate(currentDate);
     }
     getDataPreferences();
@@ -91,19 +96,19 @@ function Workout({
 
   const getDataPreferences = useCallback(() => {
     const request = indexedDB.open("fitScouterDb", 1);
-  
+
     request.onerror = function (event) {
       // Handle errors
     };
-  
+
     request.onsuccess = function (event) {
       const db = request.result;
-  
+
       // Retrieve the record with id 1 from the object store
       const transaction = db.transaction("user-data-preferences", "readonly");
       const objectStore = transaction.objectStore("user-data-preferences");
       const getRequest = objectStore.get(1);
-  
+
       getRequest.onsuccess = function (event) {
         const record = getRequest.result;
         if (record) {
@@ -126,7 +131,7 @@ function Workout({
           alignItems: "center",
           width: "100%",
           height: "100%",
-        }} 
+        }}
       >
         <Routes>
           <Route
@@ -209,16 +214,12 @@ function Workout({
             }
           />
 
+          <Route path="/analysis/*" element={<Analysis />} />
+
           <Route
             path="/bodytracker/*"
-            element={
-              <BodyTracker
-              todayDate={todayDate}
-                
-              />
-            }
+            element={<BodyTracker todayDate={todayDate} />}
           />
-
         </Routes>
       </Box>
     </Box>

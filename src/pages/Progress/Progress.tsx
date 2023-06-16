@@ -100,6 +100,7 @@ function Progress() {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
+          borderBottom:"2px black solid"
         }}
       >
         <Button
