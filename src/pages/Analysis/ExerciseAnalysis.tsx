@@ -6,9 +6,32 @@ import { Typography } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import { ChartOptions } from "chart.js";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
+import InputLabel from "@mui/material/InputLabel";
+import ListSubheader from "@mui/material/ListSubheader";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { TextField } from "@mui/material";
+
+import calculateVolumePerWorkout from "../../utils/analysisFunctions/calculateVolumePerWorkout";
+import calculateSetsPerWorkout from "../../utils/analysisFunctions/calculateSetsPerWorkout";
+import calculateRepsPerWorkout from "../../utils/analysisFunctions/calculateRepsPerWorkout";
+import calculateRepsPerWeek from "../../utils/analysisFunctions/calculateRepsPerWeek";
+import calculateWorkoutsPerWeek from "../../utils/analysisFunctions/calculateWorkoutsPerWeek";
+import calculateVolumePerWeek from "../../utils/analysisFunctions/calculateVolumePerWeek";
+import calculateSetsPerWeek from "../../utils/analysisFunctions/calculateSetsPerWeek";
+import calculateSetsPerMonth from "../../utils/analysisFunctions/calculateSetsPerMonth";
+import calculateVolumePerMonth from "../../utils/analysisFunctions/calculateVolumePerMonth";
+import calculateRepsPerMonth from "../../utils/analysisFunctions/calculateRepsPerMonth";
+import calculateWorkoutsPerMonth from "../../utils/analysisFunctions/calculateWorkoutsPerMonth";
+import calculateWorkoutsPerYear from "../../utils/analysisFunctions/calculateWorkoutsPerYear";
+import calculateRepsPerYear from "../../utils/analysisFunctions/calculateRepsPerYear";
+import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolumePerYear";
+import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
+import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
+import Autocomplete from "@mui/material/Autocomplete";
+
+import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -28,66 +51,189 @@ ChartJS.register(
   LineElement
 );
 
-declare namespace Chart {
-  interface ChartTooltipItem {
-    datasetIndex?: number;
-    index?: number;
-    xLabel?: string;
-    yLabel?: string;
-  }
-
-  interface ChartData {
-    labels?: string[] | string[][];
-    datasets?: ChartDataSets[];
-  }
-
-  interface ChartDataSets {
-    label?: string;
-    data?: number[] | ChartPoint[];
-    // ...
-  }
-
-  interface ChartPoint {
-    x?: number | string | Date;
-    y?: number | string | Date;
-    // ...
-  }
-}
-
 // Function to call the appropriate chart function based on the selected option and timeframe
 const callChartFunction = (
+  selectedGraph: string,
   selectedOption: string,
   selectedTimeframe: string,
   setInitialRawData: React.Dispatch<
     React.SetStateAction<ChartData<"line"> | null>
-  >
+  >,
+  chartType:string
 ) => {
-  switch (selectedOption) {
-    case "Bodyweight":
-      getBodyTrackerKPIValues(
-        "Bodyweight",
+  console.log("inside chart function");
+  switch (selectedGraph) {
+    
+    case "Volume per Workout":
+      calculateVolumePerWorkout(
+        selectedGraph,
+        selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "exercise"
       );
       break;
-    case "Body Fat":
-      getBodyTrackerKPIValues("Body Fat", selectedTimeframe, setInitialRawData);
+
+    case "Sets per Workout":
+      calculateSetsPerWorkout(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
       break;
 
+    case "Reps per Workout":
+      calculateRepsPerWorkout(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Reps per Week":
+      calculateRepsPerWeek(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Workouts per Week":
+      calculateWorkoutsPerWeek(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Volume per Week":
+      calculateVolumePerWeek(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Sets per Week":
+      calculateSetsPerWeek(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Sets per Month":
+      calculateSetsPerMonth(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Volume per Month":
+      calculateVolumePerMonth(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Reps per Month":
+      calculateRepsPerMonth(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Workouts per Month":
+      calculateWorkoutsPerMonth(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Workouts per Year":
+      calculateWorkoutsPerYear(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Reps per Year":
+      calculateRepsPerYear(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Volume per Year":
+      calculateVolumePerYear(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+
+    case "Sets per Year":
+      calculateSetsPerYear(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "exercise"
+      );
+      break;
+ 
     default:
       break;
   }
 };
 
 function ExerciseAnalysis() {
-  const measurementOptions = [{ label: "Bodyweight" }, { label: "Body Fat" }];
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
-  const [selectedOption, setSelectedOption] = useState(
-    measurementOptions[0].label
-  );
+
+  const [selectedGraph, setSelectedGraph] = useState("Volume per Workout"); // Initial graph is set to Volume per Workout
 
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
+
+    const [exercisesCategories, setExercisesCategories] = useState<{
+      category: string;
+      name: string;
+      measurement: any[];
+    }[]>([]);
+    
+  const [selectedOption, setSelectedOption] = useState(exercisesCategories[0]?.name || "");
 
   const timeframeOptions = [
     { label: "1m", value: "1m" },
@@ -98,16 +244,20 @@ function ExerciseAnalysis() {
   ];
 
   useEffect(() => {
+
+    getAllExercises(setExercisesCategories)
+    
     // Call the chart function when the selected exercise changes or the timeframe changes
-    callChartFunction(selectedOption, selectedTimeframe, setInitialRawData);
-    console.log("loading second use effect");
+    callChartFunction(
+      selectedGraph,
+      selectedOption,
+      selectedTimeframe,
+      setInitialRawData,
+      "exercise"
+    );
   }, [selectedTimeframe, selectedOption]);
 
-  useEffect(() => {
-    console.log("logging initial Raw Data");
-    console.log(initialRawData);
-    console.log("loading third use effect");
-  }, [initialRawData]);
+
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -171,29 +321,69 @@ function ExerciseAnalysis() {
 
   return (
     <Box>
-      <Select
-        id="combo-box-demo"
-        value={selectedOption}
-        onChange={(event) => {
-          const selectedOption = event.target.value;
-          setSelectedOption(selectedOption);
-          callChartFunction(
-            selectedOption,
-            selectedTimeframe,
-            setInitialRawData
-          );
-        }}
-        sx={{
-          width: "100%",
-          marginTop: "16px",
-        }}
-      >
-        {measurementOptions.map((option) => (
-          <MenuItem key={option.label} value={option.label}>
-            {option.label}
+<FormControl sx={{ width: "100%", marginTop: "8px" }}>
+<Autocomplete
+  options={[...exercisesCategories.map((exercise:any) => exercise.name), ""]}
+
+  renderInput={(params) => (
+    <TextField {...params} label="Exercise Filter" variant="outlined" />
+  )}
+  value={selectedOption}
+  onChange={(event, selectedOption) => {
+    setSelectedOption(selectedOption || '');
+    console.log("calling call chart function now:");
+    callChartFunction(
+      selectedGraph,
+      selectedOption || '',
+      selectedTimeframe,
+      setInitialRawData,
+      "exercise"
+    );
+  }}
+/>
+
+</FormControl>
+      <FormControl sx={{ width: "100%", marginTop: "8px" }}>
+        <InputLabel htmlFor="grouped-select">Graph</InputLabel>
+        <Select
+          defaultValue="Volume per Workout"
+          id="grouped-select"
+          label="Grouping"
+          onChange={(event) => {
+            const selectedGraph = event.target.value;
+            setSelectedGraph(selectedGraph);
+            callChartFunction(
+              selectedGraph,
+              selectedOption,
+              selectedTimeframe,
+              setInitialRawData,
+              "exercise"
+            );
+          }}
+        >
+          <ListSubheader>Workout Graphs</ListSubheader>
+          <MenuItem value={"Volume per Workout"}>Volume per Workout</MenuItem>
+          <MenuItem value={"Sets per Workout"}>Sets per Workout</MenuItem>
+          <MenuItem value={"Reps per Workout"}>Reps per Workout</MenuItem>
+          <ListSubheader>Weekly Graphs</ListSubheader>
+          <MenuItem value={"Workouts per Week"}>Workouts per Week</MenuItem>
+          <MenuItem value={"Volume per Week"}>Volume per Week</MenuItem>
+          <MenuItem value={"Sets per Week"}>Sets per Week</MenuItem>
+          <MenuItem value={"Reps per Week"}>Reps per Week</MenuItem>
+          <ListSubheader>Monthly Graphs</ListSubheader>
+          <MenuItem value={"Workouts per Month"}>Workouts per Month</MenuItem>
+          <MenuItem value={"Volume per Month"}>Volume per Month</MenuItem>
+          <MenuItem value={"Sets per Month"}>Sets per Month</MenuItem>
+          <MenuItem value={"Reps per Month"}>Reps per Month</MenuItem>=
+          <ListSubheader>Yearly Graphs</ListSubheader>
+          <MenuItem value={"Workouts per Year"}>Workouts per Year</MenuItem>
+          <MenuItem value={"Volume per Year"}>Volume per Year</MenuItem>
+          <MenuItem value={"Sets per Year"}>Sets per Year</MenuItem>
+          <MenuItem value={"Reps per Year"} sx={{ marginBottom: "56px" }}>
+            Reps per Year
           </MenuItem>
-        ))}
-      </Select>
+        </Select>
+      </FormControl>
 
       <ButtonGroup
         variant="outlined"
@@ -207,9 +397,11 @@ function ExerciseAnalysis() {
             onClick={() => {
               setSelectedTimeframe(option.value); // Update selected timeframe
               callChartFunction(
+                selectedGraph,
                 selectedOption,
                 option.value,
-                setInitialRawData
+                setInitialRawData,
+                "exercise"
               ); // Call chart function with updated timeframe
             }}
           >
@@ -220,7 +412,7 @@ function ExerciseAnalysis() {
       <Box
         sx={{
           width: "100vw",
-          height: "calc(100vh - 270.5px)",
+          height: "calc(100vh - 328.5px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -236,6 +428,6 @@ function ExerciseAnalysis() {
       </Box>
     </Box>
   );
-} 
+}
 
 export default ExerciseAnalysis;

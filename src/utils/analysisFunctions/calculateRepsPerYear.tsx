@@ -1,4 +1,4 @@
-function calculateRepsPerYear(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any) {
+function calculateRepsPerYear(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any,chartType:string) {
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
@@ -10,11 +10,25 @@ function calculateRepsPerYear(selectedGraph:string, selectedExercise:string, tim
       const db = (event.target as IDBRequest).result;
       const transaction = db.transaction(["user-exercises-entries"], "readonly");
       const objectStore = transaction.objectStore("user-exercises-entries");
-      const exerciseCategoryIndex = objectStore.index("exercise_category");
+    
+      let exerciseIndex:any;
+
+      if(chartType==="category"){
+        exerciseIndex = objectStore.index("exercise_category");
+      } else {
+        exerciseIndex = objectStore.index("exercise_name");
+      }
+  
       const range = IDBKeyRange.only(selectedExercise); // Filter by exercise category
   
-      const getDataRequest = exerciseCategoryIndex.getAll(range);
-  
+
+      let getDataRequest: any;
+      if (selectedExercise === "") {
+        getDataRequest = exerciseIndex.getAll();
+      } else {
+        getDataRequest = exerciseIndex.getAll(range);
+      }
+      
       getDataRequest.onsuccess = () => {
         const data = getDataRequest.result;
   

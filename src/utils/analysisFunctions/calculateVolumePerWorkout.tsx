@@ -1,4 +1,4 @@
-function calculateVolumePerWorkout(selectedGraph:string,selectedExercise: any, timeframe: string,setInitialRawData: any) {
+function calculateVolumePerWorkout(selectedGraph:string,selectedExercise: any, timeframe: string,setInitialRawData: any,chartType:string) {
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
@@ -7,15 +7,27 @@ function calculateVolumePerWorkout(selectedGraph:string,selectedExercise: any, t
 
   request.onsuccess = (event) => {
     
-      console.log('fetching data inside indexedDb...')
     const db = (event.target as IDBRequest).result;
     const transaction = db.transaction(["user-exercises-entries"], "readonly");
     const objectStore = transaction.objectStore("user-exercises-entries");
-    const exerciseCategoryIndex = objectStore.index("exercise_category");
-    const range = IDBKeyRange.only(selectedExercise); // Filter by exercise Category
+  
+    let exerciseIndex:any;
 
-    const getDataRequest = exerciseCategoryIndex.getAll(range);
+    if(chartType==="category"){
+      exerciseIndex = objectStore.index("exercise_category");
+    } else {
+      exerciseIndex = objectStore.index("exercise_name");
+    }
 
+    const range = IDBKeyRange.only(selectedExercise); // Filter by exercise category
+
+
+    let getDataRequest: any;
+    if (selectedExercise === "") {
+      getDataRequest = exerciseIndex.getAll();
+    } else {
+      getDataRequest = exerciseIndex.getAll(range);
+    }
     getDataRequest.onsuccess = () => {
       const data = getDataRequest.result;
 

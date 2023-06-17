@@ -27,6 +27,7 @@ import calculateRepsPerYear from "../../utils/analysisFunctions/calculateRepsPer
 import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolumePerYear";
 import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
 import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
+
 import {
   Chart as ChartJS,
   Tooltip,
@@ -46,32 +47,6 @@ ChartJS.register(
   LineElement
 );
 
-declare namespace Chart {
-  interface ChartTooltipItem {
-    datasetIndex?: number;
-    index?: number;
-    xLabel?: string;
-    yLabel?: string;
-  }
-
-  interface ChartData {
-    labels?: string[] | string[][];
-    datasets?: ChartDataSets[];
-  }
-
-  interface ChartDataSets {
-    label?: string;
-    data?: number[] | ChartPoint[];
-    // ...
-  }
-
-  interface ChartPoint {
-    x?: number | string | Date;
-    y?: number | string | Date;
-    // ...
-  }
-}
-
 // Function to call the appropriate chart function based on the selected option and timeframe
 const callChartFunction = (
   selectedGraph: string,
@@ -79,7 +54,8 @@ const callChartFunction = (
   selectedTimeframe: string,
   setInitialRawData: React.Dispatch<
     React.SetStateAction<ChartData<"line"> | null>
-  >
+  >,
+  chartType:string
 ) => {
   console.log("inside chart function");
   switch (selectedGraph) {
@@ -88,7 +64,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -97,7 +74,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -106,8 +84,10 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
-      );
+        setInitialRawData,
+        "category"
+      
+        );
       break;
 
     case "Reps per Week":
@@ -115,7 +95,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -124,7 +105,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -133,7 +115,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -142,7 +125,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -151,7 +135,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -160,7 +145,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -169,7 +155,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -178,7 +165,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -187,7 +175,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -196,7 +185,8 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
@@ -205,19 +195,20 @@ const callChartFunction = (
         selectedGraph,
         selectedOption,
         selectedTimeframe,
-        setInitialRawData
+        setInitialRawData,
+        "category"
       );
       break;
 
-      case "Sets per Year":
-        calculateSetsPerYear(
-          selectedGraph,
-          selectedOption,
-          selectedTimeframe,
-          setInitialRawData
-        );
-        break;
-  
+    case "Sets per Year":
+      calculateSetsPerYear(
+        selectedGraph,
+        selectedOption,
+        selectedTimeframe,
+        setInitialRawData,
+        "category"
+      );
+      break;
 
     default:
       break;
@@ -226,13 +217,13 @@ const callChartFunction = (
 
 function CategoryAnalysis() {
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
-  const [selectedOption, setSelectedOption] = useState("biceps");
+  const [selectedOption, setSelectedOption] = useState("");
   const [selectedGraph, setSelectedGraph] = useState("Volume per Workout"); // Initial graph is set to Volume per Workout
 
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
 
-  const [exercisesCategories, setExercisesCategories] = useState([]);
+  const [exercisesCategories, setExercisesCategories] = useState(["All"]);
 
   const timeframeOptions = [
     { label: "1m", value: "1m" },
@@ -244,25 +235,17 @@ function CategoryAnalysis() {
 
   useEffect(() => {
     populatePreselectedExercises(setExercisesCategories);
+
     // Call the chart function when the selected exercise changes or the timeframe changes
     callChartFunction(
       selectedGraph,
       selectedOption,
       selectedTimeframe,
-      setInitialRawData
+      setInitialRawData,
+      "category"
     );
   }, [selectedTimeframe, selectedOption]);
 
-  useEffect(() => {
-    console.log("logging initial Raw Data");
-    console.log(initialRawData);
-    console.log("loading third use effect");
-  }, [initialRawData]);
-
-  useEffect(() => {
-    console.log("logging exercises categories inside category analysis");
-    console.log(exercisesCategories);
-  }, [exercisesCategories]);
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -325,33 +308,37 @@ function CategoryAnalysis() {
   };
 
   return (
-    <Box sx={{}}>
-      <Select
-        id="combo-box-demo"
-        value={selectedOption}
-        onChange={(event) => {
-          const selectedOption = event.target.value;
-          setSelectedOption(selectedOption);
-          console.log("calling call chart function now:");
-          callChartFunction(
-            selectedGraph,
-            selectedOption,
-            selectedTimeframe,
-            setInitialRawData
-          );
-        }}
-        sx={{
-          width: "100%",
-          marginTop: "16px",
-        }}
-      >
-        {exercisesCategories.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </Select>
+    <Box>
+      <FormControl sx={{ width: "100%", marginTop: "8px" }}>
+        <InputLabel id="demo-simple-select-autowidth-label">
+          Category Filter
+        </InputLabel>
 
+        <Select
+          label="Category Filter"
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={selectedOption}
+          onChange={(event) => {
+            const selectedOption = event.target.value;
+            setSelectedOption(selectedOption);
+            console.log("calling call chart function now:");
+            callChartFunction(
+              selectedGraph,
+              selectedOption,
+              selectedTimeframe,
+              setInitialRawData,
+              "category"
+            );
+          }}
+        >
+          {exercisesCategories.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel htmlFor="grouped-select">Graph</InputLabel>
         <Select
@@ -365,7 +352,8 @@ function CategoryAnalysis() {
               selectedGraph,
               selectedOption,
               selectedTimeframe,
-              setInitialRawData
+              setInitialRawData,
+              "category"
             );
           }}
         >
@@ -387,7 +375,9 @@ function CategoryAnalysis() {
           <MenuItem value={"Workouts per Year"}>Workouts per Year</MenuItem>
           <MenuItem value={"Volume per Year"}>Volume per Year</MenuItem>
           <MenuItem value={"Sets per Year"}>Sets per Year</MenuItem>
-          <MenuItem value={"Reps per Year"}>Reps per Year</MenuItem>
+          <MenuItem value={"Reps per Year"} sx={{ marginBottom: "56px" }}>
+            Reps per Year
+          </MenuItem>
         </Select>
       </FormControl>
 
@@ -406,7 +396,8 @@ function CategoryAnalysis() {
                 selectedGraph,
                 selectedOption,
                 option.value,
-                setInitialRawData
+                setInitialRawData,
+                "category"
               ); // Call chart function with updated timeframe
             }}
           >
