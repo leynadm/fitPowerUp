@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "fitscouter-5a093"
-  }
+    "default": "fitpowerup-2bbc8",
+    "deploying": "fitpowerup-2bbc8"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -416,7 +416,7 @@ function CategoryAnalysis() {
       >
         {initialRawData ? (
           initialRawData.labels && initialRawData.labels.length === 0 ? (
-            <Typography>No data for this exercise yet.</Typography>
+            <Typography>No data available.</Typography>
           ) : (
             <Line data={initialRawData} options={options as any} />
           )

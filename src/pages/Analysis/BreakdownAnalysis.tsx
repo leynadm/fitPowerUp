@@ -394,7 +394,7 @@ function BreakdownAnalysis() {
       >
         {initialRawData ? (
           initialRawData.labels && initialRawData.labels.length === 0 ? (
-            <Typography>No data for this exercise yet.</Typography>
+            <Typography sx={{paddingTop:"8px"}}>No data available.</Typography>
           ) : (
             <div style={{ width: "100%", height: "100%" }}>
               <Doughnut data={initialRawData} options={options} />
