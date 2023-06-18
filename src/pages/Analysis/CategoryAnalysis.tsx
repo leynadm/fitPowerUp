@@ -268,7 +268,7 @@ function CategoryAnalysis() {
             weight: "bold", // x-axis tick font weight
           },
           autoSkip: true, // Enable automatic skipping of labels
-          maxTicksLimit: 10, // Maximum number of visible tick labels
+          maxTicksLimit: 8, // Maximum number of visible tick labels
         },
       },
       y: {
@@ -282,7 +282,7 @@ function CategoryAnalysis() {
             size: 12, // y-axis tick font size
             weight: "bold", // y-axis tick font weight
           },
-          maxTicksLimit: 10, // Maximum number of visible tick labels
+          maxTicksLimit: 8, // Maximum number of visible tick labels
           autoSkip: true,
         },
       },

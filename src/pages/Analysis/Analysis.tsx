@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
-import Breakdown from "./Breakdown";
+import BreakdownAnalysis from "./BreakdownAnalysis";
 import ExerciseAnalysis from "./ExerciseAnalysis";
 import CategoryAnalysis from "./CategoryAnalysis";
 import InsertChartIcon from '@mui/icons-material/InsertChart';
@@ -94,6 +94,7 @@ function Analysis() {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
+          borderBottom:"2px black solid"
         }}
       >
         <Button
@@ -134,7 +135,7 @@ function Analysis() {
       <Routes>
         <Route path="" element={<CategoryAnalysis />} />
         <Route path="exercise-analysis" element={<ExerciseAnalysis />} />
-        <Route path="breakdown" element={<Breakdown />} />
+        <Route path="breakdown" element={<BreakdownAnalysis />} />
 
       </Routes>
     </Box>

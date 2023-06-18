@@ -2,7 +2,6 @@ import React, { useState, useEffect, SetStateAction, Dispatch } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import Exercise from "../../utils/interfaces/Exercise";
 import Divider from "@mui/material/Divider";
@@ -12,7 +11,6 @@ import formatTime from "../../utils/formatTime";
 import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
-import ViewCommentModal from "./ViewCommentModal";
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,
