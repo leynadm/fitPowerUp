@@ -32,6 +32,12 @@ import calculateRepsByExercise from "../../utils/analysisFunctions/Breakdown/cal
 import calculateSetsByExercise from "../../utils/analysisFunctions/Breakdown/calculateSetsByExercise";
 import calculateTrainingVolumeByExercise from "../../utils/analysisFunctions/Breakdown/calculateTrainingVolumeByExercise";
 import calculateWorkoutsByExercise from "../../utils/analysisFunctions/Breakdown/calculateWorkoutsByExercise";
+import calculateTotalTrainingVolume from "../../utils/analysisFunctions/Breakdown/calculateTotalTrainingVolume";
+import calculateTotalTrainingReps from "../../utils/analysisFunctions/Breakdown/calculateTotalTrainingReps";
+import calculateTotalTrainingSets from "../../utils/analysisFunctions/Breakdown/calculateTotalTrainingSets";
+import calculateTotalTrainingWorkouts from "../../utils/analysisFunctions/Breakdown/calculateTotalWorkouts";
+import { styled } from '@mui/material/styles';
+
 import {
   Chart as ChartJS,
   Tooltip,
@@ -160,6 +166,15 @@ const callChartFunction = (
   }
 };
 
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
+  
+
 function BreakdownAnalysis() {
   const today = dayjs().startOf("day");
   const yesterday = dayjs().subtract(1, "day").startOf("day");
@@ -171,6 +186,10 @@ function BreakdownAnalysis() {
   );
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
+  const [totalTrainingVolume, setTotalTrainingVolume] = useState(0)
+  const [totalTrainingReps, setTotalTrainingReps] = useState(0)
+  const [totalTrainingSets, setTotalTrainingSets] = useState(0)
+  const [totalTrainingWorkouts, setTotalTrainingWorkouts] = useState(0)
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedGraph, setSelectedGraph] = useState(
     "Number of Sets by Category"
@@ -187,7 +206,15 @@ function BreakdownAnalysis() {
     { label: "All", value: "all" },
   ];
 
+  useEffect(()=>{
+  },[])
+
   useEffect(() => {
+    calculateTotalTrainingVolume(setTotalTrainingVolume,selectedTimeframe,selectedStartDate,selectedEndDate)
+    calculateTotalTrainingReps(setTotalTrainingReps,selectedTimeframe,selectedStartDate,selectedEndDate)
+    calculateTotalTrainingSets(setTotalTrainingSets,selectedTimeframe,selectedStartDate,selectedEndDate)
+    calculateTotalTrainingWorkouts(setTotalTrainingWorkouts,selectedTimeframe,selectedStartDate,selectedEndDate)
+    
     callChartFunction(
       setInitialRawData,
       selectedGraph,
@@ -196,6 +223,8 @@ function BreakdownAnalysis() {
       selectedEndDate
     );
   }, [selectedTimeframe, selectedGraph, selectedStartDate, selectedEndDate]);
+
+  
 
   useEffect(() => {
     console.log("logging start date and end date:");
@@ -377,9 +406,7 @@ function BreakdownAnalysis() {
       <Box>
         <TableContainer component={Paper}>
           <Table>
-            <TableHead>
- 
-            </TableHead>
+            <TableHead></TableHead>
             <TableBody>
               {initialRawData &&
                 initialRawData.labels &&
@@ -409,6 +436,33 @@ function BreakdownAnalysis() {
             </TableBody>
           </Table>
         </TableContainer>
+      </Box>
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateRows: "1fr 1fr",
+          gap: 2,
+          margin: "16px",
+        }}
+      >
+        <Item>
+          <Typography>Total Workouts</Typography>
+          <Typography>{totalTrainingWorkouts}</Typography>
+        </Item>
+        <Item>
+          <Typography>Total Sets</Typography>
+          <Typography>{totalTrainingSets}</Typography>
+        </Item>
+        <Item>
+          <Typography>Total Reps</Typography>
+          <Typography>{totalTrainingReps}</Typography>
+        </Item>
+        <Item>
+          <Typography>Total Volume</Typography>
+          <Typography>{totalTrainingVolume}</Typography>
+        </Item>
       </Box>
     </Box>
   );
