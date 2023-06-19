@@ -73,6 +73,10 @@ export default function SignIn() {
     navigate("/signup");
   };
 
+  const handleForgotPasswordClick = () => {
+    navigate("/forgot-password");
+  };
+
     function SignInWithGoogle() {
     
     signInWithPopup(userAuth, provider)
@@ -224,7 +228,7 @@ export default function SignIn() {
 
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link variant="body2" onClick={handleForgotPasswordClick}>
                   Forgot password?
                 </Link>
               </Grid>

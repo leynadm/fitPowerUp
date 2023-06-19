@@ -28,10 +28,10 @@ function LandingPage() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ width: "100%" }}>
-            <Typography variant="h4" sx={{ color: "orange" }}>
+            <Typography variant="h4" sx={{ color: "orange",fontFamily:"Dosis",fontWeight:500 }}>
               fit
             </Typography>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            <Typography variant="h4" sx={{ fontFamily:"Voltaire" }}>
               PowerUp
             </Typography>
           </Toolbar>
@@ -62,7 +62,7 @@ function LandingPage() {
             marginBottom: "1rem",
           }}
         >
-          "Connect, Inspire, Power Up!"
+          Workout.<br></br> Post. Level Up!
         </Typography>
 
         <Typography variant="body1" sx={{ textAlign: "center",fontFamily:"lato" }}>
@@ -76,7 +76,7 @@ function LandingPage() {
           onClick={getStartedClick}
           variant="contained"
           sx={{
-            width: "100%",
+            width: "50%",
             marginTop: "16px",
             marginRight: "8px",
             bgcolor: "black",

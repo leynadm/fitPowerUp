@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import { blue } from "@mui/material/colors";
 import { AuthContext } from "../../context/Auth";
 import TextField from "@mui/material/TextField";
 import CardMedia from "@mui/material/CardMedia";
@@ -174,7 +173,7 @@ function AddContentModal({
           // Retry logic
           let retryAttempts = 9;
           while (retryAttempts > 0) {
-            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 3 seconds
+            await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 3 seconds
 
             try {
               imageUrlResized = await getDownloadURL(imageRefResized);

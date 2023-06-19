@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useEffect,useState } from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
 
@@ -9,7 +9,6 @@ interface AuthRouteProps {
 
 const AuthRoute = ({ type}:AuthRouteProps) => {
   const { currentUser } = useContext(AuthContext);
-
 
   if (type === "home") {
     return currentUser ? <Outlet /> : <Navigate to="/login" />;

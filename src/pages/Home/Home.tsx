@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
@@ -8,8 +8,16 @@ import Box from "@mui/material/Box";
 import importedPreselectedExercises from "../../utils/preselectedExercises";
 import Exercise from "../../utils/interfaces/Exercise";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
+import { AuthContext } from "../../context/Auth";
 
-function Home() {
+interface AppProps {
+  sessionVerificationEmailCheck: boolean;
+  setSessionVerificationEmailCheck: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:AppProps) {
   const [preselectedExercises, setPreselectedExercises] = useState<
     { category: string; name: string; measurement: any[] }[]
   >([]);
@@ -24,8 +32,19 @@ function Home() {
   const [unitsSystem, setUnitsSystem] = useState("");
   const [initialCategoriesLoaded, setInitialCategoriesLoaded] = useState(false);
 
+    const { currentUser } = useContext(AuthContext);
+
   useEffect(() => {
     setPreselectedExercises(importedPreselectedExercises);
+
+    if (
+      !currentUser.emailVerified &&
+      !currentUser.isAnonymous &&
+      sessionVerificationEmailCheck
+    ) {
+      setVerifyEmailModalOpen(true);
+      setSessionVerificationEmailCheck(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -39,12 +58,13 @@ function Home() {
       populatePreselectedExercises();
     }
   }, [preselectedExercises, initialCategoriesLoaded]);
-  
-  function initializeCategories(categories:any) {
+
+  function initializeCategories(categories: any) {
     setExercisesCategories(categories);
     setInitialCategoriesLoaded(true);
   }
 
+  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(false);
 
   function populatePreselectedExercises() {
     const request = indexedDB.open("fitScouterDb", 1);
@@ -86,15 +106,13 @@ function Home() {
           cursor.continue();
         } else {
           const categories: string[] = Array.from(uniqueCategories); // Specify string[] type
-          
+
           setExercisesCategories(categories);
           initializeCategories(categories);
-          
         }
       };
 
       transaction.oncomplete = function () {
-        
         db.close();
       };
     };
@@ -136,6 +154,11 @@ function Home() {
           backgroundColor: "#F0F2F5",
         }}
       >
+        <VerifyEmailDialog
+          verifyEmailModalOpen={verifyEmailModalOpen}
+          setVerifyEmailModalOpen={setVerifyEmailModalOpen}
+        />
+
         <Navbar />
         <Routes>
           <Route

@@ -26,6 +26,7 @@ import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import Account from "./Account";
 import { RelationProvider } from "../../context/Relation";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -60,6 +61,12 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
     navigate("profile");
   };
 
+  const handleAccount = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    navigate("account");
+  };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -84,7 +91,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleAccount}>Account</MenuItem>
     </Menu>
   );
 
@@ -123,6 +130,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
+          onClick={handleAccount}
         >
           <ManageAccountsIcon />
         </IconButton>
@@ -236,6 +244,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
           <Route path="results/u/:id/*" element={<SearchUserProfile />} />
+          <Route path="account" element={<Account />} />
       
         </Routes>
 

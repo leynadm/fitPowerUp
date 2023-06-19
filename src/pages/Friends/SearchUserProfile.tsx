@@ -263,6 +263,10 @@ function SearchUserProfile() {
   }
 
   async function blockUser() {
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
     const userRef = doc(collection(db, "users"), currentUser.uid);
     const userBlockedRef = doc(collection(db, "users"), id);
     await updateDoc(userRef, {

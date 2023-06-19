@@ -262,6 +262,10 @@ export default function UserWorkoutCard({
   }
 
   function appreciatePost() {
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
     const postRef = doc(db, "posts", postId);
 
     if (postAppreciationStatus) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SetStateAction, Dispatch } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -11,18 +11,18 @@ import formatTime from "../../utils/formatTime";
 import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
+
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,
   p: 1,
   borderRadius: 1,
+  width:"100%"
 };
 
 interface CalendarProps {
   calendarWorkoutModalVisibility: boolean;
-  setCalendarWorkoutModalVisibility: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  setCalendarWorkoutModalVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   todayDate: Date | undefined;
   unitsSystem: string;
 }
@@ -35,8 +35,8 @@ function CalendarWorkoutModal({
 }: CalendarProps) {
   const [workoutDateExercises, setWorkoutDateExercises] = useState<
     { name: string; exercises: Exercise[] }[]
-  >([]);  
-  const navigate = useNavigate()
+  >([]);
+  const navigate = useNavigate();
   const handleClose = () => setCalendarWorkoutModalVisibility(false);
 
   useEffect(() => {
@@ -52,134 +52,142 @@ function CalendarWorkoutModal({
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        sx={{ marginBottom: "56px" }}
+        sx={{ marginBottom: "56px",width:"100%" }}
+
       >
         <Box sx={style}>
           <Typography sx={{ width: "100%", textAlign: "center" }}>
             {todayDate?.toLocaleDateString()}
           </Typography>
 
-          {workoutDateExercises.map((group, index) => (
-            <Box
-              key={index}
-              sx={{
-                borderRadius: "4px",
-                boxShadow: 1,
-                margin: "16px",
-                backgroundColor: "white",
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{ textAlign: "center", fontSize: "medium" }}
+          {workoutDateExercises.length > 0 ? (
+            workoutDateExercises.map((group, index) => (
+              <Box
+                key={index}
+                sx={{
+                  borderRadius: "4px",
+                  boxShadow: 1,
+                  margin: "16px",
+                  backgroundColor: "white",
+                }}
               >
-                {group.name.toLocaleUpperCase()}
-              </Typography>
-
-              <Divider sx={{ backgroundColor: "aliceblue" }} />
-              {group.exercises.map((exercise, exerciseIndex) => (
-                <Box
-                  key={exerciseIndex}
-                  sx={{
-                    display: "grid",
-                    gridAutoFlow: "column",
-                    gridTemplateColumns: "1fr 1fr 4fr",
-                    justifyContent: "space-evenly",
-                    justifyItems: "center",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
+                <Typography
+                  variant="h6"
+                  sx={{ textAlign: "center", fontSize: "medium" }}
                 >
-                  {exercise.comment ? ( // Check if 'comment' property exists
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={(event) => console.log("yes")}
-                    >
-                      <CommentIcon
-                        sx={{
-                          zIndex: 0,
-                        }}
-                      />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      color="inherit"
-                      disabled // Placeholder element
-                    >
-                      <CommentIcon style={{ opacity: 0 }} />
-                    </IconButton>
-                  )}
+                  {group.name.toLocaleUpperCase()}
+                </Typography>
 
-                  {exercise.is_pr ? (
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      color="inherit"
-                      disabled // Placeholder element
-                    >
-                      <EmojiEventsIcon sx={{ zIndex: 0 }} />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      color="inherit"
-                      disabled // Placeholder element
-                    >
-                      <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
-                    </IconButton>
-                  )}
-
+                <Divider sx={{ backgroundColor: "aliceblue" }} />
+                {group.exercises.map((exercise, exerciseIndex) => (
                   <Box
+                    key={exerciseIndex}
                     sx={{
                       display: "grid",
-
-                      gridTemplateColumns: "1fr 1fr",
-                      alignItems: "center",
-                      justifyItems: "center",
-                      width: "100%",
+                      gridAutoFlow: "column",
+                      gridTemplateColumns: "1fr 1fr 4fr",
                       justifyContent: "space-evenly",
+                      justifyItems: "center",
+                      alignItems: "center",
+                      width: "100%",
                     }}
                   >
-                    {exercise.weight !== 0 && (
-                      <Typography>
-                        {`${exercise.weight.toFixed(2)} ${
-                          unitsSystem === "metric" ? "kgs" : "lbs"
-                        }`}
-                      </Typography>
+                    {exercise.comment ? (
+                      // Check if 'comment' property exists
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={(event) => console.log("yes")}
+                      >
+                        <CommentIcon
+                          sx={{
+                            zIndex: 0,
+                          }}
+                        />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <CommentIcon style={{ opacity: 0 }} />
+                      </IconButton>
                     )}
 
-                    {exercise.reps !== 0 && (
-                      <Typography>{exercise.reps} reps</Typography>
+                    {exercise.is_pr ? (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        disabled // Placeholder element
+                      >
+                        <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                      </IconButton>
                     )}
 
-                    {exercise.distance !== 0 && (
-                      <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                    )}
+                    <Box
+                      sx={{
+                        display: "grid",
 
-                    {exercise.time !== 0 && (
-                      <Typography>
-                        {exercise.time !== 0 ? formatTime(exercise.time) : ""}
-                      </Typography>
-                    )}
+                        gridTemplateColumns: "1fr 1fr",
+                        alignItems: "center",
+                        justifyItems: "center",
+                        width: "100%",
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      {exercise.weight !== 0 && (
+                        <Typography>
+                          {`${exercise.weight.toFixed(2)} ${
+                            unitsSystem === "metric" ? "kgs" : "lbs"
+                          }`}
+                        </Typography>
+                      )}
+
+                      {exercise.reps !== 0 && (
+                        <Typography>{exercise.reps} reps</Typography>
+                      )}
+
+                      {exercise.distance !== 0 && (
+                        <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                      )}
+
+                      {exercise.time !== 0 && (
+                        <Typography>
+                          {exercise.time !== 0 ? formatTime(exercise.time) : ""}
+                        </Typography>
+                      )}
+                    </Box>
+
+                    <Divider />
                   </Box>
-
-                  <Divider />
-                </Box>
-              ))}
-            </Box>
-          ))}
+                ))}
+              </Box>
+            ))
+          ) : (
+            <Typography sx={{ textAlign: "center", margin: "16px" }}>
+              There are no exercises for this  date.
+            </Typography>
+          )}
 
           <Box
             sx={{
@@ -205,9 +213,7 @@ function CalendarWorkoutModal({
             </Button>
           </Box>
         </Box>
-
       </Dialog>
-
     </Box>
   );
 }
