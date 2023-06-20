@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
+import createNotificationsDoc from "../../utils/socialFunctions/createNotificationsDoc";
 import User from "../../utils/interfaces/User";
 import {
   getAuth,
@@ -96,6 +97,7 @@ export default function SignIn() {
           if (newUserCheck?.isNewUser) {
             createUserDoc(user.uid, user.displayName);
             createFollowersFeedDoc(user.uid)
+            createNotificationsDoc(user.uid)
           }
 
           // Query the users collection to retrieve the document with the given userID

@@ -21,7 +21,7 @@ import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { doc, updateDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
-
+import GuestProfileModal from "../../components/ui/GuestProfileModal";
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -39,8 +39,10 @@ function PowerLevelNumber({ n }: PowerLevelNumberProps) {
   const { number } = useSpring({
     from: { number: 0 },
     number: n,
-    delay: 50,
-    config: { mass: 1, tension: 30, friction: 25 },
+    delay: 0,
+    /* 
+    config: { mass: 1, tension: 100, friction: 25 },
+     */
   });
 
   return (
@@ -55,7 +57,9 @@ function SecondaryPowerLevelNumber({ n }: PowerLevelNumberProps) {
     from: { number: 0 },
     number: n,
     delay: 50,
-    config: { mass: 1, tension: 30, friction: 25 },
+    /* 
+    config: { mass: 1, tension: 100, friction: 25 },
+     */
   });
 
   return (
@@ -79,6 +83,8 @@ function ProgressLevel({
     useState<any>(null);
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
   const { currentUser } = useContext(AuthContext);
+  const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
+
   function calculatePowerLevel() {
     console.log(
       { firstExerciseSelected },
@@ -144,6 +150,11 @@ function ProgressLevel({
   }
 
   const uploadPowerLevelToProfile = async (powerLevelData: any) => {
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
+
     const docRef = doc(db, "users", currentUser.uid);
 
     await updateDoc(docRef, powerLevelData);
@@ -207,6 +218,10 @@ function ProgressLevel({
         paddingBottom: "56px",
       }}
     >
+      <GuestProfileModal
+        guestProfileModalOpen={guestProfileModalOpen}
+        setGuestProfileModalOpen={setGuestProfileModalOpen}
+      />
       <Box
         sx={{
           display: "flex",

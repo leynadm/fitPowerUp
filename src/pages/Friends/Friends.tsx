@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext,Dispatch,SetStateAction } from "react";
-import { styled, alpha } from "@mui/material/styles";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
+
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AddIcon from "@mui/icons-material/Add";
-import { AuthContext } from "../../context/Auth";
+
 import AddContentModal from "./AddContentModal";
 import UserProfile from "./UserProfile";
 import { Routes, Route } from "react-router-dom";
@@ -27,7 +27,9 @@ import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Account from "./Account";
-import { RelationProvider } from "../../context/Relation";
+import Notifications from "./Notifications";
+import SearchPost from "./SearchPost";
+
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   unitsSystem: string;
@@ -41,6 +43,8 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [notificationsNumber, setNotificationsNumber] = useState(0)
+  
   const navigate = useNavigate();
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -67,6 +71,12 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
     navigate("account");
   };
 
+  const handleNotifications = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    navigate("notifications");
+  };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -91,7 +101,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
-      <MenuItem onClick={handleAccount}>Account</MenuItem>
+
     </Menu>
   );
 
@@ -112,25 +122,24 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={handleNotifications}>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
+          <Badge variant="dot" badgeContent={notificationsNumber} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
 
-      <MenuItem>
+      <MenuItem onClick={handleAccount}>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
-          onClick={handleAccount}
         >
           <ManageAccountsIcon />
         </IconButton>
@@ -149,7 +158,6 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
-
     </Menu>
   );
 
@@ -244,7 +252,9 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
           <Route path="results/u/:id/*" element={<SearchUserProfile />} />
+          <Route path="posts/p/:id/*" element={<SearchPost />} />
           <Route path="account" element={<Account />} />
+          <Route path="notifications" element={<Notifications />} />
       
         </Routes>
 

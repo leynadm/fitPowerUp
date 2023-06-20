@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
+import addNotificationEntry from "../../utils/socialFunctions/addNotificationEntry";
 import {
   collection,
   setDoc,
@@ -171,7 +172,7 @@ export default function UserWorkoutCard({
         setComments([]);
       });
   }
-
+  
   function addComment() {
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
@@ -193,7 +194,7 @@ export default function UserWorkoutCard({
       };
 
       const commentDocRef = doc(commentsCollectionRef, "commentDoc"); // Provide the desired ID for the comment document
-
+      const action = "added a new comment to your post!"
       getDoc(commentDocRef)
         .then((doc) => {
           if (doc.exists()) {
@@ -213,6 +214,7 @@ export default function UserWorkoutCard({
           console.log("Comment added");
           setCommentText(""); // Clear the comment text
           getPostComments();
+          addNotificationEntry(postUserId,action,currentUser.uid,currentUserData.name,currentUserData.surname,postId,currentUserData.profileImage)
         })
         .catch((error) => {
           // Error occurred while adding comment

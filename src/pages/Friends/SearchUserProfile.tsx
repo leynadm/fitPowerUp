@@ -147,7 +147,7 @@ function SearchUserProfile() {
       // Access specific fields:
       const users = followersFeedData.users;
 
-      if (users.length <50) {
+      if (users.length <25) {
         await updateDoc(followersFeedRef, {
           users: arrayUnion(currentUser.uid),
         });

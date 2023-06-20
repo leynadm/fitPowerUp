@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import convertTimestamp from "../../utils/socialFunctions/convertTimestamp";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
 import ReplyIcon from "@mui/icons-material/Reply";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
@@ -15,21 +14,15 @@ import TextField from "@mui/material/TextField";
 import { Timestamp, deleteField } from "firebase/firestore";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { deleteDoc } from "firebase/firestore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteCommentModal from "../../components/ui/DeleteCommentModal";
+import { Link } from "react-router-dom";
 import {
   collection,
-  setDoc,
   doc,
   serverTimestamp,
   arrayUnion,
   updateDoc,
-  FieldValue,
-  getDoc,
-  arrayRemove,
-  onSnapshot,
 } from "firebase/firestore";
 import PostReply from "./PostReply";
 interface UserWorkoutCardProps {
@@ -38,7 +31,7 @@ interface UserWorkoutCardProps {
   postId: string;
   commentId: string;
   getPostComments: () => void;
-  postUserId:string
+  postUserId: string;
 }
 
 interface ExpandRepliesProps extends IconButtonProps {
@@ -60,7 +53,7 @@ function PostComment({
   postId,
   commentId,
   getPostComments,
-  postUserId
+  postUserId,
 }: UserWorkoutCardProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [expandedReplies, setExpandedReplies] = useState(false);
@@ -69,7 +62,7 @@ function PostComment({
     setExpandedReplies(!expandedReplies);
   };
 
-  const [deleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false)
+  const [deleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false);
 
   function addReply() {
     if (replyText !== "") {
@@ -115,20 +108,24 @@ function PostComment({
       .then(() => {
         console.log("Comment deleted successfully");
         getPostComments();
-        setDeleteCommentModalOpen(!deleteCommentModalOpen)
+        setDeleteCommentModalOpen(!deleteCommentModalOpen);
       })
       .catch((error) => {
         console.error("Error deleting comment:", error);
       });
   }
 
-  function handleDeleteCommentClick(){
-    setDeleteCommentModalOpen(!deleteCommentModalOpen)
+  function handleDeleteCommentClick() {
+    setDeleteCommentModalOpen(!deleteCommentModalOpen);
   }
 
   return (
     <div>
-      <DeleteCommentModal deleteCommentModalOpen={deleteCommentModalOpen} setDeleteCommentModalOpen={setDeleteCommentModalOpen} deleteComment={deleteComment}/>
+      <DeleteCommentModal
+        deleteCommentModalOpen={deleteCommentModalOpen}
+        setDeleteCommentModalOpen={setDeleteCommentModalOpen}
+        deleteComment={deleteComment}
+      />
       <Paper elevation={0} style={{ padding: "1rem 0 0" }}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -142,15 +139,22 @@ function PostComment({
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
-            > 
-              <h6 style={{ margin: 0, textAlign: "left" }}>
-                {comment.name} {comment.surname}
-              </h6>
-              {(comment.userId === currentUser.uid || postUserId===currentUser.uid) && (
+            >
+              <Link
+                to={`/home/friends/results/u/${comment.userId}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <h6 style={{ margin: 0, textAlign: "left" }}>
+                  {comment.name} {comment.surname}
+                </h6>
+              </Link>
+
+              {(comment.userId === currentUser.uid ||
+                postUserId === currentUser.uid) && (
                 <IconButton onClick={handleDeleteCommentClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>
-              )} 
+              )}
             </Box>
 
             <p style={{ textAlign: "left", fontSize: "medium" }}>

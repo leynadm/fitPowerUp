@@ -12,7 +12,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-
+import exportData from "../../utils/exportData";
 interface WorkoutProps {
   unitsSystem: string;
   setUnitsSystem: Dispatch<SetStateAction<string>>;
@@ -216,49 +216,6 @@ function Settings({
     }
   };
 
-  /* 
-  function updateDefaultWeightIncrement(selectedValue:number) {
-    // Open a connection to the indexedDB database
-    const request = window.indexedDB.open("your-database-name");
-  
-    request.onerror = (event) => {
-      console.error("Database error:", request.error);
-    };
-  
-    request.onsuccess = (event) => {
-      const db = request.result;
-      
-      // Start a transaction to perform database operations
-      const transaction = db.transaction(["user-data-preferences"], "readwrite");
-      const objectStore = transaction.objectStore("user-data-preferences");
-  
-      // Get the existing entry from the object store
-      const getRequest = objectStore.get(1);
-  
-      getRequest.onerror = (event) => {
-        console.error("Error getting entry:", request.error);
-      };
-  
-      getRequest.onsuccess = () => {
-        const entry = (event.target as IDBRequest).result;
-  
-        // Update the defaultWeightIncrement property
-        entry.defaultWeightIncrement = selectedValue;
-  
-        // Update the entry in the object store
-        const updateRequest = objectStore.put(entry);
-  
-        updateRequest.onerror = (event) => {
-          console.error("Error updating entry:", request.error);
-        };
-  
-        updateRequest.onsuccess = (event) => {
-          console.log("Default weight increment updated successfully!");
-        };
-      };
-    };
-  } */
-
   function updateDefaultWeightIncrement(selectedValue: number) {
     const dbName = "fitScouterDb";
     const objectStoreName = "user-data-preferences";
@@ -332,7 +289,7 @@ function Settings({
         flexDirection: "column",
       }}
     >
-      <AppBar position="fixed"  elevation={0} style={{ top: 0 }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -378,7 +335,15 @@ function Settings({
         </Container>
       </AppBar>
 
-      <Box sx={{ width: "100%", alignSelf: "center", justifySelf: "center" }}>
+      <Box
+        sx={{
+          width: "100%",
+          alignSelf: "center",
+          justifySelf: "center",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <FormGroup>
           <FormControlLabel
             control={<Switch checked={enabled} onChange={handleSwitchChange} />}
@@ -387,25 +352,6 @@ function Settings({
         </FormGroup>
       </Box>
 
-      {/* 
-    <Box>
-    <ButtonGroup
-        variant="outlined"
-        aria-label="outlined primary button group"
-        sx={{ width: "100%", display: "flex", padding: "8px" }}
-      >
-        {incrementOptions.map((option) => (
-          <Button
-            key={option.label}
-            style={{ flexGrow: 1, fontWeight: "bolder" }}
-            onClick={() => setSelectedWeightIncrement(option.value)}
-          >
-            {option.label}
-          </Button>
-        ))}
-      </ButtonGroup>
-    </Box>
- */}
       <Box sx={{ width: "100%" }}>
         <Autocomplete
           disablePortal
@@ -425,6 +371,14 @@ function Settings({
           }}
         />
       </Box>
+
+      <Button
+          variant="contained"
+          sx={{ width: "100%", marginTop: "8px"}}
+          onClick={exportData}
+        >
+          Export Data
+        </Button>
     </Box>
   );
 }

@@ -1,41 +1,25 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import convertTimestamp from "../../utils/socialFunctions/convertTimestamp";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
-import ReplyIcon from "@mui/icons-material/Reply";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { styled } from "@mui/material/styles";
-import Collapse from "@mui/material/Collapse";
-import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
-import { Timestamp } from "firebase/firestore";
+import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteReplyModal from "../../components/ui/DeleteReplyModal";
-import {
-  collection,
-  setDoc,
-  doc,
-  serverTimestamp,
-  arrayUnion,
-  updateDoc,
-  getDoc,
-  arrayRemove,
-  onSnapshot,
-} from "firebase/firestore";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { Typography } from "@mui/material";
 
 interface PostCommentProps {
   reply: any;
   postId: string;
   commentId: string;
   getPostComments: () => void;
-  postUserId:string
+  postUserId: string;
 }
 
 function PostReply({
@@ -43,11 +27,11 @@ function PostReply({
   postId,
   commentId,
   getPostComments,
-  postUserId
+  postUserId,
 }: PostCommentProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
-  const [deleteReplyModalOpen, setDeleteReplyModalOpen] = useState(false)
+  const [deleteReplyModalOpen, setDeleteReplyModalOpen] = useState(false);
 
   function deleteReply() {
     const postRef = doc(db, "posts", postId);
@@ -59,20 +43,24 @@ function PostReply({
       .then(() => {
         console.log("Reply deleted successfully");
         getPostComments();
-        setDeleteReplyModalOpen(!deleteReplyModalOpen)
+        setDeleteReplyModalOpen(!deleteReplyModalOpen);
       })
       .catch((error) => {
         console.error("Error deleting reply:", error);
       });
   }
 
-  function handleDeleteReplyClick(){
-    setDeleteReplyModalOpen(!deleteReplyModalOpen)
+  function handleDeleteReplyClick() {
+    setDeleteReplyModalOpen(!deleteReplyModalOpen);
   }
 
   return (
     <div>
-    <DeleteReplyModal deleteReplyModalOpen={deleteReplyModalOpen} setDeleteReplyModalOpen={setDeleteReplyModalOpen} deleteReply={deleteReply}/>
+      <DeleteReplyModal
+        deleteReplyModalOpen={deleteReplyModalOpen}
+        setDeleteReplyModalOpen={setDeleteReplyModalOpen}
+        deleteReply={deleteReply}
+      />
       <Paper elevation={0} style={{ padding: "1rem 0.25rem 0.25rem 0.25rem" }}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -87,10 +75,20 @@ function PostReply({
                 alignItems: "center",
               }}
             >
+
+              <Link
+                to={`/home/friends/results/u/${reply.userId}`}
+                style={{ textDecoration: "none", color: "black" }}
+              > 
+
               <h6 style={{ margin: 0, textAlign: "left" }}>
                 {reply.name} {reply.surname}
               </h6>
-              {(reply.userId === currentUser.uid || postUserId===currentUser.uid) && (
+
+              </Link>
+
+              {(reply.userId === currentUser.uid ||
+                postUserId === currentUser.uid) && (
                 <IconButton onClick={handleDeleteReplyClick}>
                   <MoreVertIcon sx={{ fontSize: "smaller" }} />
                 </IconButton>
