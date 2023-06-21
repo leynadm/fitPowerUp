@@ -18,15 +18,17 @@ import { db } from "../../config/firebase";
 import User from "../../utils/interfaces/User";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
+import LoadingCircle from "../../components/ui/LoadingCircle";
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
   const [usersDataCache, setUsersDataCache] = useState<any>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     getFeed();
+    setLoading(false);
   }, []);
 
   async function getFeed() {
@@ -173,40 +175,51 @@ function Newsfeed() {
   }
 
   return (
-    <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
-      <Typography
-        sx={{ fontSize: "small", opacity: "50%", textAlign: "right" }}
-      >
-        Last 7 days
-      </Typography>
-      {userFeed.map((post: PostData, index: number) => (
-        <UserWorkoutCard
-          key={index}
-          postText={post.postText}
-          postImage={post.postImage}
-          currentUserDataName={`${post.name} ${post.surname}`}
-          workoutData={post.workoutData}
-          currentUserDataImage={post.profileImage}
-          postTimestamp={post.timestamp}
-          postCreatedAt={post.createdAt}
-          postId={post.postId}
-          comments={post?.comments}
-          showWorkout={post.showWorkout}
-          unitsSystem={post.unitsSystem}
-          postAppreciation={post.postAppreciation}
-          documentId={post.documentId}
-          postUserId={post.userId}
-        />
-      ))}
-
-      <Button
-        sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-        onClick={getFeed}
-      >
-        Load More
-      </Button>
-    </Box>
+    <>
+      {(!loading && userFeed.length > 0) ? (
+        <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
+          <Typography sx={{ fontSize: "small", opacity: "50%", textAlign: "right" }}>
+            Last 7 days
+          </Typography>
+          {userFeed.map((post: PostData, index: number) => (
+            <UserWorkoutCard
+              key={index}
+              postText={post.postText}
+              postImage={post.postImage}
+              currentUserDataName={`${post.name} ${post.surname}`}
+              workoutData={post.workoutData}
+              currentUserDataImage={post.profileImage}
+              postTimestamp={post.timestamp}
+              postCreatedAt={post.createdAt}
+              postId={post.postId}
+              comments={post?.comments}
+              showWorkout={post.showWorkout}
+              unitsSystem={post.unitsSystem}
+              postAppreciation={post.postAppreciation}
+              documentId={post.documentId}
+              postUserId={post.userId}
+            />
+          ))}
+          <Button
+            sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+            onClick={getFeed}
+          >
+            Load More
+          </Button>
+        </Box>
+      ) : (
+        <Box sx={{ paddingBottom: "56px", marginTop: "8px", textAlign: "center" }}>
+          {(!loading && userFeed.length === 0) ? (
+            <Typography>No posts</Typography>
+          ) : (
+            <LoadingCircle />
+          )}
+        </Box>
+      )}
+    </>
   );
+  
+  
 }
 
 export default Newsfeed;

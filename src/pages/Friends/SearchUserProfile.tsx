@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext,useMemo } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   doc,
   getDoc,
@@ -44,14 +44,14 @@ import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
 import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
-import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+import LoadingCircle from "../../components/ui/LoadingCircle";
 
 function SearchUserProfile() {
-
   const { id } = useParams<{ id: string }>();
-  
+
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [userFollowers, setUserFollowers] = useState<number>(0);
@@ -62,9 +62,9 @@ function SearchUserProfile() {
   const [userFollowing, setUserFollowing] = useState<number>(0);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [followersLimitModalOpen,setFollowersLimitModalOpen] = useState(false)
+  const [followersLimitModalOpen, setFollowersLimitModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
-  
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -73,14 +73,12 @@ function SearchUserProfile() {
     setAnchorEl(null);
   };
 
-
   useEffect(() => {
-
     getProfileData();
     getRelationshipStatus();
     getUsersPosts();
     getSearchProfileFollowers();
-
+    setLoading(false);
   }, [id]);
 
   const navigate = useNavigate();
@@ -147,7 +145,7 @@ function SearchUserProfile() {
       // Access specific fields:
       const users = followersFeedData.users;
 
-      if (users.length <25) {
+      if (users.length < 25) {
         await updateDoc(followersFeedRef, {
           users: arrayUnion(currentUser.uid),
         });
@@ -163,10 +161,10 @@ function SearchUserProfile() {
         setFollow("Stop Spotting");
         setUserFollowers(userFollowers + 1);
 
-        getSearchProfileFollowers()
-        navigate("")
+        getSearchProfileFollowers();
+        navigate("");
       } else {
-        setFollowersLimitModalOpen(!followersLimitModalOpen)
+        setFollowersLimitModalOpen(!followersLimitModalOpen);
       }
     }
   }
@@ -227,8 +225,8 @@ function SearchUserProfile() {
       following: arrayRemove(id),
     });
 
-    getSearchProfileFollowers()
-    navigate("")
+    getSearchProfileFollowers();
+    navigate("");
   }
 
   function handleSearchUserProfilePostsBtn() {
@@ -337,118 +335,108 @@ function SearchUserProfile() {
                   textDecoration: "none",
                 }}
               >
-                {`${queriedUser?.name} ${queriedUser?.surname}`}
+                {queriedUser && `${queriedUser.name} ${queriedUser.surname}`}
               </Typography>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Box sx={{ display: "flex", gap: 2 }}>
-          {queriedUser?.profileImage !== "" ? (
-            <Stack direction="row" spacing={2}>
-              <Avatar
-                alt="Remy Sharp"
-                src={queriedUser?.profileImage}
-                sx={{ width: 64, height: 64, alignSelf: "center" }}
-              />
-            </Stack>
-          ) : (
-            <Stack direction="row" spacing={2}>
-              <Avatar
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
-                sx={{ width: 56, height: 56, alignSelf: "center" }}
-              />
-            </Stack>
-          )}
-
+      {queriedUser !== undefined && (
+        <>
           <Box
             sx={{
-              marginLeft: "8px",
-              marginTop: "8px",
-              marginBottom: "8px",
-              width: "100%",
-              justifyContent: "center",
-              justifyItems: "center",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Typography
-              sx={{
-                justifySelf: "start",
-                width: "100%",
-                alignSelf: "center",
-                fontSize: "large",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              {`${queriedUser?.name} ${queriedUser?.surname}`}
-              {queriedUser?.verified && <VerifiedIcon />}
-            </Typography>
-
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ width: "80%" }}
-              onClick={handleFollowerClick}
-            >
-              {follow}
-              {follow === "Start Spotting" ? (
-                <FavoriteIcon />
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {queriedUser?.profileImage !== "" ? (
+                <Stack direction="row" spacing={2}>
+                  <Avatar
+                    alt="Remy Sharp"
+                    sx={{ width: 64, height: 64, alignSelf: "center" }}
+                  >
+                    <LazyLoadImage
+                      alt="Remy Sharp"
+                      src={queriedUser?.profileImage}
+                      effect="opacity"
+                    />
+                  </Avatar>
+                </Stack>
               ) : (
-                <HeartBrokenIcon />
+                <Stack direction="row" spacing={2}>
+                  <Avatar
+                    alt="Remy Sharp"
+                    sx={{ width: 56, height: 56, alignSelf: "center" }}
+                  />
+                </Stack>
               )}
-            </Button>
 
-            <IconButton
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={blockUser}>Block User</MenuItem>
-            </Menu>
-          </Box>
-        </Box>
+              <Box
+                sx={{
+                  marginLeft: "8px",
+                  marginTop: "8px",
+                  marginBottom: "8px",
+                  width: "100%",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    justifySelf: "start",
+                    width: "100%",
+                    alignSelf: "center",
+                    fontSize: "large",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {`${queriedUser?.name} ${queriedUser?.surname}`}
+                  {queriedUser?.verified && <VerifiedIcon />}
+                </Typography>
 
-        <Divider sx={{ width: "100%", marginTop: "8px" }} />
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{ width: "80%" }}
+                  onClick={handleFollowerClick}
+                >
+                  {follow}
+                  {follow === "Start Spotting" ? (
+                    <FavoriteIcon />
+                  ) : (
+                    <HeartBrokenIcon />
+                  )}
+                </Button>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            width: "100%",
-            justifyItems: "center",
-          }}
-        >
-          {queriedUser?.hidePowerLevel ? (
-            <Typography
-              sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
-            >
-              Unknown Power Level
-            </Typography>
-          ) : (
+                <IconButton
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem onClick={blockUser}>Block User</MenuItem>
+                </Menu>
+              </Box>
+            </Box>
+
+            <Divider sx={{ width: "100%", marginTop: "8px" }} />
+
             <Box
               sx={{
                 display: "flex",
@@ -458,165 +446,186 @@ function SearchUserProfile() {
                 justifyItems: "center",
               }}
             >
-              
-              <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
-                {queriedUser?.powerLevel}
-              </Typography>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-                  {queriedUser?.strengthLevel}
+              {queriedUser?.hidePowerLevel ? (
+                <Typography
+                  sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+                >
+                  Unknown Power Level
                 </Typography>
-                <StrengthIcon width="1.25rem" height="1.25rem" />
-              </Box>
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "100%",
+                    justifyItems: "center",
+                  }}
+                >
+                  <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+                    {queriedUser?.powerLevel}
+                  </Typography>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-                  {queriedUser?.experienceLevel}
-                </Typography>
-                <ExperienceIcon width="1.25rem" height="1.25rem" />
-              </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      sx={{ fontSize: "1.25rem", fontWeight: "bold" }}
+                    >
+                      {queriedUser?.strengthLevel}
+                    </Typography>
+                    <StrengthIcon width="1.25rem" height="1.25rem" />
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      sx={{ fontSize: "1.25rem", fontWeight: "bold" }}
+                    >
+                      {queriedUser?.experienceLevel}
+                    </Typography>
+                    <ExperienceIcon width="1.25rem" height="1.25rem" />
+                  </Box>
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
 
-        <Divider sx={{ width: "100%" }} />
-      </Box>
+            <Divider sx={{ width: "100%" }} />
+          </Box>
 
-      <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            paddingLeft: "4px",
-            paddingRight: "4px",
-          }}
-        >
-          <Button
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              margin: 1,
-              fontSize: "small",
-              border: "none",
-              borderRadius: 2,
-              backgroundColor: "white",
-              ":hover": {
-                bgcolor: "success.main", // theme.palette.primary.main
-                border: "none",
-              },
-            }}
-            key="posts"
-            variant="contained"
-            onClick={handleSearchUserProfilePostsBtn}
-          >
-            <FeedIcon sx={{ color: "#000000" }} />
-          </Button>
+          <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                flexGrow: 1,
+                paddingLeft: "4px",
+                paddingRight: "4px",
+              }}
+            >
+              <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  margin: 1,
+                  fontSize: "small",
+                  border: "none",
+                  borderRadius: 2,
+                  backgroundColor: "white",
+                  ":hover": {
+                    bgcolor: "success.main", // theme.palette.primary.main
+                    border: "none",
+                  },
+                }}
+                key="posts"
+                variant="contained"
+                onClick={handleSearchUserProfilePostsBtn}
+              >
+                <FeedIcon sx={{ color: "#000000" }} />
+              </Button>
 
-          <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            Newsfeed
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            paddingLeft: "4px",
-            paddingRight: "4px",
-          }}
-        >
-          <Button
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              border: "none",
-              borderRadius: 2,
-              backgroundColor: "white",
-              ":hover": {
-                bgcolor: "success.main", // theme.palette.primary.main
-                border: "none",
-              },
-            }}
-            key="followers"
-            variant="contained"
-            onClick={handleSearchUserProfileFollowersBtn}
-          >
-            <FavoriteIcon sx={{ color: "#000000" }} />
-          </Button>
-          <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowers === 1
-              ? userFollowers + " Spotter"
-              : userFollowers + " Spotters"}
-          </Typography>
-        </Box>
+              <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+                Newsfeed
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                flexGrow: 1,
+                paddingLeft: "4px",
+                paddingRight: "4px",
+              }}
+            >
+              <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  flexGrow: 1,
+                  margin: 1,
+                  fontSize: "small",
+                  border: "none",
+                  borderRadius: 2,
+                  backgroundColor: "white",
+                  ":hover": {
+                    bgcolor: "success.main", // theme.palette.primary.main
+                    border: "none",
+                  },
+                }}
+                key="followers"
+                variant="contained"
+                onClick={handleSearchUserProfileFollowersBtn}
+              >
+                <FavoriteIcon sx={{ color: "#000000" }} />
+              </Button>
+              <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+                {userFollowers === 1
+                  ? userFollowers + " Spotter"
+                  : userFollowers + " Spotters"}
+              </Typography>
+            </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            paddingLeft: "4px",
-            paddingRight: "4px",
-          }}
-        >
-          <Button
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              color: "black",
-              flexGrow: 1,
-              margin: 1,
-              fontSize: "small",
-              border: "none",
-              borderRadius: 2,
-              backgroundColor: "white",
-              ":hover": {
-                bgcolor: "success.main", // theme.palette.primary.main
-                border: "none",
-              },
-            }}
-            key="following"
-            variant="contained"
-            onClick={handleSearchUserProfileFollowingBtn}
-          >
-            <FavoriteBorderIcon sx={{ color: "#000000" }} />
-          </Button>
-          <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
-            {userFollowing === 1
-              ? " Spotting " + userFollowing
-              : "Spotting " + userFollowing}
-          </Typography>
-        </Box>
-      </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                flexGrow: 1,
+                paddingLeft: "4px",
+                paddingRight: "4px",
+              }}
+            >
+              <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  color: "black",
+                  flexGrow: 1,
+                  margin: 1,
+                  fontSize: "small",
+                  border: "none",
+                  borderRadius: 2,
+                  backgroundColor: "white",
+                  ":hover": {
+                    bgcolor: "success.main", // theme.palette.primary.main
+                    border: "none",
+                  },
+                }}
+                key="following"
+                variant="contained"
+                onClick={handleSearchUserProfileFollowingBtn}
+              >
+                <FavoriteBorderIcon sx={{ color: "#000000" }} />
+              </Button>
+              <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
+                {userFollowing === 1
+                  ? " Spotting " + userFollowing
+                  : "Spotting " + userFollowing}
+              </Typography>
+            </Box>
+          </Box>
+        </>
+      )}
 
       <Routes>
         <Route

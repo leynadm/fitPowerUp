@@ -18,6 +18,9 @@ interface AppProps {
 
 
 function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:AppProps) {
+  
+  
+  
   const [preselectedExercises, setPreselectedExercises] = useState<
     { category: string; name: string; measurement: any[] }[]
   >([]);
@@ -118,14 +121,6 @@ function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:A
     };
   }
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-      primary: {
-        main: "#1976d2",
-      },
-    },
-  });
   let theme = createTheme({
     palette: {
       primary: {

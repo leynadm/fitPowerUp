@@ -1,12 +1,11 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-
+import fitImageLogo from "../../assets/LargeTile.scale-400.jpg"
 import { useNavigate } from "react-router-dom";
 function LandingPage() {
   const navigate = useNavigate();
@@ -17,8 +16,7 @@ function LandingPage() {
   return (
     <Box
       sx={{
-        width: "100vw",
-        height: "100vh",
+        width: "100vw"
       }}
     >
       <AppBar
@@ -28,11 +26,14 @@ function LandingPage() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ width: "100%" }}>
-            <Typography variant="h4" sx={{ color: "orange",fontFamily:"Dosis",fontWeight:500 }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "orange", fontFamily: "Voltaire", fontWeight: 500 }}
+            >
               fit
             </Typography>
-            <Typography variant="h4" sx={{ fontFamily:"Voltaire" }}>
-              PowerUp
+            <Typography variant="h4" sx={{ fontFamily: "Voltaire" }}>
+              PowerUp!
             </Typography>
           </Toolbar>
         </Container>
@@ -43,35 +44,51 @@ function LandingPage() {
         sx={{
           display: "flex",
           flexDirection: "column",
-
           alignItems: "center",
           width: "100%",
-          height:"100%",
-          flexGrow:1,
-          backgroundColor:"#F0F2F5"
+          height:"calc(100% - 56px)"
         }}
       >
+        <Box sx={{ display: "flex" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: "Lato",
+              fontWeight: 700,
+              marginTop: "1rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <span style={{ fontSize: "2.5rem" }}>Get</span>&nbsp;
+            <span style={{ color: "#FF8C00", fontSize: "2.5rem" }}>fit</span>
+            <span style={{ fontSize: "2.5rem" }}>,</span>&nbsp;<br></br>
+            <span
+              style={{
+                backgroundColor: "black",
+                color: "white",
+                fontSize: "2.5rem",
+              }}
+            >
+              Power Up!
+            </span>{" "}
+          </Typography>
+        </Box>
         <Typography
-          variant="h4"
-          sx={{
-            width: "100%",
-            textAlign: "center",
-            fontFamily: "lato",
-            fontWeight: 700,
-            marginTop: "1rem",
-            marginBottom: "1rem",
-          }}
+          variant="body1"
+          sx={{ textAlign: "center", fontFamily: "lato", fontSize: "1.5rem" }}
         >
-          Workout.<br></br> Post. Level Up!
+          The most{" "}
+          <span style={{ color: "black", fontWeight: "bold" }}>complete</span>,{" "}
+          <span style={{ color: "#FF8C00", fontWeight: "bold" }}>
+            intuitive
+          </span>{" "}
+          and also <span style={{ fontWeight: "bold" }}>100% FREE</span> workout
+          tracking experience.
         </Typography>
 
-        <Typography variant="body1" sx={{ textAlign: "center",fontFamily:"lato" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
+        <img src={fitImageLogo} alt="fit person" height="auto" width="90%"/>
         <Button
           onClick={getStartedClick}
           variant="contained"
@@ -88,65 +105,8 @@ function LandingPage() {
         </Button>
       </Container>
 
-      <Box sx={{backgroundColor:"white"}}>
-      <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
-        <Typography variant="body1" sx={{ textAlign: "center" }}>
-          Welcome to fitPowerApp! Experience the power of our comprehensive
-          fitness app. Share workouts, track progress, and connect with
-          like-minded fitness enthusiasts. Join us and power up your fitness
-          journey today!
-        </Typography>
-
+      <Box sx={{ backgroundColor: "white" }}>
+        
       </Box>
     </Box>
   );

@@ -426,7 +426,7 @@ function BreakdownAnalysis() {
                     return (
                       <TableRow key={label}>
                         <TableCell align="left">{label}</TableCell>
-                        <TableCell align="center">{value}</TableCell>
+                        <TableCell align="center">{value.toLocaleString()}</TableCell>
                         <TableCell align="center">
                           {percentage.toFixed(2)}%
                         </TableCell>
@@ -453,15 +453,15 @@ function BreakdownAnalysis() {
         </Item>
         <Item>
           <Typography>Total Sets</Typography>
-          <Typography>{totalTrainingSets}</Typography>
+          <Typography>{totalTrainingSets.toLocaleString()}</Typography>
         </Item>
         <Item>
           <Typography>Total Reps</Typography>
-          <Typography>{totalTrainingReps}</Typography>
+          <Typography>{totalTrainingReps.toLocaleString()}</Typography>
         </Item>
         <Item>
           <Typography>Total Volume</Typography>
-          <Typography>{totalTrainingVolume}</Typography>
+          <Typography>{totalTrainingVolume.toLocaleString()}</Typography>
         </Item>
       </Box>
     </Box>

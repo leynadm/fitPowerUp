@@ -172,7 +172,7 @@ export default function UserWorkoutCard({
         setComments([]);
       });
   }
-  
+
   function addComment() {
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
@@ -194,7 +194,7 @@ export default function UserWorkoutCard({
       };
 
       const commentDocRef = doc(commentsCollectionRef, "commentDoc"); // Provide the desired ID for the comment document
-      const action = "added a new comment to your post!"
+      const action = "added a new comment to your post!";
       getDoc(commentDocRef)
         .then((doc) => {
           if (doc.exists()) {
@@ -214,7 +214,15 @@ export default function UserWorkoutCard({
           console.log("Comment added");
           setCommentText(""); // Clear the comment text
           getPostComments();
-          addNotificationEntry(postUserId,action,currentUser.uid,currentUserData.name,currentUserData.surname,postId,currentUserData.profileImage)
+          addNotificationEntry(
+            postUserId,
+            action,
+            currentUser.uid,
+            currentUserData.name,
+            currentUserData.surname,
+            postId,
+            currentUserData.profileImage
+          );
         })
         .catch((error) => {
           // Error occurred while adding comment
@@ -313,17 +321,22 @@ export default function UserWorkoutCard({
         />
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" sx={{ bgcolor: "white", display:"flex",  justifyContent:"center",alignItems:"center" }}>
-              
+            <Avatar
+              aria-label="recipe"
+              sx={{
+                bgcolor: "white",
+                display: "flex",
+
+                width: 48,
+                height: 48,
+              }}
+            >
               {currentUserDataImage ? (
                 <LazyLoadImage
                   src={currentUserDataImage}
                   alt="user image"
                   effect="blur" // optional blur effect, you can remove it if not needed
-                  style={{ width: 42, height: 42, alignSelf: "center" }} // match the LazyLoadImage size to the Avatar
-
                 />
-
               ) : (
                 // Placeholder avatar content if currentUserDataImage is not available
                 <Stack direction="row" spacing={2}>
@@ -406,9 +419,9 @@ export default function UserWorkoutCard({
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Divider sx={{ width: "100%" }} />
-          <CardContent sx={{  }}>
-            <Box sx={{  }}>
-              {showWorkout && 
+          <CardContent sx={{}}>
+            <Box sx={{}}>
+              {showWorkout &&
                 workoutData
                   /* 
                   .sort(
@@ -423,7 +436,7 @@ export default function UserWorkoutCard({
                         boxShadow: 1,
                         backgroundColor: "white",
                         marginTop: "8px",
-                        marginBottom:"16px"
+                        marginBottom: "16px",
                       }}
                     >
                       <Typography
