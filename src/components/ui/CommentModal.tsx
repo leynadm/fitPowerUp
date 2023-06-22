@@ -116,6 +116,7 @@ function CommentModal({
             <Button
               variant="contained"
               sx={{ width: "100%", marginTop: "8px",marginLeft: "8px" }}
+              onClick={handleClose}
             >
               Cancel
             </Button>

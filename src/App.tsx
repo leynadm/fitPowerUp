@@ -19,9 +19,6 @@ function App() {
         <IndexedDBProvider>
           <Router>
             <Routes>
-              <Route element={<AuthRoute type="/" />}>
-                <Route path="/" element={<LandingPage />} />
-              </Route>
 
               {/* If the user is signed in and tries to access login, reroute him to home */}
               <Route element={<AuthRoute type="home" />}>
@@ -51,6 +48,12 @@ function App() {
               </Route>
 
               <Route element={<ForgotPassword />} path="/forgot-password" />
+
+              <Route element={<AuthRoute type="/" />}>
+                <Route path="/" element={<LandingPage />} />
+              </Route>
+
+
             </Routes>
           </Router>
         </IndexedDBProvider>

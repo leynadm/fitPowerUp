@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import fitImageLogo from "../../assets/LargeTile.scale-400.jpg"
+import fitImageLogo from "../../assets/LargeTile.scale-400.jpg";
 import { useNavigate } from "react-router-dom";
 function LandingPage() {
   const navigate = useNavigate();
@@ -13,10 +13,11 @@ function LandingPage() {
   function getStartedClick() {
     navigate("/login");
   }
+
   return (
     <Box
       sx={{
-        width: "100vw"
+        width: "100vw",
       }}
     >
       <AppBar
@@ -25,16 +26,31 @@ function LandingPage() {
         style={{ top: 0, backgroundColor: "black", width: "100%" }}
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ width: "100%" }}>
+          <Toolbar
+            disableGutters
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Typography
               variant="h4"
-              sx={{ color: "orange", fontFamily: "Voltaire", fontWeight: 500 }}
+              sx={{ color: "#FF8C00", fontFamily: "Voltaire" }}
             >
-              fit
+              fit<span style={{ color: "white" }}>PowerUp!</span>
             </Typography>
-            <Typography variant="h4" sx={{ fontFamily: "Voltaire" }}>
-              PowerUp!
-            </Typography>
+
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "white",
+                fontWeight: "bold",
+                color: "black",
+              }}
+            >
+              Install
+            </Button>
           </Toolbar>
         </Container>
       </AppBar>
@@ -46,7 +62,7 @@ function LandingPage() {
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          height:"calc(100% - 56px)"
+          height: "calc(100% - 56px)",
         }}
       >
         <Box sx={{ display: "flex" }}>
@@ -77,7 +93,11 @@ function LandingPage() {
         </Box>
         <Typography
           variant="body1"
-          sx={{ textAlign: "center", fontFamily: "lato", fontSize: "1.5rem" }}
+          sx={{
+            textAlign: "center",
+            fontFamily: "Voltaire",
+            fontSize: "1.5rem",
+          }}
         >
           The most{" "}
           <span style={{ color: "black", fontWeight: "bold" }}>complete</span>,{" "}
@@ -88,7 +108,7 @@ function LandingPage() {
           tracking experience.
         </Typography>
 
-        <img src={fitImageLogo} alt="fit person" height="auto" width="90%"/>
+        <img src={fitImageLogo} alt="fit person" height="auto" width="90%" />
         <Button
           onClick={getStartedClick}
           variant="contained"
@@ -97,7 +117,7 @@ function LandingPage() {
             marginTop: "16px",
             marginRight: "8px",
             bgcolor: "black",
-            color: "#FF8C00",
+            color: "white",
             fontWeight: "bold",
           }}
         >
@@ -105,9 +125,7 @@ function LandingPage() {
         </Button>
       </Container>
 
-      <Box sx={{ backgroundColor: "white" }}>
-        
-      </Box>
+      <Box sx={{ backgroundColor: "white" }}></Box>
     </Box>
   );
 }

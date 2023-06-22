@@ -17,21 +17,21 @@ import { useParams } from "react-router";
 import User from "../../utils/interfaces/User";
 interface SearchProfilePostsProps {
   queriedUser: User | undefined;
+  id: string | undefined;
 }
 
-function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
-
+function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
 
   useEffect(() => {
-    if(queriedUser){
+    if (queriedUser) {
       getUserPosts();
     }
-    
-    console.log('logging queried user:')
-    console.log(queriedUser)
+
+    console.log("logging queried user:");
+    console.log(queriedUser);
     /* 
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -39,24 +39,13 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
     }; */
   }, [queriedUser]);
 
-  /* 
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-
-    if (scrollTop + clientHeight >= scrollHeight - 56) {
-      fetchMore();
-    }
-  };  */
-
   async function getUserPosts() {
-
-    
     let q;
 
     if (latestDoc) {
       q = query(
         collection(db, "posts"),
-        where("userId", "==", queriedUser?.id),
+        where("userId", "==", id),
         orderBy("createdAt", "desc"),
         startAfter(latestDoc),
         limit(2)
@@ -64,7 +53,7 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
     } else {
       q = query(
         collection(db, "posts"),
-        where("userId", "==", queriedUser?.id),
+        where("userId", "==", id),
         orderBy("createdAt", "desc"),
         limit(2)
       );
@@ -76,7 +65,7 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
       const data = doc.data();
       return { ...data, postId: doc.id };
     });
-    
+
     /* setUserPosts(userData); */
     if (latestDoc) {
       setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
@@ -91,10 +80,9 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
     if (querySnapshot.empty) {
     }
   }
-  
+
   return (
     <Box sx={{ paddingBottom: "56px" }}>
-
       {userPosts.map((post: any, index: number) => (
         <UserWorkoutCard
           key={index}
@@ -114,7 +102,7 @@ function SearchProfilePosts({queriedUser}:SearchProfilePostsProps) {
           postUserId={post.userId}
         />
       ))}
-      <Button 
+      <Button
         onClick={getUserPosts}
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
       >

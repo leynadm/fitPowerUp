@@ -47,13 +47,14 @@ import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
-import LoadingCircle from "../../components/ui/LoadingCircle";
 
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
   const { currentUser, currentUserData } = useContext(AuthContext);
+  /* 
   const [userFeed, setUserFeed] = useState<any>([]);
+   */
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();
@@ -63,7 +64,6 @@ function SearchUserProfile() {
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [followersLimitModalOpen, setFollowersLimitModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -76,9 +76,7 @@ function SearchUserProfile() {
   useEffect(() => {
     getProfileData();
     getRelationshipStatus();
-    getUsersPosts();
     getSearchProfileFollowers();
-    setLoading(false);
   }, [id]);
 
   const navigate = useNavigate();
@@ -167,26 +165,6 @@ function SearchUserProfile() {
         setFollowersLimitModalOpen(!followersLimitModalOpen);
       }
     }
-  }
-
-  async function getUsersPosts() {
-    const followedUserPostsRef = collection(db, "posts");
-
-    // Create a query to get all the posts documents of the user
-    const q = query(
-      followedUserPostsRef,
-      where("userID", "==", id),
-      orderBy("timestamp", "desc"),
-      limit(10)
-    );
-
-    // Retrieve the documents that matched the query above
-    const followedUserPostSnapshot = await getDocs(q);
-
-    let followedUserFeedData = followedUserPostSnapshot.docs.map((doc) =>
-      doc.data()
-    );
-    setUserFeed(followedUserFeedData);
   }
 
   function handleFollowerClick() {
@@ -630,7 +608,7 @@ function SearchUserProfile() {
       <Routes>
         <Route
           path=""
-          element={<SearchProfilePosts queriedUser={queriedUser} />}
+          element={<SearchProfilePosts queriedUser={queriedUser} id={id} />}
         />
         <Route
           path="followers"

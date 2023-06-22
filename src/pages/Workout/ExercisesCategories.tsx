@@ -82,8 +82,10 @@ function ExercisesCategories({
     setAnchorEl(event.currentTarget);
     setCategoryToDelete(category);
   }
+
+
+
   const handleClose = () => {
-    deleteEntriesByCategory(categoryToDelete);
     populatePreselectedExercises(setExercisesCategories);
     setAnchorEl(null);
   };
@@ -131,6 +133,12 @@ function ExercisesCategories({
 
       navigate("exercises");
     };
+  }
+
+  function deleteCategoryClick(){
+    populatePreselectedExercises(setExercisesCategories);
+    deleteEntriesByCategory(categoryToDelete);
+    setAnchorEl(null);
   }
 
   const handleExerciseClick = (exercise: {
@@ -320,7 +328,7 @@ function ExercisesCategories({
         }}
         style={{ boxShadow: "none", border: "none" }}
       >
-        <MenuItem onClick={handleClose}>Delete Category</MenuItem>
+        <MenuItem onClick={deleteCategoryClick}>Delete Category</MenuItem>
       </Menu>
     </Container>
   );

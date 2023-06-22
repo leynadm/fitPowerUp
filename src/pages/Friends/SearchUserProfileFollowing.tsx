@@ -8,21 +8,9 @@ import User from "../../utils/interfaces/User";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
-import {
-  doc,
-  getDoc,
-  query,
-  collection,
-  where,
-  getDocs,
-  orderBy,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 import { Link } from "react-router-dom";
 
 interface UserData {
@@ -66,14 +54,10 @@ function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
 
     for (const docId of userIndividualFollowing.slice(startIdx, endIdx)) {
       const documentData = await getUserDocumentById(docId);
-      console.log("logging docId");
-      console.log(docId);
       if (documentData) {
         tempData.push(documentData);
       }
     }
-    console.log("logging temporary data:");
-    console.log(tempData);
     setUserIndividualFollowingData(tempData);
   }
 

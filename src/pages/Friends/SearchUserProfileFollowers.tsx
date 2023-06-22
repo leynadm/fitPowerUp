@@ -8,10 +8,7 @@ import User from "../../utils/interfaces/User";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import { doc, getDoc } from "firebase/firestore";
 
 import { db } from "../../config/firebase";
