@@ -18,10 +18,12 @@ import getLastPowerLevelEntry from "./getLastPowerLevelEntry";
 import countUniqueEntriesByDate from "../../utils/progressFunctions/countUniqueEntriesByDate";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import { doc, updateDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
+import SuccessfulProfilePowerUploadAlert from "../../components/ui/SuccessfulProfilePowerUploadAlert";
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -82,8 +84,12 @@ function ProgressLevel({
   const [secondExerciseSelected, setSecondExerciseSelected] =
     useState<any>(null);
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser,currentUserData, setCurrentUserData } = useContext(AuthContext);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
+  const [profileUploadAlert, setProfileUploadAlert] = useState(false);
+  const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   function calculatePowerLevel() {
     console.log(
@@ -174,7 +180,48 @@ function ProgressLevel({
     };
 
     await uploadPowerLevelToProfile(powerLevelData);
+    showSuccessfulAlert();
+
+    const updateCurrentUserData = () => {
+      // Create a copy of the current user data
+      const updatedUserData = { ...currentUserData };
+      console.log('checking the value of the initial currentUserData:')
+      console.log({currentUserData})
+      // Modify the desired properties
+      updatedUserData.powerLevel = strengthPowerLevel+count;
+      updatedUserData.strengthLevel = strengthPowerLevel;
+      updatedUserData.experienceLevel = count
+      // Add more modifications as needed
+      
+      console.log('checking the value AFTER Update:')
+      console.log({updatedUserData})
+      
+      // Update the state with the modified user data
+      setCurrentUserData(updatedUserData);
+    };
+
+    updateCurrentUserData()
   };
+
+
+
+
+  function showSuccessfulAlert() {
+    setProfileUploadAlert(true);
+
+    // Clear previous timeout if it exists
+    if (alertTimeoutId) {
+      clearTimeout(alertTimeoutId);
+    }
+
+    // Set new timeout to hide the alert after 2 seconds
+    const timeoutId = setTimeout(() => {
+      setProfileUploadAlert(false);
+    }, 3000);
+
+    setAlertTimeoutId(timeoutId);
+    return;
+  }
 
   useEffect(() => {
     getLastPowerLevelEntry()
@@ -195,6 +242,7 @@ function ProgressLevel({
               ? lastEntry.third
               : "Flat Barbell Bench Press"
           );
+          setPowerLevel(lastEntry.score);
           setWeight(lastEntry.bodyweight);
           setStrengthPowerLevel(lastEntry.strength);
           setExperiencePowerLevel(lastEntry.experience);
@@ -222,6 +270,11 @@ function ProgressLevel({
         guestProfileModalOpen={guestProfileModalOpen}
         setGuestProfileModalOpen={setGuestProfileModalOpen}
       />
+
+      <SuccessfulProfilePowerUploadAlert
+        profileUploadAlert={profileUploadAlert}
+      />
+
       <Box
         sx={{
           display: "flex",
@@ -231,7 +284,11 @@ function ProgressLevel({
           gap: 1,
         }}
       >
-        <PowerLevelNumber n={powerLevel} />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <PowerLevelIcon width="3.5rem" height="3.5rem" />
+          <PowerLevelNumber n={powerLevel} />
+        </Box>
+
         <Box
           sx={{
             display: "flex",

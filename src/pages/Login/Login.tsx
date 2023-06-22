@@ -15,7 +15,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
 import createNotificationsDoc from "../../utils/socialFunctions/createNotificationsDoc";
-import User from "../../utils/interfaces/User";
 import {
   getAuth,
   signInWithPopup,
@@ -24,13 +23,11 @@ import {
   getAdditionalUserInfo,
   signInAnonymously
 } from "firebase/auth";
-import { setDoc, doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../config/firebase"
+import { auth} from "../../config/firebase"
 import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
-import { AuthContext } from "../../context/Auth";
 function Copyright(props: any) {
   return (
     <Typography
@@ -51,15 +48,6 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#1976d2',
-    },
-  },
-});
-
 export default function SignIn() {
   
   const navigate = useNavigate();
@@ -67,8 +55,6 @@ export default function SignIn() {
   const provider = new GoogleAuthProvider();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const {currentUser, setCurrentUserData} = useContext(AuthContext)
 
   const handleSignUpClick = () => {
     navigate("/signup");

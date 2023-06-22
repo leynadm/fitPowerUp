@@ -47,6 +47,7 @@ import FollowersLimitModal from "../../components/ui/FollowersLimitModal";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
@@ -440,7 +441,8 @@ function SearchUserProfile() {
                     justifyItems: "center",
                   }}
                 >
-                  <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+                  <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold",display:"flex",justifyContent:"center",alignItems:"center" }}>
+                  <PowerLevelIcon width="2.5rem" height="2.5rem" />
                     {queriedUser?.powerLevel}
                   </Typography>
 

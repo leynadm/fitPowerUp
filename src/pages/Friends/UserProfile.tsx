@@ -24,10 +24,10 @@ import UserProfileFollowing from "./UserProfileFollowing";
 import { useNavigate } from "react-router-dom";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { doc, getDoc } from "firebase/firestore";
-import { db} from "../../config/firebase";
+import { db } from "../../config/firebase";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
-
+import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 
 function UserProfile() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -48,7 +48,6 @@ function UserProfile() {
 
   useEffect(() => {
     getProfileFollowers();
-
   }, [uploadCount]);
 
   const navigate = useNavigate();
@@ -67,7 +66,7 @@ function UserProfile() {
       state: { userIndividualFollowing: userIndividualFollowing },
     });
   }
- 
+
   async function getProfileFollowers() {
     const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
     const documentSnapshot = await getDoc(followersFeedRef);
@@ -82,7 +81,6 @@ function UserProfile() {
       setUserIndividualFollowing(following);
     }
   }
- 
 
   return (
     <Box>
@@ -200,62 +198,71 @@ function UserProfile() {
 
         <Divider sx={{ width: "100%", marginTop: "8px" }} />
         <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    width: "100%",
-    justifyItems: "center",
-  }}
->
-  {currentUserData.hidePowerLevel ? (
-    <Typography
-      sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
-    >
-      Unknown Power Level
-    </Typography>
-  ) : (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        width: "100%",
-        justifyItems: "center",
-      }}
-    >
-      <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold" }}>
-        {currentUserData.powerLevel}
-      </Typography>
-      
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-          {currentUserData.strengthLevel}
-        </Typography>
-        <StrengthIcon width="1.25rem" height="1.25rem" />
-      </Box>
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            width: "100%",
+            justifyItems: "center",
+          }}
+        >
+          {currentUserData.hidePowerLevel ? (
+            <Typography
+              sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+            >
+              Unknown Power Level
+            </Typography>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100%",
+                justifyItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "2.5rem",
+                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <PowerLevelIcon width="2.5rem" height="2.5rem" />
+                {currentUserData.powerLevel}
+              </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-          {currentUserData.experienceLevel}
-        </Typography>
-        <ExperienceIcon width="1.25rem" height="1.25rem" />
-      </Box>
-    </Box>
-  )}
-</Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+                  {currentUserData.strengthLevel}
+                </Typography>
+                <StrengthIcon width="1.25rem" height="1.25rem" />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+                  {currentUserData.experienceLevel}
+                </Typography>
+                <ExperienceIcon width="1.25rem" height="1.25rem" />
+              </Box>
+            </Box>
+          )}
+        </Box>
 
         <Divider sx={{ width: "100%" }} />
 

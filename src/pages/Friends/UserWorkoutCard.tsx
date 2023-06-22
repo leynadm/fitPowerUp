@@ -20,7 +20,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { Timestamp, arrayRemove } from "firebase/firestore";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ReplyIcon from "@mui/icons-material/Reply";
 import PostComment from "./PostComment";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
@@ -123,6 +123,15 @@ export default function UserWorkoutCard({
       : false
   );
 
+
+  useEffect(()=>{
+    console.log('loading workoutData')
+    console.log({workoutData})
+    console.log('showing showWorkout:')
+    console.log({showWorkout})
+    console.log('logging workoutData.length')
+    console.log(workoutData.length)
+  },[])
   const [postAppreciationNumber, setPostAppreciationNumber] = useState<number>(
     postAppreciation.length !== 0 ? postAppreciation.length : 0
   );
@@ -409,11 +418,15 @@ export default function UserWorkoutCard({
 
           <ExpandMore
             expand={expanded}
-            onClick={handleExpandClick}
+            onClick={workoutData.length > 0 && showWorkout ? handleExpandClick : undefined}
             aria-expanded={expanded}
             aria-label="show more"
           >
-            <ExpandMoreIcon />
+            {workoutData.length > 0 && showWorkout ? (
+              <FitnessCenterIcon />
+            ) : (
+              <FitnessCenterIcon sx={{ opacity: "25%", color: "gray" }} />
+            )}
           </ExpandMore>
         </CardActions>
 
