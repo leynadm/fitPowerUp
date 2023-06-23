@@ -328,35 +328,45 @@ export default function UserWorkoutCard({
           setDeletePostModalOpen={setDeletePostModalOpen}
           deletePost={deletePost}
         />
+
         <CardHeader
           avatar={
+            <Stack direction="row" spacing={2}>
+              
+              <Avatar alt="Remy Sharp" src={currentUserDataImage} sx={{width:48,height:48}} />
+            </Stack>
+          }
+          /* 
+        avatar={
+           <Stack direction="row" spacing={2}>
             <Avatar
               aria-label="recipe"
               sx={{
-                bgcolor: "white",
-                display: "flex",
-
                 width: 48,
                 height: 48,
+                backgroundSize:"cover"
               }}
             >
               {currentUserDataImage ? (
+
                 <LazyLoadImage
                   src={currentUserDataImage}
                   alt="user image"
                   effect="blur" // optional blur effect, you can remove it if not needed
+                  
                 />
-              ) : (
+
+                ) : (
                 // Placeholder avatar content if currentUserDataImage is not available
-                <Stack direction="row" spacing={2}>
                   <Avatar
                     alt="Remy Sharp"
-                    sx={{ width: 42, height: 42, alignSelf: "center" }}
+                    sx={{ width: 48, height: 48, alignSelf: "center" }}
                   />
-                </Stack>
               )}
             </Avatar>
+            </Stack>
           }
+           */
           action={
             postUserId === currentUser.uid && (
               <IconButton aria-label="settings" onClick={handleDeletePostClick}>
@@ -418,7 +428,11 @@ export default function UserWorkoutCard({
 
           <ExpandMore
             expand={expanded}
-            onClick={workoutData.length > 0 && showWorkout ? handleExpandClick : undefined}
+            onClick={
+              workoutData.length > 0 && showWorkout
+                ? handleExpandClick
+                : undefined
+            }
             aria-expanded={expanded}
             aria-label="show more"
           >
@@ -596,7 +610,7 @@ export default function UserWorkoutCard({
                 multiline
                 id="input-with-sx"
                 label="Write a comment"
-                variant="standard"
+                variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={(e) => setCommentText(e.target.value)}
                 value={commentText}

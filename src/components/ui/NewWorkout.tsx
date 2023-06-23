@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
@@ -42,6 +48,8 @@ interface NewWorkoutProps {
     SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
   selectedExercise: { category: string; name: string; measurement: any[] };
+  addDays: () => void;
+  subtractDays: () => void;
 }
 
 function NewWorkout({
@@ -53,6 +61,8 @@ function NewWorkout({
   selectedCategoryExercises,
   setSelectedExercise,
   selectedExercise,
+  addDays,
+  subtractDays,
 }: NewWorkoutProps) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -89,21 +99,6 @@ function NewWorkout({
     }
   };
 
-  const subtractDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() - 1);
-      setTodayDate(newDate);
-    }
-  };
-
-  const addDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() + 1);
-      setTodayDate(newDate);
-    }
-  };
   const pages = [
     "Settings",
     "Comment Workout",
@@ -127,7 +122,6 @@ function NewWorkout({
   const handleCalendar = () => {
     navigate("calendar");
   };
-
 
   const handlePageClick = (page: string) => {
     handleCloseNavMenu();
@@ -173,7 +167,6 @@ function NewWorkout({
   }
 
   function handleGroupNameClick(category: string) {
-
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = function (event) {
@@ -203,9 +196,8 @@ function NewWorkout({
           cursor.continue();
         } else {
           setSelectedCategoryExercises(selectedCategoryExercises);
-          
-          forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
 
+          forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
         }
       };
 
@@ -224,15 +216,18 @@ function NewWorkout({
     setOpenViewCommentModal(!openViewCommentModal);
   }
 
-  
-
   return (
     <Box
       sx={{
         width: "100%",
         display: "flex",
         flexDirection: "column",
+        height: "100%",
       }}
+      /* 
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+ */
     >
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
@@ -364,7 +359,7 @@ function NewWorkout({
         </Container>
       </AppBar>
 
-      <Box 
+      <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -372,7 +367,7 @@ function NewWorkout({
           height: "32px",
           backgroundColor: "#FF8C00",
           width: "100%",
-          borderBottom:"2px black solid"
+          borderBottom: "2px black solid",
         }}
       >
         <IconButton aria-label="left arrow" onClick={subtractDays}>
@@ -402,15 +397,25 @@ function NewWorkout({
         </IconButton>
       </Box>
 
-      <Container sx={{ height: "calc(100% - 56px)", padding:0 }}>
+      <Container sx={{ height: "calc(100% - 56px)", padding: 0 }}>
         {existingExercises.length === 0 ? (
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              height: "calc(100vh - 144px)",
+              
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+
+                flexGrow: 1,
               }}
             >
               <Typography

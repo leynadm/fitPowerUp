@@ -55,7 +55,6 @@ function ExercisesCategories({
 
   useEffect(() => {
     getAllExercises(setExercisesToSearch);
-    
   }, []);
 
   useEffect(() => {}, [exercisesCategories]);
@@ -82,8 +81,6 @@ function ExercisesCategories({
     setAnchorEl(event.currentTarget);
     setCategoryToDelete(category);
   }
-
-
 
   const handleClose = () => {
     populatePreselectedExercises(setExercisesCategories);
@@ -135,9 +132,9 @@ function ExercisesCategories({
     };
   }
 
-  function deleteCategoryClick(){
-    populatePreselectedExercises(setExercisesCategories);
+  function deleteCategoryClick() {
     deleteEntriesByCategory(categoryToDelete);
+    populatePreselectedExercises(setExercisesCategories);
     setAnchorEl(null);
   }
 

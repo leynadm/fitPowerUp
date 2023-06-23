@@ -202,7 +202,7 @@ function PostComment({
                         multiline
                         id="input-with-sx"
                         label="Reply to the comment"
-                        variant="standard"
+                        variant="outlined"
                         sx={{ width: "100%" }}
                         onChange={(e) => setReplyText(e.target.value)}
                         value={replyText}

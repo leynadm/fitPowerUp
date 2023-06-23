@@ -65,7 +65,6 @@ export default function SignIn() {
   };
 
     function SignInWithGoogle() {
-    
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -178,10 +177,6 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"

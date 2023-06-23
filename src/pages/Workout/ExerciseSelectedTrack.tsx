@@ -180,8 +180,41 @@ function ExerciseSelectedTrack({
     };
   }
 
+  function getExistingComment(exerciseCommentId:number) {
+    const request = window.indexedDB.open("fitScouterDb");
+    request.onsuccess = function (event: any) {
+      const db = event.target.result;
+      const transaction = db.transaction("user-exercises-entries", "readwrite");
+      const objectStore = transaction.objectStore("user-exercises-entries");
+  
+      const getRequest = objectStore.get(exerciseCommentId);
+  
+      getRequest.onsuccess = function (event: any) {
+        const data = event.target.result;
+        if (data) {
+          setCommentValue(data.comment);
+        } else {
+          console.log("Record not found");
+        }
+      };
+  
+      transaction.oncomplete = function () {
+        console.log("Transaction completed");
+      };
+      transaction.onerror = function () {
+        console.log("Transaction error");
+      };
+    };
+  
+    request.onerror = function () {
+      console.log("Error opening database");
+    };
+  }
+  
+
   function handleModalVisibility(exerciseId: number) {
     setExerciseCommentId(exerciseId);
+    getExistingComment(exerciseId)
     setOpenCommentModal(!openCommentModal);
   }
 

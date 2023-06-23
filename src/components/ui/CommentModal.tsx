@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
@@ -32,11 +32,12 @@ function CommentModal({
   setCommentValue,
   exerciseCommentId,
 }: ParentComponentProps) {
-  const handleClose = () => setOpenCommentModal(false);
+  function handleClose () {
+    setCommentValue("");
+    setOpenCommentModal(false);
+  } 
 
-  useEffect(() => {
-    console.log(exerciseCommentId);
-  }, [exerciseCommentId]);
+
 
   function saveComment() {
     const request = window.indexedDB.open("fitScouterDb");
@@ -78,6 +79,7 @@ function CommentModal({
     };
   }
 
+
   return (
     <div>
       <Modal
@@ -92,6 +94,7 @@ function CommentModal({
             label="Add your comment"
             multiline
             maxRows={4}
+
             sx={{
               width: "100%",
             }}

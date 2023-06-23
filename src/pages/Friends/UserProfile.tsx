@@ -140,7 +140,21 @@ function UserProfile() {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            backgroundColor: "white",
+            padding: "8px",
+            marginTop: "8px",
+            borderTopLeftRadius:"5px",
+            borderTopRightRadius:"5px",
+            boxShadow:1,
+            /* 
+            borderBottom:"1px lightgray solid"
+           */
+          }}
+        >
           {currentUserData.profileImage !== "" ? (
             <Stack direction="row" spacing={2}>
               <Avatar
@@ -187,7 +201,6 @@ function UserProfile() {
 
             <Button
               variant="contained"
-              color="success"
               sx={{ width: "80%" }}
               onClick={() => setEditProfileModalOpen(true)}
             >
@@ -195,8 +208,6 @@ function UserProfile() {
             </Button>
           </Box>
         </Box>
-
-        <Divider sx={{ width: "100%", marginTop: "8px" }} />
         <Box
           sx={{
             display: "flex",
@@ -204,7 +215,12 @@ function UserProfile() {
             alignItems: "center",
             width: "100%",
             justifyItems: "center",
+            backgroundColor: "white",
+            borderBottomLeftRadius:"5px",
+            borderBottomRightRadius:"5px",
+            boxShadow:1
           }}
+        
         >
           {currentUserData.hidePowerLevel ? (
             <Typography
@@ -224,47 +240,45 @@ function UserProfile() {
             >
               <Typography
                 sx={{
-                  fontSize: "2.5rem",
+                  fontSize: "2rem",
                   fontWeight: "bold",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <PowerLevelIcon width="2.5rem" height="2.5rem" />
+                <PowerLevelIcon width="2rem" height="2rem" />
                 {currentUserData.powerLevel}
               </Typography>
 
-              <Box
+              <Typography
                 sx={{
+                  fontSize: "2rem",
+                  fontWeight: "bold",
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-                  {currentUserData.strengthLevel}
-                </Typography>
-                <StrengthIcon width="1.25rem" height="1.25rem" />
-              </Box>
+                <StrengthIcon width="1.5rem" height="1.5rem" />
+                {currentUserData.strengthLevel}
+              </Typography>
 
-              <Box
+              <Typography
                 sx={{
+                  fontSize: "2rem",
+                  fontWeight: "bold",
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: "1.25rem", fontWeight: "bold" }}>
-                  {currentUserData.experienceLevel}
-                </Typography>
-                <ExperienceIcon width="1.25rem" height="1.25rem" />
-              </Box>
+                <ExperienceIcon width="1.5rem" height="1.5rem" />
+                {currentUserData.experienceLevel}
+              </Typography>
             </Box>
           )}
         </Box>
-
-        <Divider sx={{ width: "100%" }} />
 
         <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
           <Box

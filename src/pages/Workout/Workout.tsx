@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
+  useRef
 } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
@@ -57,6 +58,9 @@ function Workout({
 
   const [weightIncrementPreference, setWeightIncrementPreference] =
     useState(2.5);
+  const [swipe,setSwipe] = useState<any>({moved:false,touchEnd:0,touchStart:0})
+
+  const { moved,touchEnd,touchStart} = swipe
 
   useEffect(() => {
     if (!todayDate) {
@@ -121,6 +125,66 @@ function Workout({
     };
   }, [setUnitsSystem, setWeightIncrementPreference]);
 
+  /* 
+  const SENSITIVITY = 150
+
+  const handleTouchStart = (e:React.TouchEvent<HTMLDivElement>) {
+    let touchStartY = e.targetTouches[0].clientY
+    setSwipe((swipe:any)=>({...swipe,touchStartY}))
+  };
+
+  function handleTouchMove(e:React.TouchEvent<HTMLDivElement>){
+    let touchEndY = e.targetTouches[0].clientY
+    setSwipe((swipe:any)=>({...swipe,touchEnd:touchEndY,moved:true}))
+  }
+
+  function handleTouchEnd(){
+
+    let amountSwipe = touchStart-touchEnd
+
+    if(amountSwipe>SENSITIVITY && moved){
+       
+    }
+  }
+
+  const handleTouchEnd = (event:any) => {
+    console.log('inside handleTouchEnd')
+    touchEndX.current = event.changedTouches[0].screenX;
+    handleSwipeGesture();
+  };
+
+  const handleSwipeGesture = () => {
+    const swipeDistance = touchEndX.current - touchStartX.current;
+
+    if (swipeDistance > 0) {
+      // Swiped right
+      console.log('swiped right')
+      subtractDays()
+    } else if (swipeDistance < 0) {
+      // Swiped left
+      console.log('swiped left')
+      addDays()
+
+    }
+  };
+
+ */ 
+  const subtractDays = () => {
+    if (todayDate) {
+      const newDate = new Date(todayDate);
+      newDate.setDate(todayDate.getDate() - 1);
+      setTodayDate(newDate);
+    }
+  };
+
+  const addDays = () => {
+    if (todayDate) {
+      const newDate = new Date(todayDate);
+      newDate.setDate(todayDate.getDate() + 1);
+      setTodayDate(newDate);
+    }
+  };
+
   return (
     <Box sx={{ paddingBottom: "56px", backgroundColor: "#F0F2F5" }}>
       <Box
@@ -132,7 +196,11 @@ function Workout({
           width: "100%",
           height: "100%",
         }}
-      >
+/* 
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+    */
+        >
         <Routes>
           <Route
             path="/"
@@ -146,6 +214,8 @@ function Workout({
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}
                 selectedExercise={selectedExercise}
+                addDays={addDays}
+                subtractDays={subtractDays}
               />
             }
           />

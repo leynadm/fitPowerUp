@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import fitImageLogo from "../../assets/LargeTile.scale-400.jpg";
+import fitImageLogo from "../../assets/fitPowerUpLogoV3.jpg";
 import { useNavigate } from "react-router-dom";
 function LandingPage() {
   const navigate = useNavigate();

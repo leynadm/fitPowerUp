@@ -182,7 +182,7 @@ export default function SignUp() {
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Agree with the terms and conditions."
                 />
               </Grid>
             </Grid>

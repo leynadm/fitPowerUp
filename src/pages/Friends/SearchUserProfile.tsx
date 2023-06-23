@@ -329,7 +329,17 @@ function SearchUserProfile() {
               flexDirection: "column",
             }}
           >
-            <Box sx={{ display: "flex", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                backgroundColor: "white",
+                padding: "8px",
+                marginTop: "8px",
+                borderTopLeftRadius: "5px",
+                borderTopRightRadius: "5px",
+              }}
+            >
               {queriedUser?.profileImage !== "" ? (
                 <Stack direction="row" spacing={2}>
                   <Avatar
@@ -360,6 +370,7 @@ function SearchUserProfile() {
                   width: "100%",
                   justifyContent: "center",
                   justifyItems: "center",
+                  
                 }}
               >
                 <Typography
@@ -380,7 +391,6 @@ function SearchUserProfile() {
 
                 <Button
                   variant="contained"
-                  color="success"
                   sx={{ width: "80%" }}
                   onClick={handleFollowerClick}
                 >
@@ -414,8 +424,6 @@ function SearchUserProfile() {
               </Box>
             </Box>
 
-            <Divider sx={{ width: "100%", marginTop: "8px" }} />
-
             <Box
               sx={{
                 display: "flex",
@@ -423,6 +431,10 @@ function SearchUserProfile() {
                 alignItems: "center",
                 width: "100%",
                 justifyItems: "center",
+                backgroundColor: "white",
+                borderBottomLeftRadius: "5px",
+                borderBottomRightRadius: "5px",
+                boxShadow:1
               }}
             >
               {queriedUser?.hidePowerLevel ? (
@@ -441,45 +453,48 @@ function SearchUserProfile() {
                     justifyItems: "center",
                   }}
                 >
-                  <Typography sx={{ fontSize: "2.5rem", fontWeight: "bold",display:"flex",justifyContent:"center",alignItems:"center" }}>
-                  <PowerLevelIcon width="2.5rem" height="2.5rem" />
+                  <Typography
+                    sx={{
+                      fontSize: "2rem",
+                      fontWeight: "bold",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <PowerLevelIcon width="2rem" height="2rem" />
                     {queriedUser?.powerLevel}
                   </Typography>
 
-                  <Box
+                  <Typography
                     sx={{
+                      fontSize: "2rem",
+                      fontWeight: "bold",
                       display: "flex",
-                      flexDirection: "column",
+                      justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <Typography
-                      sx={{ fontSize: "1.25rem", fontWeight: "bold" }}
-                    >
-                      {queriedUser?.strengthLevel}
-                    </Typography>
-                    <StrengthIcon width="1.25rem" height="1.25rem" />
-                  </Box>
+                    <StrengthIcon width="1.5rem" height="1.5rem" />
+                    {queriedUser?.strengthLevel}
+                  </Typography>
 
-                  <Box
+                  <Typography
                     sx={{
+                      fontSize: "2rem",
+                      fontWeight: "bold",
                       display: "flex",
-                      flexDirection: "column",
+                      justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <Typography
-                      sx={{ fontSize: "1.25rem", fontWeight: "bold" }}
-                    >
-                      {queriedUser?.experienceLevel}
-                    </Typography>
-                    <ExperienceIcon width="1.25rem" height="1.25rem" />
-                  </Box>
+                    <ExperienceIcon width="1.5rem" height="1.5rem" />
+                    {queriedUser?.experienceLevel}
+                  </Typography>
                 </Box>
               )}
             </Box>
 
-            <Divider sx={{ width: "100%" }} />
           </Box>
 
           <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>

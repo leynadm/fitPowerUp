@@ -12,7 +12,7 @@ function SuccessfulProfilePowerUploadAlert({profileUploadAlert}:SelectedTracksPr
   return (
     <Stack sx={{ width: "100%"  }} spacing={2}>
       <Collapse in={profileUploadAlert}>
-        <Alert severity="success" sx={{backgroundColor:"lightgreen",marginTop:"8px"}}>Your power level was added to your profile!!</Alert>
+        <Alert severity="success" sx={{backgroundColor:"lightgreen",marginTop:"8px"}}>Your power level was added to your profile!</Alert>
       </Collapse>
     </Stack>
   );

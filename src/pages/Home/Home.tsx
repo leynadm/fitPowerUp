@@ -136,9 +136,12 @@ function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:A
     typography: {
       button: {
         // Here is where you can customise the button
-        fontWeight: "bold",
+        fontWeight: "bold"
       },
     },
+    shape:{
+
+    }
   });
 
   return (
