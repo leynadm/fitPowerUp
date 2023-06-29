@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -9,6 +9,39 @@ import fitImageLogo from "../../assets/fitPowerUpLogoV3.jpg";
 import { useNavigate } from "react-router-dom";
 function LandingPage() {
   const navigate = useNavigate();
+
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  function handleBeforeInstallPrompt(event:any) {
+    event.preventDefault();
+    setDeferredPrompt(event);
+  }
+
+  function handleInstallClick() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult:any) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the installation prompt");
+        } else {
+          console.log("User dismissed the installation prompt");
+        }
+        setDeferredPrompt(null);
+      });
+    }
+  }
 
   function getStartedClick() {
     navigate("/login");

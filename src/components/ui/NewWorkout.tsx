@@ -414,7 +414,6 @@ function NewWorkout({
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-
                 flexGrow: 1,
               }}
             >
