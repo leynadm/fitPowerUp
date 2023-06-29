@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -7,15 +7,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import fitImageLogo from "../../assets/fitPowerUpLogoV3.jpg";
 import { useNavigate } from "react-router-dom";
+
 function LandingPage() {
   const navigate = useNavigate();
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-
-
+  const [showInstallButton, setShowInstallButton] = useState(false);
   useEffect(() => {
+      console.log('waiting for the listener')
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
@@ -24,15 +24,32 @@ function LandingPage() {
     };
   }, []);
 
-  function handleBeforeInstallPrompt(event:any) {
+  function handleBeforeInstallPrompt(event: any) {
     event.preventDefault();
     setDeferredPrompt(event);
   }
 
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia("(display-mode: standalone)");
+    const handleMediaQueryChange = (event:any) => {
+      setShowInstallButton(!event.matches);
+    };
+
+    mediaQueryList.addEventListener("change", handleMediaQueryChange);
+    setShowInstallButton(!mediaQueryList.matches);
+
+    return () => {
+      mediaQueryList.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+  
   function handleInstallClick() {
+    console.log("handling the install click:");
+    console.log({ deferredPrompt });
+
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult:any) => {
+      deferredPrompt.userChoice.then((choiceResult: any) => {
         if (choiceResult.outcome === "accepted") {
           console.log("User accepted the installation prompt");
         } else {
@@ -81,9 +98,11 @@ function LandingPage() {
                 fontWeight: "bold",
                 color: "black",
               }}
+              onClick={handleInstallClick}
             >
               Install
             </Button>
+
           </Toolbar>
         </Container>
       </AppBar>
