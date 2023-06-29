@@ -37,11 +37,10 @@ function Copyright(props: any) {
       {...props}
     >
       {/* {"Copyright © "} */}
-      <Link color="inherit" href="https://mui.com/">
-        Developed by Daniel Matei
+      <Link color="inherit" href="https://github.com/leynadm">
+        Developed by Daniel Matei {new Date().getFullYear()}
+        {"."}
       </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 }

@@ -2,11 +2,12 @@
   "short_name": "fitPowerUp",
   "name": "fitPowerUp - Get Strong, Power Up!",
   "icons": [
+
     {
       "src": "favicon.ico",
       "sizes": "64x64",
       "type": "image/x-icon"
-    },
+    }, 
     {
       "src": "logo192.png",
       "type": "image/png",
@@ -30,5 +31,7 @@
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }
+
+
 
 

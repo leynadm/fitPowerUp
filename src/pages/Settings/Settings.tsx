@@ -12,6 +12,11 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+
 import exportData from "../../utils/exportData";
 import * as XLSX from "xlsx";
 interface WorkoutProps {
@@ -388,7 +393,11 @@ function Settings({
       console.log("No file selected.");
     }
   }
-
+  const handleWeightIncrementChange = (event:any) => {
+    const selectedValue = Number(event.target.value);
+    setWeightIncrementPreference(selectedValue);
+    updateDefaultWeightIncrement(selectedValue);
+  };
   return (
     <Box
       sx={{
@@ -396,6 +405,8 @@ function Settings({
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
@@ -451,6 +462,7 @@ function Settings({
           justifySelf: "center",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <FormGroup>
@@ -462,46 +474,56 @@ function Settings({
       </Box>
 
       <Box sx={{ width: "100%" }}>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={weightIncrementOptions}
-          defaultValue={weightIncrementPreference}
-          sx={{ margin: "8px" }}
-          getOptionLabel={(option) => `${option}`}
-          disableClearable
-          renderInput={(params) => (
-            <TextField {...params} label="Weight Increment" />
-          )}
-          onChange={(event, value) => {
-            if (value) {
-              updateDefaultWeightIncrement(value);
-            }
-          }}
-        />
+        <FormControl variant="outlined" sx={{ width: "100%" }}>
+          <InputLabel id="weight-increment-label">Weight Increment</InputLabel>
+          <Select
+            labelId="weight-increment-label"
+            id="weight-increment"
+            value={weightIncrementPreference}
+            onChange={handleWeightIncrementChange}
+            label="Weight Increment"
+            sx={{ width: "100%" }}
+          >
+            {weightIncrementOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
-      <Button
-        variant="contained"
-        sx={{ width: "100%", marginTop: "8px" }}
-        onClick={exportData}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        Export Data
-      </Button>
+        <Button
+          variant="contained"
+          sx={{ width: "90%", marginTop: "8px" }}
+          onClick={exportData}
+        >
+          Export Data
+        </Button>
 
-      <Button
-        variant="contained"
-        sx={{ width: "100%", marginTop: "8px" }}
-        onClick={handleImportFileSelection}
-      >
-        Import Data
-      </Button>
-      <input
-        ref={fileInputRef}
-        type="file"
-        hidden
-        onChange={handleFileChange}
-      />
+        <Button
+          variant="contained"
+          sx={{ width: "90%", marginTop: "8px" }}
+          onClick={handleImportFileSelection}
+        >
+          Import Data
+        </Button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          hidden
+          onChange={handleFileChange}
+        />
+      </Box>
     </Box>
   );
 }

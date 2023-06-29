@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import WarningIcon from "@mui/icons-material/Warning";
-
 interface ParentProps {
   deleteCommentModalOpen: boolean;
   setDeleteCommentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

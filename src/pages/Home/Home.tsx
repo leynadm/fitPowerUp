@@ -13,14 +13,15 @@ import { AuthContext } from "../../context/Auth";
 
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
-  setSessionVerificationEmailCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  setSessionVerificationEmailCheck: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
-
-function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:AppProps) {
-  
-  
-  
+function Home({
+  sessionVerificationEmailCheck,
+  setSessionVerificationEmailCheck,
+}: AppProps) {
   const [preselectedExercises, setPreselectedExercises] = useState<
     { category: string; name: string; measurement: any[] }[]
   >([]);
@@ -35,7 +36,7 @@ function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:A
   const [unitsSystem, setUnitsSystem] = useState("");
   const [initialCategoriesLoaded, setInitialCategoriesLoaded] = useState(false);
 
-    const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     setPreselectedExercises(importedPreselectedExercises);
@@ -136,12 +137,10 @@ function Home({sessionVerificationEmailCheck,setSessionVerificationEmailCheck}:A
     typography: {
       button: {
         // Here is where you can customise the button
-        fontWeight: "bold"
+        fontWeight: "bold",
       },
     },
-    shape:{
-
-    }
+    shape: {},
   });
 
   return (

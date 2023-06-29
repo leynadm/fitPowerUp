@@ -23,6 +23,7 @@ import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdateCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const style = {
@@ -40,8 +41,9 @@ const style = {
 function EditUserProfileModal({
   editProfileModalOpen,
   setEditProfileModalOpen,
+  setUpdateCount
 }: UserProfilePosts) {
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData,setCurrentUserData } = useContext(AuthContext);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
@@ -108,9 +110,8 @@ function EditUserProfileModal({
       );
 
       try {
-        const profileImageURL = await getDownloadURL(profileImageRef);
-        console.log(profileImageURL);
-        setProfileImageURL(profileImageURL);
+        const retrievedProfileImageURL = await getDownloadURL(profileImageRef);
+        setProfileImageURL(retrievedProfileImageURL);
       } catch (error) {
         console.error("Error fetching profile image:", error);
         if (userData.profileImage) {
@@ -146,7 +147,7 @@ function EditUserProfileModal({
   async function updateUserData() {
     let imageUrl: string | null = null;
     let imageRef = null;
-    let imageUrlResized = null;
+    let imageUrlResized:string|null = null;
 
     if (selectedFile) {
       setSaving(true);
@@ -166,13 +167,17 @@ function EditUserProfileModal({
       );
       try {
         imageUrlResized = await getDownloadURL(imageRefResized);
+        setCurrentUserData((prevData:any) => ({
+          ...prevData,
+          profileImage: imageUrlResized,
+        }));
       } catch (error) {
         console.error("Error fetching resized image:", error);
 
         // Retry logic
         let retryAttempts = 9;
         while (retryAttempts > 0) {
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 3 seconds
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
 
           try {
             imageUrlResized = await getDownloadURL(imageRefResized);
@@ -217,7 +222,8 @@ function EditUserProfileModal({
         hideFollowers: hideFollowers,
         hideFollowing: hideFollowing,
       });
-      currentUserData.profileImage = imageUrlResized;
+
+
     } else {
       await updateDoc(docRef, {
         name: firstName,
@@ -228,7 +234,6 @@ function EditUserProfileModal({
           lastName.toLocaleLowerCase(),
           `${firstName.toLocaleLowerCase()} ${lastName.toLocaleLowerCase()}`,
         ],
-
         hideProfile: hideProfile,
         hidePowerLevel: hidePowerLevel,
         hideFollowers: hideFollowers,
@@ -245,14 +250,14 @@ function EditUserProfileModal({
     }
 
     getUserData().then(() => {
+
       handleClose();
     });
+    
+    setUpdateCount((prevCount) => prevCount + 1);
 
     setSaving(false);
 
-    /* 
-      auth.signOut();
-    */
   }
 
   function hideProfileToggle() {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,7 +20,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-import { setDoc, doc, arrayUnion, Timestamp } from "firebase/firestore";
+import { setDoc, doc, arrayUnion } from "firebase/firestore";
 
 function Copyright(props: any) {
   return (

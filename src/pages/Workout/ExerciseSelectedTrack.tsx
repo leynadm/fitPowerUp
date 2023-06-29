@@ -219,18 +219,99 @@ function ExerciseSelectedTrack({
   }
 
   function exerciseFieldValidation() {
-    for (const element of selectedExercise.measurement) {
-      if (element === "weight" && weightValue === 0) {
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (repsValue === 0) {
+        console.log("inside the repsValue!== || weightValue!==0 check:");
         return "invalid";
       }
-      if (element === "reps" && repsValue === 0) {
-        return "invalid";
-      }
-      if (element === "distance" && distanceValue === 0) {
-        return "invalid";
-      }
+    }
 
-      if (element === "time" && timeValue === 0) {
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (weightValue !== 0 || distanceValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.includes("time") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (weightValue !== 0 || timeValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (repsValue !== 0 || distanceValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.includes("time") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (repsValue !== 0 || timeValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.includes("time") &&
+      selectedExercise.measurement.length > 0
+    ) {
+      if (distanceValue !== 0 || timeValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("weight") &&
+      selectedExercise.measurement.length === 0
+    ) {
+      if (weightValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("reps") &&
+      selectedExercise.measurement.length === 0
+    ) {
+      if (repsValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("distance") &&
+      selectedExercise.measurement.length === 0
+    ) {
+      if (distanceValue !== 0) {
+        return "invalid";
+      }
+    }
+
+    if (
+      selectedExercise.measurement.includes("time") &&
+      selectedExercise.measurement.length === 0
+    ) {
+      if (timeValue !== 0) {
         return "invalid";
       }
     }
@@ -239,9 +320,7 @@ function ExerciseSelectedTrack({
   async function saveExerciseEntry() {
     try {
       const prResult: any = await checkExercisePR(selectedExercise.name);
-      console.log("logging promise result");
-      console.log(prResult);
-
+      console.log({selectedExercise})
       const checkEntriesValidity = exerciseFieldValidation();
 
       if (checkEntriesValidity) {

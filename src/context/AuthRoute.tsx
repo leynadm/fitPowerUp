@@ -11,7 +11,8 @@ const AuthRoute = ({ type}:AuthRouteProps) => {
   const { currentUser } = useContext(AuthContext);
 
   if (type === "home") {
-    return currentUser ? <Outlet /> : <Navigate to="/login" />;
+    /* return currentUser ? <Outlet /> : <Navigate to="/" />; */
+    return currentUser ? <Outlet /> : <Navigate to="/" />;
   } else if (type === "login") {
     return currentUser === null ? <Outlet /> : <Navigate to={"/home"} />;
   } else if (type === "signup") {
@@ -20,7 +21,7 @@ const AuthRoute = ({ type}:AuthRouteProps) => {
     return currentUser === null ? <Outlet /> : <Navigate to={"/home"} />;
   }else {
     throw new Error("Invalid AuthRoute type");
-  }
+  } 
 };
 
 export default AuthRoute;

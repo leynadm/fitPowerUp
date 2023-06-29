@@ -45,10 +45,15 @@ function UserProfile() {
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
   const [userFollowing, setUserFollowing] = useState<number>(0);
+  const [updateCount, setUpdateCount] = useState(0);
 
   useEffect(() => {
     getProfileFollowers();
-  }, [uploadCount]);
+    console.log('logging current user data:')
+    console.log({currentUserData})
+  }, [uploadCount,updateCount]);
+
+
 
   const navigate = useNavigate();
   function handleUserProfilePostsBtn() {
@@ -406,6 +411,7 @@ function UserProfile() {
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
         setEditProfileModalOpen={setEditProfileModalOpen}
+        setUpdateCount={setUpdateCount}
       />
 
       <Routes>

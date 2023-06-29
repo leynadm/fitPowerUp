@@ -27,7 +27,7 @@ import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
-
+import CircularIndeterminate from "../../components/ui/CircularIndeterminate";
 import {
   collection,
   setDoc,
@@ -159,8 +159,11 @@ function AddContentModal({
           `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}`
         );
         await uploadBytes(imageRef, selectedFile);
+      
+      
         imageUrl = await getDownloadURL(imageRef);
-        const imageRefResized = ref(
+        
+         const imageRefResized = ref(
           postsStorage,
           `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}_1024x1024`
         );
@@ -173,7 +176,7 @@ function AddContentModal({
           // Retry logic
           let retryAttempts = 9;
           while (retryAttempts > 0) {
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 3 seconds
+            await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
 
             try {
               imageUrlResized = await getDownloadURL(imageRefResized);
@@ -189,6 +192,7 @@ function AddContentModal({
             // Handle the error and display an error message to the user
           }
         }
+
       }
 
       const newPostRef = doc(collection(db, "posts"));
@@ -200,7 +204,7 @@ function AddContentModal({
         createdAt: serverTimestampObj,
         postText: postText,
         userId: currentUser.uid,
-        postImage: imageUrlResized,
+        postImage: imageUrlResized, 
         timestamp: timestamp,
         commentsCount: 0,
         showWorkout: addWorkout,
@@ -385,7 +389,7 @@ function AddContentModal({
             <Box
               sx={{ padding: "8px", display: "flex", justifyContent: "center" }}
             >
-              {saving && <LinearWithValueLabel />}
+              {saving && <LinearWithValueLabel/>}
             </Box>
             <Typography
               sx={{

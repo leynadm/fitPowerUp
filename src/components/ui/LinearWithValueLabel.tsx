@@ -23,7 +23,13 @@ export default function LinearWithValueLabel() {
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
+      setProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          clearInterval(timer);
+          return 100;
+        }
+        return prevProgress + 10;
+      });
     }, 800);
     return () => {
       clearInterval(timer);

@@ -17,6 +17,7 @@ import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteCommentModal from "../../components/ui/DeleteCommentModal";
 import { Link } from "react-router-dom";
+import { removeNotificationEntry } from "../../utils/socialFunctions/removeNotificationEntry";
 import {
   collection,
   doc,
@@ -108,6 +109,7 @@ function PostComment({
       .then(() => {
         console.log("Comment deleted successfully");
         getPostComments();
+
         setDeleteCommentModalOpen(!deleteCommentModalOpen);
       })
       .catch((error) => {
@@ -197,7 +199,7 @@ function PostComment({
                         alignItems: "center",
                         height: "100%",
                       }}
-                    >
+                    > 
                       <TextField
                         multiline
                         id="input-with-sx"
