@@ -11,7 +11,7 @@ import UserWorkoutCard from "./UserWorkoutCard";
 function SearchPost() {
   const { id } = useParams<{ id: string }>();
   const [userPosts, setUserPosts] = useState<any[]>([]);
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUserData } = useContext(AuthContext);
   useEffect(() => {
     if (id) {
       getPost(id);
@@ -38,7 +38,7 @@ function SearchPost() {
   }
 
   return (
-    <Box sx={{ paddingBottom: "56px", marginTop: "8px"  }}>
+    <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
       {userPosts.map((post: any, index: number) => (
         <UserWorkoutCard
           key={index}

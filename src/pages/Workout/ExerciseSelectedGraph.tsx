@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Line } from "react-chartjs-2";
@@ -41,39 +39,8 @@ ChartJS.register(
   LineElement
 );
 
-interface DataItem {
-  date: Date;
-  weight: number;
-}
-
 interface ParentComponentProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
-}
-
-declare namespace Chart {
-  interface ChartTooltipItem {
-    datasetIndex?: number;
-    index?: number;
-    xLabel?: string;
-    yLabel?: string;
-  }
-
-  interface ChartData {
-    labels?: string[] | string[][];
-    datasets?: ChartDataSets[];
-  }
-
-  interface ChartDataSets {
-    label?: string;
-    data?: number[] | ChartPoint[];
-    // ...
-  }
-
-  interface ChartPoint {
-    x?: number | string | Date;
-    y?: number | string | Date;
-    // ...
-  }
 }
 
 // Function to call the appropriate chart function based on the selected option and timeframe

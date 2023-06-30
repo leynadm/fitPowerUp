@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import { auth } from "../../config/firebase";
 interface UserWorkoutCardProps {
   followersLimitModalOpen: boolean;
   setFollowersLimitModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

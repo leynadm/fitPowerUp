@@ -8,7 +8,6 @@ import { ChartData } from "chart.js";
 import { ChartOptions } from "chart.js";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
 import getPowerLevel from "../../utils/chartFunctions/getPowerLevel";
 
 import {
@@ -29,32 +28,6 @@ ChartJS.register(
   PointElement,
   LineElement
 );
-
-declare namespace Chart {
-  interface ChartTooltipItem {
-    datasetIndex?: number;
-    index?: number;
-    xLabel?: string;
-    yLabel?: string;
-  }
-
-  interface ChartData {
-    labels?: string[] | string[][];
-    datasets?: ChartDataSets[];
-  }
-
-  interface ChartDataSets {
-    label?: string;
-    data?: number[] | ChartPoint[];
-    // ...
-  }
-
-  interface ChartPoint {
-    x?: number | string | Date;
-    y?: number | string | Date;
-    // ...
-  }
-}
 
 // Function to call the appropriate chart function based on the selected option and timeframe
 const callChartFunction = (
@@ -103,7 +76,6 @@ function ProgressGraph() {
   useEffect(() => {
     // Call the chart function when the selected exercise changes or the timeframe changes
     callChartFunction(selectedOption, selectedTimeframe, setInitialRawData);
-    console.log("loading second use effect");
   }, [selectedTimeframe, selectedOption]);
 
   useEffect(() => {

@@ -4,25 +4,15 @@ import Box from "@mui/material/Box";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import User from "../../utils/interfaces/User";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
 import {
   doc,
-  getDoc,
-  query,
-  collection,
-  where,
-  getDocs,
-  orderBy,
-  Timestamp,
-  updateDoc,
+  getDoc
 } from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import { Link } from "react-router-dom";
 
 interface UserData {

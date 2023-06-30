@@ -12,8 +12,7 @@ import {
 import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
-import { Button, Typography } from "@mui/material";
-import { useParams } from "react-router";
+import { Button } from "@mui/material";
 import User from "../../utils/interfaces/User";
 interface SearchProfilePostsProps {
   queriedUser: User | undefined;
@@ -21,7 +20,6 @@ interface SearchProfilePostsProps {
 }
 
 function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
-  const { currentUser, currentUserData } = useContext(AuthContext);
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
 

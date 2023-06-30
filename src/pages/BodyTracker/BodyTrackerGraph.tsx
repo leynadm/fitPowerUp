@@ -28,32 +28,6 @@ ChartJS.register(
   LineElement
 );
 
-declare namespace Chart {
-  interface ChartTooltipItem {
-    datasetIndex?: number;
-    index?: number;
-    xLabel?: string;
-    yLabel?: string;
-  }
-
-  interface ChartData {
-    labels?: string[] | string[][];
-    datasets?: ChartDataSets[];
-  }
-
-  interface ChartDataSets {
-    label?: string;
-    data?: number[] | ChartPoint[];
-    // ...
-  }
-
-  interface ChartPoint {
-    x?: number | string | Date;
-    y?: number | string | Date;
-    // ...
-  }
-}
-
 // Function to call the appropriate chart function based on the selected option and timeframe
 const callChartFunction = (
   selectedOption: string,

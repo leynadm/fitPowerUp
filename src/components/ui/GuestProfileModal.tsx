@@ -27,7 +27,6 @@ export default function GuestProfileModal({
   guestProfileModalOpen,
   setGuestProfileModalOpen,
 }: UserWorkoutCardProps) {
-  const handleOpen = () => setGuestProfileModalOpen(true);
   const handleClose = () => setGuestProfileModalOpen(false);
 
   return (

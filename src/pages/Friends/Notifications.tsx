@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import getNotifications from "../../utils/socialFunctions/getNotifications";
 import { AuthContext } from "../../context/Auth";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
-import { setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";

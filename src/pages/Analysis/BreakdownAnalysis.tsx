@@ -48,7 +48,6 @@ import {
   LineElement,
 } from "chart.js";
 import dayjs from "dayjs";
-import { time } from "console";
 
 ChartJS.register(
   Tooltip,
@@ -176,8 +175,6 @@ const Item = styled(Paper)(({ theme }) => ({
   
 
 function BreakdownAnalysis() {
-  const today = dayjs().startOf("day");
-  const yesterday = dayjs().subtract(1, "day").startOf("day");
 
   const [selectedStartDate, setselectedStartDate] =
     useState<dayjs.Dayjs | null>(null);
@@ -190,7 +187,6 @@ function BreakdownAnalysis() {
   const [totalTrainingReps, setTotalTrainingReps] = useState(0)
   const [totalTrainingSets, setTotalTrainingSets] = useState(0)
   const [totalTrainingWorkouts, setTotalTrainingWorkouts] = useState(0)
-  const [selectedOption, setSelectedOption] = useState("");
   const [selectedGraph, setSelectedGraph] = useState(
     "Number of Sets by Category"
   ); // Initial graph is set to Volume per Workout

@@ -28,7 +28,6 @@ import calculateWorkoutsPerYear from "../../utils/analysisFunctions/calculateWor
 import calculateRepsPerYear from "../../utils/analysisFunctions/calculateRepsPerYear";
 import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolumePerYear";
 import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
-import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
 import Autocomplete from "@mui/material/Autocomplete";
 
 import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";

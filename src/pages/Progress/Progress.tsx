@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import { Routes, Route } from "react-router-dom";
 import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";

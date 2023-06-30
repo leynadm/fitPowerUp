@@ -6,14 +6,11 @@ import Box from "@mui/material/Box";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
 import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
-
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteReplyModal from "../../components/ui/DeleteReplyModal";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { Typography } from "@mui/material";
-
 interface PostCommentProps {
   reply: any;
   postId: string;
@@ -29,7 +26,7 @@ function PostReply({
   getPostComments,
   postUserId,
 }: PostCommentProps) {
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUser} = useContext(AuthContext);
 
   const [deleteReplyModalOpen, setDeleteReplyModalOpen] = useState(false);
 

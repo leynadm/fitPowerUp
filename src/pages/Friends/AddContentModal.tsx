@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -27,7 +27,6 @@ import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
-import CircularIndeterminate from "../../components/ui/CircularIndeterminate";
 import {
   collection,
   setDoc,
@@ -41,7 +40,7 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import { db, storage } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import uuid from "react-uuid";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";

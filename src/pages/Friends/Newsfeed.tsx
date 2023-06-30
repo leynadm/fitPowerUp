@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import Container from "@mui/material/Container";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { AuthContext } from "../../context/Auth";
@@ -12,13 +11,10 @@ import {
   startAfter,
   limit,
   documentId,
-  startAt,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import User from "../../utils/interfaces/User";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
-import LoadingCircle from "../../components/ui/LoadingCircle";
 function Newsfeed() {
   const { currentUser } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);

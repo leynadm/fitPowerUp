@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useMemo } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
@@ -45,7 +45,7 @@ import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { currentUser,currentUserData } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();

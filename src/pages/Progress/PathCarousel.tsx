@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Carousel from "react-material-ui-carousel";
 import { Typography } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
 import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
-import { Paper, Button } from "@mui/material";
 
 function PathCarousel(props: any) {
   const firebaseApp = getApp();

@@ -19,7 +19,6 @@ const defaultTheme = createTheme();
 export default function Account() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const {currentUser} = useContext(AuthContext)
-  const navigate = useNavigate();
 
     useEffect(()=>{
         console.log(currentUser)
