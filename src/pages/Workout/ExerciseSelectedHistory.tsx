@@ -224,14 +224,15 @@ function ExerciseSelectedHistory({
                       justifyItems: "center",
                     }}
                   >
-                    {exercise.weight !== 0 && (
+                    {exercise.weight!==0 &&
+                    
+                    
                       <Typography>
                         {`${exercise.weight.toFixed(2)} ${
                           unitsSystem === "metric" ? "kgs" : "lbs"
                         }`}
                       </Typography>
-                    )}
-
+                    }
                     {exercise.reps !== 0 && (
                       <Typography>{exercise.reps} reps</Typography>
                     )}

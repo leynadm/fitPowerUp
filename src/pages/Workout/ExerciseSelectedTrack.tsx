@@ -225,7 +225,6 @@ function ExerciseSelectedTrack({
       selectedExercise.measurement.length > 0
     ) {
       if (repsValue === 0) {
-        console.log("inside the repsValue!== || weightValue!==0 check:");
         return "invalid";
       }
     }
@@ -235,7 +234,7 @@ function ExerciseSelectedTrack({
       selectedExercise.measurement.includes("distance") &&
       selectedExercise.measurement.length > 0
     ) {
-      if (weightValue !== 0 || distanceValue !== 0) {
+      if (weightValue === 0 && distanceValue === 0) {
         return "invalid";
       }
     }
@@ -245,7 +244,7 @@ function ExerciseSelectedTrack({
       selectedExercise.measurement.includes("time") &&
       selectedExercise.measurement.length > 0
     ) {
-      if (weightValue !== 0 || timeValue !== 0) {
+      if (weightValue === 0 && timeValue === 0) {
         return "invalid";
       }
     }
@@ -255,7 +254,7 @@ function ExerciseSelectedTrack({
       selectedExercise.measurement.includes("distance") &&
       selectedExercise.measurement.length > 0
     ) {
-      if (repsValue !== 0 || distanceValue !== 0) {
+      if (repsValue === 0 && distanceValue === 0) {
         return "invalid";
       }
     }
@@ -265,53 +264,55 @@ function ExerciseSelectedTrack({
       selectedExercise.measurement.includes("time") &&
       selectedExercise.measurement.length > 0
     ) {
-      if (repsValue !== 0 || timeValue !== 0) {
+      if (repsValue === 0 && timeValue === 0) {
         return "invalid";
       }
     }
 
+     
     if (
       selectedExercise.measurement.includes("distance") &&
       selectedExercise.measurement.includes("time") &&
       selectedExercise.measurement.length > 0
     ) {
-      if (distanceValue !== 0 || timeValue !== 0) {
+      if (distanceValue === 0 && timeValue === 0) {
         return "invalid";
       }
     }
 
     if (
       selectedExercise.measurement.includes("weight") &&
-      selectedExercise.measurement.length === 0
+      selectedExercise.measurement.length === 1
     ) {
-      if (weightValue !== 0) {
+      if (weightValue === 0) {
         return "invalid";
       }
     }
 
     if (
       selectedExercise.measurement.includes("reps") &&
-      selectedExercise.measurement.length === 0
+      selectedExercise.measurement.length === 1
     ) {
-      if (repsValue !== 0) {
+      if (repsValue === 0) {
         return "invalid";
       }
     }
 
     if (
       selectedExercise.measurement.includes("distance") &&
-      selectedExercise.measurement.length === 0
-    ) {
-      if (distanceValue !== 0) {
+      selectedExercise.measurement.length === 1
+      
+      ) {
+      if (distanceValue === 0) {
         return "invalid";
       }
     }
 
     if (
       selectedExercise.measurement.includes("time") &&
-      selectedExercise.measurement.length === 0
+      selectedExercise.measurement.length === 1
     ) {
-      if (timeValue !== 0) {
+      if (timeValue === 0) {
         return "invalid";
       }
     }
@@ -790,7 +791,14 @@ function ExerciseSelectedTrack({
                 {measurementType.toLocaleUpperCase()}
               </Typography>
 
-              <Box sx={{ display: "flex", gap: "8px", width: "100%",height:"100%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "8px",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
                 <TextField
                   id={measurementType}
                   value={distanceValue}
@@ -800,7 +808,11 @@ function ExerciseSelectedTrack({
                     shrink: true,
                   }}
                   inputProps={{
-                    style: { fontSize: "1.5rem", textAlign: "center",padding:"10px" },
+                    style: {
+                      fontSize: "1.5rem",
+                      textAlign: "center",
+                      padding: "10px",
+                    },
                   }}
                   sx={{ textAlign: "center", width: "100%" }}
                   variant="filled"
@@ -861,8 +873,11 @@ function ExerciseSelectedTrack({
                     shrink: true,
                   }}
                   inputProps={{
-                    style: { fontSize: "1.5rem", textAlign: "center",
-                    padding:"8px" },
+                    style: {
+                      fontSize: "1.5rem",
+                      textAlign: "center",
+                      padding: "8px",
+                    },
                   }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
@@ -877,8 +892,11 @@ function ExerciseSelectedTrack({
                     shrink: true,
                   }}
                   inputProps={{
-                    style: { fontSize: "1.5rem", textAlign: "center",
-                    padding:"8px" },
+                    style: {
+                      fontSize: "1.5rem",
+                      textAlign: "center",
+                      padding: "8px",
+                    },
                   }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
@@ -893,8 +911,11 @@ function ExerciseSelectedTrack({
                     shrink: true,
                   }}
                   inputProps={{
-                    style: { fontSize: "1.5rem", textAlign: "center",
-                    padding:"8px" },
+                    style: {
+                      fontSize: "1.5rem",
+                      textAlign: "center",
+                      padding: "8px",
+                    },
                   }}
                   sx={{ textAlign: "center" }}
                   variant="filled"
@@ -949,8 +970,12 @@ function ExerciseSelectedTrack({
                 id={measurementType}
                 variant="filled"
                 inputProps={{
-                  style: { fontSize: "1.5rem", textAlign: "center",height:"100%",
-                  padding:"8px" },
+                  style: {
+                    fontSize: "1.5rem",
+                    textAlign: "center",
+                    height: "100%",
+                    padding: "8px",
+                  },
                 }}
                 value={
                   measurementType === "weight"
@@ -982,14 +1007,14 @@ function ExerciseSelectedTrack({
         <Button
           variant="contained"
           color="success"
-          sx={{ width: "100%", margin: "0.25rem",fontWeight:"bold" }}
+          sx={{ width: "100%", margin: "0.25rem", fontWeight: "bold" }}
           onClick={saveExerciseEntry}
         >
           SAVE
         </Button>
         <Button
           variant="contained"
-          sx={{ width: "100%", margin: "0.25rem",fontWeight:"bold" }}
+          sx={{ width: "100%", margin: "0.25rem", fontWeight: "bold" }}
           onClick={handleClearButtonClick}
         >
           CLEAR
@@ -1059,14 +1084,14 @@ function ExerciseSelectedTrack({
                 justifyContent: "center",
               }}
             >
-              {exercise.weight !== 0 && (
-                <Typography>
-                  {`${exercise.weight.toFixed(2)} ${
-                    unitsSystem === "metric" ? "kgs" : "lbs"
-                  }`}
-                </Typography>
-              )}
 
+{exercise.weight !== 0 && (
+              <Typography>
+                {`${exercise.weight.toFixed(2)} ${
+                  unitsSystem === "metric" ? "kgs" : "lbs"
+                }`}
+              </Typography>
+              )}
               {exercise.reps !== 0 && (
                 <Typography>{exercise.reps} reps</Typography>
               )}

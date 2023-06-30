@@ -11,11 +11,6 @@ import {
   setDoc,
   updateDoc,
   arrayUnion,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
   arrayRemove,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
@@ -30,7 +25,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FeedIcon from "@mui/icons-material/Feed";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -48,14 +42,10 @@ import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
-
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { currentUser, currentUserData } = useContext(AuthContext);
-  /* 
-  const [userFeed, setUserFeed] = useState<any>([]);
-   */
+  const { currentUser,currentUserData } = useContext(AuthContext);
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();
@@ -162,10 +152,11 @@ function SearchUserProfile() {
 
         getSearchProfileFollowers();
         navigate("");
+
       } else {
         setFollowersLimitModalOpen(!followersLimitModalOpen);
       }
-    }
+    } 
   }
 
   function handleFollowerClick() {
@@ -386,7 +377,7 @@ function SearchUserProfile() {
                   }}
                 >
                   {`${queriedUser?.name} ${queriedUser?.surname}`}
-                  {queriedUser?.verified && <VerifiedIcon />}
+                  {queriedUser?.verified && <VerifiedIcon sx={{color:"#FF8C00",width:"1rem",height:"1rem"}} />}
                 </Typography>
 
                 <Button
@@ -437,8 +428,10 @@ function SearchUserProfile() {
                 boxShadow:1
               }}
             >
-              {queriedUser?.hidePowerLevel ? (
-                <Typography
+              {queriedUser?.hidePowerLevel || (queriedUser?.powerLevel === undefined && queriedUser?.strengthLevel===undefined && queriedUser?.experienceLevel===undefined)? (
+            
+
+              <Typography
                   sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
                 >
                   Unknown Power Level

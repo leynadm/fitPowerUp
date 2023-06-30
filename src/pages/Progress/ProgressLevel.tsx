@@ -156,17 +156,22 @@ function ProgressLevel({
   }
 
   const uploadPowerLevelToProfile = async (powerLevelData: any) => {
-    if (currentUser.isAnonymous === true) {
-      setGuestProfileModalOpen(true);
-      return;
-    }
 
     const docRef = doc(db, "users", currentUser.uid);
 
     await updateDoc(docRef, powerLevelData);
   };
 
+
+
   const handleUploadToProfile = async () => {
+
+
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
+
     const count = await countUniqueEntriesByDate();
 
     const powerLevelData = {

@@ -20,21 +20,35 @@ import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
 function Newsfeed() {
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
   const [usersDataCache, setUsersDataCache] = useState<any>([]);
-  const [loading, setLoading] = useState(true);
+  const [userFeedLength, setUserFeedLength] = useState<number | undefined>(
+    undefined
+  );
+  const [loading, setLoading] = useState(false);
+  const [hasPosts, setHasPosts] = useState(false);
   useEffect(() => {
     getFeed();
-    setLoading(false);
   }, []);
 
+  useEffect(() => {
+    console.log("rerendering based on has posts");
+    console.log({ hasPosts });
+    console.log({ loading });
+  }, [loading, hasPosts]);
+
   async function getFeed() {
+
     const followedUsersRef = collection(db, "followers-feed");
     const usersRef = collection(db, "users");
     const postsRef = collection(db, "posts");
+
+    // Calculate the timestamp for 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
     const followedUsersSnapshot = await getDocs(
@@ -42,6 +56,7 @@ function Newsfeed() {
         followedUsersRef,
         where("users", "array-contains", currentUser.uid),
         orderBy("lastPost", "desc"),
+        where("lastPost", ">", sevenDaysAgo), // Add condition to filter by last 7 days
         limit(10)
       )
     );
@@ -51,6 +66,7 @@ function Newsfeed() {
     console.log("logging documentIds of the followed users:");
     if (documentIds.length === 0) {
       console.log("No post IDs found.");
+    
       // Handle the empty postIds array (e.g., display a message to the user)
       return;
     }
@@ -91,11 +107,14 @@ function Newsfeed() {
       return sortedPostIds;
     });
 
-    console.log("logging postsIds.length");
     console.log(postIds.length);
     if (postIds.length === 0) {
       console.log("No post IDs found.");
+      console.log("SETTING LOADING TO FALSE!!!");
+      setLoading(false);
+
       // Handle the empty postIds array (e.g., display a message to the user)
+
       return;
     }
 
@@ -163,24 +182,50 @@ function Newsfeed() {
       console.log(feedData);
 
       // Update the userFeed state with the sorted feed data
+
       if (latestDoc) {
         setUserFeed((prevUserFeed: PostData[]) => [
           ...prevUserFeed,
           ...feedData,
         ]);
+        setHasPosts(feedData.length > 0);
       } else {
         setUserFeed(feedData);
+        setHasPosts(feedData.length > 0);
       }
     }
-  }
 
+    console.log("SETTING LOADING TO FALSE!!!");
+    setLoading(false);
+  }
+/* 
+  if (loading && !hasPosts) {
+    return (
+      <Box
+        sx={{
+          paddingBottom: "56px",
+          marginTop: "8px",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <LoadingCircle />
+      </Box>
+    );
+  }
+ */
   return (
     <>
-      {(!loading && userFeed.length > 0) ? (
-        <Box sx={{ paddingBottom: "56px", marginTop: "8px" }}>
+      {hasPosts ? (
+        <Box sx={{ paddingBottom: "56px", marginTop: "8px",height:"100%" }}>
+          {/* 
           <Typography sx={{ fontSize: "small", opacity: "50%", textAlign: "right" }}>
             Last 7 days
           </Typography>
+          */}
           {userFeed.map((post: PostData, index: number) => (
             <UserWorkoutCard
               key={index}
@@ -200,26 +245,24 @@ function Newsfeed() {
               postUserId={post.userId}
             />
           ))}
-          <Button
-            sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-            onClick={getFeed}
-          >
-            Load More
-          </Button>
+          {hasPosts && (
+            <Button
+              sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+              onClick={getFeed}
+            >
+              Load More
+            </Button>
+          )}
         </Box>
       ) : (
-        <Box sx={{ paddingBottom: "56px", marginTop: "8px", textAlign: "center" }}>
-          {(!loading && userFeed.length === 0) ? (
-            <Typography>No posts</Typography>
-          ) : (
-            <LoadingCircle />
-          )}
+        <Box
+          sx={{ paddingBottom: "56px", marginTop: "8px", textAlign: "center",height:"100%" }}
+        >
+          <Typography sx={{height:"100%"}}>No posts, follow others to see their activity!</Typography>
         </Box>
       )}
     </>
   );
-  
-  
 }
 
 export default Newsfeed;

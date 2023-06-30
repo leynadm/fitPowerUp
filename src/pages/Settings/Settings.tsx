@@ -16,7 +16,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-
+import deleteAllEntries from "../../utils/CRUDFunctions/deleteAllEntries";
 import exportData from "../../utils/exportData";
 import * as XLSX from "xlsx";
 interface WorkoutProps {
@@ -309,6 +309,8 @@ function Settings({
 
   const weightIncrementOptions = [0.25, 0.5, 1.0, 1.25, 2.0, 2.5, 5.0, 10.0];
 
+
+
   function importData() {
     const reader = new FileReader();
 
@@ -398,6 +400,12 @@ function Settings({
     setWeightIncrementPreference(selectedValue);
     updateDefaultWeightIncrement(selectedValue);
   };
+
+function handleDeleteAllEntries(){
+  exportData()
+  deleteAllEntries()
+}
+
   return (
     <Box
       sx={{
@@ -523,6 +531,13 @@ function Settings({
           hidden
           onChange={handleFileChange}
         />
+                <Button
+          variant="contained"
+          sx={{ width: "90%", marginTop: "8px" }}
+          onClick={handleDeleteAllEntries}
+        >
+          Delete All Data
+        </Button>
       </Box>
     </Box>
   );

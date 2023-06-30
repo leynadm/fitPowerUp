@@ -51,9 +51,8 @@ function UserProfile() {
     getProfileFollowers();
     console.log('logging current user data:')
     console.log({currentUserData})
+    console.log(currentUserData.powerLevel)
   }, [uploadCount,updateCount]);
-
-
 
   const navigate = useNavigate();
   function handleUserProfilePostsBtn() {
@@ -152,9 +151,9 @@ function UserProfile() {
             backgroundColor: "white",
             padding: "8px",
             marginTop: "8px",
-            borderTopLeftRadius:"5px",
-            borderTopRightRadius:"5px",
-            boxShadow:1,
+            borderTopLeftRadius: "5px",
+            borderTopRightRadius: "5px",
+            boxShadow: 1,
             /* 
             borderBottom:"1px lightgray solid"
            */
@@ -201,7 +200,7 @@ function UserProfile() {
               }}
             >
               {`${currentUserData.name} ${currentUserData.surname}`}
-              {currentUserData.verified && <VerifiedIcon />}
+              {currentUserData.verified && <VerifiedIcon sx={{color:"#FF8C00",width:"1rem",height:"1rem"}} />}
             </Typography>
 
             <Button
@@ -221,18 +220,23 @@ function UserProfile() {
             width: "100%",
             justifyItems: "center",
             backgroundColor: "white",
-            borderBottomLeftRadius:"5px",
-            borderBottomRightRadius:"5px",
-            boxShadow:1
+            borderBottomLeftRadius: "5px",
+            borderBottomRightRadius: "5px",
+            boxShadow: 1,
           }}
-        
         >
-          {currentUserData.hidePowerLevel ? (
-            <Typography
-              sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+          {currentUserData.hidePowerLevel || (currentUserData.powerLevel === undefined && currentUserData.strengthLevel===undefined && currentUserData.experienceLevel===undefined)? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100%",
+                justifyItems: "center",
+              }}
             >
-              Unknown Power Level
-            </Typography>
+
+            </Box>
           ) : (
             <Box
               sx={{
@@ -253,7 +257,7 @@ function UserProfile() {
                 }}
               >
                 <PowerLevelIcon width="2rem" height="2rem" />
-                {currentUserData.powerLevel}
+                {currentUserData.powerLevel!==undefined?(currentUserData.powerLevel):("-")}
               </Typography>
 
               <Typography
@@ -263,10 +267,12 @@ function UserProfile() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                }}
+                }} 
               >
                 <StrengthIcon width="1.5rem" height="1.5rem" />
-                {currentUserData.strengthLevel}
+
+                {currentUserData.strengthLevel!==undefined?(currentUserData.strengthLevel):("-")}
+             
               </Typography>
 
               <Typography
@@ -279,7 +285,8 @@ function UserProfile() {
                 }}
               >
                 <ExperienceIcon width="1.5rem" height="1.5rem" />
-                {currentUserData.experienceLevel}
+                {currentUserData.experienceLevel!==undefined?(currentUserData.experienceLevel):("-")}
+      
               </Typography>
             </Box>
           )}

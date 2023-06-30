@@ -17,7 +17,6 @@ import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteCommentModal from "../../components/ui/DeleteCommentModal";
 import { Link } from "react-router-dom";
-import { removeNotificationEntry } from "../../utils/socialFunctions/removeNotificationEntry";
 import {
   collection,
   doc,

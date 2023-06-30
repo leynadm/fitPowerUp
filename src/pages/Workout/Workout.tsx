@@ -139,24 +139,40 @@ function Workout({
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     let touchStartX = e.targetTouches[0].clientX;
+    /* 
+    console.log({touchStartX})
+     */
     setSwipe((swipe: any) => ({ ...swipe, touchStart: touchStartX }));
   }
 
   function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
     let touchEndX = e.targetTouches[0].clientX;
+    /* 
+    console.log({touchEndX})
+    */
     setSwipe((swipe: any) => ({ ...swipe, touchEnd: touchEndX, moved: true }));
   }
 
   function handleTouchEnd() {
-    const amountSwipe = touchEnd - touchStart;
+    console.log({ touchStart });
+    console.log({ touchEnd });
 
-    if (Math.abs(amountSwipe) > SENSITIVITY && moved) {
-      if (amountSwipe < 0) {
-        addDays();
-      } else {
-        subtractDays();
+    if (touchStart !== 0 && touchEnd !== 0) {
+      const amountSwipe = swipe.touchEnd - swipe.touchStart;
+      console.log({ amountSwipe });
+
+      if (Math.abs(amountSwipe) > SENSITIVITY && swipe.moved) {
+        if (amountSwipe < 0) {
+          console.log("swiped right");
+          addDays();
+        } else {
+          console.log("swiped left");
+          subtractDays();
+        }
       }
     }
+
+    setSwipe({ moved: false, touchEnd: 0, touchStart: 0 });
   }
 
   const subtractDays = () => {
@@ -164,6 +180,8 @@ function Workout({
       const newDate = new Date(todayDate);
       newDate.setDate(todayDate.getDate() - 1);
       setTodayDate(newDate);
+      console.log("logging date subtract:");
+      console.log({ newDate });
     }
   };
 
@@ -172,11 +190,16 @@ function Workout({
       const newDate = new Date(todayDate);
       newDate.setDate(todayDate.getDate() + 1);
       setTodayDate(newDate);
+      console.log("logging date add:");
+      console.log({ newDate });
     }
   };
 
   return (
-    <Box sx={{ paddingBottom: "56px", backgroundColor: "#F0F2F5" }}>
+    <Box
+      className="thisIsMyClass"
+      sx={{ paddingBottom: "56px", backgroundColor: "#F0F2F5" }}
+    >
       <Box
         sx={{
           display: "flex",
