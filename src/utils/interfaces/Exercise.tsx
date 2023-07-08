@@ -11,6 +11,7 @@ interface Exercise {
     weekday?:string
     id:number
     is_pr?:boolean
+    dropset:boolean
     // Add other properties here as per your exercise object structure
   }
 

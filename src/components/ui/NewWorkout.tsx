@@ -541,6 +541,7 @@ function NewWorkout({
                         justifyItems: "center",
                         width: "100%",
                         justifyContent: "space-evenly",
+                        borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
                       }}
                     >
                       {exercise.weight !== 0 && (

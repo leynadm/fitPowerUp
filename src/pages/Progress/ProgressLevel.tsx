@@ -92,11 +92,6 @@ function ProgressLevel({
   );
 
   function calculatePowerLevel() {
-    console.log(
-      { firstExerciseSelected },
-      { secondExerciseSelected },
-      { thirdExerciseSelected }
-    );
 
     if (
       firstExerciseSelected !== null &&
@@ -123,6 +118,7 @@ function ProgressLevel({
         thirdExercisePromise,
       ])
         .then(([firstExercise, secondExercise, thirdExercise]) => {
+    
           const total: number = firstExercise + secondExercise + thirdExercise;
           const finalNumber = calculateDOTS(weight, total, false);
 
@@ -162,8 +158,6 @@ function ProgressLevel({
     await updateDoc(docRef, powerLevelData);
   };
 
-
-
   const handleUploadToProfile = async () => {
 
 
@@ -190,9 +184,7 @@ function ProgressLevel({
     const updateCurrentUserData = () => {
       // Create a copy of the current user data
       const updatedUserData = { ...currentUserData };
-      console.log('checking the value of the initial currentUserData:')
-      console.log({currentUserData})
-      // Modify the desired properties
+
       updatedUserData.powerLevel = strengthPowerLevel+count;
       updatedUserData.strengthLevel = strengthPowerLevel;
       updatedUserData.experienceLevel = count

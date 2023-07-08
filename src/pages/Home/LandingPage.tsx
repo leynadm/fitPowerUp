@@ -159,8 +159,19 @@ function LandingPage() {
           and also <span style={{ fontWeight: "bold" }}>100% FREE</span> workout
           tracking experience.
         </Typography>
+{/* 
+        <img src={fitImageLogo} alt="fit person" height="90%" width="90%" />
+ */}
+        <img
+          src={fitImageLogo}
+          alt="fit person"
+          style={{
+            height: "auto",
+            width: "90%",
+            maxWidth: "400px", // Adjust the max width for desktop and mobile
+          }}
+        />
 
-        <img src={fitImageLogo} alt="fit person" height="auto" width="90%" />
         <Button
           onClick={getStartedClick}
           variant="contained"

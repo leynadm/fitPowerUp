@@ -49,6 +49,7 @@ function App() {
 
               <Route element={<ForgotPassword />} path="/forgot-password" />
 
+
               <Route element={<AuthRoute type="/" />}>
                 <Route path="/" element={<LandingPage />} />
               </Route>

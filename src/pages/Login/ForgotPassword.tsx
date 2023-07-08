@@ -64,7 +64,7 @@ export default function ForgotPassword() {
             <Grid container justifyContent="flex-end">
               <Grid item sx={{padding:"8px"}}>
                 <Link variant="body2" onClick={handleSignInClick}>
-                  Remember your password? Sign in
+                  Do you remember your password? Sign in
                 </Link>
               </Grid>
             </Grid>

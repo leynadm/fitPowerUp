@@ -222,6 +222,7 @@ function ExerciseSelectedHistory({
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr",
                       justifyItems: "center",
+                      borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
                     }}
                   >
                     {exercise.weight!==0 &&

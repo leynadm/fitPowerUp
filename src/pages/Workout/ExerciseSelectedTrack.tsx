@@ -26,20 +26,7 @@ interface ExerciseSelectionProps {
   unitsSystem: string;
   weightIncrementPreference: number;
 }
-
-interface ExerciseRecord {
-  date: string;
-  category: string;
-  distance: number;
-  distance_unit: string;
-  exercise: string;
-  id: number;
-  reps: number;
-  time: number;
-  weight: number;
-  is_pr: boolean;
-}
-
+ 
 function ExerciseSelectedTrack({
   selectedExercise,
   todayDate,
@@ -58,9 +45,12 @@ function ExerciseSelectedTrack({
   const [commentValue, setCommentValue] = useState("");
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
+  const [isDropset, setIsDropset] = useState<boolean>(false)
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
+  const [dropsetRenderTrigger, setDropsetRenderTrigger] = useState(0)
+  const [lastExercise, setLastExercise] = useState<Exercise | null>(null);
 
   const [entryToSave, setEntryToSave] = useState({
     date: todayDate,
@@ -72,11 +62,48 @@ function ExerciseSelectedTrack({
     distance_unit: distanceUnit,
     time: timeValue,
     is_pr: false,
+    dropset:false
   });
 
   useEffect(() => {
     getExistingExercises();
+    getLastExerciseEntry()
+    return () => {
+      setLastExercise(null); // Set lastExercise to null on unmount
+    };
   }, []);
+
+  useEffect(()=>{
+
+    if(lastExercise){
+      if(lastExercise.weight!==0){
+        setWeightValue(lastExercise.weight)
+      }
+
+      if(lastExercise.reps!==0){
+        setRepsValue(lastExercise.reps)
+      }
+
+      if(lastExercise.distance!==0){
+        setDistanceValue(lastExercise.distance)
+      }
+
+      if(lastExercise.time!==0){
+        setTimeValue(lastExercise.time)
+      }
+
+
+        setDistanceUnit(lastExercise.distance_unit.toString())
+      
+
+    }
+
+  },[lastExercise])
+
+
+  useEffect(()=>{
+    getExistingExercises();
+  },[dropsetRenderTrigger])
 
   useEffect(() => {
     if (userUpdatedExerciseData) {
@@ -117,6 +144,56 @@ function ExerciseSelectedTrack({
     boxShadow: 24,
     p: 4,
   };
+
+  function getLastExerciseEntry() {
+    const request = indexedDB.open("fitScouterDb", 1);
+  
+    request.onsuccess = function () {
+      const db = request.result;
+  
+      const userEntryTransaction = db.transaction(
+        "user-exercises-entries",
+        "readonly"
+      );
+  
+      const userEntryTransactionStore = userEntryTransaction.objectStore(
+        "user-exercises-entries"
+      );
+  
+      const exerciseNameIndex = userEntryTransactionStore.index("exercise_name");
+  
+      const keyRange = IDBKeyRange.only(selectedExercise.name); // Use IDBKeyRange.only() with the exercise name as the criteria
+  
+      const exercisesRequest = exerciseNameIndex.openCursor(keyRange, "prev"); // Use "prev" to get the last entry
+  
+      exercisesRequest.onsuccess = function (event) {
+        const cursor = (event.target as IDBRequest).result;
+        if (cursor) {
+          console.log("Logging last exercise entry:");
+          console.log(cursor.value);
+          setLastExercise(cursor.value);
+        }
+      };
+  
+      exercisesRequest.onerror = function () {
+        console.error("Error retrieving existing exercises");
+      };
+  
+      userEntryTransaction.oncomplete = function () {
+        db.close();
+      };
+    };
+  
+    request.onerror = function () {
+      console.log("Error opening database");
+    };
+  }
+  
+  
+  
+  
+  
+
 
   function getExistingExercises() {
     if (!todayDate) {
@@ -193,14 +270,15 @@ function ExerciseSelectedTrack({
         const data = event.target.result;
         if (data) {
           setCommentValue(data.comment);
+          setIsDropset(data.dropset)
         } else {
           console.log("Record not found");
         }
       };
-  
+      
       transaction.oncomplete = function () {
-        console.log("Transaction completed");
-      };
+        console.log("Transaction completed - getExistingComment");
+        };
       transaction.onerror = function () {
         console.log("Transaction error");
       };
@@ -742,7 +820,10 @@ function ExerciseSelectedTrack({
         setOpenCommentModal={setOpenCommentModal}
         commentValue={commentValue}
         setCommentValue={setCommentValue}
+        setIsDropset={setIsDropset}
+        isDropset={isDropset}
         exerciseCommentId={exerciseCommentId}
+        setDropsetRenderTrigger={setDropsetRenderTrigger}
       />
 
       <Typography
@@ -1082,6 +1163,7 @@ function ExerciseSelectedTrack({
                 gridTemplateColumns: "1fr 1fr",
                 justifyItems: "center",
                 justifyContent: "center",
+                borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
               }}
             >
 

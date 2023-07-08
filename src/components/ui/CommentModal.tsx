@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const style = {
   position: "absolute" as "absolute",
@@ -20,9 +21,12 @@ const style = {
 interface ParentComponentProps {
   openCommentModal: boolean;
   setOpenCommentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isDropset: boolean;
+  setIsDropset: React.Dispatch<React.SetStateAction<boolean>>;
   commentValue: string;
   setCommentValue: React.Dispatch<React.SetStateAction<string>>;
   exerciseCommentId: number;
+  setDropsetRenderTrigger : React.Dispatch<React.SetStateAction<number>>;
 }
 
 function CommentModal({
@@ -31,15 +35,25 @@ function CommentModal({
   commentValue,
   setCommentValue,
   exerciseCommentId,
+  isDropset,
+  setIsDropset,
+  setDropsetRenderTrigger
 }: ParentComponentProps) {
-  function handleClose () {
+
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+  useEffect(()=>{
+    console.log('inside Comment Modal, checking value of isDropset:')
+    console.log({isDropset})
+  },[])
+
+  function handleClose() {
     setCommentValue("");
     setOpenCommentModal(false);
-  } 
-
-
+  }
 
   function saveComment() {
+
     const request = window.indexedDB.open("fitScouterDb");
     request.onsuccess = function (event: any) {
       const db = event.target.result;
@@ -52,6 +66,7 @@ function CommentModal({
         const data = event.target.result;
         if (data) {
           data.comment = commentValue;
+          data.dropset = isDropset;
           const updateRequest = objectStore.put(data);
           updateRequest.onsuccess = function () {
             console.log("Record updated successfully");
@@ -77,8 +92,13 @@ function CommentModal({
     request.onerror = function () {
       console.log("Error opening database");
     };
+
+    setDropsetRenderTrigger(prev => prev+1)
   }
 
+  function markEntryAsDropset() {
+    setIsDropset(!isDropset);
+  }
 
   return (
     <div>
@@ -94,13 +114,20 @@ function CommentModal({
             label="Add your comment"
             multiline
             maxRows={4}
-
             sx={{
               width: "100%",
             }}
             value={commentValue}
             onChange={(e) => setCommentValue(e.target.value)}
           />
+
+          <FormControlLabel
+            control={<Switch defaultChecked />}
+            label="Add the entry as a dropset"
+            checked={isDropset}
+            onClick={markEntryAsDropset}
+          />
+
           <Box
             sx={{
               width: "100%",
@@ -111,14 +138,14 @@ function CommentModal({
             <Button
               variant="contained"
               color="success"
-              sx={{ width: "100%", marginTop: "8px",marginRight: "8px" }}
+              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={saveComment}
             >
               Save
             </Button>
             <Button
               variant="contained"
-              sx={{ width: "100%", marginTop: "8px",marginLeft: "8px" }}
+              sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >
               Cancel
