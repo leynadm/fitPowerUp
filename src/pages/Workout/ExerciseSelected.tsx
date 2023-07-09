@@ -197,6 +197,7 @@ function ExerciseSelected({
             <ExerciseSelectedHistory
               selectedExercise={selectedExercise}
               unitsSystem={unitsSystem}
+              weightIncrementPreference={weightIncrementPreference}
             />
           }
         />

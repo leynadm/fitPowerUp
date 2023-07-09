@@ -22,7 +22,7 @@ function UsersListItem({ usersFound }: ParentProps) {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{paddingBottom:"64px"}}>
       {usersFound.map((user, index) => (
         <Box
           key={index}

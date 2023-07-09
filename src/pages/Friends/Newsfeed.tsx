@@ -11,6 +11,7 @@ import {
   startAfter,
   limit,
   documentId,
+  Timestamp
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { PostData } from "../../utils/interfaces/PostData";
@@ -45,14 +46,15 @@ function Newsfeed() {
     // Calculate the timestamp for 7 days ago
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
+    const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
+    console.log({sevenDaysAgoTimestamp})
     // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
     const followedUsersSnapshot = await getDocs(
       query(
         followedUsersRef,
         where("users", "array-contains", currentUser.uid),
         orderBy("lastPost", "desc"),
-        where("lastPost", ">", sevenDaysAgo), // Add condition to filter by last 7 days
+        where("lastPost", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
         limit(10)
       )
     );

@@ -75,8 +75,6 @@ function Workout({
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
-      console.log("logging current date:");
-      console.log(currentDate);
       setTodayDate(currentDate);
     }
     getDataPreferences();
@@ -154,9 +152,7 @@ function Workout({
   }
 
   function handleTouchEnd() {
-    console.log({ touchStart });
-    console.log({ touchEnd });
-
+    
     if (touchStart !== 0 && touchEnd !== 0) {
       const amountSwipe = swipe.touchEnd - swipe.touchStart;
       console.log({ amountSwipe });

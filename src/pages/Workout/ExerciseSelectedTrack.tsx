@@ -188,12 +188,6 @@ function ExerciseSelectedTrack({
       console.log("Error opening database");
     };
   }
-  
-  
-  
-  
-  
-
 
   function getExistingExercises() {
     if (!todayDate) {
@@ -1080,7 +1074,7 @@ function ExerciseSelectedTrack({
 
       <Box
         sx={{
-          width: "100vw",
+          width:"100%",
           display: "flex",
           justifyContent: "space-evenly",
         }}

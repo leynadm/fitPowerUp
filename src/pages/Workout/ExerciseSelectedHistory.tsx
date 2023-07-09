@@ -11,15 +11,26 @@ import ViewCommentModal from "../../components/ui/ViewCommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
+import EditExerciseModal from "../../components/ui/EditExerciseModal";
+
+
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
   unitsSystem: string;
+  weightIncrementPreference: number;
 }
 
 function ExerciseSelectedHistory({
   selectedExercise,
   unitsSystem,
+  weightIncrementPreference
 }: ExerciseSelectionProps) {
+  
+  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
+  const [openEditExerciseModal, setOpenEditExerciseModal] = useState(false);
+  
+  const [exerciseCommentId, setExerciseCommentId] = useState(0);
+  const [updateRenderTrigger, setUpdateRenderTrigger] = useState(0)
   const [existingExercises, setExistingExercises] = useState<
     { date: Date | string; exercises: Exercise[] }[]
   >([]);
@@ -28,9 +39,11 @@ function ExerciseSelectedHistory({
     getExerciseHistory();
   }, []);
 
-  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
-  const [exerciseCommentId, setExerciseCommentId] = useState(0);
+  useEffect(()=>{
+    getExerciseHistory()
+  },[updateRenderTrigger])
 
+  
   function getExerciseHistory() {
     const request = indexedDB.open("fitScouterDb", 1);
 
@@ -93,6 +106,11 @@ function ExerciseSelectedHistory({
     setExerciseCommentId(exerciseId);
     setOpenViewCommentModal(!openViewCommentModal);
   }
+
+  function handleEditExerciseModalVisibility(exerciseId:number){
+    setExerciseCommentId(exerciseId);
+    setOpenEditExerciseModal(!openEditExerciseModal);
+  }
   
   if (existingExercises.length === 0) {
     return (
@@ -111,6 +129,16 @@ function ExerciseSelectedHistory({
         setOpenViewCommentModal={setOpenViewCommentModal}
         exerciseCommentId={exerciseCommentId}
       />
+
+      <EditExerciseModal
+        openEditExerciseModal={openEditExerciseModal}
+        setOpenEditExerciseModal={setOpenEditExerciseModal}
+        exerciseCommentId={exerciseCommentId}
+        selectedExercise={selectedExercise}
+        weightIncrementPreference={weightIncrementPreference}
+        setUpdateRenderTrigger={setUpdateRenderTrigger}
+      />
+
       <Typography
         sx={{
           padding: {
@@ -155,10 +183,6 @@ function ExerciseSelectedHistory({
                   sx={{
                     display: "grid",
                     gridTemplateColumns: "1fr 2fr",
-                    /* 
-                    display: "flex",
-                    alignItems: "center",
-                    */
                     alignItems: "center",
                   }}
                 >
@@ -224,10 +248,11 @@ function ExerciseSelectedHistory({
                       justifyItems: "center",
                       borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
                     }}
+                    onClick={() =>
+                      handleEditExerciseModalVisibility(exercise.id)
+                    }
                   >
                     {exercise.weight!==0 &&
-                    
-                    
                       <Typography>
                         {`${exercise.weight.toFixed(2)} ${
                           unitsSystem === "metric" ? "kgs" : "lbs"
