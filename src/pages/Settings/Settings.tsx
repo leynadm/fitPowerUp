@@ -413,34 +413,36 @@ function Settings({
         date.setMinutes(0);
         date.setSeconds(0);
 
+        let weightRow = row[3]
+        let repsRow = row[4]
+
         let distanceRow = row[6];
         let distance_unitRow = row[7];
         let timeRow = row[8];
         let commentRow = row[9];
 
-        console.log(row[6]);
-        console.log(row[7]);
-        console.log(row[8]);
-        console.log(row[9]);
-        console.log({ distanceRow, distance_unitRow, timeRow, commentRow });
+
+        if (weightRow === undefined) {
+          weightRow = 0;
+        }
+
+        if (repsRow === undefined) {
+          repsRow = 0;
+        }
 
         if (distanceRow === undefined) {
-          console.log("inside distanceRow if check:");
           distanceRow = 0;
         }
 
         if (distance_unitRow === undefined) {
-          console.log("inside distance_unitRow if check:");
           distance_unitRow = "m";
         }
 
         if (timeRow === undefined) {
-          console.log("inside timeRow if check:");
           timeRow = 0;
         }
 
         if (commentRow === undefined) {
-          console.log("inside commentRow if check:");
           commentRow = "";
         }
 
@@ -460,10 +462,6 @@ function Settings({
           comment: commentRow,
         };
 
-        console.log("logging inside entry:");
-        console.log({ distanceRow, distance_unitRow, timeRow, commentRow });
-
-        console.log(entry);
 
         if (row[3] !== undefined && row[4] !== undefined)
           objectStore.add(entry);
@@ -520,6 +518,8 @@ function Settings({
         date.setMinutes(0);
         date.setSeconds(0);
 
+        let weightRow = row[3]
+        let repsRow = row[4]
         let distanceRow = row[5];
         let distance_unitRow = row[6];
         let timeRow = row[7];
@@ -527,7 +527,11 @@ function Settings({
         let dropsetRow = row[9];
         let commentRow = row[10];
 
-        if (distanceRow === undefined) {
+        if (weightRow===undefined){
+          weightRow=0
+        } else if (repsRow === undefined) {
+          repsRow = 0;
+        } else if (distanceRow === undefined) {
           distanceRow = 0;
         } else if (distance_unitRow === undefined) {
           distance_unitRow = "m";
@@ -540,6 +544,7 @@ function Settings({
         } else if (commentRow === undefined) {
           commentRow = "";
         }
+
 
         const entry = {
           // Map the appropriate properties from the Excel file to your object structure
