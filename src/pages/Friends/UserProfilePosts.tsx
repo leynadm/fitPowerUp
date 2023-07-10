@@ -102,6 +102,7 @@ function UserProfilePosts() {
           documentId={post.documentId}
           postUserId={post.userId}
           getUserPosts={getUserPosts}
+          userVerified={post.verified}
         />
       ))} 
       <Button 

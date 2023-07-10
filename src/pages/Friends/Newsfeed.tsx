@@ -165,12 +165,13 @@ function Newsfeed() {
       const feedData = postsData.map((post: any) => {
         const userID = post.userId;
         if (userIdToUserData.hasOwnProperty(userID)) {
-          const { name, surname, profileImage } = userIdToUserData[userID];
+          const { name, surname, profileImage,verified } = userIdToUserData[userID];
           return {
             ...post,
             name,
             surname,
             profileImage,
+            verified
           };
         }
         return null; // Add a default return value, such as null, for cases where userId is not found
@@ -241,6 +242,7 @@ function Newsfeed() {
               postAppreciation={post.postAppreciation}
               documentId={post.documentId}
               postUserId={post.userId}
+              userVerified={post.verified}
             />
           ))}
           {hasPosts && (

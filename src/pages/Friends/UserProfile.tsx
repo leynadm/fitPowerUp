@@ -153,7 +153,7 @@ function UserProfile() {
               <Avatar
                 alt="Remy Sharp"
                 src={currentUserData.profileImage}
-                sx={{ width: 64, height: 64, alignSelf: "center" }}
+                sx={{ width: 56, height: 56, alignSelf: "center" }}
               />
             </Stack>
           ) : (
@@ -189,7 +189,7 @@ function UserProfile() {
               }}
             >
               {`${currentUserData.name} ${currentUserData.surname}`}
-              {currentUserData.verified && <VerifiedIcon sx={{color:"#FF8C00",width:"1rem",height:"1rem"}} />}
+              {currentUserData.verified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
             </Typography>
 
             <Button

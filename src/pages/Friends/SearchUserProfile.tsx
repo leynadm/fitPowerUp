@@ -376,7 +376,7 @@ function SearchUserProfile() {
                   }}
                 >
                   {`${queriedUser?.name} ${queriedUser?.surname}`}
-                  {queriedUser?.verified && <VerifiedIcon sx={{color:"#FF8C00",width:"1rem",height:"1rem"}} />}
+                  {queriedUser?.verified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
                 </Typography>
 
                 <Button

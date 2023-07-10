@@ -15,4 +15,5 @@ export type PostData = {
     unitsSystem:string
     documentId:string
     postAppreciation?:any
+    verified:boolean
   };

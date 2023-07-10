@@ -89,7 +89,7 @@ function UsersListItem({ usersFound }: ParentProps) {
                     {`${user.name} ${user.surname}`}
 
                     {user.verified && (
-                      <VerifiedIcon sx={{ color: "#FF8C00",width:"1rem",height:"1rem" }} />
+                      <VerifiedIcon sx={{ color: "#3f51b5",width:"1rem",height:"1rem" }} />
                     )}
                   </Typography>
                 </Link>

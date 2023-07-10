@@ -77,7 +77,7 @@ function calculateRepsPerWeek(selectedGraph:string, selectedExercise:string, tim
         });
   
         const chartData = {
-          labels: sortedWeeks.map((week) => `${week.start.toLocaleDateString()} - ${week.end.toLocaleDateString()}`),
+          labels: sortedWeeks.map((week) => `${week.start.getMonth() + 1}/${week.start.getDate()}/${week.start.getFullYear().toString().slice(-2)} - ${week.end.getMonth() + 1}/${week.end.getDate()}/${week.end.getFullYear().toString().slice(-2)}`),
           datasets: [
             {
               label: "Reps",

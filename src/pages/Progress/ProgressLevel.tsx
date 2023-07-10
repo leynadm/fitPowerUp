@@ -80,21 +80,20 @@ function ProgressLevel({
   experiencePowerLevel,
   setExperiencePowerLevel,
 }: ProgressProps) {
-
   const [weight, setWeight] = useState(0);
   const [firstExerciseSelected, setFirstExerciseSelected] = useState<any>(null);
   const [secondExerciseSelected, setSecondExerciseSelected] =
     useState<any>(null);
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
-  const { currentUser,currentUserData, setCurrentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData, setCurrentUserData } =
+    useContext(AuthContext);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [profileUploadAlert, setProfileUploadAlert] = useState(false);
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
 
-  const [genericFailedAlert, setGenericFailedAlert] = useState(false)
-
+  const [genericFailedAlert, setGenericFailedAlert] = useState(false);
 
   function showFailedAlert() {
     setGenericFailedAlert(true);
@@ -139,7 +138,6 @@ function ProgressLevel({
         thirdExercisePromise,
       ])
         .then(([firstExercise, secondExercise, thirdExercise]) => {
-    
           const total: number = firstExercise + secondExercise + thirdExercise;
           const finalNumber = calculateDOTS(weight, total, false);
 
@@ -170,20 +168,17 @@ function ProgressLevel({
           console.error("Error occurred:", error);
         });
     } else {
-      showFailedAlert()
+      showFailedAlert();
     }
   }
 
   const uploadPowerLevelToProfile = async (powerLevelData: any) => {
-
     const docRef = doc(db, "users", currentUser.uid);
 
     await updateDoc(docRef, powerLevelData);
   };
 
   const handleUploadToProfile = async () => {
-
-
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
@@ -208,23 +203,20 @@ function ProgressLevel({
       // Create a copy of the current user data
       const updatedUserData = { ...currentUserData };
 
-      updatedUserData.powerLevel = strengthPowerLevel+count;
+      updatedUserData.powerLevel = strengthPowerLevel + count;
       updatedUserData.strengthLevel = strengthPowerLevel;
-      updatedUserData.experienceLevel = count
+      updatedUserData.experienceLevel = count;
       // Add more modifications as needed
-      
-      console.log('checking the value AFTER Update:')
-      console.log({updatedUserData})
-      
+
+      console.log("checking the value AFTER Update:");
+      console.log({ updatedUserData });
+
       // Update the state with the modified user data
       setCurrentUserData(updatedUserData);
     };
 
-    updateCurrentUserData()
+    updateCurrentUserData();
   };
-
-
-
 
   function showSuccessfulAlert() {
     setProfileUploadAlert(true);
@@ -244,11 +236,16 @@ function ProgressLevel({
   }
 
   useEffect(() => {
+
     getLastPowerLevelEntry()
+
       .then((lastEntry: any) => {
+
         if (lastEntry) {
           // Handle the last entry
+          
           setPowerLevel(lastEntry.score);
+
           setFirstExerciseSelected(
             lastEntry.first !== undefined || null ? lastEntry.first : "Deadlift"
           );
@@ -339,7 +336,7 @@ function ProgressLevel({
           label="Add your weight"
           value={weight}
           variant="filled"
-          InputProps={{ inputProps: { min: 0} }}
+          InputProps={{ inputProps: { min: 0 } }}
           sx={{
             marginTop: "8px",
             marginBottom: "8px",

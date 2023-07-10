@@ -30,6 +30,7 @@ import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import addNotificationEntry from "../../utils/socialFunctions/addNotificationEntry";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import {
   collection,
   setDoc,
@@ -58,6 +59,7 @@ interface UserProfileProps {
   documentId: string;
   postUserId: string;
   getUserPosts?: () => void;
+  userVerified:boolean
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -105,6 +107,7 @@ export default function UserWorkoutCard({
   documentId,
   postUserId,
   getUserPosts,
+  userVerified
 }: UserProfileProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [commentExpanded, setCommentExpanded] = useState(false);
@@ -321,42 +324,10 @@ export default function UserWorkoutCard({
 
         <CardHeader
           avatar={
-            <Stack direction="row" spacing={2}>
-              
-              <Avatar alt="Remy Sharp" src={currentUserDataImage} sx={{width:48,height:48}} />
+            <Stack direction="row" spacing={2}>              
+              <Avatar alt="profile" src={currentUserDataImage} sx={{width:48,height:48}} />
             </Stack>
           }
-          /* 
-        avatar={
-           <Stack direction="row" spacing={2}>
-            <Avatar
-              aria-label="recipe"
-              sx={{
-                width: 48,
-                height: 48,
-                backgroundSize:"cover"
-              }}
-            >
-              {currentUserDataImage ? (
-
-                <LazyLoadImage
-                  src={currentUserDataImage}
-                  alt="user image"
-                  effect="blur" // optional blur effect, you can remove it if not needed
-                  
-                />
-
-                ) : (
-                // Placeholder avatar content if currentUserDataImage is not available
-                  <Avatar
-                    alt="Remy Sharp"
-                    sx={{ width: 48, height: 48, alignSelf: "center" }}
-                  />
-              )}
-            </Avatar>
-            </Stack>
-          }
-           */
           action={
             postUserId === currentUser.uid && (
               <IconButton aria-label="settings" onClick={handleDeletePostClick}>
@@ -369,7 +340,10 @@ export default function UserWorkoutCard({
               to={`/home/friends/results/u/${postUserId}`}
               style={{ textDecoration: "none", color: "black" }}
             >
+              <Box sx={{display:"flex",gap:0.5,alignItems:"center"}}>
               {currentUserDataName}
+              {userVerified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
+              </Box>
             </Link>
           }
           subheader={getTimeDifference(postCreatedAt)}
@@ -463,7 +437,7 @@ export default function UserWorkoutCard({
                           fontSize: "medium",
                           backgroundColor: "#F0F2F5",
                         }}
-                      >
+                      >Profile
                         {group.name.toLocaleUpperCase()}
                       </Typography>
 

@@ -56,6 +56,7 @@ function SearchPost() {
           postAppreciation={post.postAppreciation}
           documentId={post.documentId}
           postUserId={post.userId}
+          userVerified={post.verified}
         />
       ))}
     </Box>

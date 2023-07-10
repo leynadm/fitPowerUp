@@ -11,6 +11,7 @@ import formatTime from "../../utils/formatTime";
 import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
+import ViewCommentModal from "./ViewCommentModal";
 
 const style = {
   bgcolor: "aliceblue",
@@ -36,6 +37,9 @@ function CalendarWorkoutModal({
   const [workoutDateExercises, setWorkoutDateExercises] = useState<
     { name: string; exercises: Exercise[] }[]
   >([]);
+  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
+  const [exerciseCommentId, setExerciseCommentId] = useState(0);
+
   const navigate = useNavigate();
   const handleClose = () => setCalendarWorkoutModalVisibility(false);
 
@@ -44,6 +48,16 @@ function CalendarWorkoutModal({
       getExercisesByDate(todayDate, setWorkoutDateExercises);
     }
   }, [todayDate]);
+
+  function handleViewCommentModalVisibility(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    exerciseId: number
+  ) {
+    event.stopPropagation();
+    setExerciseCommentId(exerciseId);
+    setOpenViewCommentModal(!openViewCommentModal);
+  }
+
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -55,6 +69,12 @@ function CalendarWorkoutModal({
         sx={{ marginBottom: "56px",width:"100%" }}
 
       >
+      <ViewCommentModal
+        openViewCommentModal={openViewCommentModal}
+        setOpenViewCommentModal={setOpenViewCommentModal}
+        exerciseCommentId={exerciseCommentId}
+      />
+
         <Box sx={style}>
           <Typography sx={{ width: "100%", textAlign: "center" }}>
             {todayDate?.toLocaleDateString()}
@@ -99,7 +119,9 @@ function CalendarWorkoutModal({
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
                         aria-haspopup="true"
-                        onClick={(event) => console.log("yes")}
+                        onClick={(event) =>
+                          handleViewCommentModalVisibility(event, exercise.id)
+                        }
                       >
                         <CommentIcon
                           sx={{

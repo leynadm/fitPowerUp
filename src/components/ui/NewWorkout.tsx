@@ -440,13 +440,6 @@ function NewWorkout({
                 <Typography variant="body2">Start New Workout</Typography>
               </IconButton>
 
-              <IconButton
-                aria-label="copy workout"
-                sx={{ mb: 2, display: "flex", flexDirection: "column" }}
-              >
-                <ContentCopyIcon />
-                <Typography variant="body2">Copy Previous Workout</Typography>
-              </IconButton>
             </Box>
           </Box>
         ) : (

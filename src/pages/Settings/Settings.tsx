@@ -414,12 +414,14 @@ function Settings({
         date.setSeconds(0);
 
         let weightRow = row[3]
-        let repsRow = row[4]
+        let repsRow = row[5]
 
         let distanceRow = row[6];
         let distance_unitRow = row[7];
         let timeRow = row[8];
         let commentRow = row[9];
+
+        console.log({repsRow})
 
 
         if (weightRow === undefined) {
@@ -452,8 +454,8 @@ function Settings({
           date: date, // Convert the serial date to a Date object with time set to midnight
           exercise: row[1] as string,
           category: row[2] as string,
-          weight: row[3] as number,
-          reps: row[5] as number,
+          weight: weightRow as number,
+          reps: repsRow as number,
           distance: /*  row[5] as number */ distanceRow as number,
           distance_unit: /* row[6] as string */ distance_unitRow as string,
           time: /*  row[7] as string */ timeRow as number,
@@ -552,8 +554,8 @@ function Settings({
           date: date, // Convert the serial date to a Date object with time set to midnight
           exercise: row[1] as string,
           category: row[2] as string,
-          weight: row[3] as number,
-          reps: row[4] as number,
+          weight: weightRow as number,
+          reps: repsRow as number,
           distance: /*  row[5] as number */ distanceRow as number,
           distance_unit: /* row[6] as string */ distance_unitRow as string,
           time: /*  row[7] as string */ timeRow as number,

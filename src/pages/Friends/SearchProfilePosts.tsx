@@ -15,7 +15,7 @@ import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import User from "../../utils/interfaces/User";
 interface SearchProfilePostsProps {
-  queriedUser: User | undefined;
+  queriedUser: any;
   id: string | undefined;
 }
 
@@ -30,11 +30,6 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
 
     console.log("logging queried user:");
     console.log(queriedUser);
-    /* 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }; */
   }, [queriedUser]);
 
   async function getUserPosts() {
@@ -98,6 +93,7 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
           postAppreciation={post.postAppreciation}
           documentId={post.documentId}
           postUserId={post.userId}
+          userVerified={queriedUser.verified}
         />
       ))}
       <Button
