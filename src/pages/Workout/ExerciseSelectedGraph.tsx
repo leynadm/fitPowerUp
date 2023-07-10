@@ -19,7 +19,7 @@ import getMaxSpeed from "../../utils/chartFunctions/getMaxSpeed";
 import getMaxPace from "../../utils/chartFunctions/getMaxPace";
 import { ChartOptions } from "chart.js";
 import { Select, MenuItem } from "@mui/material";
-import Container from '@mui/material/Container';
+import Container from "@mui/material/Container";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -371,52 +371,30 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
 
   return (
     <Container sx={{ width: "100%", height: "100%" }}>
-
-<Select
-  value={selectedOption}
-  onChange={(event) => {
-    const selectedOption = event.target.value;
-    setSelectedOption(selectedOption);
-    callChartFunction(
-      selectedOption,
-      selectedTimeframe,
-      setInitialRawData,
-      selectedExercise
-    );
-  }}
-  sx={{
-    width: "100%",
-    marginTop: "16px",
-  }}
->
-  {statisticsOptionsToUse.map((option) => (
-    <MenuItem key={option.label} value={option.label}>
-      {option.label}
-    </MenuItem>
-  ))}
-</Select>
-{/* 
-      <TextField
-        select
+      <Select
         value={selectedOption}
-        onChange={handleChange}
-        SelectProps={{
-          native: true,
+        onChange={(event) => {
+          const selectedOption = event.target.value;
+          setSelectedOption(selectedOption);
+          callChartFunction(
+            selectedOption,
+            selectedTimeframe,
+            setInitialRawData,
+            selectedExercise
+          );
         }}
         sx={{
           width: "100%",
-          paddingTop: "16px",
-          paddingLeft: "8px",
-          paddingRight: "8px",
+          marginTop: "16px",
         }}
       >
         {statisticsOptionsToUse.map((option) => (
-          <option key={option.label} value={option.label}>
+          <MenuItem key={option.label} value={option.label}>
             {option.label}
-          </option>
+          </MenuItem>
         ))}
-      </TextField>
- */}
+      </Select>
+
       <ButtonGroup
         variant="outlined"
         aria-label="outlined primary button group"

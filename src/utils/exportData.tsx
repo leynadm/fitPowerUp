@@ -26,7 +26,7 @@ function exportData(){
         // Generate a download link
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'user-exercises-entries.xlsx';
+        link.download = 'fitPowerUp_Exercises_Export.xlsx';
         link.click();
       };
     };

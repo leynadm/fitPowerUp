@@ -1,4 +1,10 @@
-import React, { useState, Dispatch, SetStateAction, useRef } from "react";
+import React, {
+  useState,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+} from "react";
 import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -16,6 +22,18 @@ import Select from "@mui/material/Select";
 import deleteAllEntries from "../../utils/CRUDFunctions/deleteAllEntries";
 import exportData from "../../utils/exportData";
 import * as XLSX from "xlsx";
+import DeleteAllDataModal from "../../components/ui/DeleteAllDataModal";
+import SuccessGenericAlert from "../../components/ui/SuccessGenericAlert";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+
+const style = {
+  width: "100%",
+  marginTop:"8px",
+  bgcolor: "background.paper",
+};
+
 interface WorkoutProps {
   unitsSystem: string;
   setUnitsSystem: Dispatch<SetStateAction<string>>;
@@ -31,8 +49,12 @@ function Settings({
 }: WorkoutProps) {
   const [enabled, setEnabled] = useState(unitsSystem === "imperial");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileSource, setFileSource] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [openDeleteAllData, setOpenDeleteAllData] = useState(false);
+  const [genericSuccessAlert, setGenericSuccessAlert] = useState(false);
+  const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   const updateToImperial = () => {
     const request = indexedDB.open("fitScouterDb", 1);
@@ -284,12 +306,13 @@ function Settings({
     };
   }
 
+  /* 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
     if (file) {
       setSelectedFile(file);
-
+ 
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
@@ -297,21 +320,20 @@ function Settings({
         setFileSource(fileSource);
       };
     }
+  } */
+
+  const weightIncrementOptions = [0.25, 0.5, 1.0, 1.25, 2.0, 2.5, 5.0, 10.0];
+
+  function handleDeleteAllDataModalVisibility() {
+    setOpenDeleteAllData(!openDeleteAllData);
   }
 
   function handleImportFileSelection() {
     fileInputRef.current?.click();
-    importData();
   }
 
-  const weightIncrementOptions = [0.25, 0.5, 1.0, 1.25, 2.0, 2.5, 5.0, 10.0];
-
-
-
-  function importData() {
+  function importData(file: File) {
     const reader = new FileReader();
-
-    console.log("inside import data:");
 
     reader.onload = (e) => {
       console.log(e.target);
@@ -324,87 +346,117 @@ function Settings({
         console.log({ sheetName });
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-        const request = indexedDB.open("fitScouterDb");
-        request.onsuccess = (event) => {
-          const db = (event.target as IDBOpenDBRequest).result;
-          const transaction = db.transaction(
-            "user-exercises-entries",
-            "readwrite"
-          );
-          const objectStore = transaction.objectStore("user-exercises-entries");
-          console.log("preparing to loop:");
-          for (let i = 1; i < jsonData.length; i++) {
-            const row = jsonData[i] as unknown[];
-            const serialDate = row[0] as number;
-            const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-            const millisecondsPerDay = 24 * 60 * 60 * 1000;
-            const offsetMilliseconds = serialDate * millisecondsPerDay;
-            const date = new Date(excelEpoch.getTime() + offsetMilliseconds);
-            // Set time portion to midnight
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-
-            let distanceRow = row[5];
-            let distance_unitRow = row[6]
-            let timeRow=row[7]
-
-            if(distanceRow===undefined){
-              distanceRow=0
-            } else if(distance_unitRow===undefined){
-              distance_unitRow="m"
-            } else if(timeRow===undefined){
-              timeRow=0
-            }
-
-            const entry = {
-              // Map the appropriate properties from the Excel file to your object structure
-              // For example:
-              date: date, // Convert the serial date to a Date object with time set to midnight
-              exercise: row[1] as string,
-              category: row[2] as string,
-              weight: row[3] as number,
-              reps: row[4] as number,
-              distance: /*  row[5] as number */ distanceRow as number,
-              distance_unit: /* row[6] as string */ distance_unitRow as string,
-              time:/*  row[7] as string */ timeRow as number,
-              is_pr: row[8] as boolean,
-            };
-            /* 
-            console.log('logging the entry:');
-            console.log(entry);
- */
-            if (row[3] !== undefined && row[4] !== undefined)
-              objectStore.add(entry);
-          }
-
-          transaction.oncomplete = () => {
-            console.log("Data imported successfully.");
-          };
-        };
+        processImportedData(jsonData);
       }
     };
 
-    if (selectedFile) {
-      reader.readAsArrayBuffer(selectedFile);
-    } else {
-      console.log("No file selected.");
-    }
+    reader.readAsArrayBuffer(file);
+
+    console.log("added file");
   }
-  const handleWeightIncrementChange = (event:any) => {
+
+  function processImportedData(jsonData: any) {
+    const request = indexedDB.open("fitScouterDb");
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction("user-exercises-entries", "readwrite");
+      const objectStore = transaction.objectStore("user-exercises-entries");
+
+      for (let i = 1; i < jsonData.length; i++) {
+        const row = jsonData[i] as unknown[];
+        const serialDate = row[0] as number;
+        const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+        const offsetMilliseconds = serialDate * millisecondsPerDay;
+        const date = new Date(excelEpoch.getTime() + offsetMilliseconds);
+        // Set time portion to midnight
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+
+        let distanceRow = row[5];
+        let distance_unitRow = row[6];
+        let timeRow = row[7];
+
+        if (distanceRow === undefined) {
+          distanceRow = 0;
+        } else if (distance_unitRow === undefined) {
+          distance_unitRow = "m";
+        } else if (timeRow === undefined) {
+          timeRow = 0;
+        }
+
+        const entry = {
+          // Map the appropriate properties from the Excel file to your object structure
+          // For example:
+          date: date, // Convert the serial date to a Date object with time set to midnight
+          exercise: row[1] as string,
+          category: row[2] as string,
+          weight: row[3] as number,
+          reps: row[4] as number,
+          distance: /*  row[5] as number */ distanceRow as number,
+          distance_unit: /* row[6] as string */ distance_unitRow as string,
+          time: /*  row[7] as string */ timeRow as number,
+          is_pr: row[8] as boolean,
+        };
+        if (row[3] !== undefined && row[4] !== undefined)
+          objectStore.add(entry);
+      }
+
+      transaction.oncomplete = () => {
+        console.log("Data imported successfully.");
+        showSuccessfulAlert();
+      };
+    };
+  }
+
+  function showSuccessfulAlert() {
+    setGenericSuccessAlert(true);
+
+    // Clear previous timeout if it exists
+    if (alertTimeoutId) {
+      clearTimeout(alertTimeoutId);
+    }
+
+    // Set new timeout to hide the alert after 2 seconds
+    const timeoutId = setTimeout(() => {
+      setGenericSuccessAlert(false);
+    }, 3000);
+
+    setAlertTimeoutId(timeoutId);
+    return;
+  }
+
+  /* 
+function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const file = event.target.files?.[0];
+
+  if (file) {
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileSource = e.target?.result as string;
+      setFileSource(fileSource);
+      importData();
+    };
+    reader.readAsArrayBuffer(file);
+  }
+} */
+
+  const handleWeightIncrementChange = (event: any) => {
     const selectedValue = Number(event.target.value);
     setWeightIncrementPreference(selectedValue);
     updateDefaultWeightIncrement(selectedValue);
   };
 
-function handleDeleteAllEntries(){
-  exportData()
-  deleteAllEntries()
-}
+  function handleDeleteAllEntries() {
+    exportData();
+    deleteAllEntries();
+    setOpenDeleteAllData(false);
+  }
 
   return (
-    <Box
+    <Container
       sx={{
         width: "100%",
         height: "100%",
@@ -414,6 +466,12 @@ function handleDeleteAllEntries(){
         justifyContent: "center",
       }}
     >
+      <DeleteAllDataModal
+        setOpenDeleteAllData={setOpenDeleteAllData}
+        openDeleteAllData={openDeleteAllData}
+        handleDeleteAllEntries={handleDeleteAllEntries}
+      />
+
       <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -459,84 +517,127 @@ function handleDeleteAllEntries(){
           </Toolbar>
         </Container>
       </AppBar>
+      <SuccessGenericAlert
+        genericSuccessAlert={genericSuccessAlert}
+        genericSuccessAlertText={"Your data was succesfully imported!"}
+      />
 
-      <Box
-        sx={{
-          width: "100%",
-          alignSelf: "center",
-          justifySelf: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <FormGroup>
-          <FormControlLabel
-            control={<Switch checked={enabled} onChange={handleSwitchChange} />}
-            label={enabled ? "Imperial" : "Metric"}
-          />
-        </FormGroup>
-      </Box>
-
-      <Box sx={{ width: "100%" }}>
-        <FormControl variant="outlined" sx={{ width: "100%" }}>
-          <InputLabel id="weight-increment-label">Weight Increment</InputLabel>
-          <Select
-            labelId="weight-increment-label"
-            id="weight-increment"
-            value={weightIncrementPreference}
-            onChange={handleWeightIncrementChange}
-            label="Weight Increment"
-            sx={{ width: "100%" }}
+      <List sx={style}>
+        <ListItem>
+          <Box
+            sx={{
+              width: "100%",
+              alignSelf: "center",
+              justifySelf: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            {weightIncrementOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch checked={enabled} onChange={handleSwitchChange} />
+                }
+                label={enabled ? "Imperial" : "Metric"}
+              />
+            </FormGroup>
+          </Box>
+        </ListItem>
+        
+        <Divider />
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{ width: "90%", marginTop: "8px" }}
-          onClick={exportData}
-        >
-          Export Data
-        </Button>
+        <ListItem>
+          <Box sx={{ width: "100%" }}>
+            <FormControl variant="outlined" sx={{ width: "100%" }}>
+              <InputLabel id="weight-increment-label">
+                Weight Increment
+              </InputLabel>
+              <Select
+                labelId="weight-increment-label"
+                id="weight-increment"
+                value={weightIncrementPreference}
+                onChange={handleWeightIncrementChange}
+                label="Weight Increment"
+                sx={{ width: "100%" }}
+              >
+                {weightIncrementOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        
+        </ListItem>
+        
+        <Divider />
+        
 
-        <Button
-          variant="contained"
-          sx={{ width: "90%", marginTop: "8px" }}
-          onClick={handleImportFileSelection}
-        >
-          Import Data
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          hidden
-          onChange={handleFileChange}
-        />
-                <Button
-          variant="contained"
-          sx={{ width: "90%", marginTop: "8px" }}
-          onClick={handleDeleteAllEntries}
-        >
-          Delete All Data
-        </Button>
-      </Box>
-    </Box>
+          <ListItem>
+            <Box sx={{ width: "100%" }}>
+              <Typography sx={{ fontSize: "smaller" }}>
+                Export all your exercise data to an .xlsx file.
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{ width: "100%", marginTop: "8px" }}
+                onClick={exportData}
+              >
+                Export Data
+              </Button>
+            </Box>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Box sx={{ width: "100%" }}>
+              <Typography sx={{ fontSize: "smaller" }}>
+                Import a compatible set of data.
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{ width: "100%", marginTop: "8px" }}
+                onClick={handleImportFileSelection}
+              >
+                Import Data
+              </Button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    importData(file);
+                  }
+                }}
+              />
+            </Box>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Box sx={{width:"100%"}}>
+              <Typography sx={{fontSize:"smaller"}}>
+                Delete all your exercise data (be careful!).
+              </Typography>
+            <Button
+              variant="contained"
+              sx={{ width: "100%", marginTop: "8px" }}
+              onClick={handleDeleteAllDataModalVisibility}
+            >
+              Delete All Data
+            </Button>
+            </Box>
+          </ListItem>
+
+      </List>
+    </Container>
   );
 }
 
