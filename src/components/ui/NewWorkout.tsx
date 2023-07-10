@@ -241,7 +241,6 @@ function NewWorkout({
               variant="h6"
               noWrap
               component="a"
-              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -263,7 +262,6 @@ function NewWorkout({
               variant="h5"
               noWrap
               component="a"
-              href=""
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -361,7 +359,12 @@ function NewWorkout({
           justifyContent: "space-between",
           alignItems: "center",
           height: "32px",
+
           backgroundColor: "#FF8C00",
+   
+/*     
+          backgroundColor: "#3f51b5",
+    */       
           width: "100%",
           borderBottom: "2px black solid",
         }}

@@ -122,14 +122,6 @@ export default function UserWorkoutCard({
   );
 
 
-  useEffect(()=>{
-    console.log('loading workoutData')
-    console.log({workoutData})
-    console.log('showing showWorkout:')
-    console.log({showWorkout})
-    console.log('logging workoutData.length')
-    console.log(workoutData.length)
-  },[])
   const [postAppreciationNumber, setPostAppreciationNumber] = useState<number>(
     postAppreciation.length !== 0 ? postAppreciation.length : 0
   );

@@ -24,6 +24,7 @@ import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import SuccessfulProfilePowerUploadAlert from "../../components/ui/SuccessfulProfilePowerUploadAlert";
+import FailedGenericAlert from "../../components/ui/FailedGenericAlert";
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -79,6 +80,7 @@ function ProgressLevel({
   experiencePowerLevel,
   setExperiencePowerLevel,
 }: ProgressProps) {
+
   const [weight, setWeight] = useState(0);
   const [firstExerciseSelected, setFirstExerciseSelected] = useState<any>(null);
   const [secondExerciseSelected, setSecondExerciseSelected] =
@@ -91,8 +93,27 @@ function ProgressLevel({
     null
   );
 
-  function calculatePowerLevel() {
+  const [genericFailedAlert, setGenericFailedAlert] = useState(false)
 
+
+  function showFailedAlert() {
+    setGenericFailedAlert(true);
+
+    // Clear previous timeout if it exists
+    if (alertTimeoutId) {
+      clearTimeout(alertTimeoutId);
+    }
+
+    // Set new timeout to hide the alert after 2 seconds
+    const timeoutId = setTimeout(() => {
+      setGenericFailedAlert(false);
+    }, 3000);
+
+    setAlertTimeoutId(timeoutId);
+    return;
+  }
+
+  function calculatePowerLevel() {
     if (
       firstExerciseSelected !== null &&
       secondExerciseSelected !== null &&
@@ -148,6 +169,8 @@ function ProgressLevel({
         .catch((error) => {
           console.error("Error occurred:", error);
         });
+    } else {
+      showFailedAlert()
     }
   }
 
@@ -272,6 +295,11 @@ function ProgressLevel({
         profileUploadAlert={profileUploadAlert}
       />
 
+      <FailedGenericAlert
+        genericFailedAlert={genericFailedAlert}
+        genericFailedAlertText="You need to select 3 exercises and add your weight!"
+      />
+
       <Box
         sx={{
           display: "flex",
@@ -311,13 +339,19 @@ function ProgressLevel({
           label="Add your weight"
           value={weight}
           variant="filled"
+          InputProps={{ inputProps: { min: 0} }}
           sx={{
             marginTop: "8px",
             marginBottom: "8px",
             textAlign: "center",
             width: "100%",
           }}
-          onChange={(e) => setWeight(parseInt(e.target.value))}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (!isNaN(value)) {
+              setWeight(value);
+            }
+          }}
         />
         <PowerLevelSelect
           exerciseSelected={firstExerciseSelected}

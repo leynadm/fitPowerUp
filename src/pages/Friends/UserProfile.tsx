@@ -5,9 +5,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -90,7 +88,7 @@ function UserProfile() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -112,14 +110,13 @@ function UserProfile() {
               variant="h5"
               noWrap
               component="a"
-              href=""
+              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: ".1rem",
                 color: "inherit",
                 textDecoration: "none",
               }}

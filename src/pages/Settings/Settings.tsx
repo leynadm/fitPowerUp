@@ -3,8 +3,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useRef,
-  ChangeEvent
-
+  ChangeEvent,
 } from "react";
 import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
@@ -25,15 +24,16 @@ import exportData from "../../utils/exportData";
 import * as XLSX from "xlsx";
 import DeleteAllDataModal from "../../components/ui/DeleteAllDataModal";
 import SuccessGenericAlert from "../../components/ui/SuccessGenericAlert";
+import FailedGenericAlert from "../../components/ui/FailedGenericAlert";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 
 const style = {
   width: "100%",
-  marginTop:"8px",
+  marginTop: "8px",
   bgcolor: "background.paper",
 };
 
@@ -55,11 +55,12 @@ function Settings({
 
   const [openDeleteAllData, setOpenDeleteAllData] = useState(false);
   const [genericSuccessAlert, setGenericSuccessAlert] = useState(false);
+  const [genericFailedAlert, setGenericFailedAlert] = useState(false);
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
 
-  const [datasetOrigin, setDatasetOrigin] = useState("fitPowerUp")
+  const [datasetOrigin, setDatasetOrigin] = useState("fitPowerUp");
 
   const handleDatasetOriginChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDatasetOrigin(e.target.value);
@@ -342,9 +343,8 @@ function Settings({
   }
 
   function importData(file: File) {
+    console.log("logging datasetOrigin:");
 
-    console.log('logging datasetOrigin:')
-    
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -358,13 +358,12 @@ function Settings({
         console.log({ sheetName });
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        
-        if(datasetOrigin==="fitPowerUp"){
-          processImportedData(jsonData);
-        } else if(datasetOrigin==="fitNotes"){
-          processImportedDataFitNotes(jsonData)
-        } 
 
+        if (datasetOrigin === "fitPowerUp") {
+          processImportedData(jsonData);
+        } else if (datasetOrigin === "fitNotes") {
+          processImportedDataFitNotes(jsonData);
+        }
       }
     };
 
@@ -374,8 +373,28 @@ function Settings({
   }
 
   function processImportedDataFitNotes(jsonData: any) {
+    if (jsonData.length === 0) {
+      showFailedAlert();
+      return;
+    }
 
-    console.log('inside process importedDataFitnotes')
+    const titleRow = jsonData[0];
+    if (
+      titleRow[0] !== "Date" ||
+      titleRow[1] !== "Exercise" ||
+      titleRow[2] !== "Category" ||
+      titleRow[3] !== "Weight" ||
+      titleRow[4] !== "Weight Unit" ||
+      titleRow[5] !== "Reps" ||
+      titleRow[6] !== "Distance" ||
+      titleRow[7] !== "Distance Unit" ||
+      titleRow[8] !== "Time" ||
+      jsonData.length === 0
+    ) {
+      showFailedAlert();
+      return;
+    }
+
     const request = indexedDB.open("fitScouterDb");
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
@@ -397,32 +416,32 @@ function Settings({
         let distanceRow = row[6];
         let distance_unitRow = row[7];
         let timeRow = row[8];
-        let commentRow = row[9]
+        let commentRow = row[9];
 
-        console.log(row[6])
-        console.log(row[7])
-        console.log(row[8])
-        console.log(row[9])
-        console.log({distanceRow,distance_unitRow,timeRow,commentRow})
+        console.log(row[6]);
+        console.log(row[7]);
+        console.log(row[8]);
+        console.log(row[9]);
+        console.log({ distanceRow, distance_unitRow, timeRow, commentRow });
 
         if (distanceRow === undefined) {
-          console.log('inside distanceRow if check:')
+          console.log("inside distanceRow if check:");
           distanceRow = 0;
-        } 
-        
-        if(distance_unitRow === undefined){
-          console.log('inside distance_unitRow if check:')
+        }
+
+        if (distance_unitRow === undefined) {
+          console.log("inside distance_unitRow if check:");
           distance_unitRow = "m";
         }
 
-        if(timeRow === undefined){
-          console.log('inside timeRow if check:')
+        if (timeRow === undefined) {
+          console.log("inside timeRow if check:");
           timeRow = 0;
         }
 
-        if (commentRow ===undefined){
-          console.log('inside commentRow if check:')
-          commentRow = ""
+        if (commentRow === undefined) {
+          console.log("inside commentRow if check:");
+          commentRow = "";
         }
 
         const entry = {
@@ -437,16 +456,15 @@ function Settings({
           distance_unit: /* row[6] as string */ distance_unitRow as string,
           time: /*  row[7] as string */ timeRow as number,
           is_pr: false,
-          dropset:0,
-          comment:commentRow
+          dropset: 0,
+          comment: commentRow,
         };
 
-        console.log('logging inside entry:')
-        console.log({distanceRow,distance_unitRow,timeRow,commentRow})
+        console.log("logging inside entry:");
+        console.log({ distanceRow, distance_unitRow, timeRow, commentRow });
 
-        
-        console.log(entry)
-        
+        console.log(entry);
+
         if (row[3] !== undefined && row[4] !== undefined)
           objectStore.add(entry);
       }
@@ -458,9 +476,32 @@ function Settings({
     };
   }
 
-
-
   function processImportedData(jsonData: any) {
+    if (jsonData.length === 0) {
+      showFailedAlert();
+      return;
+    }
+
+    const titleRow = jsonData[0];
+    if (
+      titleRow[0] !== "date" ||
+      titleRow[1] !== "exercise" ||
+      titleRow[2] !== "category" ||
+      titleRow[3] !== "weight" ||
+      titleRow[4] !== "reps" ||
+      titleRow[5] !== "distance" ||
+      titleRow[6] !== "distance_unit" ||
+      titleRow[7] !== "time" ||
+      titleRow[8] !== "is_pr" ||
+      titleRow[9] !== "dropset" ||
+      titleRow[10] !== "comment" ||
+      titleRow[11] !== "id" ||
+      jsonData.length === 0
+    ) {
+      showFailedAlert();
+      return;
+    }
+
     const request = indexedDB.open("fitScouterDb");
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
@@ -482,9 +523,9 @@ function Settings({
         let distanceRow = row[5];
         let distance_unitRow = row[6];
         let timeRow = row[7];
-        let isPrRow = row[8]
-        let dropsetRow = row[9]
-        let commentRow = row[10]
+        let isPrRow = row[8];
+        let dropsetRow = row[9];
+        let commentRow = row[10];
 
         if (distanceRow === undefined) {
           distanceRow = 0;
@@ -492,12 +533,12 @@ function Settings({
           distance_unitRow = "m";
         } else if (timeRow === undefined) {
           timeRow = 0;
-        } else if(isPrRow === undefined){
-          isPrRow = false
-        }else if(dropsetRow === undefined) {
-          dropsetRow=0
-        }else if(commentRow===undefined){
-          commentRow=""
+        } else if (isPrRow === undefined) {
+          isPrRow = false;
+        } else if (dropsetRow === undefined) {
+          dropsetRow = 0;
+        } else if (commentRow === undefined) {
+          commentRow = "";
         }
 
         const entry = {
@@ -512,8 +553,8 @@ function Settings({
           distance_unit: /* row[6] as string */ distance_unitRow as string,
           time: /*  row[7] as string */ timeRow as number,
           is_pr: row[8] as boolean,
-          dropset:dropsetRow,
-          comment:row[10]
+          dropset: dropsetRow,
+          comment: row[10],
         };
         if (row[3] !== undefined && row[4] !== undefined)
           objectStore.add(entry);
@@ -543,6 +584,22 @@ function Settings({
     return;
   }
 
+  function showFailedAlert() {
+    setGenericFailedAlert(true);
+
+    // Clear previous timeout if it exists
+    if (alertTimeoutId) {
+      clearTimeout(alertTimeoutId);
+    }
+
+    // Set new timeout to hide the alert after 2 seconds
+    const timeoutId = setTimeout(() => {
+      setGenericFailedAlert(false);
+    }, 3000);
+
+    setAlertTimeoutId(timeoutId);
+    return;
+  }
 
   const handleWeightIncrementChange = (event: any) => {
     const selectedValue = Number(event.target.value);
@@ -623,6 +680,10 @@ function Settings({
         genericSuccessAlertText={"Your data was succesfully imported!"}
       />
 
+      <FailedGenericAlert
+        genericFailedAlert={genericFailedAlert}
+        genericFailedAlertText={"The file provided contains incompatible data!"}
+      />
       <List sx={style}>
         <ListItem>
           <Box
@@ -695,7 +756,8 @@ function Settings({
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Import a compatible dataset.<br></br> It can be a previously
-              exported fitPowerUp file(.xlsx) or a fitNotes(for Android) app one(.csv).
+              exported fitPowerUp file(.xlsx) or a fitNotes(for Android) app
+              one(.csv).
             </Typography>
             <FormControl>
               <RadioGroup
@@ -709,7 +771,7 @@ function Settings({
                   control={<Radio />}
                   label="fitPowerUp"
                   checked={datasetOrigin === "fitPowerUp"}
-               />
+                />
                 <FormControlLabel
                   value="fitNotes"
                   control={<Radio />}
@@ -733,7 +795,7 @@ function Settings({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  console.log({datasetOrigin})
+                  console.log({ datasetOrigin });
                   importData(file);
                 }
               }}

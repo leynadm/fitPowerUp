@@ -177,7 +177,7 @@ function ExercisesCategories({
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -199,7 +199,7 @@ function ExercisesCategories({
               variant="h5"
               noWrap
               component="a"
-              href=""
+              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },

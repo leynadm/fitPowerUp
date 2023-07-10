@@ -52,7 +52,7 @@ function Progress() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -74,7 +74,7 @@ function Progress() {
               variant="h5"
               noWrap
               component="a"
-              href=""
+              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
