@@ -25,8 +25,9 @@ function exportData(){
         
         // Generate a download link
         const link = document.createElement('a');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         link.href = url;
-        link.download = 'fitPowerUp_Exercises_Export.xlsx';
+        link.download = `fitPowerUp_Exercises_Export_${timestamp}.xlsx`;
         link.click();
       };
     };
