@@ -13,6 +13,7 @@ import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
+import LoadingCircle from "../../components/ui/LoadingCircle";
 
 function UserProfilePosts() {
   const { currentUser, currentUserData } = useContext(AuthContext);
@@ -83,6 +84,8 @@ function UserProfilePosts() {
 
 
   return (
+
+    
     <Box sx={{ paddingBottom: "56px" }}>
       {userPosts.map((post: any, index: number) => (
         <UserWorkoutCard
@@ -114,6 +117,9 @@ function UserProfilePosts() {
 
       </Button>
     </Box>
+
+
+
   );
 }
 

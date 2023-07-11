@@ -16,6 +16,7 @@ import {
 import { db } from "../../config/firebase";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
+import LoadingCircle from "../../components/ui/LoadingCircle";
 function Newsfeed() {
   const { currentUser } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
@@ -27,17 +28,93 @@ function Newsfeed() {
   );
   const [loading, setLoading] = useState(false);
   const [hasPosts, setHasPosts] = useState(false);
+  const [loadButtonStatus, setLoadButtonStatus] = useState(false)
+
+  let renderedOnce = false
+  
   useEffect(() => {
     getFeed();
   }, []);
 
-  useEffect(() => {
-    console.log("rerendering based on has posts");
-    console.log({ hasPosts });
-    console.log({ loading });
-  }, [loading, hasPosts]);
+  useEffect(()=>{
+
+  },[loading])
+
+
+  async function loadMoreFeed() {
+  
+    const postsRef = collection(db, "posts");
+  
+    let postsQuery;
+    if (latestDoc) {
+      postsQuery = query(
+        postsRef,
+        orderBy("createdAt", "desc"),
+        where("documentId", "in", postIDsCache),
+        startAfter(latestDoc),
+        limit(2)
+      );
+    } else {
+      postsQuery = query(
+        postsRef,
+        orderBy("createdAt", "desc"),
+        where("documentId", "in", postIDsCache),
+        limit(2)
+      );
+    } 
+  
+    const postsSnapshot = await getDocs(postsQuery);
+  
+    if(postsSnapshot.empty){
+      setLoadButtonStatus(true)
+    }
+
+    if (postsSnapshot.docs.length > 0) {
+      setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
+    }
+  
+    // Extract the post data from the query snapshot
+    const newPostsData = postsSnapshot.docs.map((doc) => {
+      const postData = { ...doc.data(), postId: doc.id };
+      return postData;
+    });
+  
+    // Create a mapping from user ID to user data for efficient lookup
+    const userIdToUserData: { [key: string]: any } = {};
+    usersDataCache.forEach((userData: any) => {
+      const userId = userData.id;
+      userIdToUserData[userId] = userData;
+    });
+  
+    // Combine post data with user data to enrich the feed data
+    const newFeedData = newPostsData.map((post: any) => {
+      const userID = post.userId;
+      if (userIdToUserData.hasOwnProperty(userID)) {
+        const { name, surname, profileImage, verified } = userIdToUserData[userID];
+        return {
+          ...post,
+          name,
+          surname,
+          profileImage,
+          verified,
+        };
+      }
+      return null; // Add a default return value, such as null, for cases where userId is not found
+    });
+  
+    // Update the userFeed state with the new feed data
+    setUserFeed((prevUserFeed: PostData[]) => [...prevUserFeed, ...newFeedData]);
+
+  }
+  
 
   async function getFeed() {
+    
+    renderedOnce = true;
+
+    if (renderedOnce) {
+      setLoading(true);
+    }
 
     const followedUsersRef = collection(db, "followers-feed");
     const usersRef = collection(db, "users");
@@ -47,8 +124,10 @@ function Newsfeed() {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
-    console.log({sevenDaysAgoTimestamp})
+    console.log({ sevenDaysAgoTimestamp });
     // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
+    
+    
     const followedUsersSnapshot = await getDocs(
       query(
         followedUsersRef,
@@ -64,8 +143,9 @@ function Newsfeed() {
     console.log("logging documentIds of the followed users:");
     if (documentIds.length === 0) {
       console.log("No post IDs found.");
-    
-      // Handle the empty postIds array (e.g., display a message to the user)
+      if (renderedOnce) {
+        setLoading(false);
+      }
       return;
     }
     console.log(documentIds);
@@ -73,11 +153,13 @@ function Newsfeed() {
     let usersQuery;
     let usersSnapshot;
     let usersData;
+
     if (usersDataCache.length === 0) {
       // Retrieve the user data of the followed users
+    
       usersQuery = query(usersRef, where(documentId(), "in", documentIds));
+    
       usersSnapshot = await getDocs(usersQuery);
-
       // Extract the user data from the query snapshot
       usersData = usersSnapshot.docs.map((doc) => {
         const userData = { id: doc.id, ...doc.data() };
@@ -85,8 +167,6 @@ function Newsfeed() {
       });
 
       setUsersDataCache(usersData);
-      console.log("usersData:");
-      console.log(usersData);
     }
 
     let postIds;
@@ -109,7 +189,9 @@ function Newsfeed() {
     if (postIds.length === 0) {
       console.log("No post IDs found.");
       console.log("SETTING LOADING TO FALSE!!!");
-      setLoading(false);
+      if (renderedOnce) {
+        setLoading(false);
+      }
 
       // Handle the empty postIds array (e.g., display a message to the user)
 
@@ -127,18 +209,22 @@ function Newsfeed() {
           orderBy("createdAt", "desc"),
           where("documentId", "in", postIds),
           startAfter(latestDoc),
-          limit(5)
+          limit(2)
         );
       } else {
         postsQuery = query(
           postsRef,
           orderBy("createdAt", "desc"),
           where("documentId", "in", postIds),
-          limit(5)
+          limit(2)
         );
       }
 
       const postsSnapshot = await getDocs(postsQuery);
+
+      if(postsSnapshot.empty){
+        setLoadButtonStatus(true)
+      }
 
       if (postsSnapshot.docs.length > 0) {
         setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
@@ -165,13 +251,14 @@ function Newsfeed() {
       const feedData = postsData.map((post: any) => {
         const userID = post.userId;
         if (userIdToUserData.hasOwnProperty(userID)) {
-          const { name, surname, profileImage,verified } = userIdToUserData[userID];
+          const { name, surname, profileImage, verified } =
+            userIdToUserData[userID];
           return {
             ...post,
             name,
             surname,
             profileImage,
-            verified
+            verified,
           };
         }
         return null; // Add a default return value, such as null, for cases where userId is not found
@@ -182,11 +269,14 @@ function Newsfeed() {
 
       // Update the userFeed state with the sorted feed data
 
+
       if (latestDoc) {
+        
         setUserFeed((prevUserFeed: PostData[]) => [
           ...prevUserFeed,
           ...feedData,
         ]);
+
         setHasPosts(feedData.length > 0);
       } else {
         setUserFeed(feedData);
@@ -195,9 +285,13 @@ function Newsfeed() {
     }
 
     console.log("SETTING LOADING TO FALSE!!!");
-    setLoading(false);
+    if (renderedOnce) {
+      setLoading(false);
+    }
+
   }
-/* 
+ 
+
   if (loading && !hasPosts) {
     return (
       <Box
@@ -215,7 +309,7 @@ function Newsfeed() {
       </Box>
     );
   }
- */
+
   return (
     <>
       {hasPosts ? (
@@ -248,7 +342,8 @@ function Newsfeed() {
           {hasPosts && (
             <Button
               sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
-              onClick={getFeed}
+              onClick={loadMoreFeed}
+              disabled={loadButtonStatus}
             >
               Load More
             </Button>

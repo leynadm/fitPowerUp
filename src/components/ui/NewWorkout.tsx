@@ -230,173 +230,176 @@ function NewWorkout({
         exerciseCommentId={exerciseCommentId}
       />
 
-      <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <FitnessCenterIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+      <Box position="fixed" sx={{width:"100%"}}>
+        <AppBar
+          elevation={0}
+          style={{ top: 0, width: "100%" }}
+        >
+          <Container maxWidth="xl">
+            <Toolbar disableGutters>
+              <FitnessCenterIcon
+                sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+              />
 
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Log
-            </Typography>
-
-            <FitnessCenterIcon
-              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
-
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Log
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
-
-            <Box sx={{ flexGrow: 1, display: "flex" }}>
-              <Box sx={{ marginLeft: "auto" }}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={handleCalendar}
-                >
-                  <CalendarMonthIcon sx={{ color: "white" }} />
-                </IconButton>
-
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={handleNewWorkout}
-                >
-                  <AddOutlinedIcon sx={{ color: "white" }} />
-                </IconButton>
-
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                  sx={{ display: { md: "none" } }}
-                >
-                  <MenuIcon sx={{ color: "white" }} />
-                </IconButton>
-              </Box>
-
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
                 sx={{
-                  display: { xs: "block", md: "none" },
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
                 }}
               >
+                Log
+              </Typography>
+
+              <FitnessCenterIcon
+                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+              />
+
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                sx={{
+                  mr: 2,
+                  display: { xs: "flex", md: "none" },
+                  flexGrow: 1,
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Log
+              </Typography>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={() => handlePageClick(page)}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
                 ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+              </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          height: "32px",
+              <Box sx={{ flexGrow: 1, display: "flex" }}>
+                <Box sx={{ marginLeft: "auto" }}>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={handleCalendar}
+                  >
+                    <CalendarMonthIcon sx={{ color: "white" }} />
+                  </IconButton>
 
-          backgroundColor: "#FF8C00",
-   
-/*     
-          backgroundColor: "#3f51b5",
-    */       
-          width: "100%",
-          borderBottom: "2px black solid",
-        }}
-      >
-        <IconButton aria-label="left arrow" onClick={subtractDays}>
-          <KeyboardArrowLeftIcon
-            sx={{
-              color: "white",
-            }}
-          />
-        </IconButton>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={handleNewWorkout}
+                  >
+                    <AddOutlinedIcon sx={{ color: "white" }} />
+                  </IconButton>
 
-        <Typography
-          variant="body2"
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleOpenNavMenu}
+                    color="inherit"
+                    sx={{ display: { md: "none" } }}
+                  >
+                    <MenuIcon sx={{ color: "white" }} />
+                  </IconButton>
+                </Box>
+
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}
+                >
+                  {pages.map((page) => (
+                    <MenuItem key={page} onClick={() => handlePageClick(page)}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+
+        <Box
           sx={{
-            fontWeight: "bold",
-            color: "white",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "32px",
+            backgroundColor: "#FF8C00",
+
+            /*     
+          backgroundColor: "#3f51b5",
+    */
+            width: "100%",
+            borderBottom: "2px black solid",
           }}
         >
-          {todayDate && formatDate(todayDate)}
-        </Typography>
+          <IconButton aria-label="left arrow" onClick={subtractDays}>
+            <KeyboardArrowLeftIcon
+              sx={{
+                color: "white",
+              }}
+            />
+          </IconButton>
 
-        <IconButton aria-label="left arrow" onClick={addDays}>
-          <KeyboardArrowRightIcon
+          <Typography
+            variant="body2"
             sx={{
+              fontWeight: "bold",
               color: "white",
             }}
-          />
-        </IconButton>
-      </Box>
+          >
+            {todayDate && formatDate(todayDate)}
+          </Typography>
 
-      <Container sx={{ height: "calc(100% - 56px)", padding: 0 }}>
+          <IconButton aria-label="left arrow" onClick={addDays}>
+            <KeyboardArrowRightIcon
+              sx={{
+                color: "white",
+              }}
+            />
+          </IconButton>
+        </Box>
+      </Box>
+      <Container sx={{ padding: 0 }}>
         {existingExercises.length === 0 ? (
           <Box
             sx={{
@@ -439,11 +442,19 @@ function NewWorkout({
                 <AddIcon />
                 <Typography variant="body2">Start New Workout</Typography>
               </IconButton>
-
             </Box>
           </Box>
         ) : (
-          <Box className="BoxToCheck" sx={{ height: "100%" }}>
+          <Box
+            className="BoxToCheck"
+            sx={{
+              paddingTop:"32px",
+              backgroundColor: "#F0F2F5",
+              paddingBottom: "56px",
+              width: "100%",
+
+            }}
+          >
             {existingExercises.map((group, index) => (
               <Box
                 key={index}
@@ -474,6 +485,7 @@ function NewWorkout({
                       justifyItems: "center",
                       alignItems: "center",
                       width: "100%",
+                      
                     }}
                   >
                     {exercise.comment ? ( // Check if 'comment' property exists
@@ -537,7 +549,9 @@ function NewWorkout({
                         justifyItems: "center",
                         width: "100%",
                         justifyContent: "space-evenly",
-                        borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
+                        borderLeft: exercise.dropset
+                          ? "5px solid red"
+                          : "5px solid transparent",
                       }}
                     >
                       {exercise.weight !== 0 && (

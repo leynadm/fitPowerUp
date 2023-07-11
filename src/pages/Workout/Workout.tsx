@@ -194,7 +194,7 @@ function Workout({
   return (
     <Box
       className="thisIsMyClass"
-      sx={{ paddingBottom: "56px", backgroundColor: "#F0F2F5" }}
+      sx={{ backgroundColor: "#F0F2F5",height:"100%" }}
     >
       <Box
         sx={{

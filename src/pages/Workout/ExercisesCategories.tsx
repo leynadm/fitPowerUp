@@ -120,6 +120,7 @@ function ExercisesCategories({
           selectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
+          
           setSelectedCategoryExercises(selectedCategoryExercises);
         }
       };

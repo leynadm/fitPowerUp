@@ -53,12 +53,12 @@ function ExerciseSelected({
   }, []);
 
   return (
-    <Box sx={{ height: "100%" }}>
+    <Box sx={{ height: "100%", }}>
       <RestTimer
         showRestTimer={showRestTimer}
         setShowRestTimer={setShowRestTimer}
       />
-
+      
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -103,7 +103,7 @@ function ExerciseSelected({
                 textDecoration: "none",
               }}
             >
-              Add
+              Add 
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>

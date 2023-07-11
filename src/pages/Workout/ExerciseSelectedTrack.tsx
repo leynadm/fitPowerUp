@@ -806,6 +806,8 @@ function ExerciseSelectedTrack({
         justifyContent: "center",
         width: "100vw",
         alignItems: "center",
+        backgroundColor: "#F0F2F5",
+        paddingBottom:"56px"
       }}
     >
       <ValidationAlert showAlert={showAlert} />
@@ -1011,7 +1013,7 @@ function ExerciseSelectedTrack({
               justifyContent: "center",
               alignItems: "center",
               paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
+              paddingRight: "0.5rem"
             }}
           >
             <Typography

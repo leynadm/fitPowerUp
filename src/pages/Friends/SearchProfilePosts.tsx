@@ -22,6 +22,8 @@ interface SearchProfilePostsProps {
 function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
+  const [loadButtonStatus, setLoadButtonStatus] = useState(false)
+
 
   useEffect(() => {
     if (queriedUser) {
@@ -71,6 +73,7 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
     }
 
     if (querySnapshot.empty) {
+      setLoadButtonStatus(true)
     }
   }
 
@@ -99,6 +102,7 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
       <Button
         onClick={getUserPosts}
         sx={{ width: "100%", textAlign: "center", marginBottom: "8px" }}
+        disabled={loadButtonStatus}
       >
         Load More
       </Button>

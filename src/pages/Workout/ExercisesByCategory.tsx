@@ -17,7 +17,7 @@ import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCa
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
 import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
-
+import getExercisesByCategory from "../../utils/CRUDFunctions/getExercisesByCategory";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
@@ -65,11 +65,17 @@ function ExercisesByCategory({
     { category: string; name: string; measurement: any[]; id: number }[]
   >([]);
 
+
   useEffect(() => {
+    // useEffect implementation
+    console.log(categoryToRefresh)
+    console.log(selectedCategoryExercises);
     if (query === "" || exercisesToSearch.length === 0) {
-      getAllExercises((exercises: any) => {
-        setExercisesToSearch(exercises);
-      });
+      if (selectedCategoryExercises.length > 0) {
+        getExercisesByCategory(selectedCategoryExercises[0].category, (exercises: any) => {
+          setExercisesToSearch(exercises);
+        });
+      }
     } else {
       const filteredExercises = exercisesToSearch.filter((exercise) =>
         exercise.name.toLowerCase().includes(query.toLowerCase())
@@ -191,6 +197,7 @@ function ExercisesByCategory({
         sx={{
           width: "100%",
           height: "100%",
+          backgroundColor: "#F0F2F5"
         }}
       >
         {query !== ""
@@ -239,6 +246,8 @@ function ExercisesByCategory({
                       justifyContent: "center",
                       alignItems: "center",
                       height: "100%",
+                      backgroundColor: "#F0F2F5",
+                      width:"100%"
                     }}
                   >
                     <Typography
