@@ -127,7 +127,8 @@ function ExerciseSelectedHistory({
 
   const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
     
-    const group = existingExercises[index];
+    const reversedIndex = existingExercises.length - 1 - index;
+    const group = existingExercises[reversedIndex];
     
     return (
       <Box key={index} style={style}>
@@ -279,18 +280,20 @@ function ExerciseSelectedHistory({
 
       <Container
         sx={{
-          width: "100vw"
+          width: "100vw",
+          paddingBottom:"56px",
+          height: "calc(100vh - 185px)",
         }}
       >
         <VariableSizeList
-          height={window.innerHeight-144}
+          height={window.innerHeight-185}
           itemCount={existingExercises.length}
           itemSize={index => {
             // Calculate the dynamic height for each item based on its content
-            const group = existingExercises[index];
+            const group = existingExercises[existingExercises.length - 1 - index];
             const numExercises = group.exercises.length;
             const exerciseHeight = numExercises * 48; // Assuming each exercise takes 120px height
-            return exerciseHeight + 48; // Add some extra height for the group header
+            return exerciseHeight +24; // Add some extra height for the group header
           }}
           width="100%"
         >
