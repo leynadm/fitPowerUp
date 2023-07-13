@@ -87,7 +87,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
+      anchorOrigin={{ 
         vertical: "top",
         horizontal: "right",
       }}
@@ -100,6 +100,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+      <MenuItem onClick={handleAccount}>Account</MenuItem>
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
 
     </Menu>
@@ -167,7 +168,7 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
 
   return (
     <Box sx={{ width: "100%", backgroundColor: "#F0F2F5" }}>
-      <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%" }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%",height:"56px" }}>
         <Toolbar>
           {/* 
           <IconButton
@@ -180,16 +181,17 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
             <MenuIcon />
           </IconButton>
 */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            MUI
-          </Typography>
 
+
+          <Typography
+              variant="h4"
+              sx={{ color: "#FF8C00", fontFamily: "Voltaire", display: { xs: "none", sm: "block" }}}
+            >
+              fit<span style={{ color: "white" }}>PowerUp!</span>
+            </Typography>
+            
           <SocialSearchBar />
+          
           <IconButton
             size="large"
             aria-label="show 17 new notifications"
@@ -199,16 +201,24 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
             <AddIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
+          
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={handleNotifications}
             >
+
+              <NotificationsIcon />
+              {/* 
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+              
+              
               </Badge>
+               */}
             </IconButton>
+
             <IconButton
               size="large"
               edge="end"
@@ -220,7 +230,10 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
             >
               <AccountCircle />
             </IconButton>
+
           </Box>
+
+
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"

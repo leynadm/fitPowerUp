@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
@@ -628,7 +627,7 @@ function Settings({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        
       }}
     >
       <DeleteAllDataModal
@@ -637,10 +636,10 @@ function Settings({
         handleDeleteAllEntries={handleDeleteAllEntries}
       />
 
-      <AppBar position="fixed" elevation={0} style={{ top: 0 }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <SettingsIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -656,7 +655,7 @@ function Settings({
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Settings
             </Typography>
 
             <SettingsIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -692,7 +691,7 @@ function Settings({
         genericFailedAlertText={"The file provided contains incompatible data!"}
       />
       <List sx={style}>
-        <ListItem>
+        <ListItem sx={{boxShadow:1}}>
           <Box
             sx={{
               width: "100%",
@@ -716,7 +715,7 @@ function Settings({
 
         <Divider />
 
-        <ListItem>
+        <ListItem sx={{boxShadow:1}} >
           <Box sx={{ width: "100%" }}>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
               <InputLabel id="weight-increment-label">
@@ -742,7 +741,7 @@ function Settings({
 
         <Divider />
 
-        <ListItem>
+        <ListItem sx={{boxShadow:1}}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Export all your exercise data to an .xlsx file.
@@ -759,7 +758,7 @@ function Settings({
 
         <Divider />
 
-        <ListItem>
+        <ListItem sx={{boxShadow:1}}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Import a compatible dataset.<br></br> It can be a previously
@@ -812,7 +811,7 @@ function Settings({
 
         <Divider />
 
-        <ListItem>
+        <ListItem sx={{boxShadow:1}}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Delete all your exercise data.

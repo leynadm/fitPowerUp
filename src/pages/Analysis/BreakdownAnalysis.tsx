@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import Container from "@mui/material/Container";
+
 
 import {
   Typography,
@@ -281,14 +283,7 @@ function BreakdownAnalysis() {
   };
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-      }}
-    >
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0,backgroundColor:"#F0F2F5" }}>
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel htmlFor="grouped-select">Breakdown</InputLabel>
         <Select
@@ -363,7 +358,7 @@ function BreakdownAnalysis() {
         ))}
       </ButtonGroup>
 
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex",width:"100%" }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             value={selectedStartDate}
@@ -399,7 +394,7 @@ function BreakdownAnalysis() {
         ) : null}
       </Box>
 
-      <Box>
+      <Box sx={{width:"100%"}}>
         <TableContainer component={Paper}>
           <Table>
             <TableHead></TableHead>
@@ -441,6 +436,8 @@ function BreakdownAnalysis() {
           gridTemplateRows: "1fr 1fr",
           gap: 2,
           margin: "16px",
+          width:"100%",
+          paddingBottom:"56px"
         }}
       >
         <Item>
@@ -460,7 +457,7 @@ function BreakdownAnalysis() {
           <Typography>{totalTrainingVolume.toLocaleString()}</Typography>
         </Item>
       </Box>
-    </Box>
+    </Container>
   );
 }
 

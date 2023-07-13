@@ -31,7 +31,7 @@ function Newsfeed() {
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
 
   let renderedOnce = false
-  
+   
   useEffect(() => {
     getFeed();
   }, []);

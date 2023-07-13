@@ -262,10 +262,10 @@ function SearchUserProfile() {
         setFollowersLimitModalOpen={setFollowersLimitModalOpen}
       />
 
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <QueryStatsIcon
+            <PersonIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
             />
             <Typography
@@ -283,7 +283,7 @@ function SearchUserProfile() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+            {queriedUser && `${queriedUser.name} ${queriedUser.surname}`}
             </Typography>
 
             <PersonIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />

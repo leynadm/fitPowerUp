@@ -63,10 +63,10 @@ function WorkoutCalendar({
 
   return (
     <Box>
-      <AppBar position="fixed" style={{ top: 0 }}>
+      <AppBar position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <CalendarMonthIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap

@@ -9,7 +9,7 @@ import { ChartOptions } from "chart.js";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import getPowerLevel from "../../utils/chartFunctions/getPowerLevel";
-
+import Container from "@mui/material/Container";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -145,7 +145,7 @@ function ProgressGraph() {
   };
 
   return (
-    <Box>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0,backgroundColor:"#F0F2F5" }}>
       <Select
         id="combo-box-demo"
         value={selectedOption}
@@ -194,7 +194,7 @@ function ProgressGraph() {
       </ButtonGroup>
       <Box
         sx={{
-          width: "100vw",
+          width: "100%",
           height: "calc(100vh - 270.5px)",
           display: "flex",
           justifyContent: "center",
@@ -209,7 +209,7 @@ function ProgressGraph() {
           )
         ) : null}
       </Box>
-    </Box>
+    </Container>
   );
 }
 

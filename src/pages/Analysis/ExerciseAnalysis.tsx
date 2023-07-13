@@ -12,6 +12,8 @@ import ListSubheader from "@mui/material/ListSubheader";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { TextField } from "@mui/material";
+import Container from "@mui/material/Container";
+
 
 import calculateVolumePerWorkout from "../../utils/analysisFunctions/calculateVolumePerWorkout";
 import calculateSetsPerWorkout from "../../utils/analysisFunctions/calculateSetsPerWorkout";
@@ -319,7 +321,7 @@ function ExerciseAnalysis() {
   };
 
   return (
-    <Box>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
 <FormControl sx={{ width: "100%", marginTop: "8px" }}>
 <Autocomplete
   options={[...exercisesCategories.map((exercise:any) => exercise.name), ""]}
@@ -410,11 +412,11 @@ function ExerciseAnalysis() {
       </ButtonGroup>
       <Box
         sx={{
-          width: "100vw",
+          width: "100%",
           height: "calc(100vh - 328.5px)",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         {initialRawData ? (
@@ -425,7 +427,7 @@ function ExerciseAnalysis() {
           )
         ) : null}
       </Box>
-    </Box>
+    </Container>
   );
 }
 

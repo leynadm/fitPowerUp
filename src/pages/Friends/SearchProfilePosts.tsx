@@ -12,8 +12,9 @@ import {
 import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
-import User from "../../utils/interfaces/User";
+import { Button,Typography } from "@mui/material";
+import LoadingCircle from "../../components/ui/LoadingCircle";
+
 interface SearchProfilePostsProps {
   queriedUser: any;
   id: string | undefined;
@@ -23,7 +24,8 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
-
+  const [loading, setLoading] = useState(false);
+  const [hasPosts, setHasPosts] = useState(false);
 
   useEffect(() => {
     if (queriedUser) {
@@ -35,6 +37,8 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
   }, [queriedUser]);
 
   async function getUserPosts() {
+
+    setLoading(true)
     let q;
 
     if (latestDoc) {
@@ -70,14 +74,43 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
 
     if (querySnapshot.docs.length > 0) {
       setLatestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+      setHasPosts(true)
     }
 
     if (querySnapshot.empty) {
       setLoadButtonStatus(true)
     }
+
+    setLoading(false)
   }
 
+
+
+  if (loading && !hasPosts) {
+    return (
+      <Box
+        sx={{
+          paddingBottom: "56px",
+          marginTop: "8px",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <LoadingCircle />
+      </Box>
+    );
+  }
+
+
   return (
+
+
+    <>
+
+{hasPosts ? (
     <Box sx={{ paddingBottom: "56px" }}>
       {userPosts.map((post: any, index: number) => (
         <UserWorkoutCard
@@ -107,6 +140,17 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
         Load More
       </Button>
     </Box>
+   ): (
+    <Box
+      sx={{ paddingBottom: "56px", marginTop: "8px", textAlign: "center",height:"100%" }}
+    >
+      <Typography sx={{height:"100%"}}>There are no posts yet.</Typography>
+    </Box>
+  )}
+  
+
+    </>
+  
   );
 }
 

@@ -7,7 +7,6 @@ import React, {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -29,6 +28,15 @@ import ViewCommentModal from "./ViewCommentModal";
 import Exercise from "../../utils/interfaces/Exercise";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
+import CommentWorkoutModal from "./CommentWorkoutModal";
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
+
+interface Swipe {
+  touchStart: number;
+  touchEnd: number;
+  moved: boolean;
+}
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -47,8 +55,10 @@ interface NewWorkoutProps {
     SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
   selectedExercise: { category: string; name: string; measurement: any[] };
-  addDays: () => void;
-  subtractDays: () => void;
+
+  setExistingExercises: Dispatch<
+  SetStateAction<{ name: string; exercises: Exercise[] }[]>
+>;
 }
 
 function NewWorkout({
@@ -60,8 +70,7 @@ function NewWorkout({
   selectedCategoryExercises,
   setSelectedExercise,
   selectedExercise,
-  addDays,
-  subtractDays,
+setExistingExercises
 }: NewWorkoutProps) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -69,6 +78,31 @@ function NewWorkout({
   );
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
+  const [openCommentWorkoutModal,setOpenCommentWorkoutModal] = useState(false)
+  const [workoutCommentValue,setworkoutCommentValue] = useState("")
+  const [workoutValue, setWorkoutValue] = useState<number>(0);
+  const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] = useState(0)
+
+  const [swipe, setSwipe] = useState<any>({
+    moved: false,
+    touchEnd: 0,
+    touchStart: 0,
+  });
+
+  const { moved, touchEnd, touchStart } = swipe;
+
+
+
+  function getWorkoutEvaluation(){
+
+  }
+
+
+  useEffect(() => {
+    if (todayDate) {
+      getExercisesByDate(todayDate, setExistingExercises);
+    }
+  }, [todayDate]);
 
   useEffect(() => {
     const handlePopstate = () => {
@@ -81,6 +115,67 @@ function NewWorkout({
       window.removeEventListener("popstate", handlePopstate);
     };
   }, []);
+
+
+
+  const SENSITIVITY = 125;
+
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    let touchStartX = e.targetTouches[0].clientX;
+    /* 
+    console.log({touchStartX})
+     */
+    setSwipe((swipe: any) => ({ ...swipe, touchStart: touchStartX }));
+  }
+
+  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    let touchEndX = e.targetTouches[0].clientX;
+    /* 
+    console.log({touchEndX})
+    */
+    setSwipe((swipe: any) => ({ ...swipe, touchEnd: touchEndX, moved: true }));
+  }
+
+  function handleTouchEnd() {
+    
+    if (touchStart !== 0 && touchEnd !== 0) {
+      const amountSwipe = swipe.touchEnd - swipe.touchStart;
+      console.log({ amountSwipe });
+
+      if (Math.abs(amountSwipe) > SENSITIVITY && swipe.moved) {
+        if (amountSwipe < 0) {
+          console.log("swiped right");
+          addDays();
+        } else {
+          console.log("swiped left");
+          subtractDays();
+        }
+      }
+    }
+
+    setSwipe({ moved: false, touchEnd: 0, touchStart: 0 });
+  }
+
+  const subtractDays = () => {
+    if (todayDate) {
+      const newDate = new Date(todayDate);
+      newDate.setDate(todayDate.getDate() - 1);
+      setTodayDate(newDate);
+      console.log("logging date subtract:");
+      console.log({ newDate });
+    }
+  };
+
+  const addDays = () => {
+    if (todayDate) {
+      const newDate = new Date(todayDate);
+      newDate.setDate(todayDate.getDate() + 1);
+      setTodayDate(newDate);
+      console.log("logging date add:");
+      console.log({ newDate });
+    }
+  };
+
 
   const formatDate = (date: Date): string => {
     const today = new Date().setHours(0, 0, 0, 0);
@@ -100,7 +195,7 @@ function NewWorkout({
 
   const pages = [
     "Settings",
-    "Comment Workout",
+    "Evaluate Workout",
     "Body Tracker",
     "Analysis",
     "Sign Out",
@@ -111,8 +206,31 @@ function NewWorkout({
   };
 
   const handleCloseNavMenu = () => {
+
+
     setAnchorElNav(null);
   };
+
+  const handleDesktopBtnClick = (page:string)=>{
+
+    handleCloseNavMenu();
+
+    // Handle logic based on the clicked page
+    if (page === "Settings") {
+      // Handle Settings page click
+      navigate("settings");
+    } else if (page === "Evaluate Workout") {
+      handleCommentWorkoutModalVisibility()
+    } else if (page === "Body Tracker") {
+      navigate("bodytracker");
+    } else if (page === "Analysis") {
+      navigate("analysis");
+    } else if (page === "Sign Out") {
+      auth.signOut();
+      // ...
+    }
+
+  }
 
   const handleNewWorkout = () => {
     navigate("workout_categories");
@@ -129,9 +247,8 @@ function NewWorkout({
     if (page === "Settings") {
       // Handle Settings page click
       navigate("settings");
-    } else if (page === "Comment Workout") {
-      // Handle Comment Workout page click
-      // ...
+    } else if (page === "Evaluate Workout") {
+      handleCommentWorkoutModalVisibility()
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
     } else if (page === "Analysis") {
@@ -206,6 +323,10 @@ function NewWorkout({
     };
   }
 
+  function handleCommentWorkoutModalVisibility(){
+    setOpenCommentWorkoutModal(!openCommentWorkoutModal)
+  }
+
   function handleViewCommentModalVisibility(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     exerciseId: number
@@ -222,6 +343,7 @@ function NewWorkout({
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        backgroundColor: "#F0F2F5"
       }}
     >
       <ViewCommentModal
@@ -230,11 +352,18 @@ function NewWorkout({
         exerciseCommentId={exerciseCommentId}
       />
 
-      <Box position="fixed" sx={{width:"100%"}}>
-        <AppBar
-          elevation={0}
-          style={{ top: 0, width: "100%" }}
-        >
+      <CommentWorkoutModal
+        openCommentWorkoutModal={openCommentWorkoutModal}
+        setOpenCommentWorkoutModal={setOpenCommentWorkoutModal}
+        workoutCommentValue={workoutCommentValue}
+        setworkoutCommentValue={setworkoutCommentValue}
+        setWorkoutCommentRenderTrigger={setWorkoutCommentRenderTrigger}
+        setWorkoutValue={setWorkoutValue}
+        workoutValue={workoutValue}
+      />
+
+      <Box position="fixed" sx={{ width: "100%" }}>
+        <AppBar elevation={0} style={{ top: 0, width: "100%", height: "56px" }}>
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <FitnessCenterIcon
@@ -283,7 +412,7 @@ function NewWorkout({
                 {pages.map((page) => (
                   <Button
                     key={page}
-                    onClick={handleCloseNavMenu}
+                    onClick={() => handleDesktopBtnClick(page)}
                     sx={{ my: 2, color: "white", display: "block" }}
                   >
                     {page}
@@ -357,7 +486,7 @@ function NewWorkout({
           </Container>
         </AppBar>
 
-        <Box
+        <Box className="ClassCoveringBothStartNewAndCurrentExercises"
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -399,16 +528,26 @@ function NewWorkout({
           </IconButton>
         </Box>
       </Box>
-      <Container sx={{ padding: 0 }}>
+      <Container className="ContainerToAddTheTouchEventsOn"  sx={{ padding: 0,height:"calc(100% - 56px)" }}
+      
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
+      >
         {existingExercises.length === 0 ? (
-          <Box
-            sx={{
-              display: "flex",
+          <Box className="BoxThatShouldHaveTheTouchEvent"
+
+          sx={{
+
+            display: "flex",
               flexDirection: "column",
               flexGrow: 1,
               height: "calc(100vh - 144px)",
+              marginTop:"30px"
+    
             }}
           >
+
             <Box
               sx={{
                 display: "flex",
@@ -448,14 +587,25 @@ function NewWorkout({
           <Box
             className="BoxToCheck"
             sx={{
-              paddingTop:"32px",
+
+
+              /* 
+              height: "calc(100% - 144px)",
+               */
+              paddingTop: "32px",
+              paddingBottom:"56px",
+              backgroundColor: "#F0F2F5",          
+              /* 
+              paddingTop: "32px",
               backgroundColor: "#F0F2F5",
               paddingBottom: "56px",
               width: "100%",
-
+              height:"100%"
+    */
             }}
           >
             {existingExercises.map((group, index) => (
+            
               <Box
                 key={index}
                 sx={{
@@ -485,7 +635,6 @@ function NewWorkout({
                       justifyItems: "center",
                       alignItems: "center",
                       width: "100%",
-                      
                     }}
                   >
                     {exercise.comment ? ( // Check if 'comment' property exists

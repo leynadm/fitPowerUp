@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -17,41 +18,36 @@ const style = {
   p: 2,
   borderRadius: 1,
 };
-
+ 
 interface ParentComponentProps {
-  openCommentModal: boolean;
-  setOpenCommentModal: React.Dispatch<React.SetStateAction<boolean>>;
-  isDropset: boolean;
-  setIsDropset: React.Dispatch<React.SetStateAction<boolean>>;
-  commentValue: string;
-  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
-  exerciseCommentId: number;
-  setDropsetRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
+  openCommentWorkoutModal: boolean;
+  setOpenCommentWorkoutModal: React.Dispatch<React.SetStateAction<boolean>>;
+  workoutCommentValue: string;
+  setworkoutCommentValue: React.Dispatch<React.SetStateAction<string>>;
+  workoutValue: number;
+  setWorkoutValue : React.Dispatch<React.SetStateAction<number>>;
+  setWorkoutCommentRenderTrigger : React.Dispatch<React.SetStateAction<number>>;
 }
 
-function CommentModal({
-  openCommentModal,
-  setOpenCommentModal,
-  commentValue,
-  setCommentValue,
-  exerciseCommentId,
-  isDropset,
-  setIsDropset,
-  setDropsetRenderTrigger,
+function CommentWorkoutModal({
+  openCommentWorkoutModal,
+  setOpenCommentWorkoutModal,
+  workoutCommentValue,
+  setworkoutCommentValue,
+  workoutValue,
+  setWorkoutValue,
+  setWorkoutCommentRenderTrigger
 }: ParentComponentProps) {
-  const label = { inputProps: { "aria-label": "Switch demo" } };
 
-  useEffect(() => {
-    console.log("inside Comment Modal, checking value of isDropset:");
-    console.log({ isDropset });
-  }, []);
 
   function handleClose() {
-    setCommentValue("");
-    setOpenCommentModal(false);
+    setworkoutCommentValue("");
+    setOpenCommentWorkoutModal(false);
   }
 
+  /* 
   function saveComment() {
+
     const request = window.indexedDB.open("fitScouterDb");
     request.onsuccess = function (event: any) {
       const db = event.target.result;
@@ -63,8 +59,7 @@ function CommentModal({
       getRequest.onsuccess = function (event: any) {
         const data = event.target.result;
         if (data) {
-          data.comment = commentValue;
-          data.dropset = isDropset;
+          data.comment = workoutCommentValue;
           const updateRequest = objectStore.put(data);
           updateRequest.onsuccess = function () {
             console.log("Record updated successfully");
@@ -79,8 +74,8 @@ function CommentModal({
 
       transaction.oncomplete = function () {
         console.log("Transaction completed");
-        setCommentValue("");
-        setOpenCommentModal(false);
+        setworkoutCommentValue("");
+        setOpenCommentWorkoutModal(false);
       };
       transaction.onerror = function () {
         console.log("Transaction error");
@@ -91,41 +86,68 @@ function CommentModal({
       console.log("Error opening database");
     };
 
-    setDropsetRenderTrigger((prev) => prev + 1);
+    setDropsetRenderTrigger(prev => prev+1)
   }
 
-  function markEntryAsDropset() {
-    setIsDropset(!isDropset);
-  }
+ */
 
   return (
     <div>
       <Modal
-        open={openCommentModal}
+        open={openCommentWorkoutModal}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography component="legend">Rate your workout</Typography>
+            <Rating
+              size="large"
+              name="simple-controlled"
+              value={workoutValue}
+              onChange={(event, newValue) => {
+                if (newValue !== null) {
+                  setWorkoutValue(newValue);
+                }
+              }}
+            />
+          </Box>
+
           <TextField
             id="outlined-multiline-flexible"
-            label="Add your comment"
+            label="Add a workout comment"
             multiline
             maxRows={4}
             sx={{
               width: "100%",
             }}
-            value={commentValue}
-            onChange={(e) => setCommentValue(e.target.value)}
+            value={workoutCommentValue}
+            onChange={(e) => setworkoutCommentValue(e.target.value)}
           />
 
-          <FormControlLabel
-            control={<Switch defaultChecked />}
-            label="Add the entry as a dropset"
-            checked={isDropset}
-            onClick={markEntryAsDropset}
-          />
+          <Box sx={{display:"flex",flexDirection:"column"}}>
+            <FormControlLabel
+              control={<Switch defaultChecked />}
+              label="Did you train harder than the last time?"
+            />
 
+            <FormControlLabel
+              control={<Switch defaultChecked />}
+              label="Did you feel any pain?"
+            />
+
+            <FormControlLabel
+              control={<Switch defaultChecked />}
+              label="Did you warm up before and stretch properly at the end?"
+            />
+          </Box>
           <Box
             sx={{
               width: "100%",
@@ -137,7 +159,6 @@ function CommentModal({
               variant="contained"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={saveComment}
             >
               Save
             </Button>
@@ -155,4 +176,4 @@ function CommentModal({
   );
 }
 
-export default CommentModal;
+export default CommentWorkoutModal;

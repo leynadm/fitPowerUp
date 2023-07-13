@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import Button from "@mui/material/Button";
 import BodyTrackerTrack from "./BodyTrackerTrack";
@@ -41,10 +40,10 @@ function BodyTracker({todayDate}:WorkoutProps) {
         flexDirection: "column",
       }}
     >
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <AccessibilityIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap

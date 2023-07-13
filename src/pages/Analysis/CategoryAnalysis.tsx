@@ -27,6 +27,7 @@ import calculateRepsPerYear from "../../utils/analysisFunctions/calculateRepsPer
 import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolumePerYear";
 import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
 import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
+import Container from "@mui/material/Container";
 
 import {
   Chart as ChartJS,
@@ -306,9 +307,10 @@ function CategoryAnalysis() {
       duration: 500, // Animation duration in milliseconds
     },
   };
-
+ 
   return (
-    <Box>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
+      
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel id="demo-simple-select-autowidth-label">
           Category Filter
@@ -407,11 +409,12 @@ function CategoryAnalysis() {
       </ButtonGroup>
       <Box
         sx={{
-          width: "100vw",
+          width: "100%",
           height: "calc(100vh - 328.5px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          
         }}
       >
         {initialRawData ? (
@@ -422,7 +425,7 @@ function CategoryAnalysis() {
           )
         ) : null}
       </Box>
-    </Box>
+    </Container>
   );
 }
 

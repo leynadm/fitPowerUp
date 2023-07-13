@@ -29,10 +29,16 @@ function ExerciseSelected({
 }: ExerciseSelectionProps) {
   const [showRestTimer, setShowRestTimer] = useState(false);
   const [countdownValue, setCountdownValue] = useState(120);
+  
+  
+  
+  
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
     navigate("");
   };
+
+
 
   const handleNavigateHistory = () => {
     navigate("history");
@@ -47,9 +53,8 @@ function ExerciseSelected({
   }
 
   useEffect(() => {
-    console.log("logging selected exercise");
-    console.log(selectedExercise);
-    console.log(todayDate);
+
+    console.log({todayDate});
   }, []);
 
   return (
@@ -59,7 +64,7 @@ function ExerciseSelected({
         setShowRestTimer={setShowRestTimer}
       />
       
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <LibraryBooksIcon

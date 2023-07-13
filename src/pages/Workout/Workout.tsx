@@ -4,7 +4,6 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
-  useRef,
 } from "react";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
@@ -38,11 +37,7 @@ interface HomeProps {
   setUnitsSystem: Dispatch<SetStateAction<string>>;
 }
 
-interface Swipe {
-  touchStart: number;
-  touchEnd: number;
-  moved: boolean;
-}
+
 
 function Workout({
   existingExercises,
@@ -64,14 +59,7 @@ function Workout({
 
   const [weightIncrementPreference, setWeightIncrementPreference] =
     useState(2.5);
-  const [swipe, setSwipe] = useState<any>({
-    moved: false,
-    touchEnd: 0,
-    touchStart: 0,
-  });
-
-  const { moved, touchEnd, touchStart } = swipe;
-
+  
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
@@ -80,11 +68,7 @@ function Workout({
     getDataPreferences();
   }, []);
 
-  useEffect(() => {
-    if (todayDate) {
-      getExercisesByDate(todayDate, setExistingExercises);
-    }
-  }, [todayDate]);
+
 
   /* Use this useEffect to force requerying of data and update state when user navigates with back button */
   useEffect(() => {
@@ -133,70 +117,14 @@ function Workout({
     };
   }, [setUnitsSystem, setWeightIncrementPreference]);
 
-  const SENSITIVITY = 125;
-
-  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
-    let touchStartX = e.targetTouches[0].clientX;
-    /* 
-    console.log({touchStartX})
-     */
-    setSwipe((swipe: any) => ({ ...swipe, touchStart: touchStartX }));
-  }
-
-  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
-    let touchEndX = e.targetTouches[0].clientX;
-    /* 
-    console.log({touchEndX})
-    */
-    setSwipe((swipe: any) => ({ ...swipe, touchEnd: touchEndX, moved: true }));
-  }
-
-  function handleTouchEnd() {
-    
-    if (touchStart !== 0 && touchEnd !== 0) {
-      const amountSwipe = swipe.touchEnd - swipe.touchStart;
-      console.log({ amountSwipe });
-
-      if (Math.abs(amountSwipe) > SENSITIVITY && swipe.moved) {
-        if (amountSwipe < 0) {
-          console.log("swiped right");
-          addDays();
-        } else {
-          console.log("swiped left");
-          subtractDays();
-        }
-      }
-    }
-
-    setSwipe({ moved: false, touchEnd: 0, touchStart: 0 });
-  }
-
-  const subtractDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() - 1);
-      setTodayDate(newDate);
-      console.log("logging date subtract:");
-      console.log({ newDate });
-    }
-  };
-
-  const addDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() + 1);
-      setTodayDate(newDate);
-      console.log("logging date add:");
-      console.log({ newDate });
-    }
-  };
+  
 
   return (
     <Box
       className="thisIsMyClass"
       sx={{ backgroundColor: "#F0F2F5",height:"100%" }}
     >
-      <Box
+      <Box className="ClassWithTouchEvents"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -204,10 +132,9 @@ function Workout({
           alignItems: "center",
           width: "100%",
           height: "100%",
+          backgroundColor: "#F0F2F5"
         }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchMove={handleTouchMove}
+
       >
         <Routes>
           <Route
@@ -222,9 +149,8 @@ function Workout({
                 selectedCategoryExercises={selectedCategoryExercises}
                 setSelectedExercise={setSelectedExercise}
                 selectedExercise={selectedExercise}
-                addDays={addDays}
-                subtractDays={subtractDays}
-              />
+                setExistingExercises={setExistingExercises}
+                />
             }
           />
 

@@ -55,6 +55,7 @@ function ExercisesCategories({
 
   useEffect(() => {
     getAllExercises(setExercisesToSearch);
+    console.log({todayDate})
   }, []);
 
   useEffect(() => {}, [exercisesCategories]);

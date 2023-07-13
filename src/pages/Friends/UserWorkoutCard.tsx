@@ -437,7 +437,7 @@ export default function UserWorkoutCard({
                           fontSize: "medium",
                           backgroundColor: "#F0F2F5",
                         }}
-                      >Profile
+                      >
                         {group.name.toLocaleUpperCase()}
                       </Typography>
 

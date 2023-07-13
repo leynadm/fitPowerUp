@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import RemoveIcon from "@mui/icons-material/Remove";
 import saveBodyTrackerEntry from "../../utils/CRUDFunctions/saveBodyTrackerEntry";
-
+import Container from "@mui/material/Container";
 interface BodyTrackerProps {
   todayDate: Date | undefined;
 }
@@ -45,7 +45,7 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
 
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
       <Box sx={{ display: "flex", gap: "8px", width: "100%" }}>
         <Autocomplete
           disablePortal
@@ -110,9 +110,10 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
 
       <Box
         sx={{
-          width: "100vw",
+          width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
+          alignItems:"center"
           
         }}
       >
@@ -131,7 +132,7 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
           CLEAR
         </Button>
       </Box>
-    </Box>
+    </Container>
   );
 }
 

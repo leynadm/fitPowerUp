@@ -9,6 +9,7 @@ import { ChartOptions } from "chart.js";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
+import Container from "@mui/material/Container";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -144,7 +145,7 @@ function BodyTrackerGraph() {
   };
 
   return (
-    <Box>
+    <Container sx={{display:"flex",flexDirection:"column",alignItems:"center"}}>
       <Select
         id="combo-box-demo"
         value={selectedOption}
@@ -208,7 +209,7 @@ function BodyTrackerGraph() {
           )
         ) : null}
       </Box>
-    </Box>
+    </Container>
   );
 }
 

@@ -54,6 +54,11 @@ function ExercisesByCategory({
     navigate(`selected`);
   };
 
+
+  useEffect(()=>{
+    console.log({todayDate})
+  },[])
+
   useEffect(() => {}, [exercisesCategories]);
 
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
@@ -68,8 +73,6 @@ function ExercisesByCategory({
 
   useEffect(() => {
     // useEffect implementation
-    console.log(categoryToRefresh)
-    console.log(selectedCategoryExercises);
     if (query === "" || exercisesToSearch.length === 0) {
       if (selectedCategoryExercises.length > 0) {
         getExercisesByCategory(selectedCategoryExercises[0].category, (exercises: any) => {
@@ -82,6 +85,8 @@ function ExercisesByCategory({
       );
       setExercisesToSearch(filteredExercises);
     }
+
+    console.log({todayDate})
   }, [query]);
 
   const open = Boolean(anchorEl);

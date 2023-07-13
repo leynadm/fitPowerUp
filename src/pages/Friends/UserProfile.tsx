@@ -75,13 +75,13 @@ function UserProfile() {
       setUserIndividualFollowing(following);
     }
   }
-
+ 
   return (
     <Box>
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <QueryStatsIcon
+            <AccountBoxIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
             />
             <Typography

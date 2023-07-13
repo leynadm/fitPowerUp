@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import Container from "@mui/material/Container";
 interface BodyTrackerEntry {
   date: Date;
   name: string;
@@ -93,7 +94,7 @@ function BodyTrackerHistory() {
   }
 
   return (
-    <Box>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
       <Autocomplete
         disablePortal
         id="combo-box-demo"
@@ -153,7 +154,7 @@ function BodyTrackerHistory() {
             ))}
           </Box>
         ))}
-    </Box>
+    </Container>
   );
 }
 

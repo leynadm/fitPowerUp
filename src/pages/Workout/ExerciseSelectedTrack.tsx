@@ -1100,13 +1100,15 @@ function ExerciseSelectedTrack({
 
       <Box>
         {existingExercises.map((exercise, index) => (
-          <Box
+          <Container
             key={index}
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 3fr 1fr",
               alignItems: "center",
               width: "100vw",
+              paddingLeft:0,
+              paddingRight:0
             }}
           >
             <Box
@@ -1198,7 +1200,7 @@ function ExerciseSelectedTrack({
                 }}
               />
             </IconButton>
-          </Box>
+          </Container>
         ))}
       </Box>
     </Container>
