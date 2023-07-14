@@ -88,7 +88,7 @@ function NewWorkout({
 
   const { moved, touchEnd, touchStart } = swipe;
 
-  function getWorkoutEvaluation() {
+  function getWorkoutEvaluation(currentDate:Date) {
     // Open IndexedDB database connection
     const request = window.indexedDB.open("fitScouterDb");
 
@@ -100,15 +100,17 @@ function NewWorkout({
       const objectStore = transaction.objectStore("workout-evaluation");
 
       const index = objectStore.index("workout_evaluation_date");
-      const getRequest = index.get(todayDate);
+      const getRequest = index.get(currentDate);
 
+      console.log(currentDate)
       getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
-
-        console.log(existingEntry);
-
+        console.log('logging existing entry inside get workout evaluation')
+        console.log(existingEntry)
         if (existingEntry) {
-          setWorkoutEvaluationCheck(existingEntry);
+          setWorkoutEvaluationCheck(true);
+        } else { 
+          setWorkoutEvaluationCheck(false)
         }
       };
 
@@ -121,9 +123,16 @@ function NewWorkout({
   useEffect(() => {
     if (todayDate) {
       getExercisesByDate(todayDate, setExistingExercises);
-      getWorkoutEvaluation();
+      getWorkoutEvaluation(todayDate);
     }
+
+    console.log('checking constant')
+
   }, [todayDate,workoutCommentRenderTrigger]);
+
+  useEffect(()=>{
+    console.log('checking constant')
+  },[workoutEvaluationCheck])
 
   useEffect(() => {
  
@@ -560,8 +569,10 @@ function NewWorkout({
         onTouchMove={handleTouchMove}
       >
 
-        
         {existingExercises.length === 0 ? (
+
+
+
           <Box
             sx={{
               display: "flex",
@@ -571,6 +582,36 @@ function NewWorkout({
               marginTop: "30px",
             }}
           >
+
+{workoutEvaluationCheck && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                  boxShadow: 1,
+
+                  margin: "16px",
+                  marginTop:"18px",
+                  backgroundColor: "white",
+
+                }}
+                onClick={handleOpenViewCommentWorkoutModal}
+              >
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EditNoteIcon sx={{ zIndex: 0 }} />
+                </IconButton>
+              </Box>
+            )}
+        
+
             <Box
               sx={{
                 display: "flex",
@@ -614,7 +655,7 @@ function NewWorkout({
               backgroundColor: "#F0F2F5",
             }}
           >
-            {workoutEvaluationCheck && (
+{workoutEvaluationCheck && (
               <Box
                 sx={{
                   display: "flex",
@@ -637,7 +678,7 @@ function NewWorkout({
                   <EditNoteIcon sx={{ zIndex: 0 }} />
                 </IconButton>
               </Box>
-            )}
+            )}            
 
             {existingExercises.map((group, index) => (
               <Box

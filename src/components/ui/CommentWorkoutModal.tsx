@@ -10,7 +10,8 @@ import Typography from "@mui/material/Typography";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import IconButton from "@mui/material/IconButton";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FailedGenericAlert from "./FailedGenericAlert";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -27,8 +28,8 @@ interface ParentComponentProps {
   openCommentWorkoutModal: boolean;
   setOpenCommentWorkoutModal: React.Dispatch<React.SetStateAction<boolean>>;
   todayDate: Date | undefined;
-  setWorkoutCommentRenderTrigger:React.Dispatch<React.SetStateAction<number>>;
-  setWorkoutEvaluationCheck:React.Dispatch<React.SetStateAction<boolean>>;
+  setWorkoutCommentRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
+  setWorkoutEvaluationCheck: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function CommentWorkoutModal({
@@ -36,7 +37,7 @@ function CommentWorkoutModal({
   setOpenCommentWorkoutModal,
   todayDate,
   setWorkoutCommentRenderTrigger,
-  setWorkoutEvaluationCheck
+  setWorkoutEvaluationCheck,
 }: ParentComponentProps) {
   const [workoutValue, setWorkoutValue] = useState<number>(0);
   const [workoutCommentValue, setworkoutCommentValue] = useState("");
@@ -46,9 +47,7 @@ function CommentWorkoutModal({
 
   useEffect(() => {
     if (todayDate) {
-      
       getWorkoutEvaluation(todayDate);
-     
     }
   }, [todayDate]);
 
@@ -69,9 +68,7 @@ function CommentWorkoutModal({
   }
 
   function getWorkoutEvaluation(currentDate: Date) {
-    
-    console.log('logging todayDate:')
-    console.log({todayDate})
+
     // Open IndexedDB database connection
     const request = window.indexedDB.open("fitScouterDb");
 
@@ -116,8 +113,7 @@ function CommentWorkoutModal({
 
       getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
-        console.log("logging existing entry:");
-        console.log(existingEntry);
+
         if (existingEntry) {
           if (workoutCommentValue !== "") {
             existingEntry.workout_comment = workoutCommentValue;
@@ -130,7 +126,6 @@ function CommentWorkoutModal({
           } else {
             existingEntry.train = false;
           }
-
 
           if (feelPainCheck) {
             existingEntry.pain = feelPainCheck;
@@ -175,7 +170,7 @@ function CommentWorkoutModal({
 
       transaction.oncomplete = function () {
         console.log("Transaction completed");
-        setWorkoutCommentRenderTrigger((prev=>prev+1))
+        setWorkoutCommentRenderTrigger((prev) => prev + 1);
         setOpenCommentWorkoutModal(!openCommentWorkoutModal);
       };
       transaction.onerror = function () {
@@ -190,48 +185,47 @@ function CommentWorkoutModal({
 
   function deleteWorkoutEvaluation() {
     const request = window.indexedDB.open("fitScouterDb");
-    
-    request.onsuccess = function(event:any) {
+
+    request.onsuccess = function (event: any) {
       const db = event.target.result;
       const transaction = db.transaction("workout-evaluation", "readwrite");
       const objectStore = transaction.objectStore("workout-evaluation");
-  
+
       const index = objectStore.index("workout_evaluation_date");
       const getRequest = index.get(todayDate);
-  
-      getRequest.onsuccess = function(event:any) {
+
+      getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
-        
+
         if (existingEntry) {
           const deleteRequest = objectStore.delete(existingEntry.id);
-  
-          deleteRequest.onsuccess = function() {
+
+          deleteRequest.onsuccess = function () {
             console.log("Record deleted successfully");
           };
-          deleteRequest.onerror = function() {
+          deleteRequest.onerror = function () {
             console.log("Error deleting record");
           };
         } else {
           console.log("Entry not found");
         }
       };
-  
-      transaction.oncomplete = function() {
+
+      transaction.oncomplete = function () {
         console.log("Transaction completed, will get the new evaluation");
-        setWorkoutEvaluationCheck(false)
-        setWorkoutCommentRenderTrigger(prev => prev + 1);
+        setWorkoutEvaluationCheck(false);
+        setWorkoutCommentRenderTrigger((prev) => prev + 1);
         setOpenCommentWorkoutModal(!openCommentWorkoutModal);
       };
-      transaction.onerror = function() {
+      transaction.onerror = function () {
         console.log("Transaction error");
       };
     };
-  
-    request.onerror = function() {
+
+    request.onerror = function () {
       console.log("Error opening database");
     };
   }
-  
 
   return (
     <div>
@@ -265,10 +259,7 @@ function CommentWorkoutModal({
             />
 
             <IconButton
-            sx={{position:"absolute",
-            top: "1rem",
-            right: "1rem",
-          }}
+              sx={{ position: "absolute", top: "1rem", right: "1rem" }}
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
