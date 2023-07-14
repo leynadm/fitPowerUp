@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import StarsIcon from "@mui/icons-material/Stars";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -18,49 +22,129 @@ const style = {
   p: 2,
   borderRadius: 1,
 };
- 
+
 interface ParentComponentProps {
   openCommentWorkoutModal: boolean;
   setOpenCommentWorkoutModal: React.Dispatch<React.SetStateAction<boolean>>;
-  workoutCommentValue: string;
-  setworkoutCommentValue: React.Dispatch<React.SetStateAction<string>>;
-  workoutValue: number;
-  setWorkoutValue : React.Dispatch<React.SetStateAction<number>>;
-  setWorkoutCommentRenderTrigger : React.Dispatch<React.SetStateAction<number>>;
+  todayDate: Date | undefined;
+  setWorkoutCommentRenderTrigger:React.Dispatch<React.SetStateAction<number>>;
+  setWorkoutEvaluationCheck:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function CommentWorkoutModal({
   openCommentWorkoutModal,
   setOpenCommentWorkoutModal,
-  workoutCommentValue,
-  setworkoutCommentValue,
-  workoutValue,
-  setWorkoutValue,
-  setWorkoutCommentRenderTrigger
+  todayDate,
+  setWorkoutCommentRenderTrigger,
+  setWorkoutEvaluationCheck
 }: ParentComponentProps) {
+  const [workoutValue, setWorkoutValue] = useState<number>(0);
+  const [workoutCommentValue, setworkoutCommentValue] = useState("");
+  const [trainHarderCheck, setTrainHarderCheck] = useState<boolean>(false);
+  const [feelPainCheck, setFeelPainCheck] = useState<boolean>(false);
+  const [warmStretchCheck, setWarmStretchCheck] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (todayDate) {
+      
+      getWorkoutEvaluation(todayDate);
+     
+    }
+  }, [todayDate]);
 
   function handleClose() {
-    setworkoutCommentValue("");
     setOpenCommentWorkoutModal(false);
   }
 
-  /* 
-  function saveComment() {
+  function markTrainHarderCheck() {
+    setTrainHarderCheck((prevState) => !prevState);
+  }
 
+  function markfeelPainCheck() {
+    setFeelPainCheck((prevState) => !prevState);
+  }
+
+  function markWarmStretchCheck() {
+    setWarmStretchCheck((prevState) => !prevState);
+  }
+
+  function getWorkoutEvaluation(currentDate: Date) {
+    
+    console.log('logging todayDate:')
+    console.log({todayDate})
+    // Open IndexedDB database connection
+    const request = window.indexedDB.open("fitScouterDb");
+
+    request.onsuccess = function (event: any) {
+      const db = event.target.result;
+
+      // Open transaction to access the object store
+      const transaction = db.transaction(["workout-evaluation"], "readonly");
+      const objectStore = transaction.objectStore("workout-evaluation");
+
+      const index = objectStore.index("workout_evaluation_date");
+      const getRequest = index.get(currentDate);
+
+      getRequest.onsuccess = function (event: any) {
+        const comment = event.target.result?.workout_comment || "";
+        setworkoutCommentValue(comment);
+        const rating = event.target.result?.rating || 0;
+        setWorkoutValue(rating);
+        const pain = event.target.result?.pain || false;
+        setFeelPainCheck(pain);
+        const train = event.target.result?.train || false;
+        setTrainHarderCheck(train);
+        const stretchWarm = event.target.result?.warm_stretch || false;
+        setWarmStretchCheck(stretchWarm);
+      };
+
+      transaction.oncomplete = function () {
+        db.close();
+      };
+    };
+  }
+
+  function saveWorkoutEvaluation() {
     const request = window.indexedDB.open("fitScouterDb");
     request.onsuccess = function (event: any) {
       const db = event.target.result;
-      const transaction = db.transaction("user-exercises-entries", "readwrite");
-      const objectStore = transaction.objectStore("user-exercises-entries");
+      const transaction = db.transaction("workout-evaluation", "readwrite");
+      const objectStore = transaction.objectStore("workout-evaluation");
 
-      const getRequest = objectStore.get(exerciseCommentId);
+      const index = objectStore.index("workout_evaluation_date");
+      const getRequest = index.get(todayDate);
 
       getRequest.onsuccess = function (event: any) {
-        const data = event.target.result;
-        if (data) {
-          data.comment = workoutCommentValue;
-          const updateRequest = objectStore.put(data);
+        const existingEntry = getRequest.result;
+        console.log("logging existing entry:");
+        console.log(existingEntry);
+        if (existingEntry) {
+          if (workoutCommentValue !== "") {
+            existingEntry.workout_comment = workoutCommentValue;
+          }
+          if (workoutValue !== 0) {
+            existingEntry.rating = workoutValue;
+          }
+          if (trainHarderCheck) {
+            existingEntry.train = trainHarderCheck;
+          } else {
+            existingEntry.train = false;
+          }
+
+
+          if (feelPainCheck) {
+            existingEntry.pain = feelPainCheck;
+          } else {
+            existingEntry.pain = false;
+          }
+          if (warmStretchCheck) {
+            existingEntry.warm_stretch = warmStretchCheck;
+          } else {
+            existingEntry.warm_stretch = false;
+          }
+
+          const updateRequest = objectStore.put(existingEntry);
+
           updateRequest.onsuccess = function () {
             console.log("Record updated successfully");
           };
@@ -68,14 +152,31 @@ function CommentWorkoutModal({
             console.log("Error updating record");
           };
         } else {
-          console.log("Record not found");
+          const record = {
+            date: todayDate,
+            workout_comment: workoutCommentValue,
+            rating: workoutValue,
+            train: trainHarderCheck,
+            pain: feelPainCheck,
+            warm_stretch: warmStretchCheck,
+          };
+
+          const addRequest = objectStore.add(record);
+
+          addRequest.onsuccess = () => {
+            console.log("works");
+          };
+
+          addRequest.onerror = () => {
+            console.error("Failed to save the record");
+          };
         }
       };
 
       transaction.oncomplete = function () {
         console.log("Transaction completed");
-        setworkoutCommentValue("");
-        setOpenCommentWorkoutModal(false);
+        setWorkoutCommentRenderTrigger((prev=>prev+1))
+        setOpenCommentWorkoutModal(!openCommentWorkoutModal);
       };
       transaction.onerror = function () {
         console.log("Transaction error");
@@ -85,11 +186,52 @@ function CommentWorkoutModal({
     request.onerror = function () {
       console.log("Error opening database");
     };
-
-    setDropsetRenderTrigger(prev => prev+1)
   }
 
- */
+  function deleteWorkoutEvaluation() {
+    const request = window.indexedDB.open("fitScouterDb");
+    
+    request.onsuccess = function(event:any) {
+      const db = event.target.result;
+      const transaction = db.transaction("workout-evaluation", "readwrite");
+      const objectStore = transaction.objectStore("workout-evaluation");
+  
+      const index = objectStore.index("workout_evaluation_date");
+      const getRequest = index.get(todayDate);
+  
+      getRequest.onsuccess = function(event:any) {
+        const existingEntry = getRequest.result;
+        
+        if (existingEntry) {
+          const deleteRequest = objectStore.delete(existingEntry.id);
+  
+          deleteRequest.onsuccess = function() {
+            console.log("Record deleted successfully");
+          };
+          deleteRequest.onerror = function() {
+            console.log("Error deleting record");
+          };
+        } else {
+          console.log("Entry not found");
+        }
+      };
+  
+      transaction.oncomplete = function() {
+        console.log("Transaction completed, will get the new evaluation");
+        setWorkoutEvaluationCheck(false)
+        setWorkoutCommentRenderTrigger(prev => prev + 1);
+        setOpenCommentWorkoutModal(!openCommentWorkoutModal);
+      };
+      transaction.onerror = function() {
+        console.log("Transaction error");
+      };
+    };
+  
+    request.onerror = function() {
+      console.log("Error opening database");
+    };
+  }
+  
 
   return (
     <div>
@@ -117,7 +259,25 @@ function CommentWorkoutModal({
                   setWorkoutValue(newValue);
                 }
               }}
+              icon={<StarsIcon fontSize="inherit" />}
+              emptyIcon={<StarBorderIcon fontSize="inherit" />}
+              sx={{ paddingBottom: "8px" }}
             />
+
+            <IconButton
+            sx={{position:"absolute",
+            top: "1rem",
+            right: "1rem",
+          }}
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={deleteWorkoutEvaluation}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
           </Box>
 
           <TextField
@@ -132,20 +292,26 @@ function CommentWorkoutModal({
             onChange={(e) => setworkoutCommentValue(e.target.value)}
           />
 
-          <Box sx={{display:"flex",flexDirection:"column"}}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
             <FormControlLabel
-              control={<Switch defaultChecked />}
+              control={<Switch />}
               label="Did you train harder than the last time?"
+              checked={trainHarderCheck}
+              onChange={markTrainHarderCheck}
             />
 
             <FormControlLabel
-              control={<Switch defaultChecked />}
+              control={<Switch />}
+              checked={feelPainCheck}
+              onChange={markfeelPainCheck}
               label="Did you feel any pain?"
             />
 
             <FormControlLabel
-              control={<Switch defaultChecked />}
+              control={<Switch />}
               label="Did you warm up before and stretch properly at the end?"
+              checked={warmStretchCheck}
+              onChange={markWarmStretchCheck}
             />
           </Box>
           <Box
@@ -159,6 +325,7 @@ function CommentWorkoutModal({
               variant="contained"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+              onClick={saveWorkoutEvaluation}
             >
               Save
             </Button>

@@ -574,10 +574,6 @@ function ExerciseSelectedTrack({
       const repsEntryId: number = repsResult.id;
 
       const request = indexedDB.open("fitScouterDb", 1);
-      console.log("inside delete with async");
-
-      console.log(maxWeightResult);
-      console.log(maxRepsResult);
 
       request.onsuccess = function (event) {
         const db = (event.target as IDBRequest).result;

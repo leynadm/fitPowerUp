@@ -119,10 +119,10 @@ function Workout({
 
   
 
-  return (
+  return ( 
     <Box
       className="thisIsMyClass"
-      sx={{ backgroundColor: "#F0F2F5",height:"100%" }}
+      sx={{ }}
     >
       <Box className="ClassWithTouchEvents"
         sx={{

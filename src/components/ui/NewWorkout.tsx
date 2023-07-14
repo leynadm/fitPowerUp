@@ -1,9 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
@@ -29,9 +24,9 @@ import Exercise from "../../utils/interfaces/Exercise";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import CommentWorkoutModal from "./CommentWorkoutModal";
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
-
+import ViewCommentWorkoutModal from "./ViewCommentWorkoutModal";
 interface Swipe {
   touchStart: number;
   touchEnd: number;
@@ -57,8 +52,8 @@ interface NewWorkoutProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
 
   setExistingExercises: Dispatch<
-  SetStateAction<{ name: string; exercises: Exercise[] }[]>
->;
+    SetStateAction<{ name: string; exercises: Exercise[] }[]>
+  >;
 }
 
 function NewWorkout({
@@ -70,7 +65,7 @@ function NewWorkout({
   selectedCategoryExercises,
   setSelectedExercise,
   selectedExercise,
-setExistingExercises
+  setExistingExercises,
 }: NewWorkoutProps) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -78,10 +73,12 @@ setExistingExercises
   );
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
-  const [openCommentWorkoutModal,setOpenCommentWorkoutModal] = useState(false)
-  const [workoutCommentValue,setworkoutCommentValue] = useState("")
-  const [workoutValue, setWorkoutValue] = useState<number>(0);
-  const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] = useState(0)
+  const [openCommentWorkoutModal, setOpenCommentWorkoutModal] = useState(false);
+  const [openViewCommentWorkoutModal, setOpenViewCommentWorkoutModal] = useState(false);
+  const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] =
+    useState(0);
+    
+  const [workoutEvaluationCheck, setWorkoutEvaluationCheck] = useState(false);
 
   const [swipe, setSwipe] = useState<any>({
     moved: false,
@@ -91,20 +88,45 @@ setExistingExercises
 
   const { moved, touchEnd, touchStart } = swipe;
 
+  function getWorkoutEvaluation() {
+    // Open IndexedDB database connection
+    const request = window.indexedDB.open("fitScouterDb");
 
+    request.onsuccess = function (event: any) {
+      const db = event.target.result;
 
-  function getWorkoutEvaluation(){
+      // Open transaction to access the object store
+      const transaction = db.transaction(["workout-evaluation"], "readonly");
+      const objectStore = transaction.objectStore("workout-evaluation");
 
+      const index = objectStore.index("workout_evaluation_date");
+      const getRequest = index.get(todayDate);
+
+      getRequest.onsuccess = function (event: any) {
+        const existingEntry = getRequest.result;
+
+        console.log(existingEntry);
+
+        if (existingEntry) {
+          setWorkoutEvaluationCheck(existingEntry);
+        }
+      };
+
+      transaction.oncomplete = function () {
+        db.close();
+      };
+    };
   }
-
 
   useEffect(() => {
     if (todayDate) {
       getExercisesByDate(todayDate, setExistingExercises);
+      getWorkoutEvaluation();
     }
-  }, [todayDate]);
+  }, [todayDate,workoutCommentRenderTrigger]);
 
   useEffect(() => {
+ 
     const handlePopstate = () => {
       // Logic to handle the effect when the user accesses the component via back button
     };
@@ -115,8 +137,6 @@ setExistingExercises
       window.removeEventListener("popstate", handlePopstate);
     };
   }, []);
-
-
 
   const SENSITIVITY = 125;
 
@@ -137,7 +157,6 @@ setExistingExercises
   }
 
   function handleTouchEnd() {
-    
     if (touchStart !== 0 && touchEnd !== 0) {
       const amountSwipe = swipe.touchEnd - swipe.touchStart;
       console.log({ amountSwipe });
@@ -176,7 +195,6 @@ setExistingExercises
     }
   };
 
-
   const formatDate = (date: Date): string => {
     const today = new Date().setHours(0, 0, 0, 0);
     const passedDate = date.setHours(0, 0, 0, 0);
@@ -206,13 +224,10 @@ setExistingExercises
   };
 
   const handleCloseNavMenu = () => {
-
-
     setAnchorElNav(null);
   };
 
-  const handleDesktopBtnClick = (page:string)=>{
-
+  const handleDesktopBtnClick = (page: string) => {
     handleCloseNavMenu();
 
     // Handle logic based on the clicked page
@@ -220,7 +235,7 @@ setExistingExercises
       // Handle Settings page click
       navigate("settings");
     } else if (page === "Evaluate Workout") {
-      handleCommentWorkoutModalVisibility()
+      handleCommentWorkoutModalVisibility();
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
     } else if (page === "Analysis") {
@@ -229,8 +244,7 @@ setExistingExercises
       auth.signOut();
       // ...
     }
-
-  }
+  };
 
   const handleNewWorkout = () => {
     navigate("workout_categories");
@@ -248,7 +262,7 @@ setExistingExercises
       // Handle Settings page click
       navigate("settings");
     } else if (page === "Evaluate Workout") {
-      handleCommentWorkoutModalVisibility()
+      handleCommentWorkoutModalVisibility();
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
     } else if (page === "Analysis") {
@@ -280,6 +294,11 @@ setExistingExercises
     navigate(`workout_categories/exercises/selected`, {
       state: { todayDate, selectedExercise: selectedState, unitsSystem },
     });
+  }
+
+  function handleOpenViewCommentWorkoutModal(){
+    setOpenViewCommentWorkoutModal(!openViewCommentWorkoutModal)
+
   }
 
   function handleGroupNameClick(category: string) {
@@ -323,8 +342,8 @@ setExistingExercises
     };
   }
 
-  function handleCommentWorkoutModalVisibility(){
-    setOpenCommentWorkoutModal(!openCommentWorkoutModal)
+  function handleCommentWorkoutModalVisibility() {
+    setOpenCommentWorkoutModal(!openCommentWorkoutModal);
   }
 
   function handleViewCommentModalVisibility(
@@ -343,7 +362,7 @@ setExistingExercises
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        backgroundColor: "#F0F2F5"
+        backgroundColor: "#F0F2F5",
       }}
     >
       <ViewCommentModal
@@ -352,14 +371,19 @@ setExistingExercises
         exerciseCommentId={exerciseCommentId}
       />
 
+      <ViewCommentWorkoutModal
+        openViewCommentWorkoutModal={openViewCommentWorkoutModal}
+        setOpenViewCommentWorkoutModal={setOpenViewCommentWorkoutModal}
+        todayDate={todayDate}
+        workoutCommentRenderTrigger={workoutCommentRenderTrigger}
+      />
+
       <CommentWorkoutModal
         openCommentWorkoutModal={openCommentWorkoutModal}
         setOpenCommentWorkoutModal={setOpenCommentWorkoutModal}
-        workoutCommentValue={workoutCommentValue}
-        setworkoutCommentValue={setworkoutCommentValue}
+        todayDate={todayDate}
         setWorkoutCommentRenderTrigger={setWorkoutCommentRenderTrigger}
-        setWorkoutValue={setWorkoutValue}
-        workoutValue={workoutValue}
+        setWorkoutEvaluationCheck={setWorkoutEvaluationCheck}
       />
 
       <Box position="fixed" sx={{ width: "100%" }}>
@@ -486,7 +510,8 @@ setExistingExercises
           </Container>
         </AppBar>
 
-        <Box className="ClassCoveringBothStartNewAndCurrentExercises"
+        <Box
+          className="ClassCoveringBothStartNewAndCurrentExercises"
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -528,26 +553,24 @@ setExistingExercises
           </IconButton>
         </Box>
       </Box>
-      <Container className="ContainerToAddTheTouchEventsOn"  sx={{ padding: 0,height:"calc(100% - 56px)" }}
-      
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onTouchMove={handleTouchMove}
+      <Container
+        sx={{ padding: 0, height: "calc(100vh - 112px)" }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
       >
+
+        
         {existingExercises.length === 0 ? (
-          <Box className="BoxThatShouldHaveTheTouchEvent"
-
-          sx={{
-
-            display: "flex",
+          <Box
+            sx={{
+              display: "flex",
               flexDirection: "column",
               flexGrow: 1,
               height: "calc(100vh - 144px)",
-              marginTop:"30px"
-    
+              marginTop: "30px",
             }}
           >
-
             <Box
               sx={{
                 display: "flex",
@@ -585,27 +608,38 @@ setExistingExercises
           </Box>
         ) : (
           <Box
-            className="BoxToCheck"
             sx={{
-
-
-              /* 
-              height: "calc(100% - 144px)",
-               */
               paddingTop: "32px",
-              paddingBottom:"56px",
-              backgroundColor: "#F0F2F5",          
-              /* 
-              paddingTop: "32px",
-              backgroundColor: "#F0F2F5",
               paddingBottom: "56px",
-              width: "100%",
-              height:"100%"
-    */
+              backgroundColor: "#F0F2F5",
             }}
           >
+            {workoutEvaluationCheck && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                  boxShadow: 1,
+                  margin: "16px",
+                  backgroundColor: "white",
+                }}
+                onClick={handleOpenViewCommentWorkoutModal}
+              >
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EditNoteIcon sx={{ zIndex: 0 }} />
+                </IconButton>
+              </Box>
+            )}
+
             {existingExercises.map((group, index) => (
-            
               <Box
                 key={index}
                 sx={{

@@ -39,12 +39,7 @@ function CommentModal({
   setIsDropset,
   setDropsetRenderTrigger,
 }: ParentComponentProps) {
-  const label = { inputProps: { "aria-label": "Switch demo" } };
 
-  useEffect(() => {
-    console.log("inside Comment Modal, checking value of isDropset:");
-    console.log({ isDropset });
-  }, []);
 
   function handleClose() {
     setCommentValue("");

@@ -88,6 +88,20 @@ function createInitialDbTables(): Promise<void> {
           { unique: false }
         );
 
+
+        // create the body tracker table with its indexes
+        const workout_evaluation = db.createObjectStore("workout-evaluation", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+  
+        workout_evaluation.createIndex("workout_evaluation_rating", "rating", { unique: false });
+        workout_evaluation.createIndex("workout_evaluation_date", "date", { unique: true });
+        workout_evaluation.createIndex("workout_evaluation_comment", "comment", { unique: false });
+        workout_evaluation.createIndex("workout_evaluation_train", "train", { unique: false });
+        workout_evaluation.createIndex("workout_evaluation_pain", "pain", { unique: false });
+        workout_evaluation.createIndex("workout_evaluation_warm_stretch", "warm_stretch", { unique: false });
+
         // create the power level tracker table with its indexes
         const power_level = db.createObjectStore("user-power-level", {
           keyPath: "id",
