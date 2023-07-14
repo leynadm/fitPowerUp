@@ -42,6 +42,8 @@ import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
+import NoConnection from "../../components/ui/NoConnection";
+
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
@@ -55,6 +57,8 @@ function SearchUserProfile() {
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [followersLimitModalOpen, setFollowersLimitModalOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,11 +69,33 @@ function SearchUserProfile() {
   };
 
   useEffect(() => {
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    console.log('what?')
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+
+  }, []);
+
+
+  useEffect(() => {
+    if (isOnline) {
+    
     getProfileData();
     getRelationshipStatus();
     getSearchProfileFollowers();
+    }
   }, [id]);
 
+
+  
   const navigate = useNavigate();
 
   async function getRelationshipStatus() {
@@ -249,6 +275,13 @@ function SearchUserProfile() {
     handleClose();
     navigate("/home/friends");
   }
+
+  if(!isOnline){
+    return (
+      <NoConnection/>
+    );
+  }
+
 
   return (
     <Box>

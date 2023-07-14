@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -11,15 +11,37 @@ import { Link } from "react-router-dom";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
+import NoConnection from "../../components/ui/NoConnection";
 
 interface ParentProps {
   usersFound: User[];
 }
 
 function UsersListItem({ usersFound }: ParentProps) {
+
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   useEffect(() => {
-    console.log(usersFound);
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    console.log('what?')
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+
   }, []);
+
+  if(!isOnline){
+    return (
+      <NoConnection/>
+    );
+  }
 
   return (
     <Box sx={{paddingBottom:"64px"}}>

@@ -17,6 +17,7 @@ import { db } from "../../config/firebase";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
+import NoConnection from "../../components/ui/NoConnection";
 function Newsfeed() {
   const { currentUser } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
@@ -29,12 +30,37 @@ function Newsfeed() {
   const [loading, setLoading] = useState(false);
   const [hasPosts, setHasPosts] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
 
   let renderedOnce = false
    
   useEffect(() => {
-    getFeed();
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+
+    console.log('what?')
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+
+
   }, []);
+
+
+  useEffect(()=>{
+ 
+    if (isOnline) {
+      getFeed();
+    }
+ 
+  },[])
 
   useEffect(()=>{
 
@@ -106,7 +132,6 @@ function Newsfeed() {
     setUserFeed((prevUserFeed: PostData[]) => [...prevUserFeed, ...newFeedData]);
 
   }
-  
 
   async function getFeed() {
     
@@ -291,6 +316,14 @@ function Newsfeed() {
 
   }
  
+
+  if(!isOnline){
+    return (
+      <NoConnection/>
+    );
+  }
+
+
 
   if (loading && !hasPosts) {
     return (

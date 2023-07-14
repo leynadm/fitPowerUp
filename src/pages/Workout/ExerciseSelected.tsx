@@ -85,7 +85,7 @@ function ExerciseSelected({
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Add
             </Typography>
 
             <LibraryBooksIcon

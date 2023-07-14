@@ -568,22 +568,17 @@ function NewWorkout({
         onTouchEnd={handleTouchEnd}
         onTouchMove={handleTouchMove}
       >
-
         {existingExercises.length === 0 ? (
-
-
-
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              flexGrow: 1,
-              height: "calc(100vh - 144px)",
-              marginTop: "30px",
+            
+              height: "calc(100%)",
+
             }}
           >
-
-{workoutEvaluationCheck && (
+            {workoutEvaluationCheck && (
               <Box
                 sx={{
                   display: "flex",
@@ -592,9 +587,8 @@ function NewWorkout({
                   boxShadow: 1,
 
                   margin: "16px",
-                  marginTop:"18px",
+                  marginTop: "48px",
                   backgroundColor: "white",
-
                 }}
                 onClick={handleOpenViewCommentWorkoutModal}
               >
@@ -610,7 +604,6 @@ function NewWorkout({
                 </IconButton>
               </Box>
             )}
-        
 
             <Box
               sx={{
@@ -639,6 +632,7 @@ function NewWorkout({
                   mb: 2,
                   display: "flex",
                   flexDirection: "column",
+                  paddingBottom:"56px"
                 }}
                 onClick={handleNewWorkout}
               >
@@ -655,7 +649,7 @@ function NewWorkout({
               backgroundColor: "#F0F2F5",
             }}
           >
-{workoutEvaluationCheck && (
+            {workoutEvaluationCheck && (
               <Box
                 sx={{
                   display: "flex",
@@ -678,7 +672,7 @@ function NewWorkout({
                   <EditNoteIcon sx={{ zIndex: 0 }} />
                 </IconButton>
               </Box>
-            )}            
+            )}
 
             {existingExercises.map((group, index) => (
               <Box

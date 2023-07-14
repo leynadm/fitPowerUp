@@ -25,6 +25,8 @@ import { db } from "../../config/firebase";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
+import NoConnection from "../../components/ui/NoConnection";
+
 
 function UserProfile() {
 
@@ -36,15 +38,37 @@ function UserProfile() {
   const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
   const [userFollowing, setUserFollowing] = useState<number>(0);
   const [updateCount, setUpdateCount] = useState(0);
-
-  useEffect(() => {
-    getProfileFollowers();
-    console.log('logging current user data:')
-    console.log({currentUserData})
-    console.log(currentUserData.powerLevel)
-  }, [uploadCount,updateCount]);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    console.log('what?')
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+
+  }, []);
+
+  useEffect(() => {
+
+    if (isOnline) {
+      getProfileFollowers();
+    }
+ 
+  }, [uploadCount,updateCount]);
+
+
+
   function handleUserProfilePostsBtn() {
     navigate("");
   }
@@ -76,6 +100,12 @@ function UserProfile() {
     }
   }
  
+  if(!isOnline){
+    return (
+      <NoConnection/>
+    );
+  }
+
   return (
     <Box>
       <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
