@@ -11,7 +11,7 @@ import {
   startAfter,
   limit,
   documentId,
-  Timestamp
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { PostData } from "../../utils/interfaces/PostData";
@@ -29,48 +29,37 @@ function Newsfeed() {
   );
   const [loading, setLoading] = useState(false);
   const [hasPosts, setHasPosts] = useState(false);
-  const [loadButtonStatus, setLoadButtonStatus] = useState(false)
+  const [loadButtonStatus, setLoadButtonStatus] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
+  let renderedOnce = false;
 
-  let renderedOnce = false
-   
   useEffect(() => {
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-
-    console.log('what?')
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-
-
   }, []);
 
-
-  useEffect(()=>{
- 
+  useEffect(() => {
     if (isOnline) {
       getFeed();
     }
- 
-  },[])
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[loading])
-
+  }, [loading]);
 
   async function loadMoreFeed() {
-  
     const postsRef = collection(db, "posts");
-  
+
     let postsQuery;
     if (latestDoc) {
       postsQuery = query(
@@ -87,36 +76,37 @@ function Newsfeed() {
         where("documentId", "in", postIDsCache),
         limit(2)
       );
-    } 
-  
+    }
+
     const postsSnapshot = await getDocs(postsQuery);
-  
-    if(postsSnapshot.empty){
-      setLoadButtonStatus(true)
+
+    if (postsSnapshot.empty) {
+      setLoadButtonStatus(true);
     }
 
     if (postsSnapshot.docs.length > 0) {
       setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
     }
-  
+
     // Extract the post data from the query snapshot
     const newPostsData = postsSnapshot.docs.map((doc) => {
       const postData = { ...doc.data(), postId: doc.id };
       return postData;
     });
-  
+
     // Create a mapping from user ID to user data for efficient lookup
     const userIdToUserData: { [key: string]: any } = {};
     usersDataCache.forEach((userData: any) => {
       const userId = userData.id;
       userIdToUserData[userId] = userData;
     });
-  
+
     // Combine post data with user data to enrich the feed data
     const newFeedData = newPostsData.map((post: any) => {
       const userID = post.userId;
       if (userIdToUserData.hasOwnProperty(userID)) {
-        const { name, surname, profileImage, verified } = userIdToUserData[userID];
+        const { name, surname, profileImage, verified } =
+          userIdToUserData[userID];
         return {
           ...post,
           name,
@@ -127,14 +117,15 @@ function Newsfeed() {
       }
       return null; // Add a default return value, such as null, for cases where userId is not found
     });
-  
-    // Update the userFeed state with the new feed data
-    setUserFeed((prevUserFeed: PostData[]) => [...prevUserFeed, ...newFeedData]);
 
+    // Update the userFeed state with the new feed data
+    setUserFeed((prevUserFeed: PostData[]) => [
+      ...prevUserFeed,
+      ...newFeedData,
+    ]);
   }
 
   async function getFeed() {
-    
     renderedOnce = true;
 
     if (renderedOnce) {
@@ -151,8 +142,7 @@ function Newsfeed() {
     const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
     console.log({ sevenDaysAgoTimestamp });
     // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
-    
-    
+
     const followedUsersSnapshot = await getDocs(
       query(
         followedUsersRef,
@@ -181,9 +171,9 @@ function Newsfeed() {
 
     if (usersDataCache.length === 0) {
       // Retrieve the user data of the followed users
-    
+
       usersQuery = query(usersRef, where(documentId(), "in", documentIds));
-    
+
       usersSnapshot = await getDocs(usersQuery);
       // Extract the user data from the query snapshot
       usersData = usersSnapshot.docs.map((doc) => {
@@ -247,8 +237,8 @@ function Newsfeed() {
 
       const postsSnapshot = await getDocs(postsQuery);
 
-      if(postsSnapshot.empty){
-        setLoadButtonStatus(true)
+      if (postsSnapshot.empty) {
+        setLoadButtonStatus(true);
       }
 
       if (postsSnapshot.docs.length > 0) {
@@ -294,9 +284,7 @@ function Newsfeed() {
 
       // Update the userFeed state with the sorted feed data
 
-
       if (latestDoc) {
-        
         setUserFeed((prevUserFeed: PostData[]) => [
           ...prevUserFeed,
           ...feedData,
@@ -313,17 +301,11 @@ function Newsfeed() {
     if (renderedOnce) {
       setLoading(false);
     }
-
-  }
- 
-
-  if(!isOnline){
-    return (
-      <NoConnection/>
-    );
   }
 
-
+  if (!isOnline) {
+    return <NoConnection />;
+  }
 
   if (loading && !hasPosts) {
     return (
@@ -345,13 +327,8 @@ function Newsfeed() {
 
   return (
     <>
-      {hasPosts ? (
-        <Box sx={{ paddingBottom: "56px", marginTop: "8px",height:"100%" }}>
-          {/* 
-          <Typography sx={{ fontSize: "small", opacity: "50%", textAlign: "right" }}>
-            Last 7 days
-          </Typography>
-          */}
+      {hasPosts && isOnline ? (
+        <Box sx={{ paddingBottom: "56px", marginTop: "8px", height: "100%" }}>
           {userFeed.map((post: PostData, index: number) => (
             <UserWorkoutCard
               key={index}
@@ -384,9 +361,16 @@ function Newsfeed() {
         </Box>
       ) : (
         <Box
-          sx={{ paddingBottom: "56px", marginTop: "8px", textAlign: "center",height:"100%" }}
+          sx={{
+            paddingBottom: "56px",
+            marginTop: "8px",
+            textAlign: "center",
+            height: "100%",
+          }}
         >
-          <Typography sx={{height:"100%"}}>No posts, follow others to see their activity!</Typography>
+          <Typography sx={{ height: "100%" }}>
+            No posts, follow others to see their activity!
+          </Typography>
         </Box>
       )}
     </>

@@ -18,7 +18,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Box from "@mui/material/Box";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { Timestamp, arrayRemove } from "firebase/firestore";
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ReplyIcon from "@mui/icons-material/Reply";
 import PostComment from "./PostComment";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
@@ -59,7 +59,7 @@ interface UserProfileProps {
   documentId: string;
   postUserId: string;
   getUserPosts?: () => void;
-  userVerified:boolean
+  userVerified: boolean;
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -107,7 +107,7 @@ export default function UserWorkoutCard({
   documentId,
   postUserId,
   getUserPosts,
-  userVerified
+  userVerified,
 }: UserProfileProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [commentExpanded, setCommentExpanded] = useState(false);
@@ -124,7 +124,6 @@ export default function UserWorkoutCard({
       : false
   );
 
-
   const [postAppreciationNumber, setPostAppreciationNumber] = useState<number>(
     postAppreciation.length !== 0 ? postAppreciation.length : 0
   );
@@ -140,7 +139,9 @@ export default function UserWorkoutCard({
       setGuestProfileModalOpen(true);
       return;
     }
+
     getPostComments();
+
     setCommentExpanded(!commentExpanded);
   };
 
@@ -324,8 +325,12 @@ export default function UserWorkoutCard({
 
         <CardHeader
           avatar={
-            <Stack direction="row" spacing={2}>              
-              <Avatar alt="profile" src={currentUserDataImage} sx={{width:48,height:48}} />
+            <Stack direction="row" spacing={2}>
+              <Avatar
+                alt="profile"
+                src={currentUserDataImage}
+                sx={{ width: 48, height: 48 }}
+              />
             </Stack>
           }
           action={
@@ -340,9 +345,13 @@ export default function UserWorkoutCard({
               to={`/home/friends/results/u/${postUserId}`}
               style={{ textDecoration: "none", color: "black" }}
             >
-              <Box sx={{display:"flex",gap:0.5,alignItems:"center"}}>
-              {currentUserDataName}
-              {userVerified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
+              <Box sx={{ display: "flex", gap: 0.5, alignItems: "center" }}>
+                {currentUserDataName}
+                {userVerified && (
+                  <VerifiedIcon
+                    sx={{ color: "#3f51b5", width: "1rem", height: "1rem" }}
+                  />
+                )}
               </Box>
             </Link>
           }
