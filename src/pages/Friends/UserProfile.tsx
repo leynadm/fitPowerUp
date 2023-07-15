@@ -99,7 +99,7 @@ function UserProfile() {
       setUserIndividualFollowing(following);
     }
   }
- 
+  
   if(!isOnline){
     return (
       <NoConnection/>

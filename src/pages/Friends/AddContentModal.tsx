@@ -44,8 +44,7 @@ import { db } from "../../config/firebase";
 import uuid from "react-uuid";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import NoConnection from "../../components/ui/NoConnection";
-
+import User from "../../utils/interfaces/User";
 const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -77,6 +76,23 @@ interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
 
+async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
+  if (currentUser === null) {
+    return;
+  }
+
+  if (currentUser.isAnonymous === false) {
+    const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data() as User;
+      setCurrentUserData(userData);
+      return userData;
+    }
+  }
+}
+
 function AddContentModal({
   addContentModalOpen,
   setAddContentModalOpen,
@@ -87,7 +103,7 @@ function AddContentModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
   const [expanded, setExpanded] = React.useState(false);
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData,setCurrentUserData } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
   const [addWorkout, setAddWorkout] = useState(false);
   const [limitInfo, setLimitInfo] = useState("");
@@ -111,6 +127,11 @@ function AddContentModal({
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
+  
+
+  if(currentUserData===undefined){
+    return<div>undefined</div>
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);

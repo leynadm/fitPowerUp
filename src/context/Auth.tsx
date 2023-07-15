@@ -7,12 +7,12 @@ import User from "../utils/interfaces/User";
 interface AuthProviderProps {
   children: ReactNode;
 }
-
+ 
 export const AuthContext = createContext<any>({
   currentUser: null,
   userCredential: null,
 });
-
+ 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
@@ -20,6 +20,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     undefined
   );
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
+  
+  
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user);

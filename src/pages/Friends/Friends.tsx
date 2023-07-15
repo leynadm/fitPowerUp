@@ -1,4 +1,4 @@
-import React, { useState,Dispatch,SetStateAction } from "react";
+import React, { useState,Dispatch,SetStateAction, useContext, useEffect } from "react";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -29,7 +29,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Account from "./Account";
 import Notifications from "./Notifications";
 import SearchPost from "./SearchPost";
-
+import { AuthContext } from "../../context/Auth";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   unitsSystem: string;
@@ -37,6 +37,7 @@ interface HomeProps {
 }
 
 function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -45,6 +46,13 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [notificationsNumber, setNotificationsNumber] = useState(0)
   
+  const {currentUserData} = useContext(AuthContext)
+  
+  useEffect(()=>{
+    console.log('logging current user data inside log:')
+    console.log(currentUserData)
+  },[])
+
   const navigate = useNavigate();
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -166,6 +174,14 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
     setAddContentModalOpen(true);
   }
 
+  if (currentUserData===undefined) {
+    return (
+      <div>
+        We couldn't connect right now, please refresh the app or try later.
+      </div>
+    );
+  } 
+
   return (
     <Box sx={{ width: "100%", backgroundColor: "#F0F2F5" }}>
       <AppBar position="fixed" elevation={0} style={{ top: 0, width: "100%",height:"56px" }}>
@@ -250,14 +266,18 @@ function Friends({ existingExercises,unitsSystem,setUnitsSystem }: HomeProps) {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+              
+    
+    {currentUserData.name!==undefined&&
       <AddContentModal
         addContentModalOpen={addContentModalOpen}
         setAddContentModalOpen={setAddContentModalOpen}
         existingExercises={existingExercises}
         unitsSystem={unitsSystem}
       />
+}
 
-      {/* This is the container that I might have to check if it reached to bottom */}
+       {/* This is the container that I might have to check if it reached to bottom */}
       <Container sx={{ height: "100%" }}>
 
         <Routes>

@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { AuthContext } from "../../context/Auth";
+import { doc, getDoc } from "firebase/firestore";
+import User from "../../utils/interfaces/User";
 import {
   collection,
   query,
@@ -18,8 +20,27 @@ import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
 import NoConnection from "../../components/ui/NoConnection";
+
+
+async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
+  if (currentUser === null) {
+    return; 
+  }
+
+  if (currentUser.isAnonymous === false) {
+    const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data() as User;
+      setCurrentUserData(userData);
+      return userData;
+    }
+  }
+}
+
 function Newsfeed() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser,currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
@@ -31,10 +52,12 @@ function Newsfeed() {
   const [hasPosts, setHasPosts] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
+  const [feedDataNullCheck, setFeedDataNullCheck] = useState(false)
   let renderedOnce = false;
 
   useEffect(() => {
+    console.log('logging current user data:')
+    console.log(currentUserData)
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -47,8 +70,12 @@ function Newsfeed() {
     };
   }, []);
 
-  useEffect(() => {
-    if (isOnline) {
+
+  useEffect(() => { 
+    console.log('logging current user data inside newsfeeed')
+    console.log(currentUserData)
+  
+    if (isOnline && (currentUserData!==undefined || currentUserData!==null) ) {
       getFeed();
     }
   }, []);
@@ -57,6 +84,11 @@ function Newsfeed() {
 
   }, [loading]);
 
+  useEffect(()=>{
+    console.log('logging user feed')
+    console.log(userFeed)
+  },[userFeed])
+ 
   async function loadMoreFeed() {
     const postsRef = collection(db, "posts");
 
@@ -280,11 +312,15 @@ function Newsfeed() {
       });
 
       console.log("logging feed data:");
-      console.log(feedData);
+      console.log(feedData); 
+
+      if(feedData.includes(null)){
+        setFeedDataNullCheck(true)
+      }
 
       // Update the userFeed state with the sorted feed data
-
-      if (latestDoc) {
+      
+      if (latestDoc && !feedData.includes(null)) {
         setUserFeed((prevUserFeed: PostData[]) => [
           ...prevUserFeed,
           ...feedData,
@@ -324,10 +360,10 @@ function Newsfeed() {
       </Box>
     );
   }
-
-  return (
-    <>
-      {hasPosts && isOnline ? (
+   
+  return ( 
+    <>     
+      {hasPosts && isOnline &&!feedDataNullCheck ? (
         <Box sx={{ paddingBottom: "56px", marginTop: "8px", height: "100%" }}>
           {userFeed.map((post: PostData, index: number) => (
             <UserWorkoutCard
