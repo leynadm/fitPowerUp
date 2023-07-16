@@ -7,8 +7,9 @@ import SignUp from "./pages/Signup/SignUp";
 import Home from "./pages/Home/Home";
 import LandingPage from "./pages/Home/LandingPage";
 import { IndexedDBProvider } from "./context/IndexedDB";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ForgotPassword from "./pages/Login/ForgotPassword";
+import LaunchingApp from "./pages/Login/Launching";
 function App() {
   const [sessionVerificationEmailCheck, setSessionVerificationEmailCheck] =
     useState(true);
@@ -24,14 +25,16 @@ function App() {
                 <Route
                   path="/home/*"
                   element={
-                    <Home
-                      sessionVerificationEmailCheck={
-                        sessionVerificationEmailCheck
-                      }
-                      setSessionVerificationEmailCheck={
-                        setSessionVerificationEmailCheck
-                      }
-                    />
+                      
+                      <Home
+                        sessionVerificationEmailCheck={
+                          sessionVerificationEmailCheck
+                        }
+                        setSessionVerificationEmailCheck={
+                          setSessionVerificationEmailCheck
+                        }
+                      />
+
                   }
                 />
               </Route>
@@ -40,7 +43,11 @@ function App() {
               <Route element={<AuthRoute type="signup" />}>
                 <Route element={<SignUp />} path="/signup" />
               </Route>
-
+{/* 
+              <Route element={<AuthRoute type="launching" />}>
+                <Route element={<LaunchingApp />} path="/launching" />
+              </Route>
+ */}
               {/* If the user isn't signed him, reroute him to login */}
               <Route element={<AuthRoute type="login" />}>
                 <Route element={<Login />} path="/login" />

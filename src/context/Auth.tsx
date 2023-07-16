@@ -25,8 +25,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user);
-      console.log("inside unsubscribe, logging user:");
-      console.log(user);
+
 
       if (user) {
         if (user?.isAnonymous === false) {
@@ -93,7 +92,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [currentUser]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, currentUserData,setCurrentUserData }}>
+    <AuthContext.Provider value={{ currentUser, currentUserData,setCurrentUserData,loginFetchTrigger }}>
       {children}
     </AuthContext.Provider>
   );

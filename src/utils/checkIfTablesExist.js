@@ -1,3 +1,40 @@
+function checkIfTablesExist(databaseName, tableNames) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.databases();
+
+    request.onsuccess = () => {
+      const databaseList = request.result;
+      const database = databaseList.find((db) => db.name === databaseName);
+      if (!database) {
+        resolve(false); // Database does not exist
+        return;
+      }
+
+      const dbRequest = indexedDB.open(databaseName, database.version);
+      dbRequest.onsuccess = () => {
+        const db = dbRequest.result;
+        const tableExists = tableNames.every((tableName) => db.objectStoreNames.contains(tableName));
+        db.close();
+        resolve(tableExists);
+      };
+
+      dbRequest.onerror = () => {
+        reject(dbRequest.error);
+      };
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+}
+
+export default checkIfTablesExist;
+
+
+
+/* 
+
 function checkIfFitScouterDbExists() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open("fitScouterDb");
@@ -69,4 +106,4 @@ function checkIfFitScouterDbExists() {
   }
   
   export default checkIfTablesExist;
-  
+   */
