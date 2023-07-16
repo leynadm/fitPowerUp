@@ -1,7 +1,9 @@
+
 function createInitialDbTables(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const request = indexedDB.open("fitScouterDb", 1);
   
+      console.log('inside createInitialDbTables:')
       if (!request) {
         console.log("request value:");
         console.log(request);
