@@ -37,8 +37,6 @@ interface HomeProps {
   setUnitsSystem: Dispatch<SetStateAction<string>>;
 }
 
-
-
 function Workout({
   existingExercises,
   selectedCategoryExercises,
@@ -59,7 +57,7 @@ function Workout({
 
   const [weightIncrementPreference, setWeightIncrementPreference] =
     useState(2.5);
-  
+
   useEffect(() => {
     if (!todayDate) {
       const currentDate = new Date();
@@ -67,8 +65,6 @@ function Workout({
     }
     getDataPreferences();
   }, []);
-
-
 
   /* Use this useEffect to force requerying of data and update state when user navigates with back button */
   useEffect(() => {
@@ -117,14 +113,10 @@ function Workout({
     };
   }, [setUnitsSystem, setWeightIncrementPreference]);
 
-  
-
-  return ( 
-    <Box
-      className="thisIsMyClass"
-      sx={{ }}
-    >
-      <Box className="ClassWithTouchEvents"
+  return (
+    <Box className="thisIsMyClass" sx={{}}>
+      <Box
+        className="ClassWithTouchEvents"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -132,9 +124,8 @@ function Workout({
           alignItems: "center",
           width: "100%",
           height: "100%",
-          backgroundColor: "#F0F2F5"
+          backgroundColor: "#F0F2F5",
         }}
-
       >
         <Routes>
           <Route
@@ -150,7 +141,7 @@ function Workout({
                 setSelectedExercise={setSelectedExercise}
                 selectedExercise={selectedExercise}
                 setExistingExercises={setExistingExercises}
-                />
+              />
             }
           />
 
@@ -222,7 +213,9 @@ function Workout({
 
           <Route
             path="/bodytracker/*"
-            element={<BodyTracker todayDate={todayDate} />}
+            element={
+              <BodyTracker todayDate={todayDate} unitsSystem={unitsSystem} />
+            }
           />
         </Routes>
       </Box>

@@ -26,7 +26,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
-import LaunchingApp from "./Launching";
 
 function Copyright(props: any) {
   return (

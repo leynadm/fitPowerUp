@@ -28,9 +28,6 @@ export const IndexedDBProvider: React.FC<IndexedDBProviderProps> = ({
       });
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   const contextValue: IndexedDBContextValue = {};
 

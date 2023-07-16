@@ -1,20 +1,17 @@
-import React, { useContext,useState,useEffect } from "react";
+import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
 import LaunchingApp from "../pages/Login/Launching";
 interface AuthRouteProps {
-  type: "home" | "login" | "signup" | "/"| "launching";
+  type: "home" | "login" | "signup" | "/" | "launching";
 }
 
-
-const AuthRoute = ({ type}:AuthRouteProps) => {
-
-
-  const { currentUser,loginFetchTrigger } = useContext(AuthContext);
+const AuthRoute = ({ type }: AuthRouteProps) => {
+  const { currentUser, loginFetchTrigger } = useContext(AuthContext);
 
   if (!loginFetchTrigger) {
     // Render a loading state or a spinner while authentication is resolving
-    return <LaunchingApp/>
+    return <LaunchingApp />;
   }
 
   if (type === "login") {
@@ -27,7 +24,7 @@ const AuthRoute = ({ type}:AuthRouteProps) => {
     return currentUser === null ? <Outlet /> : <Navigate to={"/home"} />;
   } else {
     throw new Error("Invalid AuthRoute type");
-  } 
+  }
 };
 
 export default AuthRoute;

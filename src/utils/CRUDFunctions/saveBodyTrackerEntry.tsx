@@ -14,14 +14,14 @@ function saveBodyTrackerEntry(selectedMeasurement: any, value: number, todayDate
       const store = transaction.objectStore("user-body-tracker");
 
       const index = store.index("bodytracker_name_and_date");
-      const getRequest = index.get([selectedMeasurement.label, todayDate]);
+      const getRequest = index.get([selectedMeasurement, todayDate]);
 
       getRequest.onsuccess = () => {
         const existingEntry = getRequest.result;
 
         if (existingEntry) {
           // Update the existing entry
-          existingEntry.name = selectedMeasurement.label;
+          existingEntry.name = selectedMeasurement;
           existingEntry.value = value;
           const updateRequest = store.put(existingEntry);
 
@@ -36,7 +36,7 @@ function saveBodyTrackerEntry(selectedMeasurement: any, value: number, todayDate
         } else {
           // Create a new entry
           const record = {
-            name: selectedMeasurement.label,
+            name: selectedMeasurement,
             value: value,
             date: todayDate,
           };

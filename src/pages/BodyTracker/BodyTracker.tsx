@@ -11,25 +11,25 @@ import BodyTrackerGraph from "./BodyTrackerGraph";
 import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-interface WorkoutProps{
+interface WorkoutProps {
   todayDate: Date | undefined;
+  unitsSystem: string;
 }
 
-function BodyTracker({todayDate}:WorkoutProps) {
+function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
-    
-    const handleNavigateTrack = () => {
-        navigate("");
-      };
-    
-      const handleNavigateHistory = () => {
-        navigate("history");
-      };
-    
-      const handleNavigateGraph = () => {
-        navigate("graph");
-      };
+  const handleNavigateTrack = () => {
+    navigate("");
+  };
+
+  const handleNavigateHistory = () => {
+    navigate("history");
+  };
+
+  const handleNavigateGraph = () => {
+    navigate("graph");
+  };
 
   return (
     <Box
@@ -40,10 +40,12 @@ function BodyTracker({todayDate}:WorkoutProps) {
         flexDirection: "column",
       }}
     >
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AccessibilityIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <AccessibilityIcon
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               variant="h6"
               noWrap
@@ -96,7 +98,7 @@ function BodyTracker({todayDate}:WorkoutProps) {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
-          borderBottom:"2px black solid"
+          borderBottom: "2px black solid",
         }}
       >
         <Button
@@ -133,8 +135,16 @@ function BodyTracker({todayDate}:WorkoutProps) {
       </Box>
 
       <Routes>
-        <Route path="" element={<BodyTrackerTrack todayDate={todayDate} />} />
-        <Route path="history" element={<BodyTrackerHistory />} />
+        <Route
+          path=""
+          element={
+            <BodyTrackerTrack todayDate={todayDate} unitsSystem={unitsSystem} />
+          }
+        />
+        <Route
+          path="history"
+          element={<BodyTrackerHistory unitsSystem={unitsSystem} />}
+        />
         <Route path="graph" element={<BodyTrackerGraph />} />
       </Routes>
     </Box>

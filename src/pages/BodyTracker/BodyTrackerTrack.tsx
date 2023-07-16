@@ -1,26 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import RemoveIcon from "@mui/icons-material/Remove";
 import saveBodyTrackerEntry from "../../utils/CRUDFunctions/saveBodyTrackerEntry";
 import Container from "@mui/material/Container";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+
 interface BodyTrackerProps {
   todayDate: Date | undefined;
+  unitsSystem: string;
 }
 
-function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
-  const measurementOptions = [
-    {label:"Bodyweight"} , 
-    {label:"Body Fat"} 
-  ];
+function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
+  const measurementOptions = ["Bodyweight", "Body Fat"];
 
-  const [selectedMeasurement, setSelectedMeasurement] = useState<
-    { label: string }
-  >(measurementOptions[0]);
+  const [selectedOption, setSelectedOption] = useState<string>("Bodyweight");
+
   const [value, setValue] = useState(0);
+
+  const [bodyweightData, setBodyweightData] = useState([]);
+
+  useEffect(() => {
+    getBodyweightData("Bodyweight");
+  }, []);
 
   function handleSubtractButtonClick() {
     if (value === 0) {
@@ -31,8 +40,8 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
 
   const handleSaveButtonClick = async () => {
     try {
-      await saveBodyTrackerEntry(selectedMeasurement, value, todayDate);
-      console.log("Record saved successfully");
+      await saveBodyTrackerEntry(selectedOption, value, todayDate);
+      getBodyweightData(selectedOption);
     } catch (error) {
       console.error("Failed to save the record");
     }
@@ -42,32 +51,139 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
     setValue((prevValue) => prevValue + 1);
   }
 
+  function getBodyweightData(typeOfData: string) {
+    if (!todayDate) {
+      return;
+    }
 
+    const request = indexedDB.open("fitScouterDb", 1);
+
+    request.onsuccess = function () {
+      const db = request.result;
+
+      const userEntryTransaction = db.transaction(
+        "user-body-tracker",
+        "readonly"
+      );
+
+      const userEntryTransactionStore =
+        userEntryTransaction.objectStore("user-body-tracker");
+
+      const bodyTrackerNameAndDateIndex = userEntryTransactionStore.index(
+        "bodytracker_name_and_date"
+      );
+
+      const range = IDBKeyRange.bound(
+        [typeOfData, todayDate],
+        [typeOfData, todayDate] // Use the same date for both bounds
+      );
+
+      const exercisesRequest = bodyTrackerNameAndDateIndex.openCursor(range);
+
+      const tempBodyweightData: any = [];
+
+      exercisesRequest.onsuccess = function (event) {
+        const cursor = (event.target as IDBRequest).result;
+
+        if (cursor) {
+          tempBodyweightData.push(cursor.value);
+          cursor.continue();
+        } else {
+          console.log("logging existing exercises:");
+
+          console.log(tempBodyweightData);
+
+          setBodyweightData(tempBodyweightData);
+        }
+      };
+
+      exercisesRequest.onerror = function () {
+        console.error("Error retrieving existing exercises");
+      };
+
+      userEntryTransaction.oncomplete = function () {
+        db.close();
+      };
+    };
+
+    request.onerror = function () {
+      console.log("Error opening database");
+    };
+  }
+
+  async function deleteEntry(entryId: string) {
+    try {
+      const request = indexedDB.open("fitScouterDb", 1);
+  
+      request.onsuccess = function () {
+        const db = request.result;
+  
+        const userEntryTransaction = db.transaction(
+          "user-body-tracker",
+          "readwrite"
+        );
+  
+        const userEntryTransactionStore =
+          userEntryTransaction.objectStore("user-body-tracker");
+  
+        const deleteRequest = userEntryTransactionStore.delete(entryId);
+  
+        deleteRequest.onsuccess = function () {
+          console.log("Entry deleted successfully");
+          getBodyweightData(selectedOption);
+        };
+  
+        deleteRequest.onerror = function () {
+          console.error("Failed to delete the entry");
+        };
+  
+        userEntryTransaction.oncomplete = function () {
+          db.close();
+        };
+      };
+  
+      request.onerror = function () {
+        console.log("Error opening database");
+      };
+    } catch (error) {
+      console.error("Failed to delete the entry");
+    }
+  }
+  
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
-      <Box sx={{ display: "flex", gap: "8px", width: "100%" }}>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          value={selectedMeasurement}
-          options={measurementOptions}
-          onChange={(event, newValue) => {
-            if (newValue) {
-              console.log(newValue.label); // Log the label
-              setSelectedMeasurement(newValue);
-            }
-          }}
-          sx={{
-            width: "100%",
-            paddingTop: "16px",
-            paddingLeft: "8px",
-            paddingRight: "8px",
-          }}
-          renderInput={(params) => <TextField {...params} label="Measurement" />}
-          disableClearable
-        />
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ width: "100%", marginTop: "8px" }}>
+        <FormControl sx={{ width: "100%" }}>
+          <InputLabel id="demo-simple-select-autowidth-label">
+            Measurement
+          </InputLabel>
 
+          <Select
+            label="Category Filter"
+            labelId="demo-simple-select-autowidth-label"
+            id="demo-simple-select-autowidth"
+            value={selectedOption}
+            sx={{ width: "100%" }}
+            onChange={(event) => {
+              const selectedOption = event.target.value;
+              setSelectedOption(selectedOption);
+              getBodyweightData(selectedOption);
+            }}
+          >
+            {measurementOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       <Box
@@ -96,7 +212,7 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
           }}
           value={value.toFixed(1)}
           onChange={(event) => setValue(Number(event.target.value))}
-          sx={{width:"100%"}}
+          sx={{ width: "100%" }}
         />
 
         <Button
@@ -113,8 +229,7 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
           width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
-          alignItems:"center"
-          
+          alignItems: "center",
         }}
       >
         <Button
@@ -125,13 +240,45 @@ function BodyTrackerTrack({ todayDate }: BodyTrackerProps) {
         >
           SAVE
         </Button>
-        <Button
-          variant="contained"
-          sx={{ width: "100%", margin: "0.25rem" }}
-        >
+        <Button variant="contained" sx={{ width: "100%", margin: "0.25rem" }}>
           CLEAR
         </Button>
       </Box>
+
+      {bodyweightData.map((entry: any, index) => (
+        <Box
+          key={index}
+          sx={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          <div>{entry.date.toDateString()}</div>
+
+          <div>{entry.value}</div>
+
+          {selectedOption === "Bodyweight" && (
+            <div>{unitsSystem === "metric" ? "kgs" : "lbs"}</div>
+          )}
+          {selectedOption === "Body Fat" && <div>%</div>}
+
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={() => deleteEntry(entry.id)} 
+          >
+            <DeleteIcon
+              sx={{
+                zIndex: 0,
+              }}
+            />
+          </IconButton>
+        </Box>
+      ))}
     </Container>
   );
 }

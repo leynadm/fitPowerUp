@@ -7,8 +7,8 @@ import { Line } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import { ChartOptions } from "chart.js";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
+import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import calculateVolumePerWorkout from "../../utils/analysisFunctions/calculateVolumePerWorkout";
@@ -56,7 +56,7 @@ const callChartFunction = (
   setInitialRawData: React.Dispatch<
     React.SetStateAction<ChartData<"line"> | null>
   >,
-  chartType:string
+  chartType: string
 ) => {
   console.log("inside chart function");
   switch (selectedGraph) {
@@ -87,8 +87,7 @@ const callChartFunction = (
         selectedTimeframe,
         setInitialRawData,
         "category"
-      
-        );
+      );
       break;
 
     case "Reps per Week":
@@ -247,7 +246,6 @@ function CategoryAnalysis() {
     );
   }, [selectedTimeframe, selectedOption]);
 
-
   const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -307,10 +305,16 @@ function CategoryAnalysis() {
       duration: 500, // Animation duration in milliseconds
     },
   };
- 
+
   return (
-    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
-      
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: 0,
+      }}
+    >
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel id="demo-simple-select-autowidth-label">
           Category Filter
@@ -414,7 +418,6 @@ function CategoryAnalysis() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          
         }}
       >
         {initialRawData ? (
