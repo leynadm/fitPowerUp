@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const handleOffline = () => {
-      setLoginFetchTrigger(!loginFetchTrigger); // Set the trigger to false when offline
+      setLoginFetchTrigger(true); // Set the trigger to false when offline
     };
 
     window.addEventListener("offline", handleOffline);
@@ -81,6 +81,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentUser]);
+
 
   async function fetchData() {
     if (currentUser === null) {
@@ -98,11 +103,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     }
   }
-
-  useEffect(() => {
-    fetchData();
-  }, [currentUser]);
-
   return (
     <AuthContext.Provider value={{ currentUser, currentUserData,setCurrentUserData,loginFetchTrigger }}>
       {children}

@@ -28,7 +28,13 @@ import LoginIcon from '@mui/icons-material/Login';
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
 
 function Copyright(props: any) {
+  const navigate = useNavigate()
+  function TermsAndConditionsClick() {
+    navigate("/terms-and-conditions");
+  }
+
   return (
+    <Box sx={{display:"flex",flexDirection:"column",justifyContent:"cemter",alignItems:"center"}}>
     <Typography
       variant="body2"
       color="text.secondary"
@@ -41,6 +47,19 @@ function Copyright(props: any) {
         {"."}
       </Link>{" "}
     </Typography>
+
+
+<Typography
+onClick={TermsAndConditionsClick}
+sx={{
+  fontSize: "small",
+  marginTop: "1rem",
+  textDecoration: "underline",
+}}
+>
+Terms and Conditions
+</Typography>
+</Box>
   );
 }
 
@@ -114,6 +133,7 @@ export default function SignIn() {
   }
 
 
+
   function handleLogIn(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log('clicking log in:')
@@ -132,7 +152,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline  />
+        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -141,7 +161,6 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -155,7 +174,6 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
-
             <TextField
               margin="normal"
               fullWidth
@@ -180,31 +198,31 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2,gap:1, backgroundColor:"black" }}
-                            
+              sx={{ mt: 3, mb: 2, gap: 1, backgroundColor: "black" }}
             >
-              <LoginIcon sx={{marginRight:"8px"}}/> Sign In
+              <LoginIcon sx={{ marginRight: "8px" }} /> Sign In
             </Button>
 
             <Button
               type="button"
               fullWidth
               variant="outlined"
-              sx={{ mb: 2,gap:1 }}
+              sx={{ mb: 2, gap: 1 }}
               onClick={SignInWithGoogle}
-              
             >
-              <GoogleIcon/>LOG IN WITH GOOGLE
+              <GoogleIcon />
+              LOG IN WITH GOOGLE
             </Button>
 
             <Button
               type="button"
               fullWidth
               variant="outlined"
-              sx={{ mb: 2, color:"black",gap:1}}
+              sx={{ mb: 2, color: "black", gap: 1 }}
               onClick={signInAsGuest}
             >
-              <PersonIcon/>LOG IN AS GUEST ONLY
+              <PersonIcon />
+              LOG IN AS GUEST ONLY
             </Button>
 
             <Grid container>
@@ -222,8 +240,8 @@ export default function SignIn() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
 
+      </Container>
     </ThemeProvider>
   );
 }
