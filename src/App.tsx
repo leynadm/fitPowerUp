@@ -9,6 +9,7 @@ import LandingPage from "./pages/Home/LandingPage";
 import { IndexedDBProvider } from "./context/IndexedDB";
 import React, { useState } from "react";
 import ForgotPassword from "./pages/Login/ForgotPassword";
+import TermsAndConditions from "./pages/Login/TermsAndConditions";
 function App() {
   const [sessionVerificationEmailCheck, setSessionVerificationEmailCheck] =
     useState(true);
@@ -47,6 +48,8 @@ function App() {
               </Route>
 
               <Route element={<ForgotPassword />} path="/forgot-password" />
+
+              <Route element={<TermsAndConditions />} path="/terms-and-conditions" />
 
               <Route element={<AuthRoute type="/" />}>
                 <Route path="/" element={<LandingPage />} />

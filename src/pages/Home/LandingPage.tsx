@@ -7,12 +7,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import fitImageLogo from "../../assets/fitPowerUpLogoV3.jpg";
 import { useNavigate } from "react-router-dom";
+import InstallInstructionsModal from "../../components/ui/InstallInstructionsModal";
 
 function LandingPage() {
   const navigate = useNavigate();
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
+  const [openInstallInstructionsModal,setOpenInstallInstructionsModal] = useState(false)
+
   useEffect(() => {
       console.log('waiting for the listener')
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -44,8 +47,12 @@ function LandingPage() {
   }, []);
   
   function handleInstallClick() {
-    console.log("handling the install click:");
+
     console.log({ deferredPrompt });
+
+    if(deferredPrompt===null){
+      setOpenInstallInstructionsModal(!openInstallInstructionsModal)
+    }
 
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -62,6 +69,10 @@ function LandingPage() {
 
   function getStartedClick() {
     navigate("/login");
+  }
+
+  function TermsAndConditionsClick() {
+    navigate("/terms-and-conditions");
   }
 
   return (
@@ -94,7 +105,7 @@ function LandingPage() {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "white",
+
                 fontWeight: "bold",
                 color: "black",
               }}
@@ -117,6 +128,12 @@ function LandingPage() {
           height: "calc(100% - 56px)",
         }}
       >
+
+      <InstallInstructionsModal
+      openInstallInstructionsModal={openInstallInstructionsModal}
+      setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
+      />
+
         <Box sx={{ display: "flex" }}>
           <Typography
             variant="h4"
@@ -186,6 +203,8 @@ function LandingPage() {
         >
           Get Started
         </Button>
+
+          <Typography onClick={TermsAndConditionsClick} sx={{fontSize:"small",marginTop:"1rem",textDecoration:"underline"}}>Terms and Conditions</Typography>
       </Container>
 
       <Box sx={{ backgroundColor: "white" }}></Box>

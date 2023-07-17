@@ -70,6 +70,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const handleOffline = () => {
+      setLoginFetchTrigger(!loginFetchTrigger); // Set the trigger to false when offline
+    };
+
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   async function fetchData() {
     if (currentUser === null) {
       return;
