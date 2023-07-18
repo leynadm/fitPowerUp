@@ -9,6 +9,7 @@ function TermsAndConditions() {
       <br></br>
       Welcome to fitPowerUp!
       <br></br>
+      <br></br>
       These terms and conditions ("Terms") govern your access to and use of the
       fitPowerUp fitness application ("App") provided by Daniel Matei
       ("Independent Developer," "I," or "me").

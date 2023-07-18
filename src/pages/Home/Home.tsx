@@ -10,7 +10,6 @@ import Exercise from "../../utils/interfaces/Exercise";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import { AuthContext } from "../../context/Auth";
-
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: React.Dispatch<
@@ -164,9 +163,22 @@ function Home({
         />
 
         <Navbar />
+        
         <Routes>
+
+          {/* 
+        <Route
+            path="/workout/*"
+            element={
+              <WorkoutSubstitute
+
+              />
+            }
+          />
+*/}
+
           <Route
-            path="/*"
+            path="/workout/*"
             element={
               <Workout
                 setExercisesCategories={setExercisesCategories}
@@ -181,7 +193,7 @@ function Home({
             }
             index
           />
-
+ 
           <Route
             path="friends/*"
             element={
