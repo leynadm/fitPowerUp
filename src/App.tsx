@@ -23,7 +23,7 @@ function App() {
               {/* If the user is signed in and tries to access login, reroute him to home */}
               <Route element={<AuthRoute type="home" />}>
                 <Route
-                  path="/home/*"
+                  path="/home*"
                   element={
                     <Home
                       sessionVerificationEmailCheck={
