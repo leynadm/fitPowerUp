@@ -43,7 +43,7 @@ import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
-
+import SearchViewCharacterProgressModal from "../../components/ui/SearchViewCharacterProgressModal";
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
@@ -58,7 +58,10 @@ function SearchUserProfile() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [followersLimitModalOpen, setFollowersLimitModalOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
+  const [
+    openSearchViewCharacterProgressModal,
+    setOpenSearchViewCharacterProgressModal,
+  ] = useState(false);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,33 +72,27 @@ function SearchUserProfile() {
   };
 
   useEffect(() => {
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-    console.log('what?')
+    console.log("what?");
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-
   }, []);
-
 
   useEffect(() => {
     if (isOnline) {
-    
-    getProfileData();
-    getRelationshipStatus();
-    getSearchProfileFollowers();
+      getProfileData();
+      getRelationshipStatus();
+      getSearchProfileFollowers();
     }
   }, [id]);
 
-
-  
   const navigate = useNavigate();
 
   async function getRelationshipStatus() {
@@ -178,11 +175,10 @@ function SearchUserProfile() {
 
         getSearchProfileFollowers();
         navigate("");
-
       } else {
         setFollowersLimitModalOpen(!followersLimitModalOpen);
       }
-    } 
+    }
   }
 
   function handleFollowerClick() {
@@ -276,12 +272,13 @@ function SearchUserProfile() {
     navigate("/home/friends");
   }
 
-  if(!isOnline){
-    return (
-      <NoConnection/>
-    );
+  if (!isOnline) {
+    return <NoConnection />;
   }
 
+  function handleSearchViewCharacterProgressModalClick() {
+    setOpenSearchViewCharacterProgressModal(!openSearchViewCharacterProgressModal);
+  }
 
   return (
     <Box>
@@ -295,17 +292,14 @@ function SearchUserProfile() {
         setFollowersLimitModalOpen={setFollowersLimitModalOpen}
       />
 
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <PersonIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            <PersonIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -316,7 +310,7 @@ function SearchUserProfile() {
                 textDecoration: "none",
               }}
             >
-            {queriedUser && `${queriedUser.name} ${queriedUser.surname}`}
+              {queriedUser && `${queriedUser.name} ${queriedUser.surname}`}
             </Typography>
 
             <PersonIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -326,7 +320,6 @@ function SearchUserProfile() {
                 variant="h5"
                 noWrap
                 component="a"
-                
                 sx={{
                   mr: 2,
                   display: { xs: "flex", md: "none" },
@@ -343,6 +336,18 @@ function SearchUserProfile() {
           </Toolbar>
         </Container>
       </AppBar>
+
+      {queriedUser?.powerLevel && !queriedUser.hidePowerLevel && (
+        <SearchViewCharacterProgressModal
+          openSearchViewCharacterProgressModal={
+            openSearchViewCharacterProgressModal
+          }
+          setOpenSearchViewCharacterProgressModal={
+            setOpenSearchViewCharacterProgressModal
+          }
+          queriedUser={queriedUser}
+        />
+      )}
 
       {queriedUser !== undefined && (
         <>
@@ -364,7 +369,9 @@ function SearchUserProfile() {
               }}
             >
               {queriedUser?.profileImage !== "" ? (
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2}
+                onClick={handleSearchViewCharacterProgressModalClick}
+                >
                   <Avatar
                     alt="Remy Sharp"
                     sx={{ width: 64, height: 64, alignSelf: "center" }}
@@ -377,7 +384,9 @@ function SearchUserProfile() {
                   </Avatar>
                 </Stack>
               ) : (
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2}
+                onClick={handleSearchViewCharacterProgressModalClick}
+                >
                   <Avatar
                     alt="Remy Sharp"
                     sx={{ width: 56, height: 56, alignSelf: "center" }}
@@ -393,7 +402,6 @@ function SearchUserProfile() {
                   width: "100%",
                   justifyContent: "center",
                   justifyItems: "center",
-                  
                 }}
               >
                 <Typography
@@ -409,7 +417,11 @@ function SearchUserProfile() {
                   }}
                 >
                   {`${queriedUser?.name} ${queriedUser?.surname}`}
-                  {queriedUser?.verified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
+                  {queriedUser?.verified && (
+                    <VerifiedIcon
+                      sx={{ color: "#3f51b5", width: "1rem", height: "1rem" }}
+                    />
+                  )}
                 </Typography>
 
                 <Button
@@ -457,13 +469,14 @@ function SearchUserProfile() {
                 backgroundColor: "white",
                 borderBottomLeftRadius: "5px",
                 borderBottomRightRadius: "5px",
-                boxShadow:1
+                boxShadow: 1,
               }}
             >
-              {queriedUser?.hidePowerLevel || (queriedUser?.powerLevel === undefined && queriedUser?.strengthLevel===undefined && queriedUser?.experienceLevel===undefined)? (
-            
-
-              <Typography
+              {queriedUser?.hidePowerLevel ||
+              (queriedUser?.powerLevel === undefined &&
+                queriedUser?.strengthLevel === undefined &&
+                queriedUser?.experienceLevel === undefined) ? (
+                <Typography
                   sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
                 >
                   Unknown Power Level
@@ -519,7 +532,6 @@ function SearchUserProfile() {
                 </Box>
               )}
             </Box>
-
           </Box>
 
           <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>

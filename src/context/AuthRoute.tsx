@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
 import LaunchingApp from "../pages/Login/Launching";
@@ -8,6 +8,11 @@ interface AuthRouteProps {
 
 const AuthRoute = ({ type }: AuthRouteProps) => {
   const { currentUser, loginFetchTrigger } = useContext(AuthContext);
+
+  useEffect(()=>{
+    console.log('logging loginFetchTrigger inside AuthRoute:')
+    console.log(loginFetchTrigger)
+  },[])
 
   if (!loginFetchTrigger) {
     // Render a loading state or a spinner while authentication is resolving
@@ -25,6 +30,6 @@ const AuthRoute = ({ type }: AuthRouteProps) => {
   } else {
     throw new Error("Invalid AuthRoute type");
   }
-};
+}; 
 
 export default AuthRoute;

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
@@ -26,10 +25,9 @@ import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
-
+import UserViewCharacterProgressModal from "../../components/ui/UserViewCharacterProgressModal";
 
 function UserProfile() {
-
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
   const { currentUser, currentUserData } = useContext(AuthContext);
@@ -39,35 +37,31 @@ function UserProfile() {
   const [userFollowing, setUserFollowing] = useState<number>(0);
   const [updateCount, setUpdateCount] = useState(0);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
+  const [
+    openUserViewCharacterProgressModal,
+    setOpenUserViewCharacterProgressModal,
+  ] = useState(false);
   const navigate = useNavigate();
 
-
   useEffect(() => {
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-    console.log('what?')
+    console.log("what?");
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-
   }, []);
 
   useEffect(() => {
-
     if (isOnline) {
       getProfileFollowers();
     }
- 
-  }, [uploadCount,updateCount]);
-
-
+  }, [uploadCount, updateCount]);
 
   function handleUserProfilePostsBtn() {
     navigate("");
@@ -99,16 +93,18 @@ function UserProfile() {
       setUserIndividualFollowing(following);
     }
   }
-  
-  if(!isOnline){
-    return (
-      <NoConnection/>
-    );
+
+  if (!isOnline) {
+    return <NoConnection />;
+  }
+
+  function handleUserViewCharacterProgressModalClick() {
+    setOpenUserViewCharacterProgressModal(!openUserViewCharacterProgressModal);
   }
 
   return (
     <Box>
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AccountBoxIcon
@@ -118,7 +114,6 @@ function UserProfile() {
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -140,7 +135,6 @@ function UserProfile() {
               variant="h5"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -156,6 +150,19 @@ function UserProfile() {
           </Toolbar>
         </Container>
       </AppBar>
+
+      {currentUserData.powerLevel &&
+        openUserViewCharacterProgressModal &&
+        !currentUserData.hidePowerLevel && (
+          <UserViewCharacterProgressModal
+            openUserViewCharacterProgressModal={
+              openUserViewCharacterProgressModal
+            }
+            setOpenUserViewCharacterProgressModal={
+              setOpenUserViewCharacterProgressModal
+            }
+          />
+        )}
 
       <Box
         sx={{
@@ -177,9 +184,12 @@ function UserProfile() {
             borderBottom:"1px lightgray solid"
            */
           }}
+
         >
           {currentUserData.profileImage !== "" ? (
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2}
+            onClick={handleUserViewCharacterProgressModalClick}
+            >
               <Avatar
                 alt="Remy Sharp"
                 src={currentUserData.profileImage}
@@ -187,7 +197,9 @@ function UserProfile() {
               />
             </Stack>
           ) : (
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2}
+            onClick={handleUserViewCharacterProgressModalClick}
+            >
               <Avatar
                 alt="Remy Sharp"
                 src="/static/images/avatar/1.jpg"
@@ -219,7 +231,11 @@ function UserProfile() {
               }}
             >
               {`${currentUserData.name} ${currentUserData.surname}`}
-              {currentUserData.verified && <VerifiedIcon sx={{color:"#3f51b5",width:"1rem",height:"1rem"}} />}
+              {currentUserData.verified && (
+                <VerifiedIcon
+                  sx={{ color: "#3f51b5", width: "1rem", height: "1rem" }}
+                />
+              )}
             </Typography>
 
             <Button
@@ -244,7 +260,10 @@ function UserProfile() {
             boxShadow: 1,
           }}
         >
-          {currentUserData.hidePowerLevel || (currentUserData.powerLevel === undefined && currentUserData.strengthLevel===undefined && currentUserData.experienceLevel===undefined)? (
+          {currentUserData.hidePowerLevel ||
+          (currentUserData.powerLevel === undefined &&
+            currentUserData.strengthLevel === undefined &&
+            currentUserData.experienceLevel === undefined) ? (
             <Box
               sx={{
                 display: "flex",
@@ -253,9 +272,7 @@ function UserProfile() {
                 width: "100%",
                 justifyItems: "center",
               }}
-            >
-
-            </Box>
+            ></Box>
           ) : (
             <Box
               sx={{
@@ -276,7 +293,9 @@ function UserProfile() {
                 }}
               >
                 <PowerLevelIcon width="2rem" height="2rem" />
-                {currentUserData.powerLevel!==undefined?(currentUserData.powerLevel):("-")}
+                {currentUserData.powerLevel !== undefined
+                  ? currentUserData.powerLevel
+                  : "-"}
               </Typography>
 
               <Typography
@@ -286,12 +305,13 @@ function UserProfile() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                }} 
+                }}
               >
                 <StrengthIcon width="1.5rem" height="1.5rem" />
 
-                {currentUserData.strengthLevel!==undefined?(currentUserData.strengthLevel):("-")}
-             
+                {currentUserData.strengthLevel !== undefined
+                  ? currentUserData.strengthLevel
+                  : "-"}
               </Typography>
 
               <Typography
@@ -304,8 +324,9 @@ function UserProfile() {
                 }}
               >
                 <ExperienceIcon width="1.5rem" height="1.5rem" />
-                {currentUserData.experienceLevel!==undefined?(currentUserData.experienceLevel):("-")}
-      
+                {currentUserData.experienceLevel !== undefined
+                  ? currentUserData.experienceLevel
+                  : "-"}
               </Typography>
             </Box>
           )}

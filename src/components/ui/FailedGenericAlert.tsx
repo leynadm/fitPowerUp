@@ -17,7 +17,7 @@ function FailedGenericAlert({
       <Collapse in={genericFailedAlert}>
         <Alert
           severity="error"
-          sx={{ backgroundColor: "lightgreen", marginTop: "8px" }}
+          sx={{ backgroundColor: "pink", marginTop: "8px" }}
         >
           {genericFailedAlertText}
         </Alert>

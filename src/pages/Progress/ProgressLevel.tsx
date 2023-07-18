@@ -94,7 +94,8 @@ function ProgressLevel({
   );
 
   const [genericFailedAlert, setGenericFailedAlert] = useState(false);
-
+  const [genericFailedAlertText, setGenericFailedAlertText] = useState("")
+  
   function showFailedAlert() {
     setGenericFailedAlert(true);
 
@@ -167,7 +168,8 @@ function ProgressLevel({
         .catch((error) => {
           console.error("Error occurred:", error);
         });
-    } else {
+    } else { 
+      setGenericFailedAlertText("You need to select 3 exercises and add your weight!")
       showFailedAlert();
     }
   }
@@ -181,6 +183,22 @@ function ProgressLevel({
   const handleUploadToProfile = async () => {
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
+      return;
+    }
+
+    if (
+      weight === 0 ||
+      firstExerciseSelected === null ||
+      secondExerciseSelected === null ||
+      thirdExerciseSelected === null ||
+      powerLevel === 0 ||
+      strengthPowerLevel === 0 ||
+      experiencePowerLevel === 0
+    ) {
+      showFailedAlert();
+      setGenericFailedAlertText(
+        "You need to calculate your power level first before uploading!"
+      );
       return;
     }
 
@@ -206,6 +224,9 @@ function ProgressLevel({
       updatedUserData.powerLevel = strengthPowerLevel + count;
       updatedUserData.strengthLevel = strengthPowerLevel;
       updatedUserData.experienceLevel = count;
+      updatedUserData.firstPowerExercise = firstExerciseSelected;
+      updatedUserData.secondPowerExercise = secondExerciseSelected;
+      updatedUserData.thirdPowerExercise = thirdExerciseSelected
       // Add more modifications as needed
 
       console.log("checking the value AFTER Update:");
@@ -294,7 +315,7 @@ function ProgressLevel({
 
       <FailedGenericAlert
         genericFailedAlert={genericFailedAlert}
-        genericFailedAlertText="You need to select 3 exercises and add your weight!"
+        genericFailedAlertText={genericFailedAlertText}
       />
 
       <Box

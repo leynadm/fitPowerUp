@@ -10,6 +10,8 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import getBodyTrackerKPIValues from "../../utils/chartFunctions/getBodyTrackerKPIValues";
 import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import {
   Chart as ChartJS,
   Tooltip,
@@ -145,31 +147,36 @@ function BodyTrackerGraph() {
   };
 
   return (
-    <Container sx={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-      <Select
-        id="combo-box-demo"
-        value={selectedOption}
-        onChange={(event) => {
-          const selectedOption = event.target.value;
-          setSelectedOption(selectedOption);
-          callChartFunction(
-            selectedOption,
-            selectedTimeframe,
-            setInitialRawData
-          );
-        }}
-        sx={{
-          width: "100%",
-          marginTop: "16px",
-        }}
-      >
-        {measurementOptions.map((option) => (
-          <MenuItem key={option.label} value={option.label}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </Select>
-
+    <Container
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <Box sx={{ width: "100%", marginTop: "8px" }}>
+        <FormControl sx={{ width: "100%" }}>
+          <InputLabel id="measurement-label">Measurement</InputLabel>
+          <Select
+            id="measurement-select"
+            labelId="measurement-label"
+            value={selectedOption}
+            onChange={(event) => {
+              const selectedOption = event.target.value;
+              setSelectedOption(selectedOption);
+              callChartFunction(
+                selectedOption,
+                selectedTimeframe,
+                setInitialRawData
+              );
+            }}
+            label="Measurement"
+            sx={{ width: "100%" }}
+          >
+            {measurementOptions.map((option) => (
+              <MenuItem key={option.label} value={option.label}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <ButtonGroup
         variant="outlined"
         aria-label="outlined primary button group"

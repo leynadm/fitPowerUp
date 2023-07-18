@@ -23,9 +23,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged(async (user) => {
-      setCurrentUser(user);
 
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {    
+      setCurrentUser(user);
 
       if (user) {
         if (user?.isAnonymous === false) {
@@ -64,23 +64,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           });
         }
       }
-      setLoginFetchTrigger(!loginFetchTrigger);
+      setLoginFetchTrigger(true);
     });
 
+
     return unsubscribe;
+
+
   }, []);
 
   useEffect(() => {
+
     const handleOffline = () => {
       setLoginFetchTrigger(true); // Set the trigger to false when offline
     };
 
+    const handleOnline = () => {
+      setLoginFetchTrigger(true); // Set the trigger to true when online
+    };
+
     window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
 
     return () => {
       window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
     };
   }, []);
+
+
 
   useEffect(() => {
     fetchData();

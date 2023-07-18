@@ -14,17 +14,19 @@ function TermsAndConditions() {
       ("Independent Developer," "I," or "me").
       <br></br>
       <br></br>By using the App, you agree to be bound by these Terms. If you do
-      not agree to these Terms, please refrain from using the App. Description
-      of the App fitPowerUp is a fitness application that offers various
-      features and services to help you track your workouts, set fitness goals,
-      access exercise routines, and connect with a community of fitness
-      enthusiasts. The App is available for download on compatible mobile
-      devices.
+      not agree to these Terms, please refrain from using the App.
+      <br></br>
+      <br></br>
+      <strong>Description of the App</strong> fitPowerUp is a fitness
+      application that offers various features and services to help you track
+      your workouts, access exercise routines, in-depth data analysis functionalities and connect
+      with a community of fitness enthusiasts. The App is available for download
+      on compatible mobile devices.
       <br></br>
       <br></br>
       <strong>Eligibility</strong> a. You must be at least 13 years of age to
       use the App. If you are under the age of 18, you must have the consent of
-      a parent or legal guardian to use the App. b. By using the App, you
+      a parent or legal guardian to use the App. <br></br>b. By using the App, you
       represent and warrant that you have the legal capacity to enter into these
       Terms and comply with all applicable laws.
       <br></br>
@@ -42,22 +44,23 @@ function TermsAndConditions() {
       <br></br>
       <br></br>
       <strong>Free Use and Limitations on Online Component</strong>
-      <br></br>a. fitPowerUp is available for free use, allowing users to access
+      a. fitPowerUp is available for free use, allowing users to access
       and utilize its features and services at no cost.
       <br></br>
       b. However, please note that certain limitations may be imposed on the
       online component of the app, including but not limited to:
       <br></br>
-      <em>i. Availability and Accessibility:</em>
       <br></br>
+      <em>i. Availability and Accessibility:</em>
       While I strive to provide continuous and uninterrupted access to the
       online component, there may be occasions when access is temporarily
       suspended or restricted due to maintenance, updates, or unforeseen
       circumstances. I will make reasonable efforts to minimize any disruptions
       and notify users in advance whenever possible.
       <br></br>
+      <br></br>
       <em>ii. Service and Feature Modifications:</em>
-      <br></br> I reserve the right to modify, suspend, or discontinue any
+       I reserve the right to modify, suspend, or discontinue any
       aspect of the online component, including services, features, or
       functionalities, at any time and without prior notice. This may include
       the addition or removal of certain features or the introduction of new
@@ -103,70 +106,67 @@ function TermsAndConditions() {
       information: name, surname and email address.
       <br></br>This information is necessary to create and manage your user
       account. Various features inside the app may require you to add your
-      weight or sex, but the decision to use those features is completely optional.
+      weight or sex, but the decision to use those features is completely
+      optional.
+      <br></br>
+      <br></br>
       <strong>Use of Information</strong>
       <em>a. Account Management:</em>
       The information collected during account registration is used for the
-      purpose of managing and administering your fitPowerUp user account. 
-      <em>b.
-      Communication: </em>There will be no use of your email address to send you any
-      notifications, updates, and information related to the App or your
-      account. 
-      <strong>Data Storage and Security</strong> 
-      <em>a. Data Storage:</em> The user information collected
-      during account registration is securely stored using various services
-      within the Google Cloud Infrastructure. 
-      <em>b. Data Security:</em> We implement
-      appropriate security measures to protect your personal information from
-      unauthorized access, alteration, disclosure, or destruction. However,
-      please note that no data transmission or storage can be guaranteed to be
-      100% secure. Therefore, while we strive to protect your data, we cannot
-      guarantee its absolute security. 
+      purpose of managing and administering your fitPowerUp user account.
+      <em>b. Communication: </em>There will be no use of your email address to
+      send you any notifications, updates, and information related to the App or
+      your account.
       <br></br>
       <br></br>
-      <strong>Cookies and Tracking Technologies</strong> 
-      
-      
+      <strong>Data Storage and Security</strong>
+      <em>a. Data Storage:</em> The user information collected during account
+      registration is securely stored using various services within the Google
+      Cloud Infrastructure.
+      <em>b. Data Security:</em> We implement appropriate security measures to
+      protect your personal information from unauthorized access, alteration,
+      disclosure, or destruction. However, please note that no data transmission
+      or storage can be guaranteed to be 100% secure. Therefore, while we strive
+      to protect your data, we cannot guarantee its absolute security.
+      <br></br>
+      <br></br>
+      <strong>Cookies and Tracking Technologies</strong>
       fitPowerUp does not use cookies or employ any tracking technologies to
-      collect information about your use of the App. 
+      collect information about your use of the App.
       <br></br>
       <br></br>
-      <strong>Third-Party Services</strong> a. We
-      do not share your personal information with any third parties, except as
-      necessary to provide the App's core functionality, support our operations,
-      or as required by law. 
+      <strong>Third-Party Services</strong> a. We do not share your personal
+      information with any third parties, except as necessary to provide the
+      App's core functionality, support our operations, or as required by law.
       <br></br>
       <br></br>
-      <strong>Data Retention</strong> 
-      a. We will retain your personal
-      information for as long as necessary to fulfill the purposes outlined in
-      this Privacy Policy, unless a longer retention period is required or
-      permitted by law. 
+      <strong>Data Retention</strong>
+      a. We will retain your personal information for as long as necessary to
+      fulfill the purposes outlined in this Privacy Policy, unless a longer
+      retention period is required or permitted by law.
       <br></br>
       <br></br>
-      <strong>User Rights and Choices</strong> 
-      <em>a. Access and Correction:</em> You
-      may access and update your personal information stored in your fitPowerUp
-      user account by logging into the App and editing your profile. 
-      
-      <em>b. Account
-      Deletion: </em>You may request the deletion of your fitPowerUp user account and
-      associated personal information by contacting us using the information
-      referenced multiple times inside the document. 
+      <strong>User Rights and Choices</strong>
+      <em>a. Access and Correction:</em> You may access and update your personal
+      information stored in your fitPowerUp user account by logging into the App
+      and editing your profile.
+      <em>b. Account Deletion: </em>You may request the deletion of your
+      fitPowerUp user account and associated personal information by contacting
+      us using the information referenced multiple times inside the document.
       <br></br>
       <br></br>
-      <strong>Children's Privacy</strong> a. The fitPowerUp App is not
-      intended for use by individuals under the age of 13. We
-      <br></br> do not knowingly
-      collect personal information from children under 13. If you are a parent
-      or guardian and believe we may have collected information about a child,
-      please contact us using the information provided in Section 9. 
+      <strong>Children's Privacy</strong> a. The fitPowerUp App is not intended
+      for use by individuals under the age of 13. We
+      <br></br> do not knowingly collect personal information from children
+      under 13. If you are a parent or guardian and believe we may have
+      collected information about a child, please contact us using the
+      information provided in Section 9.
       <br></br>
       <br></br>
       <strong>Contact Me</strong>
       a. If you have any questions, concerns, or requests related to this
       Privacy Policy or the handling of your personal information, please
-      contact me at [Insert Contact Information]. 
+      contact me at [Insert Contact Information].
       <br></br>
       <br></br>
       <strong>Changes to this Privacy Policy</strong>
@@ -178,48 +178,44 @@ function TermsAndConditions() {
       review it for any updates or changes.
       <br></br>
       <br></br>
-      Disclaimers and Limitation of Liability a. The App is provided on an "as
+      <strong>Disclaimers and Limitation of Liability</strong> a. The App is provided on an "as
       is" and "as available" basis, without warranties of any kind, express or
       implied, including, but not limited to, warranties of merchantability,
-      fitness for a particular purpose, and non-infringement. 
+      fitness for a particular purpose, and non-infringement.
       <br></br>
-      b. I do not
-      warrant that the App will be uninterrupted, error-free, or secure, or that
-      any defects or errors will be corrected. 
-      <br></br>c. In no event shall I be liable
-      for any indirect, incidental, special, consequential, or punitive damages,
-      including without limitation, loss of profits, data, use, goodwill, or
-      other intangible losses, arising out of or in connection with your use of
-      the App.
+      b. I do not warrant that the App will be uninterrupted, error-free, or
+      secure, or that any defects or errors will be corrected.
+      <br></br>c. In no event shall I be liable for any indirect, incidental,
+      special, consequential, or punitive damages, including without limitation,
+      loss of profits, data, use, goodwill, or other intangible losses, arising
+      out of or in connection with your use of the App.
       <br></br>
       <br></br>
-      <strong>Modification and Termination</strong> a. I reserve the right to modify or
-      discontinue the App at any time, with or without notice. 
-      <br></br>b. I may also
-      revise these Terms from time to time. The updated Terms will be effective
-      as of the date of their posting. 
-      <br></br>c. Your continued use of the App after
-      the posting of the updated Terms constitutes your acceptance of the
-      revised Terms.
+      <strong>Modification and Termination</strong> a. I reserve the right to
+      modify or discontinue the App at any time, with or without notice.
+      <br></br>b. I may also revise these Terms from time to time. The updated
+      Terms will be effective as of the date of their posting.
+      <br></br>c. Your continued use of the App after the posting of the updated
+      Terms constitutes your acceptance of the revised Terms.
       <br></br>
       <br></br>
-      <strong>Governing Law and Dispute Resolution</strong> a. These Terms shall be governed by
-      and construed in accordance with the laws of Spain. <br></br>b. Any
-      disputes arising out of or in connection with these Terms shall be
-      resolved exclusively through arbitration, in accordance with the rules of
-      Spanish Court of Arbitration (Tribunal Arbitral de España or Corte Española de Arbitraje).
+      <strong>Governing Law and Dispute Resolution</strong> a. These Terms shall
+      be governed by and construed in accordance with the laws of Spain.{" "}
+      <br></br>b. Any disputes arising out of or in connection with these Terms
+      shall be resolved exclusively through arbitration, in accordance with the
+      rules of Spanish Court of Arbitration (Tribunal Arbitral de España or
+      Corte Española de Arbitraje).
       <br></br>
       <br></br>
-      <strong>Statement Regarding Dragon Ball Z-Inspired Elements and Copyright
-      Ownership</strong>
-      
-      <br></br>
+      <strong>
+        Statement Regarding Dragon Ball Z-Inspired Elements and Copyright
+        Ownership
+      </strong>
       fitPowerUp would like to acknowledge that certain elements within the app
-      are inspired by the iconic anime series Dragon Ball Z.
-      
-      However, it is important to note that all copyrights and intellectual
-      property rights related to Dragon Ball Z and its associated assets belong
-      exclusively to Toei Animation, FUNimation, Fuji TV and Akira Toriyama.
+      are inspired by the iconic anime series Dragon Ball Z. However, it is
+      important to note that all copyrights and intellectual property rights
+      related to Dragon Ball Z and its associated assets belong exclusively to
+      Toei Animation, FUNimation, Fuji TV and Akira Toriyama.
       <br></br>
       <br></br>
       fitPowerUp does not claim ownership of any Dragon Ball Z related assets,
@@ -230,12 +226,10 @@ function TermsAndConditions() {
       Any visual or thematic resemblances to Dragon Ball Z are purely for the
       purpose of inspiration and fan appreciation.
       <br></br>
-      <br></br>
-      I respect the intellectual property rights of Toei Animation and
+      <br></br>I respect the intellectual property rights of Toei Animation and
       their associated rights holders.
       <br></br>
-      <br></br>
-      I have not entered into any licensing agreements or partnerships
+      <br></br>I have not entered into any licensing agreements or partnerships
       with Toei Animation, and the use of Dragon Ball Z-inspired elements within
       fitPowerUp does not imply any endorsement or official affiliation with the
       Dragon Ball Z brand or its creators.
@@ -265,17 +259,17 @@ function TermsAndConditions() {
       consequences.
       <br></br>
       <br></br>
-      <strong>Miscellaneous</strong> a. These Terms constitute the entire agreement between you
-      and the Independent Developer regarding the App and supersede any prior
-      agreements or understandings. <br>
-      </br>b. If any provision of these Terms is found
-      to be unenforceable, the remaining provisions shall continue in full force
-      and effect. <br></br>c. My failure to enforce any right or provision of these Terms
-      shall not be deemed a waiver of such right or provision.
+      <strong>Miscellaneous</strong> a. These Terms constitute the entire
+      agreement between you and the Independent Developer regarding the App and
+      supersede any prior agreements or understandings. <br></br>b. If any
+      provision of these Terms is found to be unenforceable, the remaining
+      provisions shall continue in full force and effect. <br></br>c. My failure
+      to enforce any right or provision of these Terms shall not be deemed a
+      waiver of such right or provision.
       <br></br>
       <br></br>
       If you have any questions or concerns about these Terms, please contact me
-      at [Contact Information]. 
+      at [Contact Information].
       <br></br>
       <br></br>Thank you for using fitPowerUp!
     </Box>

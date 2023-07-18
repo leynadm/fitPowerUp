@@ -30,7 +30,7 @@ function Navbar() {
 
       <Paper
         sx={{ zIndex:9995, position: "fixed", bottom: 0, left: 0, right: 0,backgroundColor:"white" }}
-        elevation={3}
+        elevation={0}
       >
         <BottomNavigation sx={{backgroundColor:"white", zIndex:9999}} showLabels onChange={(event, newValue) => {}}>
           <BottomNavigationAction

@@ -71,10 +71,6 @@ function LandingPage() {
     navigate("/login");
   }
 
-  function TermsAndConditionsClick() {
-    navigate("/terms-and-conditions");
-  }
-
   return (
     <Box
       sx={{
@@ -204,7 +200,6 @@ function LandingPage() {
           Get Started
         </Button>
 
-          <Typography onClick={TermsAndConditionsClick} sx={{fontSize:"small",marginTop:"1rem",textDecoration:"underline"}}>Terms and Conditions</Typography>
       </Container>
 
       <Box sx={{ backgroundColor: "white" }}></Box>

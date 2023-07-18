@@ -21,10 +21,9 @@ import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
 import NoConnection from "../../components/ui/NoConnection";
 
-
-async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
+async function fetchCurrentUserData(currentUser: any, setCurrentUserData: any) {
   if (currentUser === null) {
-    return; 
+    return;
   }
 
   if (currentUser.isAnonymous === false) {
@@ -40,7 +39,7 @@ async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
 }
 
 function Newsfeed() {
-  const { currentUser,currentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData } = useContext(AuthContext);
   const [userFeed, setUserFeed] = useState<any>([]);
   const [latestDoc, setLatestDoc] = useState<any>(null);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
@@ -52,12 +51,12 @@ function Newsfeed() {
   const [hasPosts, setHasPosts] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [feedDataNullCheck, setFeedDataNullCheck] = useState(false)
+  const [feedDataNullCheck, setFeedDataNullCheck] = useState(false);
   let renderedOnce = false;
 
   useEffect(() => {
-    console.log('logging current user data:')
-    console.log(currentUserData)
+    console.log("logging current user data:");
+    console.log(currentUserData);
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -70,33 +69,36 @@ function Newsfeed() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("logging current user data inside newsfeeed");
+    console.log(currentUserData);
 
-  useEffect(() => { 
-    console.log('logging current user data inside newsfeeed')
-    console.log(currentUserData)
-  
-    if (isOnline && (currentUserData!==undefined || currentUserData!==null) ) {
+    if (
+      isOnline &&
+      (currentUserData !== undefined || currentUserData !== null)
+    ) {
       getFeed();
     }
   }, []);
 
+  useEffect(() => {}, [loading]);
+
   useEffect(() => {
+    console.log("logging user feed");
+    console.log(userFeed);
+  }, [userFeed]);
 
-  }, [loading]);
-
-  useEffect(()=>{
-    console.log('logging user feed')
-    console.log(userFeed)
-  },[userFeed])
- 
   async function loadMoreFeed() {
     const postsRef = collection(db, "posts");
-
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
     let postsQuery;
     if (latestDoc) {
       postsQuery = query(
         postsRef,
         orderBy("createdAt", "desc"),
+        where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
         where("documentId", "in", postIDsCache),
         startAfter(latestDoc),
         limit(2)
@@ -105,6 +107,7 @@ function Newsfeed() {
       postsQuery = query(
         postsRef,
         orderBy("createdAt", "desc"),
+        where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
         where("documentId", "in", postIDsCache),
         limit(2)
       );
@@ -180,7 +183,6 @@ function Newsfeed() {
         followedUsersRef,
         where("users", "array-contains", currentUser.uid),
         orderBy("lastPost", "desc"),
-        where("lastPost", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
         limit(10)
       )
     );
@@ -255,13 +257,16 @@ function Newsfeed() {
           postsRef,
           orderBy("createdAt", "desc"),
           where("documentId", "in", postIds),
+          where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
           startAfter(latestDoc),
+
           limit(2)
         );
       } else {
         postsQuery = query(
           postsRef,
           orderBy("createdAt", "desc"),
+          where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
           where("documentId", "in", postIds),
           limit(2)
         );
@@ -312,14 +317,14 @@ function Newsfeed() {
       });
 
       console.log("logging feed data:");
-      console.log(feedData); 
+      console.log(feedData);
 
-      if(feedData.includes(null)){
-        setFeedDataNullCheck(true)
+      if (feedData.includes(null)) {
+        setFeedDataNullCheck(true);
       }
 
       // Update the userFeed state with the sorted feed data
-      
+
       if (latestDoc && !feedData.includes(null)) {
         setUserFeed((prevUserFeed: PostData[]) => [
           ...prevUserFeed,
@@ -360,10 +365,10 @@ function Newsfeed() {
       </Box>
     );
   }
-   
-  return ( 
-    <>     
-      {hasPosts && isOnline &&!feedDataNullCheck ? (
+
+  return (
+    <>
+      {hasPosts && isOnline && !feedDataNullCheck ? (
         <Box sx={{ paddingBottom: "56px", marginTop: "8px", height: "100%" }}>
           {userFeed.map((post: PostData, index: number) => (
             <UserWorkoutCard

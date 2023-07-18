@@ -4,9 +4,10 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
+
 
 interface BodyTrackerEntry {
   date: Date;
@@ -119,7 +120,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
               setSelectedMeasurement(newSelectedMeasurement!);
             }}
             label="Measurement"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%",marginBottom:"1rem" }}
           >
             {measurementOptions.map((option) => (
               <MenuItem key={option.label} value={option.label}>
