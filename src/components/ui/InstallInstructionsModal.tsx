@@ -8,14 +8,36 @@ import SafariIcon from "../../assets/safari-48.png";
 import EdgeIcon from "../../assets/edge-48.png";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-const style = {
+
+const mobileStyle = {
+  display: "flex",
+  flexDirection: "column",
   margin: "3%",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 2,
   borderRadius: 1,
-    display:"flex",flexDirection:"column",
-    gap:5
+  gap: 5,
+  maxHeight: "80vh", // Limit max height to 70% of the viewport height
+
+};
+
+const desktopStyle = {
+  display: "flex",
+  flexDirection: "column",
+  margin: "3%",
+  bgcolor: "background.paper",
+  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
+  borderRadius: "10px",
+  p: 2,
+  gap: 5,
+  maxWidth: "800px",
+  position: "absolute", // Add position absolute
+  top: "50%", // Center vertically
+  left: "50%", // Center horizontally
+  transform: "translate(-50%, -50%)", // Center both horizontally and vertically
+  maxHeight: "80vh", // Limit max height to 70% of the viewport height
+
 };
 
 interface ParentComponentProps {
@@ -31,6 +53,10 @@ function InstallInstructionsModal({
 }: ParentComponentProps) {
   const handleClose = () => setOpenInstallInstructionsModal(false);
 
+  const isMobile = window.innerWidth < 600;
+
+  const style = isMobile ? mobileStyle : desktopStyle;
+
   const boxShadowStyle = {
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
     borderRadius:"10px"
@@ -45,11 +71,12 @@ function InstallInstructionsModal({
         aria-describedby="modal-modal-description"
         sx={{ overflow: "scroll" }}
       >
-        <Box sx={{ ...style, overflowY: "auto", maxHeight: "85vh" }}>
+        <Box sx={{ ...style, overflowY: "auto" }}>
           <Typography sx={{textAlign:"center"}}>
             In case the installation didn't start automatically, you can install
             the app manually:
           </Typography>
+
 
           <Box
             sx={{

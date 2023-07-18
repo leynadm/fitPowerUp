@@ -166,19 +166,9 @@ function Home({
         
         <Routes>
 
-          {/* 
-        <Route
-            path="/workout/*"
-            element={
-              <WorkoutSubstitute
-
-              />
-            }
-          />
-*/}
-
           <Route
-            path="/workout/*"
+            path="workout/*"
+            index
             element={
               <Workout
                 setExercisesCategories={setExercisesCategories}
@@ -191,7 +181,6 @@ function Home({
                 setUnitsSystem={setUnitsSystem}
               />
             }
-            index
           />
  
           <Route
