@@ -33,7 +33,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 const style = {
   width: "100%",
   marginTop: "8px",
+
   bgcolor: "background.paper",
+
 };
 
 interface WorkoutProps {
@@ -352,9 +354,7 @@ function Settings({
       if (e.target && e.target.result) {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: "array" });
-        console.log({ workbook });
         const sheetName = workbook.SheetNames[0];
-        console.log({ sheetName });
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
@@ -627,7 +627,6 @@ function Settings({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        
       }}
     >
       <DeleteAllDataModal
@@ -636,7 +635,7 @@ function Settings({
         handleDeleteAllEntries={handleDeleteAllEntries}
       />
 
-      <AppBar position="fixed" elevation={0} style={{ top: 0,height:"56px" }}>
+      <AppBar position="fixed" elevation={0} style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <SettingsIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -691,7 +690,7 @@ function Settings({
         genericFailedAlertText={"The file provided contains incompatible data!"}
       />
       <List sx={style}>
-        <ListItem sx={{boxShadow:1}}>
+        <ListItem sx={{ boxShadow: 1 }}>
           <Box
             sx={{
               width: "100%",
@@ -713,9 +712,7 @@ function Settings({
           </Box>
         </ListItem>
 
-        <Divider />
-
-        <ListItem sx={{boxShadow:1}} >
+        <ListItem sx={{ boxShadow: 1 }}>
           <Box sx={{ width: "100%" }}>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
               <InputLabel id="weight-increment-label">
@@ -739,16 +736,14 @@ function Settings({
           </Box>
         </ListItem>
 
-        <Divider />
-
-        <ListItem sx={{boxShadow:1}}>
+        <ListItem sx={{ boxShadow: 1 }}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Export all your exercise data to an .xlsx file.
             </Typography>
             <Button
               variant="contained"
-              sx={{ width: "100%", marginTop: "8px" }}
+              sx={{ width: "100%" }}
               onClick={exportData}
             >
               Export Data
@@ -756,9 +751,7 @@ function Settings({
           </Box>
         </ListItem>
 
-        <Divider />
-
-        <ListItem sx={{boxShadow:1}}>
+        <ListItem sx={{ boxShadow: 1 }}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Import a compatible dataset.<br></br> It can be a previously
@@ -788,7 +781,7 @@ function Settings({
             </FormControl>
             <Button
               variant="contained"
-              sx={{ width: "100%", marginTop: "8px" }}
+              sx={{ width: "100%" }}
               onClick={handleImportFileSelection}
             >
               Import Data
@@ -809,23 +802,39 @@ function Settings({
           </Box>
         </ListItem>
 
-        <Divider />
-
-        <ListItem sx={{boxShadow:1}}>
+        <ListItem sx={{ boxShadow: 1 }}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
               Delete all your exercise data.
             </Typography>
             <Button
               variant="contained"
-              sx={{ width: "100%", marginTop: "8px" }}
+              sx={{ width: "100%" }}
               onClick={handleDeleteAllDataModalVisibility}
             >
               Delete All Data
             </Button>
           </Box>
         </ListItem>
+
+        <ListItem sx={{ boxShadow: 1 }}>
+          <Box sx={{ width: "100%" }}>
+            <Typography sx={{ fontSize: "smaller" }}>
+              You can recalculate all your records if you think there might be
+              an error. It's advisable to do this after importing a dataset.
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{ width: "100%" }}
+              onClick={handleDeleteAllDataModalVisibility}
+            >
+              Recalculate PRs
+            </Button>
+          </Box>
+        </ListItem>
+
       </List>
+      
     </Container>
   );
 }

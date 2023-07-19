@@ -28,7 +28,7 @@ interface ParentComponentProps {
   exerciseCommentId: number;
   setDropsetRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
 }
-
+ 
 function CommentModal({
   openCommentModal,
   setOpenCommentModal,

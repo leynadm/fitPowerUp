@@ -12,7 +12,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
 import ViewCommentModal from "./ViewCommentModal";
-
+import Modal from "@mui/material/Modal";
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,
@@ -60,7 +60,7 @@ function CalendarWorkoutModal({
 
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column",width:"100%" }}>
       <Dialog
         open={calendarWorkoutModalVisibility}
         onClose={handleClose}
@@ -222,7 +222,7 @@ function CalendarWorkoutModal({
               variant="contained"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/home/workout")}
             >
               Go To
             </Button>

@@ -263,7 +263,15 @@ function ExerciseSelectedTrack({
       getRequest.onsuccess = function (event: any) {
         const data = event.target.result;
         if (data) {
-          setCommentValue(data.comment);
+
+          console.log('logging data comment with no comment added:')
+          console.log(data.comment)
+
+          if(data.comment===undefined){
+            setCommentValue("");
+          } else {
+            setCommentValue(data.comment)
+          }
           setIsDropset(data.dropset)
         } else {
           console.log("Record not found");

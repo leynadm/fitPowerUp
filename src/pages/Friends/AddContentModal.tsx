@@ -57,7 +57,7 @@ interface FriendsProps {
   addContentModalOpen: boolean;
   setAddContentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
-  existingExercises: { name: string; exercises: Exercise[] }[];
+  existingExercises:any;
   unitsSystem: string;
 }
 
@@ -103,7 +103,7 @@ function AddContentModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
   const [expanded, setExpanded] = React.useState(false);
-  const { currentUser, currentUserData,setCurrentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
   const [addWorkout, setAddWorkout] = useState(false);
   const [limitInfo, setLimitInfo] = useState("");
@@ -233,6 +233,7 @@ function AddContentModal({
 
       const serverTimestampObj = serverTimestamp();
       const timestamp = Timestamp.fromMillis(Date.now());
+
 
       await setDoc(newPostRef, {
         createdAt: serverTimestampObj,
@@ -458,7 +459,7 @@ function AddContentModal({
                 (a, b) =>
                   new Date(b.date).getTime() - new Date(a.date).getTime()
               ) */
-                      .map((group, index) => (
+                      .map((group:any, index:number) => (
                         <Box
                           key={index}
                           sx={{
@@ -480,7 +481,7 @@ function AddContentModal({
                           </Typography>
 
                           <Divider sx={{ backgroundColor: "aliceblue" }} />
-                          {group.exercises.map((exercise, exerciseIndex) => (
+                          {group.exercises.map((exercise:any, exerciseIndex:number) => (
                             <Box
                               key={exerciseIndex}
                               sx={{
