@@ -167,7 +167,7 @@ function Home({
         <Routes>
 
           <Route
-            path="workout/*"
+            path="/*"
             index
             element={
               <Workout
