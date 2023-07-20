@@ -13,7 +13,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   function handleWorkoutClick() {
-    navigate("");
+    navigate("workout/");
   }
 
   function handleFriendsClick() {
