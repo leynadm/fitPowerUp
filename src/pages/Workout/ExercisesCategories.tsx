@@ -15,6 +15,7 @@ import deleteEntriesByCategory from "../../utils/CRUDFunctions/deleteEntriesByCa
 import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
 import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
+import toast from "react-hot-toast";
 
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -93,10 +94,10 @@ function ExercisesCategories({
   }
 
   function handleCategoryClick(category: string) {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onerror = function (event) {
-      console.error("An error occurred with IndexedDB");
+      toast.error("Oops, handleCategoryClick has an error!")
       console.error(event);
     };
 
@@ -123,6 +124,11 @@ function ExercisesCategories({
         } else {
           setSelectedCategoryExercises(selectedCategoryExercises);
         }
+      };
+
+      categoryQuery.onerror = function (event) {
+        console.error("An error occurred while iterating through the cursor.")
+        toast.error("Oops, handleCategoryClick cursor has an error!")
       };
 
       transaction.oncomplete = function () {

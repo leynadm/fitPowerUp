@@ -12,6 +12,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import toast from "react-hot-toast";
 
 interface BodyTrackerProps {
   todayDate: Date | undefined;
@@ -43,6 +44,7 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
       await saveBodyTrackerEntry(selectedOption, value, todayDate);
       getBodyweightData(selectedOption);
     } catch (error) {
+      toast.error("Oops, failed to save entry in saveBodyTrackerEntry!")
       console.error("Failed to save the record");
     }
   };
@@ -63,7 +65,7 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
 
       const userEntryTransaction = db.transaction(
         "user-body-tracker",
-        "readonly"
+         "readonly"
       );
 
       const userEntryTransactionStore =
@@ -98,6 +100,7 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
       };
 
       exercisesRequest.onerror = function () {
+        toast.error("Oops, getBodyweightData has an error!")
         console.error("Error retrieving existing exercises");
       };
 
@@ -107,6 +110,7 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in getBodyweightData!")
       console.log("Error opening database");
     };
   }
@@ -134,6 +138,7 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
         };
   
         deleteRequest.onerror = function () {
+          toast.error("Oops, deleteEntry has an error!")
           console.error("Failed to delete the entry");
         };
   
@@ -143,9 +148,11 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
       };
   
       request.onerror = function () {
+        toast.error("Oops, couldn't open the database in deleteEntry!")
         console.log("Error opening database");
       };
     } catch (error) {
+      toast.error("Oops, failed to delete the entry in deleteEntry!")
       console.error("Failed to delete the entry");
     }
   }

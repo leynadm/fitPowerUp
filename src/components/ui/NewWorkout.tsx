@@ -27,6 +27,8 @@ import CommentWorkoutModal from "./CommentWorkoutModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import ViewCommentWorkoutModal from "./ViewCommentWorkoutModal";
+import toast from "react-hot-toast";
+
 interface Swipe {
   touchStart: number;
   touchEnd: number;
@@ -105,13 +107,16 @@ function NewWorkout({
       console.log(currentDate)
       getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
-        console.log('logging existing entry inside get workout evaluation')
-        console.log(existingEntry)
         if (existingEntry) {
           setWorkoutEvaluationCheck(true);
         } else { 
           setWorkoutEvaluationCheck(false)
         }
+      };
+
+      request.onerror = function (event) {
+        toast.error("Oops, getWorkoutEvaluation has an error!")
+        console.error(event);
       };
 
       transaction.oncomplete = function () {
@@ -256,6 +261,7 @@ function NewWorkout({
   };
 
   const handleNewWorkout = () => {
+
     navigate("workout_categories");
   };
 
@@ -311,10 +317,10 @@ function NewWorkout({
   }
 
   function handleGroupNameClick(category: string) {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onerror = function (event) {
-      console.error("An error occurred with IndexedDB");
+      toast.error("Oops, handleGroupNameClick has an error!")
       console.error(event);
     };
 
@@ -520,7 +526,6 @@ function NewWorkout({
         </AppBar>
 
         <Box
-          className="ClassCoveringBothStartNewAndCurrentExercises"
           sx={{
             display: "flex",
             justifyContent: "space-between",

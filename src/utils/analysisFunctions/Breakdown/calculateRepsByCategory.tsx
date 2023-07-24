@@ -1,12 +1,15 @@
+import toast from "react-hot-toast";
+
 function calculateRepsByCategory(
     setInitialRawData: any,
     timeframe: string,
     selectedStartDate: any,
     selectedEndDate: any
   ) {
-    const request = indexedDB.open("fitScouterDb");
+    const request = indexedDB.open("fitScouterDb",1);
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateRepsByCategory has an error!")
       console.error(request.error);
     };
   
@@ -42,6 +45,7 @@ function calculateRepsByCategory(
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateRepsByCategory has an error!")
         console.error(getDataRequest.error);
       };
     };

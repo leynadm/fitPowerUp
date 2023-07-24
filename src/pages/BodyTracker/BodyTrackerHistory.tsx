@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-
+import toast from "react-hot-toast";
 
 interface BodyTrackerEntry {
   date: Date;
@@ -69,6 +69,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
       };
 
       getAllEntriesRequest.onerror = function () {
+        toast.error("Oops, getBodyTrackerHistory has an error!")
         console.error("Error retrieving body tracker entries");
       };
 
@@ -96,25 +97,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
 
     return groupedEntries;
   }
-/* 
-  if (bodyTrackerEntries.length === 0) {
-    return (
-      <Box
-        sx={{
-          height: "calc(100vh - 144px)",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        <Typography variant="body1" align="center">
-          No existing exercises found.
-        </Typography>
-      </Box>
-    );
-  }
- */
+
   return (
     <Container
       sx={{
@@ -136,10 +119,9 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
                 (option) => option.label === newValue
               );
               setSelectedMeasurement(newSelectedMeasurement!);
-
             }}
             label="Measurement"
-            sx={{ width: "100%",marginBottom:"1rem" }}
+            sx={{ width: "100%", marginBottom: "1rem" }}
           >
             {measurementOptions.map((option) => (
               <MenuItem key={option.label} value={option.label}>
@@ -149,85 +131,74 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
           </Select>
         </FormControl>
       </Box>
- 
 
-      {bodyTrackerEntries.length !== 0 ?(
-
+      {bodyTrackerEntries.length !== 0 ? (
         bodyTrackerEntries
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .map((group, index) => (
-          <Box key={index} sx={{ width: "100%" }}>
-            <Typography
-              variant="h6"
-              sx={{
-                textAlign: "left",
-                fontSize: "medium",
-                paddingLeft: "1rem",
-              }}
-            >
-              {group.date.toLocaleString()}
-            </Typography>
-            <Divider />
-
-            {group.entries.map((groupedEntry:any, groupedEntryIndex:number) => (
-              <Box
-                key={groupedEntryIndex}
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          )
+          .map((group, index) => (
+            <Box key={index} sx={{ width: "100%" }}>
+              <Typography
+                variant="h6"
                 sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  width: "100%",
-                  alignItems: "center",
+                  textAlign: "left",
+                  fontSize: "medium",
+                  paddingLeft: "1rem",
                 }}
               >
-                <Typography sx={{ textAlign: "center" }}>
-                  {groupedEntry.name}
-                </Typography>
-               
-                <Typography sx={{ textAlign: "center" }}>
-                  {groupedEntry.value}
-                </Typography>
+                {group.date.toLocaleString()}
+              </Typography>
+              <Divider />
 
-                {selectedMeasurement.label === "Bodyweight" && (
-                  <Typography sx={{ textAlign: "center" }}>
-                    {unitsSystem === "metric" ? "kgs" : "lbs"}
-                  </Typography>
-                )}
-                
-                {selectedMeasurement.label === "Body Fat" && (
-                  <Typography sx={{ textAlign: "center" }}>%</Typography>
-                )}
-              </Box>
-            ))}
-          </Box>
-        ))
+              {group.entries.map(
+                (groupedEntry: any, groupedEntryIndex: number) => (
+                  <Box
+                    key={groupedEntryIndex}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      width: "100%",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      {groupedEntry.name}
+                    </Typography>
 
+                    <Typography sx={{ textAlign: "center" }}>
+                      {groupedEntry.value}
+                    </Typography>
 
+                    {selectedMeasurement.label === "Bodyweight" && (
+                      <Typography sx={{ textAlign: "center" }}>
+                        {unitsSystem === "metric" ? "kgs" : "lbs"}
+                      </Typography>
+                    )}
 
-
-      ):(
-
-
+                    {selectedMeasurement.label === "Body Fat" && (
+                      <Typography sx={{ textAlign: "center" }}>%</Typography>
+                    )}
+                  </Box>
+                )
+              )}
+            </Box>
+          ))
+      ) : (
         <Box
-        sx={{
-          height: "calc(100vh - 144px)",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        <Typography variant="body1" align="center">
-          No existing exercises found.
-        </Typography>
-      </Box>
-
-
-
+          sx={{
+            height: "calc(100vh - 144px)",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body1" align="center">
+            No existing exercises found.
+          </Typography>
+        </Box>
       )}
-      
-
-
-
     </Container>
   );
 }

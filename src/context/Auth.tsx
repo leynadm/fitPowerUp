@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             privateAccount: false,
             blocked:[],        
             hideProfile:false,
-            hidePowerLevel:false,
+            hidePowerLevel:true,
             hideFollowers:false,
             hideFollowing:false,
             powerLevel:0,

@@ -73,6 +73,8 @@ function SocialSearchBar() {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data();
       user.id = doc.id; // Add this line to set the 'id' property
+      console.log('logging currentUserData.blocked')
+      console.log(currentUserData.blocked)
       if(user.id !== currentUser.uid && !currentUserData.blocked.includes(user.id)){
         userResults.push(user);
       }

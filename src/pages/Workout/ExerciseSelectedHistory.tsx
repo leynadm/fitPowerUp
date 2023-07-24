@@ -11,6 +11,7 @@ import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
 import EditExerciseModal from "../../components/ui/EditExerciseModal";
 import { VariableSizeList } from "react-window";
+import toast from "react-hot-toast";
 
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
@@ -40,7 +41,7 @@ function ExerciseSelectedHistory({
   }, [updateRenderTrigger]);
 
   function getExerciseHistory() {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onsuccess = function () {
       const db = request.result;
@@ -84,6 +85,7 @@ function ExerciseSelectedHistory({
       };
 
       exercisesRequest.onerror = function () {
+        toast.error("Oops, getExerciseHistory has an error!")
         console.error("Error retrieving existing exercises");
       };
 
@@ -93,6 +95,7 @@ function ExerciseSelectedHistory({
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in getExerciseHistory!")
       console.log("Error opening database");
     };
   }

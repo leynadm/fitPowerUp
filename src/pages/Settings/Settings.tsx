@@ -26,9 +26,9 @@ import SuccessGenericAlert from "../../components/ui/SuccessGenericAlert";
 import FailedGenericAlert from "../../components/ui/FailedGenericAlert";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import toast from "react-hot-toast"
 
 const style = {
   width: "100%",
@@ -68,7 +68,7 @@ function Settings({
   };
 
   const updateToImperial = () => {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onsuccess = function () {
       const db = request.result;
@@ -97,6 +97,7 @@ function Settings({
           };
 
           updatePreferenceRequest.onerror = function () {
+            toast.error("Oops, updateToImperial has an error!")
             console.error("Error updating units system");
           };
         }
@@ -127,6 +128,7 @@ function Settings({
           };
 
           updateRequest.onerror = function () {
+            toast.error("Oops, updateRequest in updateToImperial has an error!")
             console.error("Error updating weight");
             cursor.continue();
           };
@@ -139,6 +141,7 @@ function Settings({
       };
 
       preferenceTransaction.onerror = function () {
+        toast.error("Oops, preferenceTransaction has an error!")
         console.error("Error in preference transaction");
       };
 
@@ -147,17 +150,19 @@ function Settings({
       };
 
       weightTransaction.onerror = function () {
+        toast.error("Oops, weightTransaction has an error!")
         console.error("Error in weight transaction");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in updateToImperial!")
       console.error("Error opening database");
     };
   };
 
   const updateToMetric = () => {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onsuccess = function () {
       const db = request.result;
@@ -186,6 +191,7 @@ function Settings({
           };
 
           updatePreferenceRequest.onerror = function () {
+            toast.error("Oops, updateToMetric has an error!")
             console.error("Error updating units system");
           };
         }
@@ -216,6 +222,7 @@ function Settings({
           };
 
           updateRequest.onerror = function () {
+            toast.error("Oops, updateToMetric cursor has an error!")
             console.error("Error updating weight");
             cursor.continue();
           };
@@ -228,6 +235,7 @@ function Settings({
       };
 
       preferenceTransaction.onerror = function () {
+        toast.error("Oops, preference transaction has an error!")
         console.error("Error in preference transaction");
       };
 
@@ -236,11 +244,13 @@ function Settings({
       };
 
       weightTransaction.onerror = function () {
+        toast.error("Oops, weight transaction has an error!")
         console.error("Error in weight transaction");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in updateToMetric")
       console.error("Error opening database");
     };
   };
@@ -263,6 +273,7 @@ function Settings({
     const request = window.indexedDB.open(dbName);
 
     request.onerror = (event) => {
+      toast.error("Oops, updateDefaultWeightIncrement has an error!")
       console.error("Database error:", request.error);
     };
 
@@ -287,18 +298,18 @@ function Settings({
       const getRequest = objectStore.get(1);
 
       getRequest.onerror = (event) => {
+        toast.error("Oops, updateDefaultWeightIncrement has an error!")
         console.error("Error getting entry:", getRequest.error);
       };
 
       getRequest.onsuccess = (event) => {
         const entry = getRequest.result;
-        console.log("loggin entry:");
-        console.log(entry);
         entry.defaultWeightIncrement = selectedValue;
 
         const updateRequest = objectStore.put(entry);
 
         updateRequest.onerror = (event) => {
+          toast.error("Oops, updateRequest has an error!")
           console.error("Error updating entry:", updateRequest.error);
         };
 
@@ -317,22 +328,6 @@ function Settings({
     };
   }
 
-  /* 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-
-    if (file) {
-      setSelectedFile(file);
- 
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        const fileSource = e.target?.result as string;
-        setFileSource(fileSource);
-      };
-    }
-  } */
-
   const weightIncrementOptions = [0.25, 0.5, 1.0, 1.25, 2.0, 2.5, 5.0, 10.0];
 
   function handleDeleteAllDataModalVisibility() {
@@ -344,8 +339,6 @@ function Settings({
   }
 
   function importData(file: File) {
-    console.log("logging datasetOrigin:");
-
     const reader = new FileReader();
 
     reader.onload = (e) => {

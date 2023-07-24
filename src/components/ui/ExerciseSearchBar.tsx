@@ -5,6 +5,13 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+
+import Paper from "@mui/material/Paper";
+
+import Divider from "@mui/material/Divider";
+import MenuIcon from "@mui/icons-material/Menu";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -62,25 +69,35 @@ function ExerciseSearchBar({ query, setQuery }: ParentsProps) {
   };
 
   return (
-    <Search sx={{display:"flex"}}>      
+    <Search sx={{ display: "flex" }}>
+      <Paper
+        component="form"
+        sx={{
+          marginTop: "8px",
+          marginBottom: "8px",
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         <SearchIconWrapper>
-          <SearchIcon/>
+          <SearchIcon />
         </SearchIconWrapper>
-
         <StyledInputBase
           placeholder="Search for an exercise..."
           inputProps={{ "aria-label": "search" }}
           onChange={onChange}
           value={query}
           sx={{ width: "100%" }}
-/>      <Box>
-        {query !== "" && (
-          <IconButton aria-label="clear search" onClick={resetQuery}>
-            <ClearIcon />
-          </IconButton>
-        )}
-      </Box>
-
+        />{" "}
+        <Box>
+          {query !== "" && (
+            <IconButton aria-label="clear search" onClick={resetQuery}>
+              <ClearIcon />
+            </IconButton>
+          )}
+        </Box>
+      </Paper>
     </Search>
   );
 }

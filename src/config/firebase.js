@@ -22,9 +22,7 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-/* 
-window.self.FIREBASE_APPCHECK_DEBUG_TOKEN=true;
- */
+ 
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

@@ -11,7 +11,8 @@ import StarsIcon from "@mui/icons-material/Stars";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import FailedGenericAlert from "./FailedGenericAlert";
+import toast from "react-hot-toast";
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -70,7 +71,7 @@ function CommentWorkoutModal({
   function getWorkoutEvaluation(currentDate: Date) {
 
     // Open IndexedDB database connection
-    const request = window.indexedDB.open("fitScouterDb");
+    const request = window.indexedDB.open("fitScouterDb",1);
 
     request.onsuccess = function (event: any) {
       const db = event.target.result;
@@ -102,7 +103,7 @@ function CommentWorkoutModal({
   }
 
   function saveWorkoutEvaluation() {
-    const request = window.indexedDB.open("fitScouterDb");
+    const request = window.indexedDB.open("fitScouterDb",1);
     request.onsuccess = function (event: any) {
       const db = event.target.result;
       const transaction = db.transaction("workout-evaluation", "readwrite");
@@ -144,6 +145,7 @@ function CommentWorkoutModal({
             console.log("Record updated successfully");
           };
           updateRequest.onerror = function () {
+            toast.error("Oops, saveWorkoutEvaluation has an error!")
             console.log("Error updating record");
           };
         } else {
@@ -163,6 +165,7 @@ function CommentWorkoutModal({
           };
 
           addRequest.onerror = () => {
+            toast.error("Oops, saveWorkoutEvaluation has an error!")
             console.error("Failed to save the record");
           };
         }
@@ -174,11 +177,13 @@ function CommentWorkoutModal({
         setOpenCommentWorkoutModal(!openCommentWorkoutModal);
       };
       transaction.onerror = function () {
+        toast.error("Oops, saveWorkoutEvaluation has a Transaction Error!")
         console.log("Transaction error");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in saveWorkoutEvaluation!")
       console.log("Error opening database");
     };
   }
@@ -204,9 +209,11 @@ function CommentWorkoutModal({
             console.log("Record deleted successfully");
           };
           deleteRequest.onerror = function () {
+            toast.error("Oops, deleteWorkoutEvaluation has an error!")
             console.log("Error deleting record");
           };
         } else {
+          toast.error("There's no evaluation to delete!")
           console.log("Entry not found");
         }
       };
@@ -218,11 +225,13 @@ function CommentWorkoutModal({
         setOpenCommentWorkoutModal(!openCommentWorkoutModal);
       };
       transaction.onerror = function () {
+        toast.error("Oops, deleteWorkoutEvaluation has an error!")
         console.log("Transaction error");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in deleteWorkoutEvaluation!")
       console.log("Error opening database");
     };
   }

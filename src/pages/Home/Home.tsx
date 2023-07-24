@@ -166,7 +166,6 @@ function Home({
         <Navbar />
         
         <Routes>
-
           <Route
             path="workout/*"
             index

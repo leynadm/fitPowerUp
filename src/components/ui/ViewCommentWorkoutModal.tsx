@@ -8,6 +8,8 @@ import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import StarsIcon from '@mui/icons-material/Stars';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import toast from "react-hot-toast";
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -50,47 +52,19 @@ function ViewCommentWorkoutModal({
   }
 
 
-  function checkIfWorkoutDataExists(currentDate: Date){
-
-    const request = window.indexedDB.open("fitScouterDb");
-
-    request.onsuccess = function (event: any) {
-      const db = event.target.result;
-
-      const transaction = db.transaction(["user-exercises-entries"], "readonly");
-      const objectStore = transaction.objectStore("user-exercises-entries");
-
-      const index = objectStore.index("exercise_date");
-      const getRequest = index.get(currentDate);
-
-      getRequest.onsuccess = function (event: any) {
-
-        return getRequest
-    };
-
-    transaction.oncomplete = function () {
-      db.close();
-    };
-
-
-  }
-}
-
   function getWorkoutEvaluation(currentDate: Date) {
-    // Open IndexedDB database connection
-    const request = window.indexedDB.open("fitScouterDb");
-    console.log('logging todayDate:')
-    console.log({todayDate})
+    const request = window.indexedDB.open("fitScouterDb", 1);
+  
     request.onsuccess = function (event: any) {
       const db = event.target.result;
-
+  
       // Open transaction to access the object store
       const transaction = db.transaction(["workout-evaluation"], "readonly");
       const objectStore = transaction.objectStore("workout-evaluation");
-
+  
       const index = objectStore.index("workout_evaluation_date");
       const getRequest = index.get(currentDate);
-
+  
       getRequest.onsuccess = function (event: any) {
         const comment = event.target.result?.workout_comment || "";
         setworkoutCommentValue(comment);
@@ -103,13 +77,18 @@ function ViewCommentWorkoutModal({
         const stretchWarm = event.target.result?.warm_stretch || false;
         setWarmStretchCheck(stretchWarm);
       };
-
+  
       transaction.oncomplete = function () {
         db.close();
       };
     };
+  
+    request.onerror = function () {
+      toast.error("Oops, couldn't open the database in getWorkoutEvaluation!")
+      console.error("Error opening database.");
+    };
+  
   }
-
 
   return (
     <div>

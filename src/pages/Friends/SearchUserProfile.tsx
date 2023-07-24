@@ -47,7 +47,7 @@ import SearchViewCharacterProgressModal from "../../components/ui/SearchViewChar
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser,currentUserData,setCurrentUserData } = useContext(AuthContext);
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();
@@ -253,24 +253,25 @@ function SearchUserProfile() {
   }
 
   async function blockUser() {
-
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
     }
 
     const userRef = doc(collection(db, "users"), currentUser.uid);
-    
-    const userBlockedRef = doc(collection(db, "users"), id);
-    
+
     await updateDoc(userRef, {
       blocked: arrayUnion(id),
     });
-    /* 
-    await updateDoc(userBlockedRef, {
-      blocked: arrayUnion(currentUser.uid),
-    }); */
 
+    // Assuming you have the currentUserData state and setCurrentUserData setter from useState hook
+    setCurrentUserData((prevUserData:any) => {
+      return {
+        ...prevUserData,
+        blocked: [...prevUserData.blocked, id],
+      };
+    });
+    
     unfollowUser();
 
     handleClose();
@@ -373,19 +374,15 @@ function SearchUserProfile() {
                 borderTopRightRadius: "5px",
               }}
             >
-              {queriedUser?.profileImage !== "" ? (
+              {queriedUser.profileImage !== "" ? (
                 <Stack direction="row" spacing={2}
                 onClick={handleSearchViewCharacterProgressModalClick}
                 >
                   <Avatar
-                    alt="Remy Sharp"
+                    alt="user profile"
                     sx={{ width: 64, height: 64, alignSelf: "center" }}
+                    src={queriedUser.profileImage}
                   >
-                    <LazyLoadImage
-                      alt="Remy Sharp"
-                      src={queriedUser?.profileImage}
-                      effect="opacity"
-                    />
                   </Avatar>
                 </Stack>
               ) : (

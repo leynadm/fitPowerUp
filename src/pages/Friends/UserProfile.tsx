@@ -124,7 +124,7 @@ function UserProfile() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Guest User
             </Typography>
 
             <AccountBoxIcon
@@ -151,9 +151,12 @@ function UserProfile() {
         </Container>
       </AppBar>
 
-      {currentUserData.powerLevel &&
+      {
+      
+      (currentUserData.powerLevel &&
         openUserViewCharacterProgressModal &&
-        !currentUserData.hidePowerLevel && (
+        !currentUserData.hidePowerLevel)  ? (
+
           <UserViewCharacterProgressModal
             openUserViewCharacterProgressModal={
               openUserViewCharacterProgressModal
@@ -162,7 +165,8 @@ function UserProfile() {
               setOpenUserViewCharacterProgressModal
             }
           />
-        )}
+          
+        ):(<div></div>)}
 
       <Box
         sx={{
@@ -180,9 +184,6 @@ function UserProfile() {
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
             boxShadow: 1,
-            /* 
-            borderBottom:"1px lightgray solid"
-           */
           }}
 
         >
@@ -191,9 +192,9 @@ function UserProfile() {
             onClick={handleUserViewCharacterProgressModalClick}
             >
               <Avatar
-                alt="Remy Sharp"
+                alt="user profile"
                 src={currentUserData.profileImage}
-                sx={{ width: 56, height: 56, alignSelf: "center" }}
+                sx={{ width: 64, height: 64, alignSelf: "center" }}
               />
             </Stack>
           ) : (
@@ -247,7 +248,8 @@ function UserProfile() {
             </Button>
           </Box>
         </Box>
-        <Box
+
+        <Box className="CheckingForTheLevel"
           sx={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -260,6 +262,7 @@ function UserProfile() {
             boxShadow: 1,
           }}
         >
+
           {currentUserData.hidePowerLevel ||
           (currentUserData.powerLevel === undefined &&
             currentUserData.strengthLevel === undefined &&

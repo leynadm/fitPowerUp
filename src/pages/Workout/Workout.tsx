@@ -18,6 +18,7 @@ import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
 import EditExercise from "./EditExercise";
+import { Toaster } from "react-hot-toast";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   selectedCategoryExercises: {
@@ -88,7 +89,7 @@ function Workout({
   }, [todayDate, setExistingExercises]);
 
   const getDataPreferences = useCallback(() => {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb");
 
     request.onerror = function (event) {
       // Handle errors
@@ -128,6 +129,7 @@ function Workout({
           backgroundColor: "#F0F2F5",
         }}
       >
+        <Toaster position="top-center"/>
         <Routes>
           <Route
             path="/"

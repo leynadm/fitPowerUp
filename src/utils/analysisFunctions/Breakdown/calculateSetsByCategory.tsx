@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function calculateSetsByCategory(
   setInitialRawData: any,
   timeframe: string,
@@ -7,6 +9,7 @@ function calculateSetsByCategory(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, calculateSetsByCategory has an error!")
     console.error(request.error);
   };
 
@@ -42,6 +45,7 @@ function calculateSetsByCategory(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in calculateSetsByCategory has an error!")
       console.error(getDataRequest.error);
     };
   };
