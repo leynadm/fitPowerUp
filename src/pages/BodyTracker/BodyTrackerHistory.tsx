@@ -96,7 +96,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
 
     return groupedEntries;
   }
-
+/* 
   if (bodyTrackerEntries.length === 0) {
     return (
       <Box
@@ -108,16 +108,13 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
           alignItems: "center"
         }}
       >
-
-
-
         <Typography variant="body1" align="center">
           No existing exercises found.
         </Typography>
       </Box>
     );
   }
-
+ */
   return (
     <Container
       sx={{
@@ -139,6 +136,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
                 (option) => option.label === newValue
               );
               setSelectedMeasurement(newSelectedMeasurement!);
+
             }}
             label="Measurement"
             sx={{ width: "100%",marginBottom:"1rem" }}
@@ -153,9 +151,9 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
       </Box>
  
 
+      {bodyTrackerEntries.length !== 0 ?(
 
-  
-      {bodyTrackerEntries
+        bodyTrackerEntries
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .map((group, index) => (
           <Box key={index} sx={{ width: "100%" }}>
@@ -171,7 +169,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
             </Typography>
             <Divider />
 
-            {group.entries.map((groupedEntry, groupedEntryIndex) => (
+            {group.entries.map((groupedEntry:any, groupedEntryIndex:number) => (
               <Box
                 key={groupedEntryIndex}
                 sx={{
@@ -201,7 +199,35 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
               </Box>
             ))}
           </Box>
-        ))}
+        ))
+
+
+
+
+      ):(
+
+
+        <Box
+        sx={{
+          height: "calc(100vh - 144px)",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <Typography variant="body1" align="center">
+          No existing exercises found.
+        </Typography>
+      </Box>
+
+
+
+      )}
+      
+
+
+
     </Container>
   );
 }

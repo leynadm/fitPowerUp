@@ -199,7 +199,7 @@ function BodyTrackerGraph() {
           </Button>
         ))}
       </ButtonGroup>
-      <Box
+      <Container
         sx={{
           width: "100vw",
           height: "calc(100vh - 270.5px)",
@@ -215,7 +215,7 @@ function BodyTrackerGraph() {
             <Line data={initialRawData} options={options as any} />
           )
         ) : null}
-      </Box>
+      </Container>
     </Container>
   );
 }

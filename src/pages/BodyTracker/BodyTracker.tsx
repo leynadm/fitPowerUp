@@ -61,7 +61,7 @@ function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Tracker
             </Typography>
 
             <AccessibilityIcon

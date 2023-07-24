@@ -22,25 +22,26 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-
+/* 
+window.self.FIREBASE_APPCHECK_DEBUG_TOKEN=true;
+ */
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6Lc5XU0nAAAAAF57wPxnBD_JZoA4GayiJFB15Q6h'),
+  isTokenAutoRefreshEnabled: true
+}); 
 
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+ 
 
 
-/* 
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider('6Lc5XU0nAAAAAF57wPxnBD_JZoA4GayiJFB15Q6h'),
 
-  // Optional argument. If true, the SDK automatically refreshes App Check
-  // tokens as needed.
-  isTokenAutoRefreshEnabled: true
-}); */
+
 
 export { app, analytics, auth, db, storage };

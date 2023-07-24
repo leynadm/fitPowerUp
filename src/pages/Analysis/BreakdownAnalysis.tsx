@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Container from "@mui/material/Container";
 
-
 import {
   Typography,
   Table,
@@ -38,7 +37,7 @@ import calculateTotalTrainingVolume from "../../utils/analysisFunctions/Breakdow
 import calculateTotalTrainingReps from "../../utils/analysisFunctions/Breakdown/calculateTotalTrainingReps";
 import calculateTotalTrainingSets from "../../utils/analysisFunctions/Breakdown/calculateTotalTrainingSets";
 import calculateTotalTrainingWorkouts from "../../utils/analysisFunctions/Breakdown/calculateTotalWorkouts";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 import {
   Chart as ChartJS,
@@ -108,7 +107,7 @@ const callChartFunction = (
       break;
 
     case "Training Volume by Category":
-        console.log('logging training volume by category:')
+      console.log("logging training volume by category:");
       calculateTrainingVolumeByCategory(
         setInitialRawData,
         selectedTimeframe,
@@ -118,66 +117,63 @@ const callChartFunction = (
 
       break;
 
+    case "Number of Reps by Exercise":
+      console.log("calculating Sets By Category");
+      calculateRepsByExercise(
+        setInitialRawData,
+        selectedTimeframe,
+        selectedStartDate,
+        selectedEndDate
+      );
 
-      case "Number of Reps by Exercise":
-        console.log("calculating Sets By Category");
-        calculateRepsByExercise(
-          setInitialRawData,
-          selectedTimeframe,
-          selectedStartDate,
-          selectedEndDate
-        );
-  
-        break;
-  
-        case "Number of Sets by Exercise":
-            console.log("calculating Sets By Category");
-            calculateSetsByExercise(
-              setInitialRawData,
-              selectedTimeframe,
-              selectedStartDate,
-              selectedEndDate
-            );
-      
-            break;
+      break;
 
-            case "Training Volume by Exercise":
-                console.log('logging training volume by category:')
-              calculateTrainingVolumeByExercise(
-                setInitialRawData,
-                selectedTimeframe,
-                selectedStartDate,
-                selectedEndDate
-              );
-        
-              break;
+    case "Number of Sets by Exercise":
+      console.log("calculating Sets By Category");
+      calculateSetsByExercise(
+        setInitialRawData,
+        selectedTimeframe,
+        selectedStartDate,
+        selectedEndDate
+      );
 
-              case "Number of Workouts by Exercise":
-                console.log("calculating Sets By Category");
-                calculateWorkoutsByExercise(
-                  setInitialRawData,
-                  selectedTimeframe,
-                  selectedStartDate,
-                  selectedEndDate
-                );
-          
-                break;
+      break;
+
+    case "Training Volume by Exercise":
+      console.log("logging training volume by category:");
+      calculateTrainingVolumeByExercise(
+        setInitialRawData,
+        selectedTimeframe,
+        selectedStartDate,
+        selectedEndDate
+      );
+
+      break;
+
+    case "Number of Workouts by Exercise":
+      console.log("calculating Sets By Category");
+      calculateWorkoutsByExercise(
+        setInitialRawData,
+        selectedTimeframe,
+        selectedStartDate,
+        selectedEndDate
+      );
+
+      break;
     default:
       break;
   }
 };
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-  
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function BreakdownAnalysis() {
-
   const [selectedStartDate, setselectedStartDate] =
     useState<dayjs.Dayjs | null>(null);
   const [selectedEndDate, setselectedEndDate] = useState<dayjs.Dayjs | null>(
@@ -185,10 +181,10 @@ function BreakdownAnalysis() {
   );
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m"); // Initial timeframe is set to 1 month
-  const [totalTrainingVolume, setTotalTrainingVolume] = useState(0)
-  const [totalTrainingReps, setTotalTrainingReps] = useState(0)
-  const [totalTrainingSets, setTotalTrainingSets] = useState(0)
-  const [totalTrainingWorkouts, setTotalTrainingWorkouts] = useState(0)
+  const [totalTrainingVolume, setTotalTrainingVolume] = useState(0);
+  const [totalTrainingReps, setTotalTrainingReps] = useState(0);
+  const [totalTrainingSets, setTotalTrainingSets] = useState(0);
+  const [totalTrainingWorkouts, setTotalTrainingWorkouts] = useState(0);
   const [selectedGraph, setSelectedGraph] = useState(
     "Number of Sets by Category"
   ); // Initial graph is set to Volume per Workout
@@ -204,15 +200,34 @@ function BreakdownAnalysis() {
     { label: "All", value: "all" },
   ];
 
-  useEffect(()=>{
-  },[])
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    calculateTotalTrainingVolume(setTotalTrainingVolume,selectedTimeframe,selectedStartDate,selectedEndDate)
-    calculateTotalTrainingReps(setTotalTrainingReps,selectedTimeframe,selectedStartDate,selectedEndDate)
-    calculateTotalTrainingSets(setTotalTrainingSets,selectedTimeframe,selectedStartDate,selectedEndDate)
-    calculateTotalTrainingWorkouts(setTotalTrainingWorkouts,selectedTimeframe,selectedStartDate,selectedEndDate)
-    
+    calculateTotalTrainingVolume(
+      setTotalTrainingVolume,
+      selectedTimeframe,
+      selectedStartDate,
+      selectedEndDate
+    );
+    calculateTotalTrainingReps(
+      setTotalTrainingReps,
+      selectedTimeframe,
+      selectedStartDate,
+      selectedEndDate
+    );
+    calculateTotalTrainingSets(
+      setTotalTrainingSets,
+      selectedTimeframe,
+      selectedStartDate,
+      selectedEndDate
+    );
+    calculateTotalTrainingWorkouts(
+      setTotalTrainingWorkouts,
+      selectedTimeframe,
+      selectedStartDate,
+      selectedEndDate
+    );
+
     callChartFunction(
       setInitialRawData,
       selectedGraph,
@@ -221,8 +236,6 @@ function BreakdownAnalysis() {
       selectedEndDate
     );
   }, [selectedTimeframe, selectedGraph, selectedStartDate, selectedEndDate]);
-
-  
 
   useEffect(() => {
     console.log("logging start date and end date:");
@@ -283,7 +296,14 @@ function BreakdownAnalysis() {
   };
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0,backgroundColor:"#F0F2F5" }}>
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#F0F2F5",
+      }}
+    >
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel htmlFor="grouped-select">Breakdown</InputLabel>
         <Select
@@ -358,7 +378,7 @@ function BreakdownAnalysis() {
         ))}
       </ButtonGroup>
 
-      <Box sx={{ display: "flex",width:"100%" }}>
+      <Box sx={{ display: "flex", width: "100%" }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             value={selectedStartDate}
@@ -385,7 +405,9 @@ function BreakdownAnalysis() {
       >
         {initialRawData ? (
           initialRawData.labels && initialRawData.labels.length === 0 ? (
-            <Typography sx={{paddingTop:"8px"}}>No data available.</Typography>
+            <Typography sx={{ paddingTop: "8px" }}>
+              No data available.
+            </Typography>
           ) : (
             <div style={{ width: "100%", height: "100%" }}>
               <Doughnut data={initialRawData} options={options} />
@@ -394,7 +416,7 @@ function BreakdownAnalysis() {
         ) : null}
       </Box>
 
-      <Box sx={{width:"100%"}}>
+      <Box sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
           <Table>
             <TableHead></TableHead>
@@ -417,7 +439,9 @@ function BreakdownAnalysis() {
                     return (
                       <TableRow key={label}>
                         <TableCell align="left">{label}</TableCell>
-                        <TableCell align="center">{value.toLocaleString()}</TableCell>
+                        <TableCell align="center">
+                          {value.toLocaleString()}
+                        </TableCell>
                         <TableCell align="center">
                           {percentage.toFixed(2)}%
                         </TableCell>
@@ -436,8 +460,8 @@ function BreakdownAnalysis() {
           gridTemplateRows: "1fr 1fr",
           gap: 2,
           margin: "16px",
-          width:"100%",
-          paddingBottom:"56px"
+          width: "100%",
+          paddingBottom: "56px",
         }}
       >
         <Item>

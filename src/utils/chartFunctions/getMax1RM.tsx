@@ -1,4 +1,4 @@
-import { ChartData} from "chart.js";
+import { ChartData } from "chart.js";
 import { DateTime } from "luxon";
 
 interface DataItem {
@@ -19,7 +19,7 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
     const transaction = db.transaction(["user-exercises-entries"], "readonly");
     const objectStore = transaction.objectStore("user-exercises-entries");
     const exerciseNameIndex = objectStore.index("exercise_name");
- 
+
     const range = IDBKeyRange.only(selectedExercise.name); // Filter by exercise name
 
     const getDataRequest = exerciseNameIndex.getAll(range);
@@ -27,60 +27,58 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
     getDataRequest.onsuccess = () => {
       const data = getDataRequest.result as DataItem[];
 
-      // Create a map to store unique dates and corresponding 1 Rep Max
-      const dateMaxMap = new Map<string, number | undefined>();
+      // Create a map to store unique dates and corresponding 1 Rep Max sum and count
+      const dateSumMap = new Map<string, number | undefined>();
+      const dateCountMap = new Map<string, number>();
 
       data.forEach((item) => {
-        console.log('logging the item:')
-        console.log(item)
         const currentDate = new Date(item.date).toDateString();
         const currentWeight = item.weight;
         const currentReps = item.reps;
         const currentMax = Math.round((currentWeight * (1 + currentReps / 30)) * 10) / 10; // Calculate 1 Rep Max
-        console.log('loggging current date:')
-        console.log(currentDate)
-      
+
         // Check if the current date is within the selected timeframe
         const currentDateObj = new Date(item.date);
         const startDate = getStartDate(timeframe);
         const endDate = new Date();
-        console.log('logging currentDateObj')
-        console.log(currentDateObj)
-        console.log('logging the start date:')
-        console.log(startDate)
-        console.log('logging the endDate')
-        console.log(endDate)
+
         if (currentDateObj < startDate || currentDateObj > endDate) {
           return; // Skip data outside the timeframe
         }
 
-        console.log('logging dateMaxpMap:')
-        console.log(dateMaxMap)
-        // Check if the current date is already present in the map
-        if (dateMaxMap.has(currentDate)) {
-          const existingMax = dateMaxMap.get(currentDate);
+        if (dateSumMap.has(currentDate)) {
+          const existingSum = dateSumMap.get(currentDate);
+          const existingCount = dateCountMap.get(currentDate);
 
-          // Update the 1 Rep Max if the current Max is higher
-          if (existingMax !== undefined && currentMax > existingMax) {
-            dateMaxMap.set(currentDate, currentMax);
+          if (existingSum !== undefined && existingCount !== undefined) {
+            const newSum = existingSum + currentMax;
+            dateSumMap.set(currentDate, newSum);
+            dateCountMap.set(currentDate, existingCount + 1);
           }
         } else {
-          // Add the date to the map if it doesn't exist
-          dateMaxMap.set(currentDate, currentMax);
+          dateSumMap.set(currentDate, currentMax);
+          dateCountMap.set(currentDate, 1);
         }
       });
- 
-      const sortedDatesLog = Array.from(dateMaxMap)
-      console.log(sortedDatesLog)
 
-      const sortedDates = Array.from(dateMaxMap.keys())
-      
+      // Calculate the average for each date
+      const dateAvgMap = new Map<string, number>();
+      dateSumMap.forEach((sum, date) => {
+        const count = dateCountMap.get(date);
+        if (sum !== undefined && count !== undefined) {
+          const average = sum / count;
+          dateAvgMap.set(date, average);
+        }
+      });
+
+      const sortedDates = Array.from(dateAvgMap.keys())
         .map((date) => new Date(date))
         .sort((a, b) => a.getTime() - b.getTime());
-          
+
+      // Create the array of maxValues rounded to the nearest integer
       const maxValues = sortedDates.map((date) => {
-        const max = dateMaxMap.get(date.toDateString());
-        return max !== undefined ? max : null;
+        const avg = dateAvgMap.get(date.toDateString());
+        return avg !== undefined ? Math.round(avg) : null;
       });
 
       const chartData: ChartData<"line"> = {
@@ -95,7 +93,7 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
           },
         ],
       };
- 
+
       setInitialRawData(chartData);
     };
 

@@ -14,7 +14,6 @@ import Select from "@mui/material/Select";
 import { TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 
-
 import calculateVolumePerWorkout from "../../utils/analysisFunctions/calculateVolumePerWorkout";
 import calculateSetsPerWorkout from "../../utils/analysisFunctions/calculateSetsPerWorkout";
 import calculateRepsPerWorkout from "../../utils/analysisFunctions/calculateRepsPerWorkout";
@@ -60,11 +59,10 @@ const callChartFunction = (
   setInitialRawData: React.Dispatch<
     React.SetStateAction<ChartData<"line"> | null>
   >,
-  chartType:string
+  chartType: string
 ) => {
   console.log("inside chart function");
   switch (selectedGraph) {
-    
     case "Volume per Workout":
       calculateVolumePerWorkout(
         selectedGraph,
@@ -214,7 +212,7 @@ const callChartFunction = (
         "exercise"
       );
       break;
- 
+
     default:
       break;
   }
@@ -228,13 +226,17 @@ function ExerciseAnalysis() {
   const [initialRawData, setInitialRawData] =
     useState<ChartData<"line"> | null>(null);
 
-    const [exercisesCategories, setExercisesCategories] = useState<{
+  const [exercisesCategories, setExercisesCategories] = useState<
+    {
       category: string;
       name: string;
       measurement: any[];
-    }[]>([]);
-    
-  const [selectedOption, setSelectedOption] = useState(exercisesCategories[0]?.name || "");
+    }[]
+  >([]);
+
+  const [selectedOption, setSelectedOption] = useState(
+    exercisesCategories[0]?.name || ""
+  );
 
   const timeframeOptions = [
     { label: "1m", value: "1m" },
@@ -245,9 +247,8 @@ function ExerciseAnalysis() {
   ];
 
   useEffect(() => {
+    getAllExercises(setExercisesCategories);
 
-    getAllExercises(setExercisesCategories)
-    
     // Call the chart function when the selected exercise changes or the timeframe changes
     callChartFunction(
       selectedGraph,
@@ -257,8 +258,6 @@ function ExerciseAnalysis() {
       "exercise"
     );
   }, [selectedTimeframe, selectedOption]);
-
-
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -321,29 +320,32 @@ function ExerciseAnalysis() {
   };
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0 }}>
-<FormControl sx={{ width: "100%", marginTop: "8px" }}>
-<Autocomplete
-  options={[...exercisesCategories.map((exercise:any) => exercise.name), ""]}
-
-  renderInput={(params) => (
-    <TextField {...params} label="Exercise Filter" variant="outlined" />
-  )}
-  value={selectedOption}
-  onChange={(event, selectedOption) => {
-    setSelectedOption(selectedOption || '');
-    console.log("calling call chart function now:");
-    callChartFunction(
-      selectedGraph,
-      selectedOption || '',
-      selectedTimeframe,
-      setInitialRawData,
-      "exercise"
-    );
-  }}
-/>
-
-</FormControl>
+    <Container
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <FormControl sx={{ width: "100%", marginTop: "8px" }}>
+        <Autocomplete
+          options={[
+            ...exercisesCategories.map((exercise: any) => exercise.name),
+            "",
+          ]}
+          renderInput={(params) => (
+            <TextField {...params} label="Exercise Filter" variant="outlined" />
+          )}
+          value={selectedOption}
+          onChange={(event, selectedOption) => {
+            setSelectedOption(selectedOption || "");
+            console.log("calling call chart function now:");
+            callChartFunction(
+              selectedGraph,
+              selectedOption || "",
+              selectedTimeframe,
+              setInitialRawData,
+              "exercise"
+            );
+          }}
+        />
+      </FormControl>
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
         <InputLabel htmlFor="grouped-select">Graph</InputLabel>
         <Select
@@ -416,7 +418,7 @@ function ExerciseAnalysis() {
           height: "calc(100vh - 328.5px)",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         {initialRawData ? (

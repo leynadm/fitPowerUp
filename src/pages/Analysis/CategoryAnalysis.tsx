@@ -311,8 +311,7 @@ function CategoryAnalysis() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        padding: 0,
+        alignItems: "center"
       }}
     >
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
