@@ -1,6 +1,5 @@
 function addMissingExercises() {
-
-  /* 
+/* 
     const request = indexedDB.open('fitScouterDb');
     request.onsuccess = function(event) {
       const db = (event.target as IDBOpenDBRequest).result;
@@ -22,9 +21,11 @@ function addMissingExercises() {
           const preselectedExerciseRequest = preselectedExercisesStore.index('exercise_name').get(exercise);
           preselectedExerciseRequest.onsuccess = function(event) {
             const preselectedExercise = (event.target as IDBRequest).result;
+          
+            let typeOfMeasurement;
+
+            if()
             if (!preselectedExercise) {
-    
-                
                 exercisesToAdd.push({
                 name: exercise,
                 category: cursor.value.category,
@@ -37,6 +38,7 @@ function addMissingExercises() {
   
           cursor.continue();
         } else {
+
           if (exercisesToAdd.length > 0) {
             const addExercisesTransaction = db.transaction('preselected-exercises', 'readwrite');
             const addExercisesStore = addExercisesTransaction.objectStore('preselected-exercises');
@@ -58,8 +60,8 @@ function addMissingExercises() {
         }
       };
     };
-     */
+ */
   }
-  
+ 
   export default addMissingExercises;
   

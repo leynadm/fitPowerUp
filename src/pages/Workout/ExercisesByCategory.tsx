@@ -2,7 +2,6 @@ import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { AppBar, Toolbar, Divider } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
 import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
@@ -13,17 +12,18 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntries";
-import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
-import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
 import getExercisesByCategory from "../../utils/CRUDFunctions/getExercisesByCategory";
+import EditExercisePropertiesModal from "../../components/ui/EditExercisePropertiesModal";
+
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
     category: string;
     name: string;
     measurement: any[];
+    id?:any
   }[];
   setSelectedExercise: Dispatch<
     SetStateAction<{ name: string; category: string; measurement: any[] }>
@@ -55,13 +55,18 @@ function ExercisesByCategory({
   };
 
 
-  useEffect(()=>{
-    console.log({todayDate})
-  },[])
+  const handleEditExerciseClick = () => {
+    console.log({selectedExerciseId})
+    setOpenEditExercisePropertiesModal(true)
+    setAnchorEl(null);
+  };
+  
 
   useEffect(() => {}, [exercisesCategories]);
 
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
+  const [openEditExercisePropertiesModal, setOpenEditExercisePropertiesModal] =
+    useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState("");
   const [categoryToRefresh, setCategoryToRefresh] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -69,15 +74,20 @@ function ExercisesByCategory({
   const [exercisesToSearch, setExercisesToSearch] = useState<
     { category: string; name: string; measurement: any[]; id: number }[]
   >([]);
+  const [exerciseToEdit, setExerciseToEdit] = useState("")
+  const [selectedExerciseId, setSelectedExerciseId] = useState<any>(null);
 
 
   useEffect(() => {
     // useEffect implementation
     if (query === "" || exercisesToSearch.length === 0) {
       if (selectedCategoryExercises.length > 0) {
-        getExercisesByCategory(selectedCategoryExercises[0].category, (exercises: any) => {
-          setExercisesToSearch(exercises);
-        });
+        getExercisesByCategory(
+          selectedCategoryExercises[0].category,
+          (exercises: any) => {
+            setExercisesToSearch(exercises);
+          }
+        );
       }
     } else {
       const filteredExercises = exercisesToSearch.filter((exercise) =>
@@ -86,23 +96,27 @@ function ExercisesByCategory({
       setExercisesToSearch(filteredExercises);
     }
 
-    console.log({todayDate})
   }, [query]);
 
   const open = Boolean(anchorEl);
   function handleOptionsClick(
     event: React.MouseEvent<HTMLButtonElement>,
     exerciseName: string,
-    exerciseCategory: string
+    exerciseCategory: string,
+    exerciseId:any
   ) {
     setAnchorEl(event.currentTarget);
-
     setExerciseToDelete(exerciseName);
     setCategoryToRefresh(exerciseCategory);
+    setSelectedExerciseId(exerciseId)
+  }
+
+  function deleteExerciseClick() {
+    deleteExerciseEntries(exerciseToDelete);
+    setAnchorEl(null);
   }
 
   const handleClose = () => {
-    deleteExerciseEntries(exerciseToDelete);
     handleCategoryClick(categoryToRefresh, setSelectedCategoryExercises);
     setAnchorEl(null);
   };
@@ -131,6 +145,20 @@ function ExercisesByCategory({
         selectedCategoryExercises={selectedCategoryExercises}
       />
 
+      {selectedExerciseId && (
+        <EditExercisePropertiesModal
+          setExercisesCategories={setExercisesCategories}
+          exercisesCategories={exercisesCategories}
+          openEditExercisePropertiesModal={openEditExercisePropertiesModal}
+          setOpenEditExercisePropertiesModal={
+            setOpenEditExercisePropertiesModal
+          }
+          setSelectedCategoryExercises={setSelectedCategoryExercises}
+          selectedCategoryExercises={selectedCategoryExercises}
+          selectedExerciseId={selectedExerciseId}
+        />
+      )}
+
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -141,7 +169,6 @@ function ExercisesByCategory({
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -163,7 +190,6 @@ function ExercisesByCategory({
               variant="h5"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -202,7 +228,8 @@ function ExercisesByCategory({
         sx={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#F0F2F5"
+          backgroundColor: "#F0F2F5",
+          paddingBottom: "56px",
         }}
       >
         {query !== ""
@@ -225,14 +252,24 @@ function ExercisesByCategory({
                     }}
                     onClick={() => handleExerciseClick(exercise)}
                   >
-                    {exercise.name}
+                    {exercise.name.charAt(0).toUpperCase() +
+                      exercise.name.slice(1)}
                   </Typography>
+
                   <IconButton
                     size="large"
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     color="inherit"
+                    onClick={(event) =>
+                      handleOptionsClick(
+                        event,
+                        exercise.name,
+                        exercise.category,
+                        exercise.id
+                      )
+                    }
                   >
                     <MoreVertIcon sx={{ zIndex: 0 }} />
                   </IconButton>
@@ -242,7 +279,7 @@ function ExercisesByCategory({
             ))
           : selectedCategoryExercises
               .slice() // Create a copy of the array to avoid mutating the original array
-              .sort((a, b) => a.name.localeCompare(b.name)) // Sort the categories alphabetically
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sort the exercises alphabetically
               .map((exercise, index) => (
                 <Box key={index}>
                   <Box
@@ -252,7 +289,7 @@ function ExercisesByCategory({
                       alignItems: "center",
                       height: "100%",
                       backgroundColor: "#F0F2F5",
-                      width:"100%"
+                      width: "100%",
                     }}
                   >
                     <Typography
@@ -279,7 +316,8 @@ function ExercisesByCategory({
                         handleOptionsClick(
                           event,
                           exercise.name,
-                          exercise.category
+                          exercise.category,
+                          exercise.id
                         )
                       }
                     >
@@ -301,7 +339,8 @@ function ExercisesByCategory({
         }}
         style={{ boxShadow: "none", border: "none" }}
       >
-        <MenuItem onClick={handleClose}>Delete Exercise</MenuItem>
+        <MenuItem onClick={deleteExerciseClick}>Delete Exercise</MenuItem>
+        <MenuItem onClick={handleEditExerciseClick}>Edit Exercise</MenuItem>
       </Menu>
     </Container>
   );

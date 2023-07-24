@@ -178,16 +178,13 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr",
                   width: "100%",
-                  /* 
-                    display: "flex",
-                    alignItems: "center",
-                    */
                   alignItems: "center",
                 }}
               >
                 <Typography sx={{ textAlign: "center" }}>
                   {groupedEntry.name}
                 </Typography>
+               
                 <Typography sx={{ textAlign: "center" }}>
                   {groupedEntry.value}
                 </Typography>
@@ -197,20 +194,15 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
                     {unitsSystem === "metric" ? "kgs" : "lbs"}
                   </Typography>
                 )}
-
+                
                 {selectedMeasurement.label === "Body Fat" && (
                   <Typography sx={{ textAlign: "center" }}>%</Typography>
                 )}
               </Box>
             ))}
           </Box>
-        ))})
-
-
-
+        ))}
     </Container>
-
-
   );
 }
 

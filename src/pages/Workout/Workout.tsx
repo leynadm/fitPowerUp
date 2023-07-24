@@ -17,6 +17,7 @@ import WorkoutCalendar from "./WorkoutCalendar";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
+import EditExercise from "./EditExercise";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   selectedCategoryExercises: {

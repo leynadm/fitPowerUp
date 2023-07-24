@@ -50,7 +50,7 @@ function SocialSearchBar() {
     let q;
 
     if (userToSearch !== "") {
-      console.log("value of userToSearch:" + userToSearch);
+
       q = query(
         collection(db, "users"),
         where("fullname", "array-contains", userToSearch),
@@ -73,7 +73,7 @@ function SocialSearchBar() {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data();
       user.id = doc.id; // Add this line to set the 'id' property
-      if(user.id !== currentUser.uid && !user.blocked.includes(currentUser.uid)){
+      if(user.id !== currentUser.uid && !currentUserData.blocked.includes(user.id)){
         userResults.push(user);
       }
     });

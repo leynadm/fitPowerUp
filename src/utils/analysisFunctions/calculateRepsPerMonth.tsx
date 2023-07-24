@@ -1,3 +1,8 @@
+const monthNames = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 function calculateRepsPerMonth(
   selectedGraph: string,
   selectedExercise: string,
@@ -82,10 +87,10 @@ function calculateRepsPerMonth(
       });
 
       const chartData = {
-        labels: sortedMonths.map(
-          (month) =>
-            `${month.start.toLocaleDateString()} - ${month.end.toLocaleDateString()}`
-        ),
+        labels: sortedMonths.map((month) => {
+          const monthLabel = `${monthNames[month.start.getMonth()]}-${month.start.getFullYear()}`;
+          return monthLabel;
+        }),
         datasets: [
           {
             label: "Reps",

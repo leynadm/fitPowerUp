@@ -55,7 +55,7 @@ function ExercisesCategories({
 
   useEffect(() => {
     getAllExercises(setExercisesToSearch);
-    console.log({todayDate})
+    console.log({ todayDate });
   }, []);
 
   useEffect(() => {}, [exercisesCategories]);
@@ -121,7 +121,6 @@ function ExercisesCategories({
           selectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
-          
           setSelectedCategoryExercises(selectedCategoryExercises);
         }
       };
@@ -160,15 +159,6 @@ function ExercisesCategories({
         height: "100%",
       }}
     >
-      <AddNewExerciseModal
-        exercisesCategories={exercisesCategories}
-        openAddNewExerciseModal={openAddNewExerciseModal}
-        setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
-        setExercisesCategories={setExercisesCategories}
-        selectedCategoryExercises={selectedCategoryExercises}
-        setSelectedCategoryExercises={setSelectedCategoryExercises}
-      />
-
       <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -179,7 +169,6 @@ function ExercisesCategories({
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -201,7 +190,6 @@ function ExercisesCategories({
               variant="h5"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -233,12 +221,20 @@ function ExercisesCategories({
           </Toolbar>
         </Container>
       </AppBar>
-
+      <AddNewExerciseModal
+        exercisesCategories={exercisesCategories}
+        openAddNewExerciseModal={openAddNewExerciseModal}
+        setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+        setExercisesCategories={setExercisesCategories}
+        selectedCategoryExercises={selectedCategoryExercises}
+        setSelectedCategoryExercises={setSelectedCategoryExercises}
+      />
       <ExerciseSearchBar query={query} setQuery={setQuery} />
       <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
           width: "100%",
+          paddingBottom:"56px"
         }}
       >
         {query !== ""

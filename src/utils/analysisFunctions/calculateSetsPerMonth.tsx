@@ -1,3 +1,8 @@
+const monthNames = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 function calculateSetsPerMonth(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any,chartType:string) {
     const request = indexedDB.open("fitScouterDb");
   
@@ -72,7 +77,10 @@ function calculateSetsPerMonth(selectedGraph:string, selectedExercise:string, ti
         const setsValues = sortedMonths.map((month) => monthSetsMap.get(month.start.toISOString()));
   
         const chartData = {
-          labels: sortedMonths.map((month) => `${month.start.toLocaleDateString()} - ${month.end.toLocaleDateString()}`),
+          labels: sortedMonths.map((month) => {
+            const monthLabel = `${monthNames[month.start.getMonth()]}-${month.start.getFullYear()}`;
+            return monthLabel;
+          }),
           datasets: [
             {
               label: "Sets",

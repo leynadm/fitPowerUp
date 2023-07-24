@@ -26,18 +26,21 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-/* 
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider('6Ldmi8cmAAAAALHmVnAa9KJwuRoRf51_exK76-TK'),
-  // Optional argument. If true, the SDK automatically refreshes App Check
-  // tokens as needed.
-  isTokenAutoRefreshEnabled: true
-}); */
+
 
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+
+/* 
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6Lc5XU0nAAAAAF57wPxnBD_JZoA4GayiJFB15Q6h'),
+
+  // Optional argument. If true, the SDK automatically refreshes App Check
+  // tokens as needed.
+  isTokenAutoRefreshEnabled: true
+}); */
 
 export { app, analytics, auth, db, storage };

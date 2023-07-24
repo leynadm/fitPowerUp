@@ -76,7 +76,11 @@ function calculateVolumePerWeek(selectedGraph:string, selectedExercise:string, t
         const volumeValues = sortedWeeks.map((week) => weekVolumeMap.get(week.start.toISOString()));
   
         const chartData = {
-          labels: sortedWeeks.map((week) => `${week.start.toLocaleDateString()} - ${week.end.toLocaleDateString()}`),
+          labels: sortedWeeks.map((week) => {
+            const weekNumber = getWeekNumber(week.start);
+            const year = week.start.getFullYear();
+            return `WK${weekNumber}-${year}`;
+          }),
           datasets: [
             {
               label: "Volume",
@@ -122,5 +126,17 @@ function calculateVolumePerWeek(selectedGraph:string, selectedExercise:string, t
     return startDate;
   }
   
+  function getWeekNumber(date:any) {
+    const target:any = new Date(date.valueOf());
+    const dayNr = (date.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+    }
+    return 1 + Math.ceil((firstThursday - target) / 604800000); // 604800000 ms per week
+  }
+
   export default calculateVolumePerWeek;
   
