@@ -11,6 +11,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import { AuthContext } from "../../context/Auth";
 import { Typography } from "@mui/material";
+import NewWorkout from "../../components/ui/NewWorkout";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: React.Dispatch<
@@ -23,7 +24,7 @@ function Home({
   setSessionVerificationEmailCheck,
 }: AppProps) {
   const [preselectedExercises, setPreselectedExercises] = useState<
-    { category: string; name: string; measurement: any[] }[]
+    { category: string; name: string; measurement: any[],favorite?:boolean }[]
   >([]);
   const [existingExercises, setExistingExercises] = useState<
     { name: string; exercises: Exercise[] }[]
@@ -87,6 +88,7 @@ function Home({
           name: exercise.name,
           category: exercise.category,
           measurement: exercise.measurement,
+          favorite:exercise.favorite
         };
 
         const exerciseNameQuery = exerciseNameIndex.getAll(exercise.name);
@@ -95,7 +97,7 @@ function Home({
           const result = (event.target as IDBRequest).result;
           if (result.length === 0) {
             store.add(formattedExercise);
-          }
+          } 
         };
       });
 
@@ -162,9 +164,7 @@ function Home({
           verifyEmailModalOpen={verifyEmailModalOpen}
           setVerifyEmailModalOpen={setVerifyEmailModalOpen}
         />
-
         <Navbar />
-        
         <Routes>
           <Route
             path="workout/*"
@@ -172,13 +172,16 @@ function Home({
             element={
               <Workout
                 setExercisesCategories={setExercisesCategories}
+                exercisesCategories={exercisesCategories} // Passed as a prop
+                
+                setUnitsSystem={setUnitsSystem}
+                
                 existingExercises={existingExercises}
                 selectedCategoryExercises={selectedCategoryExercises}
-                exercisesCategories={exercisesCategories} // Passed as a prop
+
                 setSelectedCategoryExercises={setSelectedCategoryExercises}
                 setExistingExercises={setExistingExercises}
                 unitsSystem={unitsSystem}
-                setUnitsSystem={setUnitsSystem}
               />
             }
           /> 

@@ -4,14 +4,8 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
-import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
 import updateExerciseCategory from "../../utils/CRUDFunctions/updateExerciseCategory";
-
+import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];
   openEditExercisePropertiesModal: boolean;
@@ -156,11 +150,13 @@ function EditExercisePropertiesModal({
       };
 
       putRequest.onerror = () => {
+        toast.error("Oops, saveUpdatedExercise has an error!")
         console.log("Error updating exercise:", putRequest.error);
       };
 
       // Close the transaction and the database connection
       transaction.oncomplete = () => {
+        toast.success("Exercise updated succesfully!")
         db.close();
       };
     };

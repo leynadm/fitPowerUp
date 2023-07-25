@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState,  useContext } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import addNotificationEntry from "../../utils/socialFunctions/addNotificationEntry";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import toast from "react-hot-toast";
 import {
   collection,
   setDoc,
@@ -171,6 +172,7 @@ export default function UserWorkoutCard({
         }
       })
       .catch((error) => {
+        toast.error("There was an error getting the comments...")
         console.error("Error getting comments document:", error);
         setComments([]);
       });
@@ -229,6 +231,7 @@ export default function UserWorkoutCard({
         })
         .catch((error) => {
           // Error occurred while adding comment
+          toast.error("There was an error adding your comment...")
           console.error("Error adding comment:", error);
         });
     }
@@ -254,18 +257,18 @@ export default function UserWorkoutCard({
       await updateDoc(followersRef, { recentPosts: updatedPosts });
     }
   }
-
+ 
   async function deletePost() {
     await deleteFollowersFeedEntry();
 
     try {
       const postRef = doc(db, "posts", postId);
       await deleteDoc(postRef);
-
       setPostDeleteTrigger((prevTrigger) => prevTrigger + 1);
       navigate("/home/friends");
-      console.log("Post deleted successfully!");
+      toast.success("Your post was successfully deleted!")
     } catch (error) {
+      toast.error("There was an error deleting the post...")
       console.error("Error deleting post:", error);
     }
   }
@@ -292,6 +295,7 @@ export default function UserWorkoutCard({
           console.log("Post not appreciated");
         })
         .catch((error) => {
+          toast.error("There was an error appreciating the post...")
           console.error("Error appreciating post:", error);
         });
     } else {
@@ -304,6 +308,7 @@ export default function UserWorkoutCard({
           console.log("Post appreciated");
         })
         .catch((error) => {
+          toast.error("There was an error appreciating the post...")
           console.error("Error appreciating post:", error);
         });
     }

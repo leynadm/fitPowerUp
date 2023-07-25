@@ -76,10 +76,11 @@ function NewWorkout({
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
   const [openCommentWorkoutModal, setOpenCommentWorkoutModal] = useState(false);
-  const [openViewCommentWorkoutModal, setOpenViewCommentWorkoutModal] = useState(false);
+  const [openViewCommentWorkoutModal, setOpenViewCommentWorkoutModal] =
+    useState(false);
   const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] =
     useState(0);
-    
+
   const [workoutEvaluationCheck, setWorkoutEvaluationCheck] = useState(false);
 
   const [swipe, setSwipe] = useState<any>({
@@ -90,7 +91,7 @@ function NewWorkout({
 
   const { moved, touchEnd, touchStart } = swipe;
 
-  function getWorkoutEvaluation(currentDate:Date) {
+  function getWorkoutEvaluation(currentDate: Date) {
     // Open IndexedDB database connection
     const request = window.indexedDB.open("fitScouterDb");
 
@@ -104,18 +105,18 @@ function NewWorkout({
       const index = objectStore.index("workout_evaluation_date");
       const getRequest = index.get(currentDate);
 
-      console.log(currentDate)
+      console.log(currentDate);
       getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
         if (existingEntry) {
           setWorkoutEvaluationCheck(true);
-        } else { 
-          setWorkoutEvaluationCheck(false)
+        } else {
+          setWorkoutEvaluationCheck(false);
         }
       };
 
       request.onerror = function (event) {
-        toast.error("Oops, getWorkoutEvaluation has an error!")
+        toast.error("Oops, getWorkoutEvaluation has an error!");
         console.error(event);
       };
 
@@ -131,16 +132,14 @@ function NewWorkout({
       getWorkoutEvaluation(todayDate);
     }
 
-    console.log('checking constant')
-
-  }, [todayDate,workoutCommentRenderTrigger]);
-
-  useEffect(()=>{
-    console.log('checking constant')
-  },[workoutEvaluationCheck])
+    console.log("checking constant");
+  }, [todayDate, workoutCommentRenderTrigger]);
 
   useEffect(() => {
- 
+    console.log("checking constant");
+  }, [workoutEvaluationCheck]);
+
+  useEffect(() => {
     const handlePopstate = () => {
       // Logic to handle the effect when the user accesses the component via back button
     };
@@ -261,7 +260,6 @@ function NewWorkout({
   };
 
   const handleNewWorkout = () => {
-
     navigate("workout_categories");
   };
 
@@ -305,22 +303,23 @@ function NewWorkout({
       name: myExercise.name,
       measurement: myExercise.measurement,
     };
+
     setSelectedExercise(myExercise);
+
     navigate(`workout_categories/exercises/selected`, {
       state: { todayDate, selectedExercise: selectedState, unitsSystem },
     });
   }
 
-  function handleOpenViewCommentWorkoutModal(){
-    setOpenViewCommentWorkoutModal(!openViewCommentWorkoutModal)
-
+  function handleOpenViewCommentWorkoutModal() {
+    setOpenViewCommentWorkoutModal(!openViewCommentWorkoutModal);
   }
 
   function handleGroupNameClick(category: string) {
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = function (event) {
-      toast.error("Oops, handleGroupNameClick has an error!")
+      toast.error("Oops, handleGroupNameClick has an error!");
       console.error(event);
     };
 
@@ -331,7 +330,8 @@ function NewWorkout({
       const exerciseCategoryIndex = store.index("exercise_name");
 
       const categoryRange = IDBKeyRange.only(category);
-
+      console.log("logging the category:");
+      console.log({ category });
       const categoryQuery = exerciseCategoryIndex.openCursor(categoryRange);
       const selectedCategoryExercises: {
         category: string;
@@ -345,9 +345,15 @@ function NewWorkout({
           selectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
+          console.log("logging selectedCategoryExercises");
+          console.log(selectedCategoryExercises);
           setSelectedCategoryExercises(selectedCategoryExercises);
 
-          forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
+          if (category && selectedCategoryExercises[0]) {
+            forwardToExerciseMenuClick(category, selectedCategoryExercises[0]);
+          } else {
+            toast.error("Exercise missing from your list, please add it!");
+          }
         }
       };
 
@@ -578,9 +584,8 @@ function NewWorkout({
             sx={{
               display: "flex",
               flexDirection: "column",
-            
-              height: "calc(100%)",
 
+              height: "calc(100%)",
             }}
           >
             {workoutEvaluationCheck && (
@@ -637,7 +642,7 @@ function NewWorkout({
                   mb: 2,
                   display: "flex",
                   flexDirection: "column",
-                  paddingBottom:"56px"
+                  paddingBottom: "56px",
                 }}
                 onClick={handleNewWorkout}
               >

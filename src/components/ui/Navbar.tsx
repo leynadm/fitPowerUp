@@ -8,12 +8,12 @@ import PeopleIcon from "@mui/icons-material/People";
 import Paper from "@mui/material/Paper";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { useNavigate } from "react-router-dom";
-
+ 
 function Navbar() {
   const navigate = useNavigate();
 
   function handleWorkoutClick() {
-    navigate("workout/");
+    navigate("workout");
   }
 
   function handleFriendsClick() {

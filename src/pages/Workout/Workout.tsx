@@ -114,11 +114,10 @@ function Workout({
       };
     };
   }, [setUnitsSystem, setWeightIncrementPreference]);
-
+ 
   return (
-    <Box className="thisIsMyClass" sx={{}}>
+    <Box>
       <Box
-        className="ClassWithTouchEvents"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -127,12 +126,15 @@ function Workout({
           width: "100%",
           height: "100%",
           backgroundColor: "#F0F2F5",
-        }}
+        }} 
       >
+        
         <Toaster position="top-center"/>
+         
         <Routes>
           <Route
-            path="/"
+            path=""
+            index
             element={
               <NewWorkout
                 unitsSystem={unitsSystem}
@@ -190,7 +192,7 @@ function Workout({
           />
 
           <Route
-            path="/settings"
+            path="settings"
             element={
               <Settings
                 unitsSystem={unitsSystem}
@@ -202,7 +204,7 @@ function Workout({
           />
 
           <Route
-            path="/calendar"
+            path="calendar"
             element={
               <WorkoutCalendar
                 todayDate={todayDate}
@@ -212,10 +214,10 @@ function Workout({
             }
           />
 
-          <Route path="/analysis/*" element={<Analysis />} />
+          <Route path="analysis/*" element={<Analysis />} />
 
           <Route
-            path="/bodytracker/*"
+            path="bodytracker/*"
             element={
               <BodyTracker todayDate={todayDate} unitsSystem={unitsSystem} />
             }

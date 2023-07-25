@@ -8,7 +8,7 @@ interface AuthRouteProps {
 
 const AuthRoute = ({ type }: AuthRouteProps) => {
   const { currentUser, loginFetchTrigger } = useContext(AuthContext);
-
+ 
   useEffect(()=>{
     console.log('logging loginFetchTrigger inside AuthRoute:')
     console.log(loginFetchTrigger)
@@ -22,7 +22,7 @@ const AuthRoute = ({ type }: AuthRouteProps) => {
   if (type === "login") {
     return currentUser === null ? <Outlet /> : <Navigate to={"/home/workout"} />;
   } else if (type === "home") {
-    return currentUser ? <Outlet /> : <Navigate to="/login" />;
+    return currentUser!==null ? <Outlet /> : <Navigate to="/login" />;
   } else if (type === "signup") {
     return currentUser === null ? <Outlet /> : <Navigate to={"/home/workout"} />;
   } else if (type === "/") {

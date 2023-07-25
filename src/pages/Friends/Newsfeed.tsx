@@ -20,23 +20,7 @@ import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
 import NoConnection from "../../components/ui/NoConnection";
-
-async function fetchCurrentUserData(currentUser: any, setCurrentUserData: any) {
-  if (currentUser === null) {
-    return;
-  }
-
-  if (currentUser.isAnonymous === false) {
-    const docRef = doc(db, "users", currentUser.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const userData = docSnap.data() as User;
-      setCurrentUserData(userData);
-      return userData;
-    }
-  }
-}
+import { toast } from "react-hot-toast";
 
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
@@ -81,12 +65,7 @@ function Newsfeed() {
     }
   }, []);
 
-  useEffect(() => {}, [loading]);
-
-  useEffect(() => {
-    console.log("logging user feed");
-    console.log(userFeed);
-  }, [userFeed]);
+  useEffect(() => {}, [userFeed, loading]);
 
   async function loadMoreFeed() {
     const postsRef = collection(db, "posts");
@@ -163,184 +142,190 @@ function Newsfeed() {
   async function getFeed() {
     renderedOnce = true;
 
-    if (renderedOnce) {
-      setLoading(true);
-    }
-
-    const followedUsersRef = collection(db, "followers-feed");
-    const usersRef = collection(db, "users");
-    const postsRef = collection(db, "posts");
-
-    // Calculate the timestamp for 7 days ago
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
-    console.log({ sevenDaysAgoTimestamp });
-    // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
-
-    const followedUsersSnapshot = await getDocs(
-      query(
-        followedUsersRef,
-        where("users", "array-contains", currentUser.uid),
-        orderBy("lastPost", "desc"),
-        limit(10)
-      )
-    );
-
-    // Extract the document IDs of the followed users
-    const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
-    console.log("logging documentIds of the followed users:");
-    if (documentIds.length === 0) {
-      console.log("No post IDs found.");
+    try {
       if (renderedOnce) {
-        setLoading(false);
-      }
-      return;
-    }
-    console.log(documentIds);
-
-    let usersQuery;
-    let usersSnapshot;
-    let usersData;
-
-    if (usersDataCache.length === 0) {
-      // Retrieve the user data of the followed users
-
-      usersQuery = query(usersRef, where(documentId(), "in", documentIds));
-
-      usersSnapshot = await getDocs(usersQuery);
-      // Extract the user data from the query snapshot
-      usersData = usersSnapshot.docs.map((doc) => {
-        const userData = { id: doc.id, ...doc.data() };
-        return userData;
-      });
-
-      setUsersDataCache(usersData);
-    }
-
-    let postIds;
-    // Extract the post IDs from the "recentPosts" field of the followed users' documents
-
-    postIds = followedUsersSnapshot.docs.flatMap((doc) => {
-      console.log("logging data:");
-      console.log(doc.data());
-
-      const recentPosts = (doc.data() as { recentPosts: any }).recentPosts;
-      const filteredPosts = recentPosts.filter((post: any) => post.published);
-      const sortedPostIds = filteredPosts
-        .sort((a: any, b: any) => b.published - a.published)
-        .map((post: any) => post.postId);
-
-      return sortedPostIds;
-    });
-
-    console.log(postIds.length);
-    if (postIds.length === 0) {
-      console.log("No post IDs found.");
-      console.log("SETTING LOADING TO FALSE!!!");
-      if (renderedOnce) {
-        setLoading(false);
+        setLoading(true);
       }
 
-      // Handle the empty postIds array (e.g., display a message to the user)
+      const followedUsersRef = collection(db, "followers-feed");
+      const usersRef = collection(db, "users");
+      const postsRef = collection(db, "posts");
 
-      return;
-    }
+      // Calculate the timestamp for 7 days ago
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
+      console.log({ sevenDaysAgoTimestamp });
+      // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
 
-    // Retrieve the post data based on the extracted post IDs
-    setPostIDsCache(postIds);
+      const followedUsersSnapshot = await getDocs(
+        query(
+          followedUsersRef,
+          where("users", "array-contains", currentUser.uid),
+          orderBy("lastPost", "desc"),
+          limit(10)
+        )
+      );
 
-    let postsQuery;
-    if (postIds.length > 0) {
-      if (latestDoc) {
-        postsQuery = query(
-          postsRef,
-          orderBy("createdAt", "desc"),
-          where("documentId", "in", postIds),
-          where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
-          startAfter(latestDoc),
-
-          limit(2)
-        );
-      } else {
-        postsQuery = query(
-          postsRef,
-          orderBy("createdAt", "desc"),
-          where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
-          where("documentId", "in", postIds),
-          limit(2)
-        );
-      }
-
-      const postsSnapshot = await getDocs(postsQuery);
-
-      if (postsSnapshot.empty) {
-        setLoadButtonStatus(true);
-      }
-
-      if (postsSnapshot.docs.length > 0) {
-        setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
-      }
-
-      // Extract the post data from the query snapshot
-      const postsData = postsSnapshot.docs.map((doc) => {
-        const postData = { ...doc.data(), postId: doc.id };
-        return postData;
-      });
-
-      console.log("logging postsData:");
-      console.log(postsData);
-      // Create a mapping from user ID to user data for efficient lookup
-      const userIdToUserData: { [key: string]: any } = {};
-      if (usersData) {
-        usersData.forEach((userData) => {
-          const userId = userData.id;
-          userIdToUserData[userId] = userData;
-        });
-      }
-
-      // Combine post data with user data to enrich the feed data
-      const feedData = postsData.map((post: any) => {
-        const userID = post.userId;
-        if (userIdToUserData.hasOwnProperty(userID)) {
-          const { name, surname, profileImage, verified } =
-            userIdToUserData[userID];
-          return {
-            ...post,
-            name,
-            surname,
-            profileImage,
-            verified,
-          };
+      // Extract the document IDs of the followed users
+      const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
+      console.log("logging documentIds of the followed users:");
+      if (documentIds.length === 0) {
+        console.log("No post IDs found.");
+        if (renderedOnce) {
+          setLoading(false);
         }
-        return null; // Add a default return value, such as null, for cases where userId is not found
+        return;
+      }
+      console.log(documentIds);
+
+      let usersQuery;
+      let usersSnapshot;
+      let usersData;
+
+      if (usersDataCache.length === 0) {
+        // Retrieve the user data of the followed users
+
+        usersQuery = query(usersRef, where(documentId(), "in", documentIds));
+
+        usersSnapshot = await getDocs(usersQuery);
+        // Extract the user data from the query snapshot
+        usersData = usersSnapshot.docs.map((doc) => {
+          const userData = { id: doc.id, ...doc.data() };
+          return userData;
+        });
+
+        setUsersDataCache(usersData);
+      }
+
+      let postIds;
+      // Extract the post IDs from the "recentPosts" field of the followed users' documents
+
+      postIds = followedUsersSnapshot.docs.flatMap((doc) => {
+        console.log("logging data:");
+        console.log(doc.data());
+
+        const recentPosts = (doc.data() as { recentPosts: any }).recentPosts;
+        const filteredPosts = recentPosts.filter((post: any) => post.published);
+        const sortedPostIds = filteredPosts
+          .sort((a: any, b: any) => b.published - a.published)
+          .map((post: any) => post.postId);
+
+        return sortedPostIds;
       });
 
-      console.log("logging feed data:");
-      console.log(feedData);
+      console.log(postIds.length);
+      if (postIds.length === 0) {
+        console.log("No post IDs found.");
+        console.log("SETTING LOADING TO FALSE!!!");
+        if (renderedOnce) {
+          setLoading(false);
+        }
 
-      if (feedData.includes(null)) {
-        setFeedDataNullCheck(true);
+        // Handle the empty postIds array (e.g., display a message to the user)
+
+        return;
       }
 
-      // Update the userFeed state with the sorted feed data
+      // Retrieve the post data based on the extracted post IDs
+      setPostIDsCache(postIds);
 
-      if (latestDoc && !feedData.includes(null)) {
-        setUserFeed((prevUserFeed: PostData[]) => [
-          ...prevUserFeed,
-          ...feedData,
-        ]);
+      let postsQuery;
+      if (postIds.length > 0) {
+        if (latestDoc) {
+          postsQuery = query(
+            postsRef,
+            orderBy("createdAt", "desc"),
+            where("documentId", "in", postIds),
+            where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
+            startAfter(latestDoc),
 
-        setHasPosts(feedData.length > 0);
-      } else {
-        setUserFeed(feedData);
-        setHasPosts(feedData.length > 0);
+            limit(2)
+          );
+        } else {
+          postsQuery = query(
+            postsRef,
+            orderBy("createdAt", "desc"),
+            where("createdAt", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
+            where("documentId", "in", postIds),
+            limit(2)
+          );
+        }
+
+        const postsSnapshot = await getDocs(postsQuery);
+
+        if (postsSnapshot.empty) {
+          setLoadButtonStatus(true);
+        }
+
+        if (postsSnapshot.docs.length > 0) {
+          setLatestDoc(postsSnapshot.docs[postsSnapshot.docs.length - 1]);
+        }
+
+        // Extract the post data from the query snapshot
+        const postsData = postsSnapshot.docs.map((doc) => {
+          const postData = { ...doc.data(), postId: doc.id };
+          return postData;
+        });
+
+        console.log("logging postsData:");
+        console.log(postsData);
+        // Create a mapping from user ID to user data for efficient lookup
+        const userIdToUserData: { [key: string]: any } = {};
+        if (usersData) {
+          usersData.forEach((userData) => {
+            const userId = userData.id;
+            userIdToUserData[userId] = userData;
+          });
+        }
+
+        // Combine post data with user data to enrich the feed data
+        const feedData = postsData.map((post: any) => {
+          const userID = post.userId;
+          if (userIdToUserData.hasOwnProperty(userID)) {
+            const { name, surname, profileImage, verified } =
+              userIdToUserData[userID];
+            return {
+              ...post,
+              name,
+              surname,
+              profileImage,
+              verified,
+            };
+          }
+          return null; // Add a default return value, such as null, for cases where userId is not found
+        });
+
+        console.log("logging feed data:");
+        console.log(feedData);
+
+        if (feedData.includes(null)) {
+          setFeedDataNullCheck(true);
+        }
+
+        // Update the userFeed state with the sorted feed data
+
+        if (latestDoc && !feedData.includes(null)) {
+          setUserFeed((prevUserFeed: PostData[]) => [
+            ...prevUserFeed,
+            ...feedData,
+          ]);
+
+          setHasPosts(feedData.length > 0);
+        } else {
+          setUserFeed(feedData);
+          setHasPosts(feedData.length > 0);
+        }
       }
-    }
 
-    console.log("SETTING LOADING TO FALSE!!!");
-    if (renderedOnce) {
-      setLoading(false);
+      if (renderedOnce) {
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Oops, we couldn't get the feed...");
+      if (renderedOnce) {
+        setLoading(false);
+      }
     }
   }
 

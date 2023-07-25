@@ -3,6 +3,7 @@ import { auth } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import User from "../utils/interfaces/User";
+import toast from "react-hot-toast";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -105,13 +106,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     if (currentUser.isAnonymous === false) {
-      const docRef = doc(db, "users", currentUser.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data() as User;
-        setCurrentUserData(userData);
-        return userData;
+      try {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const userData = docSnap.data() as User;
+          setCurrentUserData(userData);
+          return userData;
+        }
+      } catch (error) {
+        toast.error("We couldn't fetch the data...")
+        console.error("Error while fetching user data:", error);
       }
     }
   }

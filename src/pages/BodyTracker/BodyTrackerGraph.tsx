@@ -150,6 +150,8 @@ function BodyTrackerGraph() {
     <Container
       sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
+
+
       <Box sx={{ width: "100%", marginTop: "8px" }}>
         <FormControl sx={{ width: "100%" }}>
           <InputLabel id="measurement-label">Measurement</InputLabel>
@@ -199,7 +201,7 @@ function BodyTrackerGraph() {
           </Button>
         ))}
       </ButtonGroup>
-      <Container
+      <Box
         sx={{
           width: "100vw",
           height: "calc(100vh - 270.5px)",
@@ -215,7 +217,8 @@ function BodyTrackerGraph() {
             <Line data={initialRawData} options={options as any} />
           )
         ) : null}
-      </Container>
+      </Box>
+
     </Container>
   );
 }

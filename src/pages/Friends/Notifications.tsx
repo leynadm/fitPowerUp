@@ -47,6 +47,7 @@ function Notifications() {
     >
       {notificationsData.map((notification: any, index: number) => (
         <List
+        key={index}
           sx={{
             width: "100%",
             bgcolor: "background.paper",

@@ -20,23 +20,6 @@ function App() {
         <IndexedDBProvider>
           <Router>
             <Routes>
-              {/* If the user is signed in and tries to access login, reroute him to home */}
-              <Route element={<AuthRoute type="home" />}>
-                <Route
-                  path="/home/*"
-                  element={
-                    <Home
-                      sessionVerificationEmailCheck={
-                        sessionVerificationEmailCheck
-                      }
-                      setSessionVerificationEmailCheck={
-                        setSessionVerificationEmailCheck
-                      }
-                    /> 
-                  }
-                />
-              </Route>
-
               {/* If the user is signed in and tries to access signup, reroute him to home */}
               <Route element={<AuthRoute type="signup" />}>
                 <Route element={<SignUp />} path="/signup" />
@@ -49,7 +32,29 @@ function App() {
 
               <Route element={<ForgotPassword />} path="/forgot-password" />
 
-              <Route element={<TermsAndConditions />} path="/terms-and-conditions" />
+              <Route
+                element={<TermsAndConditions />}
+                path="/terms-and-conditions"
+              />
+
+              {/* If the user is signed in and tries to access login, reroute him to home */}
+              <Route element={<AuthRoute type="home" />}>
+                <Route
+                  path="/home/*"
+                  element={
+                    <Home
+                      sessionVerificationEmailCheck={
+                        sessionVerificationEmailCheck
+                      }
+                      setSessionVerificationEmailCheck={
+                        setSessionVerificationEmailCheck
+                      }
+                    />
+                  }
+                />
+              </Route>
+
+              
 
               <Route element={<AuthRoute type="/" />}>
                 <Route path="/" element={<LandingPage />} />

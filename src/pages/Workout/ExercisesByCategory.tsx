@@ -16,14 +16,19 @@ import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
 import getExercisesByCategory from "../../utils/CRUDFunctions/getExercisesByCategory";
 import EditExercisePropertiesModal from "../../components/ui/EditExercisePropertiesModal";
-
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
     category: string;
     name: string;
     measurement: any[];
-    id?:any
+    id?: any;
+    favorite?: boolean;
   }[];
   setSelectedExercise: Dispatch<
     SetStateAction<{ name: string; category: string; measurement: any[] }>
@@ -49,18 +54,16 @@ function ExercisesByCategory({
     category: string;
     name: string;
     measurement: any[];
+    favorite?: boolean;
   }) => {
     setSelectedExercise(exercise);
     navigate(`selected`);
   };
 
-
   const handleEditExerciseClick = () => {
-    console.log({selectedExerciseId})
-    setOpenEditExercisePropertiesModal(true)
+    setOpenEditExercisePropertiesModal(true);
     setAnchorEl(null);
   };
-  
 
   useEffect(() => {}, [exercisesCategories]);
 
@@ -68,18 +71,16 @@ function ExercisesByCategory({
   const [openEditExercisePropertiesModal, setOpenEditExercisePropertiesModal] =
     useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState("");
-  const [categoryToRefresh, setCategoryToRefresh] = useState("");
+  const [categoryToRefresh, setCategoryToRefresh] = useState(""); 
+  const [selectedExerciseId, setSelectedExerciseId] = useState<any>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [query, setQuery] = useState("");
   const [exercisesToSearch, setExercisesToSearch] = useState<
     { category: string; name: string; measurement: any[]; id: number }[]
   >([]);
-  const [exerciseToEdit, setExerciseToEdit] = useState("")
-  const [selectedExerciseId, setSelectedExerciseId] = useState<any>(null);
-
+  const [exerciseToEdit, setExerciseToEdit] = useState("");
 
   useEffect(() => {
-    // useEffect implementation
     if (query === "" || exercisesToSearch.length === 0) {
       if (selectedCategoryExercises.length > 0) {
         getExercisesByCategory(
@@ -95,7 +96,6 @@ function ExercisesByCategory({
       );
       setExercisesToSearch(filteredExercises);
     }
-
   }, [query]);
 
   const open = Boolean(anchorEl);
@@ -103,12 +103,12 @@ function ExercisesByCategory({
     event: React.MouseEvent<HTMLButtonElement>,
     exerciseName: string,
     exerciseCategory: string,
-    exerciseId:any
+    exerciseId: any
   ) {
     setAnchorEl(event.currentTarget);
     setExerciseToDelete(exerciseName);
     setCategoryToRefresh(exerciseCategory);
-    setSelectedExerciseId(exerciseId)
+    setSelectedExerciseId(exerciseId);
   }
 
   function deleteExerciseClick() {
@@ -123,6 +123,68 @@ function ExercisesByCategory({
 
   function handleAddNewExerciseModal() {
     setOpenAddNewExerciseModal(!openAddNewExerciseModal);
+  }
+
+  function addExerciseToFavorites() {
+    // If selectedExerciseId is not available or empty, no need to fetch the record
+    if (!selectedExerciseId) {
+      console.log("No exercise selected.");
+      return;
+    }
+
+    const request = indexedDB.open("fitScouterDb");
+
+    request.onerror = (event) => {
+      console.log("Error opening IndexedDB:", request.error);
+    };
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBRequest).result;
+
+      // Start a new transaction
+      const transaction = db.transaction("preselected-exercises", "readwrite");
+
+      // Retrieve the object store
+      const store = transaction.objectStore("preselected-exercises");
+
+      // Get the exercise with the selectedExerciseId
+      const getRequest = store.get(selectedExerciseId);
+
+      getRequest.onsuccess = (event: any) => {
+        const exercise = event.target.result;
+
+        if (!exercise) {
+          console.log("Exercise not found.");
+          return;
+        }
+
+        const updatedExercise = {
+          ...exercise,
+          favorite: !exercise.favorite,
+        };
+
+        // If the exercise record is found, update the state with the values
+        const putRequest = store.put(updatedExercise);
+
+        putRequest.onsuccess = () => {
+          console.log("Exercise added to favorites successfully.");
+        };
+
+        putRequest.onerror = () => {
+          console.log("Error updating exercise:", putRequest.error);
+        };
+      };
+
+      getRequest.onerror = () => {
+        console.log("Error fetching exercise:", getRequest.error);
+      };
+
+      // Close the transaction and the database connection
+      transaction.oncomplete = () => {
+        handleClose()
+        db.close();
+      };
+    };
   }
 
   return (
@@ -306,6 +368,18 @@ function ExercisesByCategory({
                         exercise.name.slice(1)}
                     </Typography>
 
+                    {exercise.favorite && (
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                      >
+                        <BookmarkIcon sx={{ zIndex: 0 }} />
+                      </IconButton>
+                    )}
+
                     <IconButton
                       size="large"
                       aria-label="account of current user"
@@ -337,11 +411,45 @@ function ExercisesByCategory({
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
-        style={{ boxShadow: "none", border: "none" }}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        style={{ boxShadow: "none", border: "none", fontSize: "small" }}
       >
-        <MenuItem onClick={deleteExerciseClick}>Delete Exercise</MenuItem>
-        <MenuItem onClick={handleEditExerciseClick}>Edit Exercise</MenuItem>
+        <MenuItem
+          onClick={deleteExerciseClick}
+          sx={{ margin: 0, fontSize: "small" }}
+        >
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          Delete Exercise
+        </MenuItem>
+        <MenuItem
+          onClick={handleEditExerciseClick}
+          sx={{ margin: 0, fontSize: "small" }}
+        >
+          <ListItemIcon>
+            <ChangeCircleIcon fontSize="small" />
+          </ListItemIcon>
+          Edit Exercise
+        </MenuItem>
+        <MenuItem
+          sx={{ margin: 0, fontSize: "small" }}
+          onClick={addExerciseToFavorites}
+        >
+          <ListItemIcon>
+            <BookmarkAddIcon fontSize="small" />
+          </ListItemIcon>
+          Select Favorite
+        </MenuItem>
       </Menu>
+
     </Container>
   );
 }

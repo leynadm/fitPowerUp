@@ -16,7 +16,7 @@ interface ParentProps {
   setOpenAddNewExerciseModal: React.Dispatch<React.SetStateAction<boolean>>;
   setExercisesCategories: Dispatch<SetStateAction<string[]>>;
   setSelectedCategoryExercises: Dispatch<
-    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
+    SetStateAction<{ category: string; name: string; measurement: any[],favorite?:boolean }[]>
   >;
   selectedCategoryExercises: {
     category: string;
@@ -81,6 +81,7 @@ function AddNewExerciseModal({
       name: exerciseName,
       category,
       measurement: measurementValue,
+      favorite:false
     };
 
     // Open a connection to the IndexedDB database

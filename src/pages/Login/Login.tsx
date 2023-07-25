@@ -13,6 +13,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
 import createNotificationsDoc from "../../utils/socialFunctions/createNotificationsDoc";
+import toast from "react-hot-toast";
+
 import {
   getAuth,
   signInWithPopup,
@@ -109,6 +111,7 @@ export default function SignIn() {
         }
       })
       .catch((error) => {
+
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -116,6 +119,7 @@ export default function SignIn() {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
+        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
         // ...
       });
   }
@@ -126,9 +130,11 @@ export default function SignIn() {
         // Signed in..
       })
       .catch((error) => {
+
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ...
+        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
+        
       });
   }
 
@@ -146,6 +152,7 @@ export default function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
       });
   }
 
