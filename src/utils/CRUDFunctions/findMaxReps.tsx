@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function findMaxReps(exerciseName: string, id: number) {
   return new Promise<{ id: number, maxReps: number }>((resolve, reject) => {
     const request = indexedDB.open("fitScouterDb", 1);
@@ -34,6 +36,7 @@ function findMaxReps(exerciseName: string, id: number) {
       };
 
       cursorRequest.onerror = (event) => {
+        toast.error("Oops, findMaxReps cursor has an error!");
         reject(request.error);
         transaction.abort();
         db.close();
@@ -41,6 +44,7 @@ function findMaxReps(exerciseName: string, id: number) {
     };
 
     request.onerror = (event) => {
+      toast.error("Oops, couldn't open the database in findMaxReps!");
       reject(request.error);
     };
   });

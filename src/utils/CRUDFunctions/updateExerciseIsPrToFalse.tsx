@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function updateExerciseIsPrToFalse(exerciseName: string, weight: number, reps: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // Open the IndexedDB database
@@ -38,6 +40,7 @@ function updateExerciseIsPrToFalse(exerciseName: string, weight: number, reps: n
         };
   
         getRequest.onerror = () => {
+          toast.error("Oops, getRequest in updateExerciseIsPrToFalse has an error!");
           db.close();
           reject(new Error('Error retrieving entries'));
         };
@@ -45,6 +48,7 @@ function updateExerciseIsPrToFalse(exerciseName: string, weight: number, reps: n
   
       // Event handler for database opening error
       request.onerror = () => {
+        toast.error("Oops, couldn't open the database in updateExerciseIsPrToFalse!");
         reject(new Error('Error opening database'));
       };
     });

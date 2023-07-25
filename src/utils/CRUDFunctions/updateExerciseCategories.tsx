@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function updateExerciseCategories(setExercisesCategories: any) {
   const request = indexedDB.open("fitScouterDb", 1);
 
@@ -9,12 +11,7 @@ function updateExerciseCategories(setExercisesCategories: any) {
 
   // Check if there are any error while opening the Db
   request.onerror = function (event) {
-    console.error("And error occurred with IndexedDb");
-    console.error(event);
-  };
-
-  // Check if there are any error while opening the Db
-  request.onerror = function (event) {
+    toast.error("Oops, updateExerciseCategories has an error!");
     console.error("And error occurred with IndexedDb");
     console.error(event);
   };

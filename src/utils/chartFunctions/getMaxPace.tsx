@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -10,6 +11,7 @@ function getMaxPace(setInitialRawData: any, selectedExercise: any, timeframe: st
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getMaxPace has an error!");
     console.error(request.error);
   };
 
@@ -84,6 +86,7 @@ function getMaxPace(setInitialRawData: any, selectedExercise: any, timeframe: st
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMaxPace has an error!");
       console.error(getDataRequest.error);
     };
   };

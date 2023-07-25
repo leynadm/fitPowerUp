@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function populatePreselectedExercises(setExercisesCategories:any) {
     const request = indexedDB.open("fitScouterDb", 1);
   
@@ -9,6 +11,7 @@ function populatePreselectedExercises(setExercisesCategories:any) {
   
     // Check if there are any errors while opening the DB
     request.onerror = function (event) {
+      toast.error("Oops, populatePreselectedExercises has an error!");
       console.error("An error occurred with IndexedDB");
       console.error(event);
     };

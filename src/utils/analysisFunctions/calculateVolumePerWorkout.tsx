@@ -1,7 +1,10 @@
+import toast from "react-hot-toast";
+
 function calculateVolumePerWorkout(selectedGraph:string,selectedExercise: any, timeframe: string,setInitialRawData: any,chartType:string) {
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, calculateVolumePerWorkout has an error!")            
     console.error(request.error);
   };
 
@@ -85,6 +88,7 @@ function calculateVolumePerWorkout(selectedGraph:string,selectedExercise: any, t
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in calculateVolumePerWorkout has an error!")
       console.error(getDataRequest.error);
     };
   };

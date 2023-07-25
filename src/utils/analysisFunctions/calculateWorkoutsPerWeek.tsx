@@ -1,7 +1,10 @@
+import toast from "react-hot-toast";
+
 function calculateWorkoutsPerWeek(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any,chartType:string) {
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateWorkoutsPerWeek has an error!")            
       console.error(request.error);
     };
   
@@ -91,6 +94,7 @@ function calculateWorkoutsPerWeek(selectedGraph:string, selectedExercise:string,
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateWorkoutsPerWeek has an error!")
         console.error(getDataRequest.error);
       };
     };

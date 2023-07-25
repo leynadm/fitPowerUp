@@ -1,22 +1,28 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
-date: Date;
-reps: number;
+  date: Date;
+  reps: number;
 }
 
-function getMaxReps(setInitialRawData: any, selectedExercise: any, timeframe: string) {
-const request = indexedDB.open("fitScouterDb");
+function getMaxReps(
+  setInitialRawData: any,
+  selectedExercise: any,
+  timeframe: string
+) {
+  const request = indexedDB.open("fitScouterDb");
 
-request.onerror = (event) => {
-console.error(request.error);
-};
+  request.onerror = (event) => {
+    toast.error("Oops, getMaxReps has an error!");
+    console.error(request.error);
+  };
 
-request.onsuccess = (event) => {
-const db = (event.target as IDBRequest).result;
-const transaction = db.transaction(["user-exercises-entries"], "readonly");
-const objectStore = transaction.objectStore("user-exercises-entries");
-const exerciseNameIndex = objectStore.index("exercise_name");
+  request.onsuccess = (event) => {
+    const db = (event.target as IDBRequest).result;
+    const transaction = db.transaction(["user-exercises-entries"], "readonly");
+    const objectStore = transaction.objectStore("user-exercises-entries");
+    const exerciseNameIndex = objectStore.index("exercise_name");
     const range = IDBKeyRange.only(selectedExercise.name); // Filter by exercise name
 
     const getDataRequest = exerciseNameIndex.getAll(range);
@@ -81,24 +87,45 @@ const exerciseNameIndex = objectStore.index("exercise_name");
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMaxReps has an error!");
       console.error(getDataRequest.error);
     };
   };
 }
-  
+
 function getStartDate(timeframe: string): Date {
   const today = new Date();
   switch (timeframe) {
     case "1m":
-      return new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+      return new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        today.getDate()
+      );
     case "3m":
-      return new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+      return new Date(
+        today.getFullYear(),
+        today.getMonth() - 3,
+        today.getDate()
+      );
     case "6m":
-      return new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+      return new Date(
+        today.getFullYear(),
+        today.getMonth() - 6,
+        today.getDate()
+      );
     case "1y":
-      return new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+      return new Date(
+        today.getFullYear() - 1,
+        today.getMonth(),
+        today.getDate()
+      );
     default:
-      return new Date(today.getFullYear()-50, today.getMonth(), today.getDate());
+      return new Date(
+        today.getFullYear() - 50,
+        today.getMonth(),
+        today.getDate()
+      );
   }
 }
 

@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -14,6 +15,7 @@ function getBodyTrackerKPIValues(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getBodyTrackerKPIValues has an error!")                  
     console.error(request.error);
   };
 
@@ -75,6 +77,7 @@ function getBodyTrackerKPIValues(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getBodyTrackerKPIValues has an error!")
       console.error(getDataRequest.error);
     };
   };

@@ -1,7 +1,10 @@
+import toast from "react-hot-toast";
+
 function calculateSetsPerWorkout(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any,chartType:string) {
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+     toast.error("Oops, calculateSetsPerWorkout has an error!")            
       console.error(request.error);
     };
   
@@ -83,6 +86,7 @@ function calculateSetsPerWorkout(selectedGraph:string, selectedExercise:string, 
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateSetsPerWorkout has an error!")
         console.error(getDataRequest.error);
       };
     };

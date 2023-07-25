@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const monthNames = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -7,6 +9,7 @@ function calculateWorkoutsPerMonth(selectedGraph:string, selectedExercise:string
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateWorkoutsPerMonth has an error!")            
       console.error(request.error);
     };
   
@@ -94,6 +97,7 @@ function calculateWorkoutsPerMonth(selectedGraph:string, selectedExercise:string
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateWorkoutsPerMonth has an error!")
         console.error(getDataRequest.error);
       };
     };

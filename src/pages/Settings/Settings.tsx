@@ -465,6 +465,11 @@ function Settings({
         console.log("Data imported successfully.");
         showSuccessfulAlert();
       };
+
+      request.onerror = () => {
+        toast.error("Oops, processImportedDataFitNotes has an error!")
+        console.error(request.error);
+      };
     };
   }
 
@@ -562,6 +567,11 @@ function Settings({
       transaction.oncomplete = () => {
         console.log("Data imported successfully.");
         showSuccessfulAlert();
+      };
+
+      request.onerror = () => {
+        toast.error("Oops, processImportedData has an error!")
+        console.error(request.error);
       };
     };
   }

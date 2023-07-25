@@ -20,7 +20,7 @@
       "purpose":"any maskable"
     }
   ],
-  "start_url": "/home", 
+  "start_url": "/home/workout", 
   "scope":"/",
   "display": "standalone",
   "theme_color": "#000000",

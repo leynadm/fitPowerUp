@@ -1,7 +1,10 @@
+import toast from "react-hot-toast";
+
 function getExercisesByCategory(category: string, setExercisesToSearch: any) {
     const request = indexedDB.open("fitScouterDb", 1);
   
     request.onerror = function (event) {
+      toast.error("Oops, getExercisesByCategory has an error!");
       console.error("An error occurred with IndexedDB");
       console.error(event);
     };

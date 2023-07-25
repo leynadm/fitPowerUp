@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function checkExercisePR(name:string) {
 
     return new Promise((resolve, reject) => {
@@ -37,6 +39,7 @@ function checkExercisePR(name:string) {
         };
   
         cursorRequest.onerror = (event) => {
+          toast.error("Oops, checkExercisePR cursor has an error!");
           reject(request.error);
           transaction.abort();
           db.close();
@@ -45,6 +48,7 @@ function checkExercisePR(name:string) {
   
       // Handle error event
       request.onerror = (event) => {
+        toast.error("Oops, checkExercisePR has an error!");
         reject(request.error);
       };
     });

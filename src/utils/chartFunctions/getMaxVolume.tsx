@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -10,6 +11,7 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any, timeframe: 
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getMaxVolume has an error!");
     console.error(request.error);
   };
 
@@ -88,6 +90,7 @@ function getMaxVolume(setInitialRawData: any, selectedExercise: any, timeframe: 
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMaxVolume has an error!");
       console.error(getDataRequest.error);
     };
   };

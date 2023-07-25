@@ -1,8 +1,11 @@
+import toast from "react-hot-toast";
+
 function getProgressExercises() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('fitScouterDb', 1);
   
       request.onerror = function (event) {
+        toast.error("Oops, getProgressExercises has an error!");
         console.error('An error occurred with IndexedDB');
         console.error(event);
         reject(event);

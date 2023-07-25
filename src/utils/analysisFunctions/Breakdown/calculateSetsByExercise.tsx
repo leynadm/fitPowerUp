@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function calculateSetsByExercise(
   setInitialRawData: any,
   timeframe: string,
@@ -7,13 +9,12 @@ function calculateSetsByExercise(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, calculateSetsByExercise has an error!")
     console.error(request.error);
   };
 
   let regularStartDate: any;
   let regularEndDate: any;
-
-  console.log("Logging modified start date and end date:");
 
   if (selectedStartDate !== null && selectedEndDate !== null) {
     regularStartDate = selectedStartDate.toDate();
@@ -42,6 +43,7 @@ function calculateSetsByExercise(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in calculateSetsByExercise has an error!")
       console.error(getDataRequest.error);
     };
   };

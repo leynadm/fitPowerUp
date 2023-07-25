@@ -1,8 +1,11 @@
+import toast from "react-hot-toast";
+
 function countUniqueEntriesByDate():Promise<number> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('fitScouterDb');
     
         request.onerror = function(event) {
+          toast.error("Oops, countUniqueEntriesByDate has an error!");
           reject('Error opening database');
         };
     
@@ -15,6 +18,7 @@ function countUniqueEntriesByDate():Promise<number> {
           const countRequest = index.openCursor(null, 'nextunique');
     
           countRequest.onerror = function(event:any) {
+            toast.error("Oops, countRequest in countUniqueEntriesByDate has an error!");
             reject('Error counting unique entries');
           };
     

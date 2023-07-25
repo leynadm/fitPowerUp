@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const monthNames = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -7,6 +9,7 @@ function calculateSetsPerMonth(selectedGraph:string, selectedExercise:string, ti
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateSetsPerMonth has an error!")            
       console.error(request.error);
     };
   
@@ -96,6 +99,7 @@ function calculateSetsPerMonth(selectedGraph:string, selectedExercise:string, ti
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateSetsPerMonth has an error!")
         console.error(getDataRequest.error);
       };
     };

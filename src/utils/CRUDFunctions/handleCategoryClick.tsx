@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function handleCategoryClick(
   category: string,
   setSelectedCategoryExercises: any
@@ -5,6 +7,7 @@ function handleCategoryClick(
   const request = indexedDB.open("fitScouterDb", 1);
 
   request.onerror = function (event) {
+    toast.error("Oops, handleCategoryClick has an error!");
     console.error("An error occurred with IndexedDB");
     console.error(event);
   };

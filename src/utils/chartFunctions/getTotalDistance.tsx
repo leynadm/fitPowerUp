@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -15,6 +16,7 @@ function getTotalDistance(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getTotalDistance has an error!");
     console.error(request.error);
   };
 
@@ -88,6 +90,7 @@ function getTotalDistance(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getTotalDistance has an error!");
       console.error(getDataRequest.error);
     };
   };

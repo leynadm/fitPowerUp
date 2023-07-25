@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function deleteExerciseEntries(exercise:string) {
   const request = indexedDB.open("fitScouterDb", 1);
   
@@ -43,6 +45,7 @@ function deleteExerciseEntries(exercise:string) {
     };
   
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in deleteExerciseEntries!");
       console.log("Error opening database");
     };
   }

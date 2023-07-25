@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function deleteEntriesByCategory(category:string) {
     const request = indexedDB.open("fitScouterDb", 1);
   
@@ -43,6 +45,7 @@ function deleteEntriesByCategory(category:string) {
     };
   
     request.onerror = function () {
+      toast.error("Oops, couldn't open the database in deleteEntriesByCategory!");
       console.log("Error opening database");
     };
   }

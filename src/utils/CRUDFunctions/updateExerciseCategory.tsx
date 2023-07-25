@@ -1,17 +1,13 @@
-// Import any required libraries here if needed
+import toast from "react-hot-toast";
 
 // Define the function to update records in the user-exercises-entries table
 function updateExerciseCategory(updatedExerciseName:string, newCategory:string) {
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, updateExerciseCategory has an error!");
       console.log("Error opening IndexedDB:", request.error);
     };
-  
-    console.log('inside updateExerciseCategory:'    )
-
-    console.log({updatedExerciseName})
-    console.log({newCategory})
 
     request.onsuccess = (event) => {
       const db = (event.target as IDBRequest).result;
@@ -44,6 +40,7 @@ function updateExerciseCategory(updatedExerciseName:string, newCategory:string) 
             };
   
             updateRequest.onerror = () => {
+              toast.error("Oops, updateRequest in updateExerciseCategory has an error!");
               console.log("Error updating record:", updateRequest.error);
             };
           }

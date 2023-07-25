@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function calculateTotalTrainingVolume(
     setInitialRawData: any,
     timeframe: string,
@@ -7,6 +9,7 @@ function calculateTotalTrainingVolume(
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateTotalTrainingVolume has an error!")      
       console.error(request.error);
     };
   
@@ -40,6 +43,7 @@ function calculateTotalTrainingVolume(
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateTotalTrainingVolume has an error!")           
         console.error(getDataRequest.error);
       };
     };

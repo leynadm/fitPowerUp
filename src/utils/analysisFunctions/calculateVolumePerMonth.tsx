@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const monthNames = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -7,6 +9,7 @@ function calculateVolumePerMonth(selectedGraph:string,selectedExercise:string, t
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateVolumePerMonth has an error!")            
       console.error(request.error);
     };
   
@@ -99,6 +102,7 @@ function calculateVolumePerMonth(selectedGraph:string,selectedExercise:string, t
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateVolumePerMonth has an error!")
         console.error(getDataRequest.error);
       };
     };

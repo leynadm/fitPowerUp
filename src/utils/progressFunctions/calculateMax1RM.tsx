@@ -1,14 +1,18 @@
+import toast from "react-hot-toast";
+
 interface DataItem {
   date: Date;
   weight: number;
   reps: number;
 }
+
 function calculateMax1RM(selectedExercise: any, timeframe: string): Promise<number> {
 
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = (event) => {
+      toast.error("Oops, calculateMax1RM has an error!");
       console.error(request.error);
     };
   
@@ -48,12 +52,11 @@ function calculateMax1RM(selectedExercise: any, timeframe: string): Promise<numb
           }
         });
 
-        console.log('Logging max1RM inside calculate:');
-        console.log(max1RM);
         resolve(max1RM);
       };
 
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in updateExerciseIsPrToFalse has an error!");
         console.error(getDataRequest.error);
         reject(getDataRequest.error);
       };

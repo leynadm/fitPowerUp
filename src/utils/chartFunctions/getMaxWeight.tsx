@@ -1,4 +1,6 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
+
 interface DataItem {
   date: Date;
   weight: number;
@@ -8,6 +10,7 @@ function getMaxWeight(setInitialRawData:any, selectedExercise:any, timeframe: st
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getMaxWeight has an error!");
     console.error(request.error);
   };
 
@@ -84,6 +87,8 @@ function getMaxWeight(setInitialRawData:any, selectedExercise:any, timeframe: st
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMaxWeight has an error!");
+     
       console.error(getDataRequest.error);
     };
   };

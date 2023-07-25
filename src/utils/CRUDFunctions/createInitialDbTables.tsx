@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 
 function createInitialDbTables(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -5,14 +6,14 @@ function createInitialDbTables(): Promise<void> {
   
       console.log('inside createInitialDbTables:')
       if (!request) {
-        console.log("request value:");
-        console.log(request);
+        toast.error("Oops, failed to open the database in createInitialDbTables!");
         reject(new Error("Failed to open IndexedDB"));
         return;
       }
   
       // Check if there are any errors while opening the DB
       request.onerror = function (event) {
+        toast.error("Oops, request in createInitialDbTables has an error!");
         console.error("An error occurred with IndexedDB");
         console.error(event);
         reject(request.error);

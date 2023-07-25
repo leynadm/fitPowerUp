@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -15,6 +16,7 @@ function getMaxWeightForReps(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getMaxWeightForReps has an error!");
     console.error(request.error);
   };
 
@@ -91,6 +93,7 @@ function getMaxWeightForReps(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMaxWeightForReps has an error!");
       console.error(getDataRequest.error);
     };
   };

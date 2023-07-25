@@ -1,8 +1,11 @@
+import toast from "react-hot-toast";
+
 function saveBodyTrackerEntry(selectedMeasurement: any, value: number, todayDate: any) {
   return new Promise<void>((resolve, reject) => {
     const request = window.indexedDB.open("fitScouterDb", 1);
 
     request.onerror = () => {
+      toast.error("Oops, saveBodyTrackerEntry has an error!");
       console.error("Failed to open the database");
       reject();
     };
@@ -30,6 +33,7 @@ function saveBodyTrackerEntry(selectedMeasurement: any, value: number, todayDate
           };
 
           updateRequest.onerror = () => {
+            toast.error("Oops, updateRequest in saveBodyTrackerEntry has an error!");
             console.error("Failed to update the record");
             reject();
           };
@@ -48,6 +52,7 @@ function saveBodyTrackerEntry(selectedMeasurement: any, value: number, todayDate
           };
 
           addRequest.onerror = () => {
+            toast.error("Oops, addRequest in saveBodyTrackerEntry has an error!");
             console.error("Failed to save the record");
             reject();
           };

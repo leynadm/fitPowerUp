@@ -1,7 +1,10 @@
+import toast from "react-hot-toast";
+
 function calculateRepsPerYear(selectedGraph:string, selectedExercise:string, timeframe:string, setInitialRawData:any,chartType:string) {
     const request = indexedDB.open("fitScouterDb");
   
     request.onerror = (event) => {
+      toast.error("Oops, calculateRepsPerYear has an error!")            
       console.error(request.error);
     };
   
@@ -92,6 +95,7 @@ function calculateRepsPerYear(selectedGraph:string, selectedExercise:string, tim
       };
   
       getDataRequest.onerror = () => {
+        toast.error("Oops, getDataRequest in calculateRepsPerYear has an error!")
         console.error(getDataRequest.error);
       };
     };

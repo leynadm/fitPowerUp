@@ -1,4 +1,5 @@
 import { ChartData } from "chart.js";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -15,6 +16,7 @@ function getPowerLevel(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getPowerLevel has an error!");
     console.error(request.error);
   };
 
@@ -77,6 +79,7 @@ function getPowerLevel(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getPowerLevel has an error!");
       console.error(getDataRequest.error);
     };
   };

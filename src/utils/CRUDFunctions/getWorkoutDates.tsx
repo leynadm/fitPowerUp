@@ -1,10 +1,12 @@
 import dayjs, { Dayjs } from "dayjs";
+import toast from "react-hot-toast";
 
 function getWorkoutDates() {
     return new Promise<string[]>((resolve, reject) => {
       const request = window.indexedDB.open("fitScouterDb");
   
       request.onerror = (event) => {
+        toast.error("Oops, getWorkoutDates has an error!");
         reject(new Error("Error opening IndexedDB database"));
       };
   
@@ -29,6 +31,7 @@ function getWorkoutDates() {
         };
   
         request.onerror = (event: any) => {
+          toast.error("Oops, getWorkoutDates has an error!");
           reject(new Error("Error retrieving data from IndexedDB"));
         };
       };

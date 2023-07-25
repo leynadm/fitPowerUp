@@ -1,4 +1,5 @@
 import Exercise from "../interfaces/Exercise";
+import toast from "react-hot-toast";
 
 function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
   const request = indexedDB.open("fitScouterDb", 1);
@@ -53,6 +54,7 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
     };
 
     exercisesRequest.onerror = function () {
+      toast.error("Oops, getExercisesByDate has an error!");
       console.error("Error retrieving existing exercises");
     };
 
@@ -62,6 +64,7 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
   };
 
   request.onerror = function () {
+    toast.error("Oops, couldn't open the database in getExercisesByDate!");
     console.error("Error opening database");
   };
 }

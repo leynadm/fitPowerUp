@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const monthNames = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -13,6 +15,7 @@ function calculateRepsPerMonth(
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, calculateRepsPerMonth has an error!")      
     console.error(request.error);
   };
 
@@ -106,6 +109,7 @@ function calculateRepsPerMonth(
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in calculateRepsPerMonth has an error!")                   
       console.error(getDataRequest.error);
     };
   };

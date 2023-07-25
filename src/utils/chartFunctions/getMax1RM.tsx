@@ -1,5 +1,6 @@
 import { ChartData } from "chart.js";
 import { DateTime } from "luxon";
+import toast from "react-hot-toast";
 
 interface DataItem {
   date: Date;
@@ -11,6 +12,7 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
   const request = indexedDB.open("fitScouterDb");
 
   request.onerror = (event) => {
+    toast.error("Oops, getMax1RM has an error!")                  
     console.error(request.error);
   };
 
@@ -98,6 +100,7 @@ function getMax1RM(setInitialRawData: any, selectedExercise: any, timeframe: str
     };
 
     getDataRequest.onerror = () => {
+      toast.error("Oops, getDataRequest in getMax1RM has an error!")
       console.error(getDataRequest.error);
     };
   };
