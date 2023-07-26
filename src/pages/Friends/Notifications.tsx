@@ -14,7 +14,7 @@ import { setDoc, doc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
-
+import toast from "react-hot-toast";
 import { db } from "../../config/firebase";
 
 function Notifications() {
@@ -27,13 +27,22 @@ function Notifications() {
   }, [currentUser.uid]);
 
   function deleteNotifications() {
-    const notificationDocRef = doc(db, "notifications", currentUser.uid);
+    try {
+      const notificationDocRef = doc(db, "notifications", currentUser.uid);
 
-    setDoc(notificationDocRef, {
-      // Use the comment ID as the field name within the document
-    });
+      setDoc(notificationDocRef, {
+        // Use the comment ID as the field name within the document
+      });
+    } catch (error) {
+      // Handle the error here
+      toast.error("Oops, createFollowersFeedDoc has an error!");
+      console.error("Error creating followers feed document:", error);
+      // You can also throw the error again to propagate it to the caller of this function
+      throw error;
+    }
 
     getNotifications(currentUser.uid, setNotificationsData);
+
   }
 
   return (
@@ -52,9 +61,12 @@ function Notifications() {
             width: "100%",
             bgcolor: "background.paper",
             borderRadius: "5px",
+            paddingBottom:0,
+            marginBottom:0,
+            marginTop:0.5
           }}
         >
-          <ListItem key={index} alignItems="flex-start" sx={{ width: "100%" }}>
+          <ListItem key={index} alignItems="flex-start" sx={{ width: "100%",boxShadow:1 }}>
             <ListItemAvatar>
               <Avatar alt="Remy Sharp" src={notification.userProfileImage} />
             </ListItemAvatar>

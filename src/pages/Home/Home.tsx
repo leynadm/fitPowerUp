@@ -12,6 +12,7 @@ import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import { AuthContext } from "../../context/Auth";
 import { Typography } from "@mui/material";
 import NewWorkout from "../../components/ui/NewWorkout";
+import { SocialDataProvider } from "../../context/SocialData";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: React.Dispatch<
@@ -151,9 +152,10 @@ function Home({
     },
     shape: {},
   });
-
+ 
   return (
     <ThemeProvider theme={theme}>
+      <SocialDataProvider>
       <Box
         sx={{
           height: "calc(100vh - 56px)",
@@ -199,6 +201,7 @@ function Home({
           <Route path="progress/*" element={<Progress />} />
         </Routes>
       </Box>
+      </SocialDataProvider>
     </ThemeProvider>
   );
 }

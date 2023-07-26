@@ -17,6 +17,7 @@ import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteCommentModal from "../../components/ui/DeleteCommentModal";
 import { Link } from "react-router-dom";
+import addNotificationEntry from "../../utils/socialFunctions/addNotificationEntry";
 import {
   collection,
   doc,
@@ -52,7 +53,7 @@ function PostComment({
   commentIndex,
   postId,
   commentId,
-  getPostComments,
+  getPostComments, 
   postUserId,
 }: UserWorkoutCardProps) {
   const { currentUser, currentUserData } = useContext(AuthContext);
@@ -83,6 +84,7 @@ function PostComment({
         profileImage: currentUserData.profileImage,
       };
 
+      const action = "replied to one of your comments!";
       // Update the document to add the new array field to the map field
       updateDoc(commentDocRef, {
         [`${mapFieldToUpdate}.${arrayFieldToAdd}`]: arrayUnion(newReply),
@@ -91,6 +93,15 @@ function PostComment({
           console.log("Array field added to the map successfully");
           setReplyText("");
           getPostComments();
+          addNotificationEntry(
+            postUserId,
+            action,
+            currentUser.uid,
+            currentUserData.name,
+            currentUserData.surname,
+            postId,
+            currentUserData.profileImage
+          )
         })
         .catch((error) => {
           console.error("Error adding array field to the map:", error);

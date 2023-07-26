@@ -21,26 +21,41 @@ import { Button, Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
 import NoConnection from "../../components/ui/NoConnection";
 import { toast } from "react-hot-toast";
-
+import { SocialDataContext } from "../../context/SocialData";
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
-  const [userFeed, setUserFeed] = useState<any>([]);
+  /* 
   const [latestDoc, setLatestDoc] = useState<any>(null);
+  const [userFeed, setUserFeed] = useState<any>([]);
   const [postIDsCache, setPostIDsCache] = useState<any>([]);
   const [usersDataCache, setUsersDataCache] = useState<any>([]);
-  const [userFeedLength, setUserFeedLength] = useState<number | undefined>(
-    undefined
-  );
-  const [loading, setLoading] = useState(false);
   const [hasPosts, setHasPosts] = useState(false);
+    const [feedDataNullCheck, setFeedDataNullCheck] = useState(false);
+ */
+  
+  const {
+    userFeed,
+    setUserFeed,
+    postIDsCache,
+    setPostIDsCache,
+    usersDataCache,
+    setUsersDataCache,
+    latestDoc,
+    setLatestDoc,
+    hasPosts,
+    setHasPosts,
+    feedDataNullCheck,
+    setFeedDataNullCheck
+  } = useContext(SocialDataContext);
+
+  const [loading, setLoading] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [feedDataNullCheck, setFeedDataNullCheck] = useState(false);
+
   let renderedOnce = false;
 
   useEffect(() => {
-    console.log("logging current user data:");
-    console.log(currentUserData);
+
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -59,13 +74,23 @@ function Newsfeed() {
 
     if (
       isOnline &&
-      (currentUserData !== undefined || currentUserData !== null)
+      ((currentUserData !== undefined || currentUserData !== null) && userFeed.length===0)
     ) {
+
       getFeed();
     }
   }, []);
 
-  useEffect(() => {}, [userFeed, loading]);
+  useEffect(() => {
+    console.log('logging inside check.')
+    console.log(userFeed)
+    console.log(postIDsCache)
+
+    console.log(usersDataCache)
+    console.log(latestDoc)
+    console.log(hasPosts)
+
+  }, [userFeed, loading]);
 
   async function loadMoreFeed() {
     const postsRef = collection(db, "posts");
@@ -162,6 +187,7 @@ function Newsfeed() {
         query(
           followedUsersRef,
           where("users", "array-contains", currentUser.uid),
+          where("lastPost", ">", sevenDaysAgoTimestamp), // Add condition to filter by last 7 days
           orderBy("lastPost", "desc"),
           limit(10)
         )
@@ -202,8 +228,7 @@ function Newsfeed() {
       // Extract the post IDs from the "recentPosts" field of the followed users' documents
 
       postIds = followedUsersSnapshot.docs.flatMap((doc) => {
-        console.log("logging data:");
-        console.log(doc.data());
+       
 
         const recentPosts = (doc.data() as { recentPosts: any }).recentPosts;
         const filteredPosts = recentPosts.filter((post: any) => post.published);
@@ -214,10 +239,7 @@ function Newsfeed() {
         return sortedPostIds;
       });
 
-      console.log(postIds.length);
       if (postIds.length === 0) {
-        console.log("No post IDs found.");
-        console.log("SETTING LOADING TO FALSE!!!");
         if (renderedOnce) {
           setLoading(false);
         }
@@ -268,8 +290,6 @@ function Newsfeed() {
           return postData;
         });
 
-        console.log("logging postsData:");
-        console.log(postsData);
         // Create a mapping from user ID to user data for efficient lookup
         const userIdToUserData: { [key: string]: any } = {};
         if (usersData) {
@@ -295,9 +315,6 @@ function Newsfeed() {
           }
           return null; // Add a default return value, such as null, for cases where userId is not found
         });
-
-        console.log("logging feed data:");
-        console.log(feedData);
 
         if (feedData.includes(null)) {
           setFeedDataNullCheck(true);

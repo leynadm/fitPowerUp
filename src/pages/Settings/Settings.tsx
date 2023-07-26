@@ -32,10 +32,12 @@ import toast from "react-hot-toast"
 
 const style = {
   width: "100%",
-  marginTop: "8px",
+
 
   bgcolor: "background.paper",
-
+  paddingBottom:0,
+  marginBottom:0,
+  marginTop:1
 };
 
 interface WorkoutProps {

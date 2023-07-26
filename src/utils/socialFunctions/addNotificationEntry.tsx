@@ -2,6 +2,7 @@ import { setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
 import { Timestamp, } from "firebase/firestore";
 import uuid from "react-uuid";
 import { db } from "../../config/firebase";
+import toast from "react-hot-toast";
 function addNotificationEntry(postUserId:string, action: string,currentUserUid:string,currentUserDataName:string,currentUserDataSurname:string,postId:string,userProfileImage:"string") {
   const notificationDocRef = doc(db, "notifications", postUserId);
   const notificationId = uuid(); // Generate a unique identifier for the comment
@@ -37,7 +38,9 @@ function addNotificationEntry(postUserId:string, action: string,currentUserUid:s
     })
     .catch((error) => {
       // Error occurred while adding comment
+      toast.error("Oops, addNotificationEntry has an error!")
       console.error("Error adding comment:", error);
+      
     });
 }
 
