@@ -5,7 +5,7 @@ import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
 import { AuthContext } from "../../context/Auth";
 import { Typography } from "@mui/material";
-
+import toast from "react-hot-toast";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -56,30 +56,31 @@ function UserViewCharacterProgressModal({
     matchPowerLevelWithImage();
   }, []);
 
-  function matchPowerLevelWithImage(){
+  function matchPowerLevelWithImage() {
     for (let index = 0; index < powerLevelImageMatchArr.length; index++) {
       const currentLevel: number = powerLevelImageMatchArr[index];
       const nextLevel: number = powerLevelImageMatchArr[index + 1];
-      
+
       if (
         currentLevel <= currentUserData.powerLevel &&
         currentUserData.powerLevel < nextLevel
-        
       ) {
         setImageIndex(index);
         getPowerLevelImage(currentLevel);
         setCurrentImagePowerLevel(powerLevelImageMatchArr[index]);
         break;
-      } 
-      console.log(powerLevelImageMatchArr[index])
-      if(currentLevel>=powerLevelImageMatchArr[powerLevelImageMatchArr.length-1]){
+      }
+
+      if (
+        currentLevel >=
+        powerLevelImageMatchArr[powerLevelImageMatchArr.length - 1]
+      ) {
         setImageIndex(2695);
         getPowerLevelImage(2695);
         setCurrentImagePowerLevel(2695);
-        break
+        break;
       }
-    } 
-
+    }
   }
 
   async function getPowerLevelImage(currentLevel: number) {
@@ -90,9 +91,10 @@ function UserViewCharacterProgressModal({
 
     try {
       const matchedImageURL = await getDownloadURL(matchedImageRef);
-      console.log(matchedImageURL);
+
       setImageMatched(matchedImageURL);
     } catch (error) {
+      toast.error("Oops, getPowerLevelImage has an error!")
       // Handle the error here
     }
   }
@@ -117,19 +119,26 @@ function UserViewCharacterProgressModal({
               alignItems: "center",
             }}
           >
-
             <img
               src={imageMatched}
               alt="matched level"
               width="100%"
               height="100%"
               loading="lazy"
-
             ></img>
 
-            <Typography sx={{fontWeight:"bold"}}> 1. {currentUserData.firstPowerExercise}</Typography>
-            <Typography sx={{fontWeight:"bold"}}> 2. {currentUserData.secondPowerExercise}</Typography>
-            <Typography sx={{fontWeight:"bold"}}> 3. {currentUserData.thirdPowerExercise}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {" "}
+              1. {currentUserData.firstPowerExercise}
+            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {" "}
+              2. {currentUserData.secondPowerExercise}
+            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {" "}
+              3. {currentUserData.thirdPowerExercise}
+            </Typography>
           </Box>
         </Box>
       </Modal>

@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-
+import toast from "react-hot-toast";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -65,6 +65,7 @@ function CommentModal({
             console.log("Record updated successfully");
           };
           updateRequest.onerror = function () {
+            toast.error("Oops, saveComment has an error!")
             console.log("Error updating record");
           };
         } else {
@@ -78,11 +79,13 @@ function CommentModal({
         setOpenCommentModal(false);
       };
       transaction.onerror = function () {
+        toast.error("Oops, saveComment has an error!")
         console.log("Transaction error");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, saveComment couldn't open the database!")
       console.log("Error opening database");
     };
 

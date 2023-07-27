@@ -28,7 +28,6 @@ export const IndexedDBProvider: React.FC<IndexedDBProviderProps> = ({
       });
   }, []);
 
-
   const contextValue: IndexedDBContextValue = {};
 
   return (

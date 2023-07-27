@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
-import { AuthContext } from "../../context/Auth";
-import { Typography } from "@mui/material";
 
+import { Typography } from "@mui/material";
+import toast from "react-hot-toast";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -24,16 +24,14 @@ interface ParentComponentProps {
   setOpenSearchViewCharacterProgressModal: React.Dispatch<
     React.SetStateAction<boolean>
   >;
-  queriedUser:any
+  queriedUser: any;
 }
 
 function SearchViewCharacterProgressModal({
   openSearchViewCharacterProgressModal,
   setOpenSearchViewCharacterProgressModal,
-  queriedUser
+  queriedUser,
 }: ParentComponentProps) {
-  const { currentUserData } = useContext(AuthContext);
-
   const firebaseApp = getApp();
   const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
   const [currentImagePowerLevel, setCurrentImagePowerLevel] = useState(0);
@@ -58,30 +56,31 @@ function SearchViewCharacterProgressModal({
     matchPowerLevelWithImage();
   }, []);
 
-  function matchPowerLevelWithImage(){
+  function matchPowerLevelWithImage() {
     for (let index = 0; index < powerLevelImageMatchArr.length; index++) {
       const currentLevel: number = powerLevelImageMatchArr[index];
       const nextLevel: number = powerLevelImageMatchArr[index + 1];
-      
+
       if (
         currentLevel <= queriedUser.powerLevel &&
         queriedUser.powerLevel < nextLevel
-        
       ) {
         setImageIndex(index);
         getPowerLevelImage(currentLevel);
         setCurrentImagePowerLevel(powerLevelImageMatchArr[index]);
         break;
-      } 
-      console.log(powerLevelImageMatchArr[index])
-      if(currentLevel>=powerLevelImageMatchArr[powerLevelImageMatchArr.length-1]){
+      }
+
+      if (
+        currentLevel >=
+        powerLevelImageMatchArr[powerLevelImageMatchArr.length - 1]
+      ) {
         setImageIndex(2695);
         getPowerLevelImage(2695);
         setCurrentImagePowerLevel(2695);
-        break
+        break;
       }
-    } 
-
+    }
   }
 
   async function getPowerLevelImage(currentLevel: number) {
@@ -92,10 +91,10 @@ function SearchViewCharacterProgressModal({
 
     try {
       const matchedImageURL = await getDownloadURL(matchedImageRef);
-      console.log(matchedImageURL);
+
       setImageMatched(matchedImageURL);
     } catch (error) {
-      // Handle the error here
+      toast.error("Oops, getPowerLevelImage has an error!");
     }
   }
 

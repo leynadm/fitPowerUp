@@ -77,13 +77,10 @@ function BodyTrackerGraph() {
   useEffect(() => {
     // Call the chart function when the selected exercise changes or the timeframe changes
     callChartFunction(selectedOption, selectedTimeframe, setInitialRawData);
-    console.log("loading second use effect");
+
   }, [selectedTimeframe, selectedOption]);
 
   useEffect(() => {
-    console.log("logging initial Raw Data");
-    console.log(initialRawData);
-    console.log("loading third use effect");
   }, [initialRawData]);
 
   const options: ChartOptions<"line"> = {
@@ -150,8 +147,6 @@ function BodyTrackerGraph() {
     <Container
       sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-
-
       <Box sx={{ width: "100%", marginTop: "8px" }}>
         <FormControl sx={{ width: "100%" }}>
           <InputLabel id="measurement-label">Measurement</InputLabel>
@@ -218,7 +213,6 @@ function BodyTrackerGraph() {
           )
         ) : null}
       </Box>
-
     </Container>
   );
 }

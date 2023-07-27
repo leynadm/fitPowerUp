@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,54 +21,59 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   getAdditionalUserInfo,
-  signInAnonymously
+  signInAnonymously,
 } from "firebase/auth";
-import { auth} from "../../config/firebase"
-import GoogleIcon from '@mui/icons-material/Google';
-import PersonIcon from '@mui/icons-material/Person';
-import LoginIcon from '@mui/icons-material/Login';
+import { auth } from "../../config/firebase";
+import GoogleIcon from "@mui/icons-material/Google";
+import PersonIcon from "@mui/icons-material/Person";
+import LoginIcon from "@mui/icons-material/Login";
 import createUserDoc from "../../utils/socialFunctions/createUserDoc";
 
 function Copyright(props: any) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   function TermsAndConditionsClick() {
     navigate("/terms-and-conditions");
   }
 
   return (
-    <Box sx={{display:"flex",flexDirection:"column",justifyContent:"cemter",alignItems:"center"}}>
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "cemter",
+        alignItems: "center",
+      }}
     >
-      {/* {"Copyright © "} */}
-      <Link color="inherit" href="https://github.com/leynadm">
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        align="center"
+        {...props}
+      >
+        {/*  
+      <Link color="inherit"  href="https://github.com/leynadm" >
         Developed by Daniel Matei {new Date().getFullYear()}
-        {"."}
-      </Link>{" "}
-    </Typography>
+      </Link> */}
+        Developed by Daniel Matei {new Date().getFullYear()}
+      </Typography>
 
-
-<Typography
-onClick={TermsAndConditionsClick}
-sx={{
-  fontSize: "small",
-  marginTop: "1rem",
-  textDecoration: "underline",
-}}
->
-Terms and Conditions
-</Typography>
-</Box>
+      <Typography
+        onClick={TermsAndConditionsClick}
+        sx={{
+          fontSize: "small",
+          marginTop: "1rem",
+          textDecoration: "underline",
+        }}
+      >
+        Terms and Conditions
+      </Typography>
+    </Box>
   );
 }
 
 const theme = createTheme();
 
 export default function SignIn() {
-  
   const navigate = useNavigate();
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -83,25 +88,21 @@ export default function SignIn() {
     navigate("/forgot-password");
   };
 
-    function SignInWithGoogle() {
+  function SignInWithGoogle() {
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log('logging credential')
-        console.log(credential)
+
         if (credential) {
           const token = credential.accessToken;
           // The signed-in user info.
           const user = result.user;
-          console.log(user)
           const newUserCheck = getAdditionalUserInfo(result);
-          console.log(newUserCheck)
-          console.log('about to create new user:')
           if (newUserCheck?.isNewUser) {
             createUserDoc(user.uid, user.displayName);
-            createFollowersFeedDoc(user.uid)
-            createNotificationsDoc(user.uid)
+            createFollowersFeedDoc(user.uid);
+            createNotificationsDoc(user.uid);
           }
 
           // Query the users collection to retrieve the document with the given userID
@@ -111,7 +112,6 @@ export default function SignIn() {
         }
       })
       .catch((error) => {
-
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -119,7 +119,7 @@ export default function SignIn() {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
+        toast.error("Oops, we couldn't log you in. Try again later", errorCode);
         // ...
       });
   }
@@ -130,19 +130,14 @@ export default function SignIn() {
         // Signed in..
       })
       .catch((error) => {
-
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
-        
+        toast.error("Oops, we couldn't log you in. Try again later", errorCode);
       });
   }
 
-
-
   function handleLogIn(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log('clicking log in:')
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -152,7 +147,22 @@ export default function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error("Oops, we couldn't log you in. Try again later",errorCode)
+
+        if (
+          errorCode === "auth/wrong-password" ||
+          errorCode === "auth/user-not-found" ||
+          errorCode === "auth/invalid-email"
+        ) {
+          toast.error(
+            "Incorrect email or password. Please try again.",
+            errorCode
+          );
+        } else {
+          toast.error(
+            "Oops, we couldn't log you in. Try again later.",
+            errorCode
+          );
+        }
       });
   }
 
@@ -247,7 +257,6 @@ export default function SignIn() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
-
       </Container>
     </ThemeProvider>
   );

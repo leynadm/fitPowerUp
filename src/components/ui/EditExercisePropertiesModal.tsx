@@ -79,6 +79,7 @@ function EditExercisePropertiesModal({
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = (event) => {
+      toast.error("Oops, getExerciseToUpdate couldn't open the database!")
       console.log("Error opening IndexedDB:", request.error);
     };
 
@@ -106,6 +107,7 @@ function EditExercisePropertiesModal({
       };
 
       getRequest.onerror = () => {
+        toast.error("Oops, getExerciseToUpdate has a getRequest error!")
         console.log("Error fetching exercise:", getRequest.error);
       };
 
@@ -128,6 +130,7 @@ function EditExercisePropertiesModal({
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = (event) => {
+      toast.error("Oops, saveUpdatedExercise couldn't open the database!")
       console.log("Error opening IndexedDB:", request.error);
     };
 

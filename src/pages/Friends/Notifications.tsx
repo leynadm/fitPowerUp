@@ -42,7 +42,6 @@ function Notifications() {
     }
 
     getNotifications(currentUser.uid, setNotificationsData);
-
   }
 
   return (
@@ -56,17 +55,21 @@ function Notifications() {
     >
       {notificationsData.map((notification: any, index: number) => (
         <List
-        key={index}
+          key={index}
           sx={{
             width: "100%",
             bgcolor: "background.paper",
             borderRadius: "5px",
-            paddingBottom:0,
-            marginBottom:0,
-            marginTop:0.5
+            paddingBottom: 0,
+            marginBottom: 0,
+            marginTop: 0.5,
           }}
         >
-          <ListItem key={index} alignItems="flex-start" sx={{ width: "100%",boxShadow:1 }}>
+          <ListItem
+            key={index}
+            alignItems="flex-start"
+            sx={{ width: "100%", boxShadow: 1 }}
+          >
             <ListItemAvatar>
               <Avatar alt="Remy Sharp" src={notification.userProfileImage} />
             </ListItemAvatar>

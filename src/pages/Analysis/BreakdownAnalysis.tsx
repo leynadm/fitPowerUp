@@ -70,11 +70,8 @@ const callChartFunction = (
   selectedStartDate: any,
   selectedEndDate: any
 ) => {
-  console.log("logging the selected graph");
-  console.log({ selectedGraph });
   switch (selectedGraph) {
     case "Number of Sets by Category":
-      console.log("calculating Sets By Category");
       calculateSetsByCategory(
         setInitialRawData,
         selectedTimeframe,
@@ -85,7 +82,6 @@ const callChartFunction = (
       break;
 
     case "Number of Reps by Category":
-      console.log("calculating Sets By Category");
       calculateRepsByCategory(
         setInitialRawData,
         selectedTimeframe,
@@ -96,7 +92,6 @@ const callChartFunction = (
       break;
 
     case "Number of Workouts by Category":
-      console.log("calculating Sets By Category");
       calculateWorkoutsByCategory(
         setInitialRawData,
         selectedTimeframe,
@@ -107,7 +102,6 @@ const callChartFunction = (
       break;
 
     case "Training Volume by Category":
-      console.log("logging training volume by category:");
       calculateTrainingVolumeByCategory(
         setInitialRawData,
         selectedTimeframe,
@@ -118,7 +112,6 @@ const callChartFunction = (
       break;
 
     case "Number of Reps by Exercise":
-      console.log("calculating Sets By Category");
       calculateRepsByExercise(
         setInitialRawData,
         selectedTimeframe,
@@ -129,7 +122,6 @@ const callChartFunction = (
       break;
 
     case "Number of Sets by Exercise":
-      console.log("calculating Sets By Category");
       calculateSetsByExercise(
         setInitialRawData,
         selectedTimeframe,
@@ -140,7 +132,6 @@ const callChartFunction = (
       break;
 
     case "Training Volume by Exercise":
-      console.log("logging training volume by category:");
       calculateTrainingVolumeByExercise(
         setInitialRawData,
         selectedTimeframe,
@@ -151,7 +142,6 @@ const callChartFunction = (
       break;
 
     case "Number of Workouts by Exercise":
-      console.log("calculating Sets By Category");
       calculateWorkoutsByExercise(
         setInitialRawData,
         selectedTimeframe,
@@ -237,55 +227,12 @@ function BreakdownAnalysis() {
     );
   }, [selectedTimeframe, selectedGraph, selectedStartDate, selectedEndDate]);
 
-  useEffect(() => {
-    console.log("logging start date and end date:");
-    console.log({ selectedStartDate });
-    console.log({ selectedEndDate });
-  }, [selectedStartDate, selectedEndDate]);
-
-  /* 
-  const options = {
-    plugins: {src/utils/analysisFunctions/Breakdown/calculateWorkoutsByCategory.tsx
-   
-    },
-  
-    responsive: true,
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
-    options:{
-        plugins:[ChartDataLabels]
-    }
-
-  };
-
-   */
+  useEffect(() => {}, [selectedStartDate, selectedEndDate]);
 
   const options: any = {
     responsive: true,
     maintainAspectRatio: false,
-    /* 
-    plugins: {        
-      legend: {
-        display: true, // Hide the legend
-      },
-      datalabels:{
-        color:"black",
-        font: {
-            weight: 'bold', // Customize label font weight
-          },
-      },
 
-    }, */
     elements: {
       // ...
       arc: {

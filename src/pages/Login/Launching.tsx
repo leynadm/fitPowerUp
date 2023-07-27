@@ -4,8 +4,6 @@ import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 
 function LaunchingApp() {
-
-
   return (
     <Box
       sx={{
@@ -13,8 +11,8 @@ function LaunchingApp() {
         flexDirection: "column",
         gap: 2,
         alignItems: "center",
-        justifyContent:"center",
-        height:"100vh"
+        justifyContent: "center",
+        height: "100vh",
       }}
     >
       <CircularProgress />
@@ -23,4 +21,4 @@ function LaunchingApp() {
   );
 }
 
-export default LaunchingApp
+export default LaunchingApp;

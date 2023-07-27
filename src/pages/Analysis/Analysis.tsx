@@ -9,7 +9,7 @@ import { Routes, Route } from "react-router-dom";
 import BreakdownAnalysis from "./BreakdownAnalysis";
 import ExerciseAnalysis from "./ExerciseAnalysis";
 import CategoryAnalysis from "./CategoryAnalysis";
-import InsertChartIcon from '@mui/icons-material/InsertChart';
+import InsertChartIcon from "@mui/icons-material/InsertChart";
 import { useNavigate } from "react-router-dom";
 
 function Analysis() {
@@ -34,10 +34,10 @@ function Analysis() {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        backgroundColor: "#F0F2F5"
+        backgroundColor: "#F0F2F5",
       }}
     >
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <InsertChartIcon
@@ -93,7 +93,7 @@ function Analysis() {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
-          borderBottom:"2px black solid"
+          borderBottom: "2px black solid",
         }}
       >
         <Button
@@ -128,14 +128,12 @@ function Analysis() {
         >
           Breakdown
         </Button>
-
       </Box>
 
       <Routes>
         <Route path="" element={<CategoryAnalysis />} />
         <Route path="exercise-analysis" element={<ExerciseAnalysis />} />
         <Route path="breakdown" element={<BreakdownAnalysis />} />
-
       </Routes>
     </Box>
   );

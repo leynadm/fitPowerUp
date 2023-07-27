@@ -20,15 +20,14 @@ const style = {
 interface ParentComponentProps {
   openDeleteAllData: boolean;
   setOpenDeleteAllData: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDeleteAllEntries:()=>void;
+  handleDeleteAllEntries: () => void;
 }
 
 function DeleteAllDataModal({
   openDeleteAllData,
   setOpenDeleteAllData,
-  handleDeleteAllEntries
+  handleDeleteAllEntries,
 }: ParentComponentProps) {
-
   const handleClose = () => setOpenDeleteAllData(false);
 
   return (
@@ -39,7 +38,7 @@ function DeleteAllDataModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-   <Box sx={style}>
+        <Box sx={style}>
           <Typography
             id="modal-modal-title"
             variant="h6"
@@ -49,9 +48,11 @@ function DeleteAllDataModal({
             <WarningIcon /> Warning
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            You are about to delete <strong>ALL</strong> your exercise data!<br></br>The data will be exported before being erased, and a file will be saved on your device.<br></br> 
-            Please ensure that you want to proceed with the deletion process before
-            taking this action!
+            You are about to delete <strong>ALL</strong> your exercise data!
+            <br></br>The data will be exported before being erased, and a file
+            will be saved on your device.<br></br>
+            Please ensure that you want to proceed with the deletion process
+            before taking this action!
           </Typography>
           <Box
             sx={{
@@ -74,7 +75,7 @@ function DeleteAllDataModal({
               Cancel
             </Button>
           </Box>
-            </Box>
+        </Box>
       </Modal>
     </div>
   );

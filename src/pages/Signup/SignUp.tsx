@@ -19,7 +19,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-
+import toast from "react-hot-toast";
 import { setDoc, doc, arrayUnion } from "firebase/firestore";
 
 function Copyright(props: any) {
@@ -86,8 +86,9 @@ export default function SignUp() {
       if (isFirebaseError(error)) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(email, password);
+        toast.error("Oops, handleSignUp has an error!")
       } else {
+        toast.error("An unknown error occurred")
         console.log("An unknown error occurred:", error);
       }
     }

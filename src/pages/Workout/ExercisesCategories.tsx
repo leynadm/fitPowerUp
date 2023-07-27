@@ -203,13 +203,13 @@ function ExercisesCategories({
   function addExerciseToFavorites() {
     // If selectedExerciseId is not available or empty, no need to fetch the record
     if (!selectedExerciseId) {
-      console.log("No exercise selected.");
       return;
     }
 
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = (event) => {
+      toast.error("Oops, addExerciseToFavorites has an error!")
       console.log("Error opening IndexedDB:", request.error);
     };
 
@@ -229,7 +229,7 @@ function ExercisesCategories({
         const exercise = event.target.result;
 
         if (!exercise) {
-          console.log("Exercise not found.");
+          
           return;
         }
 
@@ -242,15 +242,17 @@ function ExercisesCategories({
         const putRequest = store.put(updatedExercise);
 
         putRequest.onsuccess = () => {
-          console.log("Exercise added to favorites successfully.");
+
         };
 
         putRequest.onerror = () => {
+          toast.error("Oops, putRequest in addExerciseToFavorites has an error!")
           console.log("Error updating exercise:", putRequest.error);
         };
       };
 
       getRequest.onerror = () => {
+        toast.error("Oops, getRequest in addExerciseToFavorites has an error!")
         console.log("Error fetching exercise:", getRequest.error);
       };
 
@@ -259,7 +261,7 @@ function ExercisesCategories({
         db.close();
         handleClose()
         resetLoadScreen()
-        toast.success("Exercise add to your favorites!")
+        toast.success("Exercise updated!")
       };
     };
   }

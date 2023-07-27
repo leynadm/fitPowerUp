@@ -85,7 +85,6 @@ function Newsfeed() {
     console.log('logging inside check.')
     console.log(userFeed)
     console.log(postIDsCache)
-
     console.log(usersDataCache)
     console.log(latestDoc)
     console.log(hasPosts)
@@ -93,6 +92,7 @@ function Newsfeed() {
   }, [userFeed, loading]);
 
   async function loadMoreFeed() {
+
     const postsRef = collection(db, "posts");
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -164,6 +164,9 @@ function Newsfeed() {
     ]);
   }
 
+
+
+
   async function getFeed() {
     renderedOnce = true;
 
@@ -195,7 +198,11 @@ function Newsfeed() {
 
       // Extract the document IDs of the followed users
       const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
+
+
       console.log("logging documentIds of the followed users:");
+      console.log(documentIds);
+
       if (documentIds.length === 0) {
         console.log("No post IDs found.");
         if (renderedOnce) {
@@ -203,8 +210,7 @@ function Newsfeed() {
         }
         return;
       }
-      console.log(documentIds);
-
+      
       let usersQuery;
       let usersSnapshot;
       let usersData;
@@ -224,12 +230,13 @@ function Newsfeed() {
         setUsersDataCache(usersData);
       }
 
+      console.log('logging users data:')
+      console.log(usersData)
       let postIds;
       // Extract the post IDs from the "recentPosts" field of the followed users' documents
 
       postIds = followedUsersSnapshot.docs.flatMap((doc) => {
-       
-
+      
         const recentPosts = (doc.data() as { recentPosts: any }).recentPosts;
         const filteredPosts = recentPosts.filter((post: any) => post.published);
         const sortedPostIds = filteredPosts

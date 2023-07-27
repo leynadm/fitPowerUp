@@ -14,7 +14,7 @@ import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { Button,Typography } from "@mui/material";
 import LoadingCircle from "../../components/ui/LoadingCircle";
-
+import toast from "react-hot-toast";
 function UserProfilePosts() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   const [userPosts, setUserPosts] = useState<any[]>([]);
@@ -24,72 +24,65 @@ function UserProfilePosts() {
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
   useEffect(() => {
     getUserPosts();
-    console.log('gettingUserPosts')
-    /* 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }; */
+
   }, []);
 
 
-  /* 
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-
-    if (scrollTop + clientHeight >= scrollHeight - 56) {
-      fetchMore();
-    }
-  };  */
-
   async function getUserPosts() {
-
-    setLoading(true);
-
-    let q;
-    if (latestDoc) {
-      q = query(
-        collection(db, "posts"),
-        where("userId", "==", currentUser.uid),
-        orderBy("createdAt", "desc"),
-        startAfter(latestDoc),
-        limit(2)
-      );
-    } else {
-      q = query(
-        collection(db, "posts"),
-        where("userId", "==", currentUser.uid),
-        orderBy("createdAt", "desc"),
-        limit(2)
-      );
+    try {
+      setLoading(true);
+  
+      let q;
+      if (latestDoc) {
+        q = query(
+          collection(db, "posts"),
+          where("userId", "==", currentUser.uid),
+          orderBy("createdAt", "desc"),
+          startAfter(latestDoc),
+          limit(2)
+        );
+      } else {
+        q = query(
+          collection(db, "posts"),
+          where("userId", "==", currentUser.uid),
+          orderBy("createdAt", "desc"),
+          limit(2)
+        );
+      }
+  
+      const querySnapshot = await getDocs(q);
+  
+      const userData = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return { ...data, postId: doc.id };
+      });
+  
+      if (latestDoc) {
+        setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
+      } else {
+        setUserPosts(userData);
+      }
+  
+      if (querySnapshot.docs.length > 0) {
+        setLatestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setHasPosts(true);
+      }
+  
+      if (querySnapshot.empty) {
+        setLoadButtonStatus(true);
+      }
+  
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Oops, getUserPosts has an error!")
+      // Handle the error here
+      console.error("Error fetching user posts:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to fetch user posts. Please try again later.");
     }
-
-    const querySnapshot = await getDocs(q);
-
-    const userData = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return { ...data, postId: doc.id };
-    });
-    
-    /* setUserPosts(userData); */
-    if (latestDoc) {
-      setUserPosts((prevUserPosts) => [...prevUserPosts, ...userData]);
-    } else {
-      console.log(userData)
-      setUserPosts(userData);
-    }
-
-    if (querySnapshot.docs.length > 0) {
-      setLatestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      setHasPosts(true)
-    }
-
-    if (querySnapshot.empty) {
-      setLoadButtonStatus(true)
-    }
-
-    setLoading(false);
   }
+  
 
 
   if (loading && !hasPosts) {

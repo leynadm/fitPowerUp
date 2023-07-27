@@ -10,12 +10,17 @@ import { IndexedDBProvider } from "./context/IndexedDB";
 import React, { useState } from "react";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import TermsAndConditions from "./pages/Login/TermsAndConditions";
+import { Toaster } from "react-hot-toast";
+
 function App() {
   const [sessionVerificationEmailCheck, setSessionVerificationEmailCheck] =
     useState(true);
 
   return (
     <div className="App">
+
+    <Toaster position="top-center" />
+
       <AuthProvider>
         <IndexedDBProvider>
           <Router>
@@ -53,8 +58,6 @@ function App() {
                   }
                 />
               </Route>
-
-              
 
               <Route element={<AuthRoute type="/" />}>
                 <Route path="/" element={<LandingPage />} />

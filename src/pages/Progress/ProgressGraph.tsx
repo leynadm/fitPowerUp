@@ -79,9 +79,7 @@ function ProgressGraph() {
   }, [selectedTimeframe, selectedOption]);
 
   useEffect(() => {
-    console.log("logging initial Raw Data");
-    console.log(initialRawData);
-    console.log("loading third use effect");
+
   }, [initialRawData]);
 
   const options: ChartOptions<"line"> = {

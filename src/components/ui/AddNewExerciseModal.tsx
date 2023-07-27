@@ -10,13 +10,21 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
 import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
+import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];
   openAddNewExerciseModal: boolean;
   setOpenAddNewExerciseModal: React.Dispatch<React.SetStateAction<boolean>>;
   setExercisesCategories: Dispatch<SetStateAction<string[]>>;
   setSelectedCategoryExercises: Dispatch<
-    SetStateAction<{ category: string; name: string; measurement: any[],favorite?:boolean }[]>
+    SetStateAction<
+      {
+        category: string;
+        name: string;
+        measurement: any[];
+        favorite?: boolean;
+      }[]
+    >
   >;
   selectedCategoryExercises: {
     category: string;
@@ -43,7 +51,7 @@ function AddNewExerciseModal({
   setOpenAddNewExerciseModal,
   setExercisesCategories,
   setSelectedCategoryExercises,
-  selectedCategoryExercises
+  selectedCategoryExercises,
 }: ParentProps) {
   const [exerciseName, setExerciseName] = useState("");
   const [category, setCategory] = useState("");
@@ -69,9 +77,7 @@ function AddNewExerciseModal({
     value: string[];
   } | null>(null);
 
-
   const saveNewExercise = () => {
-
     if (!isFormValid()) {
       return; // If the form is not valid, exit the function without saving
     }
@@ -81,13 +87,14 @@ function AddNewExerciseModal({
       name: exerciseName,
       category,
       measurement: measurementValue,
-      favorite:false
+      favorite: false,
     };
 
     // Open a connection to the IndexedDB database
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onerror = (event) => {
+      toast.error("Oops, saveNewExercise has an error!");
       console.log("Error opening IndexedDB:", request.error);
     };
 
@@ -104,17 +111,14 @@ function AddNewExerciseModal({
       const request = store.add(newExercise);
 
       request.onsuccess = () => {
-        console.log("New exercise saved successfully!");
-
-        // Close the transaction and the database connection
-
         db.close();
         updateExerciseCategories(setExercisesCategories);
-        handleCategoryClick(category,setSelectedCategoryExercises)
+        handleCategoryClick(category, setSelectedCategoryExercises);
         handleClose();
       };
 
       request.onerror = () => {
+        toast.error("Oops, saveNewExercise has an error!");
         console.log("Error saving new exercise:", request.error);
 
         // Close the transaction and the database connection
@@ -275,7 +279,6 @@ function AddNewExerciseModal({
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >
-            
               Cancel
             </Button>
           </Box>

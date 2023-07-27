@@ -2,22 +2,22 @@ import React, { useState, createContext, ReactNode } from "react";
 
 // Create the context to hold the data and share it among all components
 interface SocialDataProviderProps {
-    children:ReactNode
+  children: ReactNode;
 }
 
 export const SocialDataContext = createContext<any>({
-    userFeed: [],
-    setUserFeed: () => {},
-    postIDsCache: [],
-    setPostIDsCache: () => {},
-    usersDataCache: [],
-    setUsersDataCache: () => {},
-    latestDoc: null,
-    setLatestDoc: () => {},
-    hasPosts: false,
-    setHasPosts: () => {},
-    feedDataNullCheck: false,
-    setFeedDataNullCheck: () => {},
+  userFeed: [],
+  setUserFeed: () => {},
+  postIDsCache: [],
+  setPostIDsCache: () => {},
+  usersDataCache: [],
+  setUsersDataCache: () => {},
+  latestDoc: null,
+  setLatestDoc: () => {},
+  hasPosts: false,
+  setHasPosts: () => {},
+  feedDataNullCheck: false,
+  setFeedDataNullCheck: () => {},
 });
 
 export const SocialDataProvider = ({ children }: SocialDataProviderProps) => {
@@ -28,7 +28,7 @@ export const SocialDataProvider = ({ children }: SocialDataProviderProps) => {
   const [latestDoc, setLatestDoc] = useState<any | null>(null);
   const [hasPosts, setHasPosts] = useState<boolean>(false);
   const [feedDataNullCheck, setFeedDataNullCheck] = useState<boolean>(false);
-  
+
   return (
     <SocialDataContext.Provider
       value={{
@@ -43,7 +43,7 @@ export const SocialDataProvider = ({ children }: SocialDataProviderProps) => {
         hasPosts,
         setHasPosts,
         setFeedDataNullCheck,
-        feedDataNullCheck
+        feedDataNullCheck,
       }}
     >
       {children}

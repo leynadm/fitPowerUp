@@ -125,36 +125,43 @@ export default function UserWorkoutCard({
   const [postAppreciationStatus, setPostAppreciationStatus] = useState(false);
 
   const navigate = useNavigate();
-
+ 
 
   useEffect(()=>{
+    
     getPostAppreciations()
     checkIfPostHasComments()
+
   },[])
 
   useEffect(()=>{
     
   },[postAppreciationsNumber])
 
-  async function checkIfPostHasComments(){
-
+  async function checkIfPostHasComments() {
     const postRef = doc(db, "posts", postId);
     const commentsDocRef = doc(collection(postRef, "comments"), "commentDoc");
-
+  
     try {
       const commentsSnapshot = await getDoc(commentsDocRef);
   
       if (commentsSnapshot.exists()) {
-        setCheckCommentsExist("See comments...")
-        console.log("Post has comments.");
+        const commentsData = commentsSnapshot.data();
+  
+        if (commentsData && Object.keys(commentsData).length > 0) {
+          setCheckCommentsExist("See comments...");
+        } else {
+          setCheckCommentsExist("0 Comments");
+        }
       } else {
-        setCheckCommentsExist("0 Comments")
-        console.log("Post does not have comments.");
+        setCheckCommentsExist("0 Comments");
       }
     } catch (error) {
+      toast.error("Oops, checkIfPostHasComments has an error!");
       console.error("Error checking for comments:", error);
     }
   }
+  
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -226,10 +233,9 @@ export default function UserWorkoutCard({
             (a, b) => a.timestamp.toMillis() - b.timestamp.toMillis()
           );
 
-          console.log("Comments document data:", commentsData);
           setComments(commentsData);
         } else {
-          console.log("Comments document does not exist");
+
           setComments([]);
         }
       })
@@ -275,21 +281,23 @@ export default function UserWorkoutCard({
               [commentId]: commentData, // Use the comment ID as the field name within the document
             });
           }
-        })
+        }) 
         .then(() => {
-          // Comment added successfully
-          console.log("Comment added");
+
           setCommentText(""); // Clear the comment text
           getPostComments();
-          addNotificationEntry(
-            postUserId,
-            action,
-            currentUser.uid,
-            currentUserData.name,
-            currentUserData.surname,
-            postId,
-            currentUserData.profileImage
-          );
+          if(postUserId!==currentUser.uid){
+            addNotificationEntry(
+              postUserId,
+              action, 
+              currentUser.uid,
+              currentUserData.name,
+              currentUserData.surname,
+              postId,
+              currentUserData.profileImage
+            );
+          }
+     
         })
         .catch((error) => {
           // Error occurred while adding comment
@@ -300,21 +308,30 @@ export default function UserWorkoutCard({
   }
 
   async function deleteFollowersFeedEntry() {
-    // Remove the object from the recentPosts array in the followers collection
-    const followersRef = doc(db, "followers-feed", currentUser.uid);
-    const followersDoc = await getDoc(followersRef);
-    if (followersDoc.exists()) {
-      const followersData = followersDoc.data();
-      const recentPosts = followersData.recentPosts;
-
-      // Filter out the object with the matching postId
-      const updatedPosts = recentPosts.filter(
-        (post: any) => post.postId !== postId
-      );
-      // Update the followers collection document with the modified recentPosts array
-      await updateDoc(followersRef, { recentPosts: updatedPosts });
+    try {
+      // Remove the object from the recentPosts array in the followers collection
+      const followersRef = doc(db, "followers-feed", currentUser.uid);
+      const followersDoc = await getDoc(followersRef);
+      if (followersDoc.exists()) {
+        const followersData = followersDoc.data();
+        const recentPosts = followersData.recentPosts;
+  
+        // Filter out the object with the matching postId
+        const updatedPosts = recentPosts.filter(
+          (post: any) => post.postId !== postId
+        );
+        // Update the followers collection document with the modified recentPosts array
+        await updateDoc(followersRef, { recentPosts: updatedPosts });
+      }
+    } catch (error) {
+      toast.error("Oops, deleteFollowersFeedEntry has an error!")
+      // Handle the error here
+      console.error("Error deleting followers feed entry:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to delete entry. Please try again later.");
     }
   }
+  
  
   async function deletePost() {
     await deleteFollowersFeedEntry();
@@ -336,36 +353,38 @@ export default function UserWorkoutCard({
   }
 
 
-  function removePostAppreciation(){
-
+  function removePostAppreciation() {
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
     }
+  
     const postRef = doc(db, "posts", postId);
     const apprecationsCollectionRef = collection(postRef, "appreciations");
   
-  
     const serverTimestampObj = serverTimestamp();
     const timestamp = Timestamp.fromMillis(Date.now());
-
-    const appreciationId = currentUser.uid; // Generate a unique identifier for the comment
-
-    const appreciationsDocRef = doc(apprecationsCollectionRef, "appreciationsDoc"); // Provide the desired ID for the comment document
-
+  
+    const appreciationId = currentUser.uid; // Generate a unique identifier for the appreciation
+  
+    const appreciationsDocRef = doc(apprecationsCollectionRef, "appreciationsDoc"); // Provide the desired ID for the appreciation document
+  
     updateDoc(appreciationsDocRef, {
       [appreciationId]: deleteField(),
     })
       .then(() => {
-        setPostAppreciationsNumber(postAppreciationsNumber-1)
-        setPostAppreciationStatus(false)
+        setPostAppreciationsNumber(postAppreciationsNumber - 1);
+        setPostAppreciationStatus(false);
       })
       .catch((error) => {
-        toast.error("We couldn't remove the appreciation...")
-        console.error("Error deleting comment:", error);
+        // Handle the error here
+        toast.error("We couldn't remove the appreciation...");
+        console.error("Error removing post appreciation:", error);
+        // You can also show a user-friendly error message to the user
+        // For example: setErrorState("Failed to remove appreciation. Please try again later.");
       });
-
   }
+  
 
   function appreciatePost() {
 
@@ -418,45 +437,6 @@ export default function UserWorkoutCard({
       });
   }
 
-/* 
-  function appreciatePost() {
-    if (currentUser.isAnonymous === true) {
-      setGuestProfileModalOpen(true);
-      return;
-    }
-    const postRef = doc(db, "posts", postId);
-
-    if (postAppreciationStatus) {
-      updateDoc(postRef, {
-        postAppreciation: arrayRemove(currentUser.uid),
-      })
-        .then(() => {
-          setPostAppreciationStatus(!postAppreciationStatus);
-          setPostAppreciationNumber((prevNumber) => prevNumber - 1);
-
-          console.log("Post not appreciated");
-        })
-        .catch((error) => {
-          toast.error("There was an error appreciating the post...")
-          console.error("Error appreciating post:", error);
-        });
-    } else {
-      updateDoc(postRef, {
-        postAppreciation: arrayUnion(currentUser.uid),
-      })
-        .then(() => {
-          setPostAppreciationStatus(!postAppreciationStatus);
-          setPostAppreciationNumber((prevNumber) => prevNumber + 1);
-          console.log("Post appreciated");
-        })
-        .catch((error) => {
-          toast.error("There was an error appreciating the post...")
-          console.error("Error appreciating post:", error);
-        });
-    }
-    // Add the current user's UID to the "appreciations" array in the Firestore document
-  }
- */
 
   function handlePostAppreciation(){
 
@@ -547,7 +527,6 @@ export default function UserWorkoutCard({
             <Typography>{postAppreciationsNumber}</Typography>
           )}
 
-          
           <ExpandMoreComment
             expandComment={commentExpanded}
             onClick={handleCommentExpandClick}
@@ -555,13 +534,11 @@ export default function UserWorkoutCard({
             aria-label="show more"
           >
             <InsertCommentIcon />
-
-            
           </ExpandMoreComment>
 
-          <Typography sx={{fontSize:"small"}}>{checkCommentsExist}</Typography>
-
-
+          <Typography sx={{ fontSize: "small" }}>
+            {checkCommentsExist}
+          </Typography>
 
           <ExpandMore
             expand={expanded}
@@ -691,6 +668,9 @@ export default function UserWorkoutCard({
                                 justifyItems: "center",
                                 width: "100%",
                                 justifyContent: "space-evenly",
+                                borderLeft: exercise.dropset
+                                  ? "5px solid red"
+                                  : "5px solid transparent",
                               }}
                             >
                               {exercise.weight !== 0 && (

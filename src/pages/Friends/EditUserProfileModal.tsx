@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import User from "../../utils/interfaces/User";
 import Switch from "@mui/material/Switch";
+import toast from "react-hot-toast";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
@@ -41,9 +42,10 @@ const style = {
 function EditUserProfileModal({
   editProfileModalOpen,
   setEditProfileModalOpen,
-  setUpdateCount
+  setUpdateCount,
 }: UserProfilePosts) {
-  const { currentUser, currentUserData,setCurrentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData, setCurrentUserData } =
+    useContext(AuthContext);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
@@ -113,6 +115,7 @@ function EditUserProfileModal({
         const retrievedProfileImageURL = await getDownloadURL(profileImageRef);
         setProfileImageURL(retrievedProfileImageURL);
       } catch (error) {
+        toast.error("Oops, getUserData has an error!")
         console.error("Error fetching profile image:", error);
         if (userData.profileImage) {
           setProfileImageURL(userData.profileImage);
@@ -147,7 +150,7 @@ function EditUserProfileModal({
   async function updateUserData() {
     let imageUrl: string | null = null;
     let imageRef = null;
-    let imageUrlResized:string|null = null;
+    let imageUrlResized: string | null = null;
 
     if (selectedFile) {
       setSaving(true);
@@ -156,8 +159,6 @@ function EditUserProfileModal({
         `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
       );
 
-      console.log("logging selectedFile:");
-      console.log({ selectedFile });
       await uploadBytes(imageRef, selectedFile);
       imageUrl = await getDownloadURL(imageRef);
 
@@ -167,7 +168,7 @@ function EditUserProfileModal({
       );
       try {
         imageUrlResized = await getDownloadURL(imageRefResized);
-        setCurrentUserData((prevData:any) => ({
+        setCurrentUserData((prevData: any) => ({
           ...prevData,
           profileImage: imageUrlResized,
         }));
@@ -222,8 +223,6 @@ function EditUserProfileModal({
         hideFollowers: hideFollowers,
         hideFollowing: hideFollowing,
       });
-
-
     } else {
       await updateDoc(docRef, {
         name: firstName,
@@ -243,21 +242,19 @@ function EditUserProfileModal({
 
     // If hide options changed, show the note and log out the user
     if (hideOptionsChanged) {
-      console.log("Note: Applying these settings will sign you out.");
+
       auth.signOut();
 
       return;
     }
 
     getUserData().then(() => {
-
       handleClose();
     });
-    
+
     setUpdateCount((prevCount) => prevCount + 1);
 
     setSaving(false);
-
   }
 
   function hideProfileToggle() {

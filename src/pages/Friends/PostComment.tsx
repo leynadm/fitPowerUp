@@ -26,6 +26,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import PostReply from "./PostReply";
+import toast from "react-hot-toast";
 interface UserWorkoutCardProps {
   comment: any;
   commentIndex: number;
@@ -82,7 +83,7 @@ function PostComment({
         name: currentUserData.name,
         surname: currentUserData.surname,
         profileImage: currentUserData.profileImage,
-      };
+      }; 
 
       const action = "replied to one of your comments!";
       // Update the document to add the new array field to the map field
@@ -90,20 +91,27 @@ function PostComment({
         [`${mapFieldToUpdate}.${arrayFieldToAdd}`]: arrayUnion(newReply),
       })
         .then(() => {
-          console.log("Array field added to the map successfully");
+
           setReplyText("");
           getPostComments();
-          addNotificationEntry(
-            postUserId,
-            action,
-            currentUser.uid,
-            currentUserData.name,
-            currentUserData.surname,
-            postId,
-            currentUserData.profileImage
-          )
+          console.log(currentUser.uid)
+          console.log({postUserId})
+          if(postUserId!==currentUser.uid){
+            addNotificationEntry(
+              postUserId,
+              action,
+              currentUser.uid,
+              currentUserData.name,
+              currentUserData.surname,
+              postId,
+              currentUserData.profileImage
+            )
+          }
+
+
         })
         .catch((error) => {
+          toast.error("Oops, addReply has an error!")
           console.error("Error adding array field to the map:", error);
         });
     }

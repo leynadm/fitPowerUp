@@ -27,7 +27,7 @@ function ViewCommentModal({
   exerciseCommentId,
 }: ParentComponentProps) {
   useEffect(() => {
-    getComment()
+    getComment();
   }, [openViewCommentModal]);
 
   const handleClose = () => setOpenViewCommentModal(false);
@@ -41,7 +41,10 @@ function ViewCommentModal({
       const db = event.target.result;
 
       // Open transaction to access the object store
-      const transaction = db.transaction(["user-exercises-entries"], "readonly");
+      const transaction = db.transaction(
+        ["user-exercises-entries"],
+        "readonly"
+      );
       const objectStore = transaction.objectStore("user-exercises-entries");
 
       // Get the comment based on exerciseCommentId

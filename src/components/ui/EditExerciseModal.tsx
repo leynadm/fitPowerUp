@@ -7,7 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
-
+import toast from "react-hot-toast";
 
 const style = {
   position: "absolute" as "absolute",
@@ -61,7 +61,7 @@ function EditExerciseModal({
     
   
   useEffect(()=>{
-    console.log('inside useeffect:')
+
     getEntryValues()
   },[openEditExerciseModal])
 
@@ -97,6 +97,7 @@ function EditExerciseModal({
         }; 
   
         getRequest.onerror = function (event:any) {
+          toast.error("Oops, getEntryValues has an error!")
           reject(getRequest.error);
         };
   
@@ -139,6 +140,7 @@ function EditExerciseModal({
             console.log("Record updated successfully");
           };
           updateRequest.onerror = function () {
+            toast.error("Oops, saveUpdatedExercise has an error!")
             console.log("Error updating record");
           };
         } else {
@@ -152,11 +154,13 @@ function EditExerciseModal({
         setOpenEditExerciseModal(false);
       };
       transaction.onerror = function () {
+        toast.error("Oops, saveUpdatedExercise has a transaction error!")
         console.log("Transaction error");
       };
     };
 
     request.onerror = function () {
+      toast.error("Oops, saveUpdatedExercise couldn't open the database!")
       console.log("Error opening database");
     };
   }

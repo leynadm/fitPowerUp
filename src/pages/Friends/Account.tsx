@@ -12,36 +12,41 @@ import { sendEmailVerification } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import EmailIcon from "@mui/icons-material/Email";
 import { AuthContext } from "../../context/Auth";
-import CheckIcon from '@mui/icons-material/Check';
-// TODO remove, this demo shouldn't need to reset the theme.
+import CheckIcon from "@mui/icons-material/Check";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import toast from "react-hot-toast";
 const defaultTheme = createTheme();
 
 export default function Account() {
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const {currentUser} = useContext(AuthContext)
-
-    useEffect(()=>{
-        console.log(currentUser)
-    },[])
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   async function sendVerificationEmail() {
-    console.log(auth.currentUser);
-    if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser);
+    try {
+      if (auth.currentUser) {
+        await sendEmailVerification(auth.currentUser);
+      }
+      setIsEmailSent(true);
+    } catch (error) {
+      // Handle the error here
+      console.error("Error sending verification email:", error);
+      toast.error("Oops, sendVerificationEmail has an issue!");
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to send verification email. Please try again later.");
     }
-    setIsEmailSent(true);
   }
 
-  if(currentUser.emailVerified){
+  function handleBlockUsersClick() {
+    navigate("blocked-users");
+  }
+
+  if (currentUser.emailVerified) {
     return (
       <Box>
         <Container component="main" maxWidth="xs">
@@ -66,12 +71,19 @@ export default function Account() {
               onSubmit={handleSubmit}
               sx={{ mt: 3 }}
             ></Box>
+            <Button
+              variant="outlined"
+              sx={{ width: "80%" }}
+              onClick={handleBlockUsersClick}
+            >
+              Check Blocked Users
+              <RemoveCircleIcon />
+            </Button>
           </Box>
         </Container>
       </Box>
     );
   }
-
 
   return (
     <ThemeProvider theme={defaultTheme}>

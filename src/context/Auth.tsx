@@ -8,12 +8,12 @@ import toast from "react-hot-toast";
 interface AuthProviderProps {
   children: ReactNode;
 }
- 
+
 export const AuthContext = createContext<any>({
   currentUser: null,
   userCredential: null,
 });
- 
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
@@ -21,22 +21,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     undefined
   );
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
-  
-  
-  useEffect(() => {
 
-    const unsubscribe = auth.onIdTokenChanged(async (user) => {    
+  useEffect(() => {
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user);
 
       if (user) {
         if (user?.isAnonymous === false) {
-          console.log("now inside user?.isAnonymous === false:");
-          console.log(user?.isAnonymous);
-
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
-          console.log("checking if DocRef exists:");
-          console.log(docRef);
+
           if (docSnap.exists()) {
             const userData = docSnap.data() as User;
             setCurrentUserData(userData);
@@ -50,32 +44,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             profileImage: "",
             verified: false,
             privateAccount: false,
-            blocked:[],        
-            hideProfile:false,
-            hidePowerLevel:true,
-            hideFollowers:false,
-            hideFollowing:false,
-            powerLevel:0,
-            strengthLevel:0,
-            experienceLevel:0,
-            firstPowerExercise:"No Exercise Selected Yet",
-            secondPowerExercise:"No Exercise Selected Yet",
-            thirdPowerExercise:"No Exercise Selected Yet",
-            weight:0
+            blocked: [],
+            hideProfile: false,
+            hidePowerLevel: true,
+            hideFollowers: false,
+            hideFollowing: false,
+            powerLevel: 0,
+            strengthLevel: 0,
+            experienceLevel: 0,
+            firstPowerExercise: "No Exercise Selected Yet",
+            secondPowerExercise: "No Exercise Selected Yet",
+            thirdPowerExercise: "No Exercise Selected Yet",
+            weight: 0,
           });
         }
       }
       setLoginFetchTrigger(true);
     });
 
-
     return unsubscribe;
-
-
   }, []);
 
   useEffect(() => {
-
     const handleOffline = () => {
       setLoginFetchTrigger(true); // Set the trigger to false when offline
     };
@@ -93,12 +83,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
-
-
   useEffect(() => {
     fetchData();
   }, [currentUser]);
-
 
   async function fetchData() {
     if (currentUser === null) {
@@ -109,20 +96,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
           const userData = docSnap.data() as User;
           setCurrentUserData(userData);
           return userData;
         }
       } catch (error) {
-        toast.error("We couldn't fetch the data...")
+        toast.error("We couldn't fetch the data...");
         console.error("Error while fetching user data:", error);
       }
     }
   }
   return (
-    <AuthContext.Provider value={{ currentUser, currentUserData,setCurrentUserData,loginFetchTrigger }}>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        currentUserData,
+        setCurrentUserData,
+        loginFetchTrigger,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

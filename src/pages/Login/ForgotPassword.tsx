@@ -13,7 +13,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../config/firebase";
-
+import toast from "react-hot-toast";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
@@ -24,10 +24,6 @@ export default function ForgotPassword() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   const handleSignInClick = () => {
@@ -35,8 +31,16 @@ export default function ForgotPassword() {
   };
 
   async function sendEmailReset() {
-    await sendPasswordResetEmail(auth, email);
-    setIsEmailSent(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setIsEmailSent(true);
+    } catch (error) {
+      toast.error("Oops, sendEmailReset has an issue!");
+      // Handle the error here
+      console.error("Error sending password reset email:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to send password reset email. Please try again later.");
+    }
   }
 
   return (
@@ -58,11 +62,16 @@ export default function ForgotPassword() {
             <Typography component="h1" variant="h5">
               Forgotten Password
             </Typography>
-            <Typography variant="body2" sx={{padding:"8px"}}>
-            An email has been sent to {email}. Please check your inbox, including your spam folder, for instructions on how to reset your password.
+            <Typography
+              variant="body2"
+              sx={{ padding: "8px", textAlign: "center" }}
+            >
+              An email has been sent to {email}. Please check your inbox,
+              including your spam folder, for instructions on how to reset your
+              password.
             </Typography>
             <Grid container justifyContent="flex-end">
-              <Grid item sx={{padding:"8px"}}>
+              <Grid item sx={{ padding: "8px" }}>
                 <Link variant="body2" onClick={handleSignInClick}>
                   Do you remember your password? Sign in
                 </Link>

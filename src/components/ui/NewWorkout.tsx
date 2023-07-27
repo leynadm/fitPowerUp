@@ -105,7 +105,7 @@ function NewWorkout({
       const index = objectStore.index("workout_evaluation_date");
       const getRequest = index.get(currentDate);
 
-      console.log(currentDate);
+
       getRequest.onsuccess = function (event: any) {
         const existingEntry = getRequest.result;
         if (existingEntry) {
@@ -132,11 +132,10 @@ function NewWorkout({
       getWorkoutEvaluation(todayDate);
     }
 
-    console.log("checking constant");
+
   }, [todayDate, workoutCommentRenderTrigger]);
 
   useEffect(() => {
-    console.log("checking constant");
   }, [workoutEvaluationCheck]);
 
   useEffect(() => {
@@ -155,31 +154,24 @@ function NewWorkout({
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     let touchStartX = e.targetTouches[0].clientX;
-    /* 
-    console.log({touchStartX})
-     */
+
     setSwipe((swipe: any) => ({ ...swipe, touchStart: touchStartX }));
   }
 
   function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
     let touchEndX = e.targetTouches[0].clientX;
-    /* 
-    console.log({touchEndX})
-    */
+
     setSwipe((swipe: any) => ({ ...swipe, touchEnd: touchEndX, moved: true }));
   }
 
   function handleTouchEnd() {
     if (touchStart !== 0 && touchEnd !== 0) {
       const amountSwipe = swipe.touchEnd - swipe.touchStart;
-      console.log({ amountSwipe });
-
+      
       if (Math.abs(amountSwipe) > SENSITIVITY && swipe.moved) {
         if (amountSwipe < 0) {
-          console.log("swiped right");
           addDays();
         } else {
-          console.log("swiped left");
           subtractDays();
         }
       }
@@ -193,8 +185,6 @@ function NewWorkout({
       const newDate = new Date(todayDate);
       newDate.setDate(todayDate.getDate() - 1);
       setTodayDate(newDate);
-      console.log("logging date subtract:");
-      console.log({ newDate });
     }
   };
 
@@ -203,8 +193,6 @@ function NewWorkout({
       const newDate = new Date(todayDate);
       newDate.setDate(todayDate.getDate() + 1);
       setTodayDate(newDate);
-      console.log("logging date add:");
-      console.log({ newDate });
     }
   };
 
@@ -330,8 +318,6 @@ function NewWorkout({
       const exerciseCategoryIndex = store.index("exercise_name");
 
       const categoryRange = IDBKeyRange.only(category);
-      console.log("logging the category:");
-      console.log({ category });
       const categoryQuery = exerciseCategoryIndex.openCursor(categoryRange);
       const selectedCategoryExercises: {
         category: string;
@@ -345,8 +331,6 @@ function NewWorkout({
           selectedCategoryExercises.push(cursor.value);
           cursor.continue();
         } else {
-          console.log("logging selectedCategoryExercises");
-          console.log(selectedCategoryExercises);
           setSelectedCategoryExercises(selectedCategoryExercises);
 
           if (category && selectedCategoryExercises[0]) {

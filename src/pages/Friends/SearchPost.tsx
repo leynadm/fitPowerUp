@@ -1,8 +1,7 @@
 import { useParams } from "react-router";
 import React, { useState, useEffect, useContext } from "react";
-
 import Box from "@mui/material/Box";
-
+import toast from "react-hot-toast";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
@@ -28,10 +27,10 @@ function SearchPost() {
         const post = { ...docSnapshot.data(), postId: docSnapshot.id };
         setUserPosts([post]);
       } else {
-        console.log("Post document does not exist");
         setUserPosts([]);
       }
     } catch (error) {
+      toast.error("Oops, getPost has an error!")
       console.error("Error getting post document:", error);
       setUserPosts([]);
     }

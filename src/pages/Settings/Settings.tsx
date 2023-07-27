@@ -29,7 +29,7 @@ import ListItem from "@mui/material/ListItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import toast from "react-hot-toast"
-
+import { useNavigate } from "react-router-dom";
 const style = {
   width: "100%",
 
@@ -64,7 +64,7 @@ function Settings({
   );
 
   const [datasetOrigin, setDatasetOrigin] = useState("fitPowerUp");
-
+    const navigate = useNavigate()
   const handleDatasetOriginChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDatasetOrigin(e.target.value);
   };
@@ -95,7 +95,6 @@ function Settings({
 
           updatePreferenceRequest.onsuccess = function () {
             setUnitsSystem("imperial");
-            console.log("Units system updated successfully");
           };
 
           updatePreferenceRequest.onerror = function () {
@@ -125,7 +124,6 @@ function Settings({
           const updateRequest = cursor.update(updatedRecord);
 
           updateRequest.onsuccess = function () {
-            console.log("Weight updated successfully");
             cursor.continue();
           };
 
@@ -139,7 +137,7 @@ function Settings({
 
       // Commit the transactions
       preferenceTransaction.oncomplete = function () {
-        console.log("Preference transaction completed");
+
       };
 
       preferenceTransaction.onerror = function () {
@@ -148,7 +146,7 @@ function Settings({
       };
 
       weightTransaction.oncomplete = function () {
-        console.log("Weight transaction completed");
+
       };
 
       weightTransaction.onerror = function () {
@@ -189,7 +187,7 @@ function Settings({
 
           updatePreferenceRequest.onsuccess = function () {
             setUnitsSystem("metric");
-            console.log("Units system updated successfully");
+            toast.success("Units system updated successfully");
           };
 
           updatePreferenceRequest.onerror = function () {
@@ -219,7 +217,7 @@ function Settings({
           const updateRequest = cursor.update(updatedRecord);
 
           updateRequest.onsuccess = function () {
-            console.log("Weight updated successfully");
+
             cursor.continue();
           };
 
@@ -233,7 +231,7 @@ function Settings({
 
       // Commit the transactions
       preferenceTransaction.oncomplete = function () {
-        console.log("Preference transaction completed");
+
       };
 
       preferenceTransaction.onerror = function () {
@@ -242,7 +240,7 @@ function Settings({
       };
 
       weightTransaction.oncomplete = function () {
-        console.log("Weight transaction completed");
+
       };
 
       weightTransaction.onerror = function () {
@@ -316,11 +314,10 @@ function Settings({
         };
 
         updateRequest.onsuccess = (event) => {
-          console.log("Default weight increment updated successfully!");
+
 
           // Commit the transaction
           transaction.oncomplete = () => {
-            console.log("Transaction completed.");
 
             // Close the database connection
             db.close();
@@ -344,8 +341,7 @@ function Settings({
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      console.log(e.target);
-      console.log(e.target?.result);
+
       if (e.target && e.target.result) {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: "array" });
@@ -363,7 +359,6 @@ function Settings({
 
     reader.readAsArrayBuffer(file);
 
-    console.log("added file");
   }
 
   function processImportedDataFitNotes(jsonData: any) {
@@ -415,8 +410,6 @@ function Settings({
         let timeRow = row[8];
         let commentRow = row[9];
 
-        console.log({repsRow})
-
 
         if (weightRow === undefined) {
           weightRow = 0;
@@ -464,7 +457,6 @@ function Settings({
       }
 
       transaction.oncomplete = () => {
-        console.log("Data imported successfully.");
         showSuccessfulAlert();
       };
 
@@ -567,7 +559,7 @@ function Settings({
       }
 
       transaction.oncomplete = () => {
-        console.log("Data imported successfully.");
+
         showSuccessfulAlert();
       };
 
@@ -622,6 +614,10 @@ function Settings({
     exportData();
     deleteAllEntries();
     setOpenDeleteAllData(false);
+  }
+
+  function handleSendFeedbackClick(){
+    navigate("send-feedback")
   }
 
   return (
@@ -799,7 +795,7 @@ function Settings({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  console.log({ datasetOrigin });
+
                   importData(file);
                 }
               }}
@@ -825,15 +821,14 @@ function Settings({
         <ListItem sx={{ boxShadow: 1 }}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ fontSize: "smaller" }}>
-              You can recalculate all your records if you think there might be
-              an error. It's advisable to do this after importing a dataset.
+              Send your thoughts, comments and suggestions.
             </Typography>
             <Button
               variant="contained"
               sx={{ width: "100%" }}
-              onClick={handleDeleteAllDataModalVisibility}
+              onClick={handleSendFeedbackClick}
             >
-              Recalculate PRs
+              Feedback
             </Button>
           </Box>
         </ListItem>

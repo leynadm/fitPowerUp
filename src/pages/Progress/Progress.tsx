@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -11,9 +11,10 @@ import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";
 import ProgressGraph from "./ProgressGraph";
 import { useNavigate } from "react-router-dom";
-
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import ProgressHelp from "./ProgressHelp";
 function Progress() {
-
   const [powerLevel, setPowerLevel] = useState<number>(0);
   const [strengthPowerLevel, setStrengthPowerLevel] = useState<number>(0);
   const [experiencePowerLevel, setExperiencePowerLevel] = useState<number>(0);
@@ -32,17 +33,20 @@ function Progress() {
     navigate("progress-graph");
   };
 
+  const handleProgressHelpClick =()=>{
+    navigate("progress-help")
+  }
   return (
     <Box
       sx={{
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        height:"100%",
-        backgroundColor: "#F0F2F5"
+        height: "100%",
+        backgroundColor: "#F0F2F5",
       }}
     >
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <QueryStatsIcon
@@ -52,7 +56,6 @@ function Progress() {
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -63,7 +66,7 @@ function Progress() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Progress
             </Typography>
 
             <QueryStatsIcon
@@ -74,7 +77,6 @@ function Progress() {
               variant="h5"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -88,6 +90,17 @@ function Progress() {
             >
               Progress
             </Typography>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              sx={{ display: { md: "none" } }}
+              onClick={handleProgressHelpClick}
+            >
+              <InfoIcon sx={{ color: "white" }} />
+            </IconButton>
           </Toolbar>
         </Container>
       </AppBar>
@@ -99,7 +112,8 @@ function Progress() {
           height: "32px",
           width: "100vw",
           backgroundColor: "#FF8C00",
-          borderBottom:"2px black solid"
+          borderBottom: "2px black solid",
+          
         }}
       >
         <Button
@@ -136,13 +150,34 @@ function Progress() {
       </Box>
 
       <Routes>
-        <Route path="" element={<ProgressLevel powerLevel={powerLevel} setPowerLevel={setPowerLevel} setStrengthPowerLevel={setStrengthPowerLevel} strengthPowerLevel={strengthPowerLevel} experiencePowerLevel={experiencePowerLevel} setExperiencePowerLevel={setExperiencePowerLevel}/>} />
-        <Route path="path" element={<ProgressPath powerLevel={powerLevel} setPowerLevel={setPowerLevel} />} />
+        <Route
+          path=""
+          element={
+            <ProgressLevel
+              powerLevel={powerLevel}
+              setPowerLevel={setPowerLevel}
+              setStrengthPowerLevel={setStrengthPowerLevel}
+              strengthPowerLevel={strengthPowerLevel}
+              experiencePowerLevel={experiencePowerLevel}
+              setExperiencePowerLevel={setExperiencePowerLevel}
+            />
+          }
+        />
+        <Route
+          path="path"
+          element={
+            <ProgressPath
+              powerLevel={powerLevel}
+              setPowerLevel={setPowerLevel}
+            />
+          }
+        />
         <Route path="progress-graph" element={<ProgressGraph />} />
+        <Route path="progress-help" element={<ProgressHelp />} />
       </Routes>
-
     </Box>
   );
 }
 
 export default Progress;
+ 

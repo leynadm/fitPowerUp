@@ -91,10 +91,6 @@ function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
           tempBodyweightData.push(cursor.value);
           cursor.continue();
         } else {
-          console.log("logging existing exercises:");
-
-          console.log(tempBodyweightData);
-
           setBodyweightData(tempBodyweightData);
         }
       };

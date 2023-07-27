@@ -166,14 +166,12 @@ function ExerciseSelectedTrack({
       exercisesRequest.onsuccess = function (event) {
         const cursor = (event.target as IDBRequest).result;
         if (cursor) {
-          console.log("Logging last exercise entry:");
-          console.log(cursor.value);
           setLastExercise(cursor.value);
         }
       };
 
       exercisesRequest.onerror = function () {
-        toast.error("Oops, getLastExerciseEntry has an error!")
+        toast.error("Oops, getLastExerciseEntry has an error!");
         console.error("Error retrieving existing exercises");
       };
 
@@ -183,7 +181,7 @@ function ExerciseSelectedTrack({
     };
 
     request.onerror = function () {
-      toast.error("Oops, couldn't open the database!")
+      toast.error("Oops, couldn't open the database!");
       console.log("Error opening database in getLastExerciseEntry!");
     };
   }
@@ -228,16 +226,12 @@ function ExerciseSelectedTrack({
           tempExistingExercises.push(cursor.value);
           cursor.continue();
         } else {
-          console.log("logging existing exercises:");
-
-          console.log(tempExistingExercises);
-
           setExistingExercises(tempExistingExercises);
         }
       };
 
       exercisesRequest.onerror = function () {
-        toast.error("Oops, getExistingExercises has an error!")
+        toast.error("Oops, getExistingExercises has an error!");
         console.error("Error retrieving existing exercises");
       };
 
@@ -247,7 +241,7 @@ function ExerciseSelectedTrack({
     };
 
     request.onerror = function () {
-      toast.error("Oops, couldn't open the database!")
+      toast.error("Oops, couldn't open the database!");
       console.log("Error opening database");
     };
   }
@@ -264,9 +258,6 @@ function ExerciseSelectedTrack({
       getRequest.onsuccess = function (event: any) {
         const data = event.target.result;
         if (data) {
-          console.log("logging data comment with no comment added:");
-          console.log(data.comment);
-
           if (data.comment === undefined) {
             setCommentValue("");
           } else {
@@ -274,21 +265,20 @@ function ExerciseSelectedTrack({
           }
           setIsDropset(data.dropset);
         } else {
-          console.log("Record not found");
+
         }
       };
 
       transaction.oncomplete = function () {
-        console.log("Transaction completed - getExistingComment");
       };
       transaction.onerror = function () {
-        toast.error("Oops, getExistingComment has an error!")
+        toast.error("Oops, getExistingComment has an error!");
         console.log("Transaction error");
       };
     };
 
     request.onerror = function () {
-      toast.error("Oops, couldn't open the database!")
+      toast.error("Oops, couldn't open the database!");
       console.log("Error opening the database in getExistingComment!");
     };
   }
@@ -487,7 +477,7 @@ function ExerciseSelectedTrack({
                   console.log("PR updated successfully");
                 };
                 updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error!")
+                  toast.error("Oops, saveExerciseEntry has an error!");
                   console.log("Failed to update PR");
                 };
               }
@@ -521,7 +511,7 @@ function ExerciseSelectedTrack({
                   console.log("PR updated successfully");
                 };
                 updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error - FTUPR!")
+                  toast.error("Oops, saveExerciseEntry has an error - FTUPR!");
                   console.log("Failed to update PR");
                 };
               }
@@ -558,7 +548,7 @@ function ExerciseSelectedTrack({
                   console.log("PR updated successfully");
                 };
                 updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error - FTUPR")
+                  toast.error("Oops, saveExerciseEntry has an error - FTUPR");
                   console.log("Failed to update PR");
                 };
               }
@@ -576,11 +566,11 @@ function ExerciseSelectedTrack({
       };
 
       request.onerror = function () {
-        toast.error("Oops, saveExerciseEntry has an error!")
+        toast.error("Oops, saveExerciseEntry has an error!");
         console.log("found error:");
       };
     } catch (error) {
-      toast.error("Oops, saveExerciseEntry has an error!")
+      toast.error("Oops, saveExerciseEntry has an error!");
       console.error(error);
     }
   }
@@ -647,7 +637,7 @@ function ExerciseSelectedTrack({
                 console.log("PR updated successfully");
               };
               updateRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error!")
+                toast.error("Oops, deleteEntry has an error!");
                 console.log("Failed to update PR");
               };
             }
@@ -671,7 +661,7 @@ function ExerciseSelectedTrack({
                 console.log("Weight Entry updated successfully");
               };
               updateWeightEntryRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error!")
+                toast.error("Oops, deleteEntry has an error!");
                 console.log("Failed to update Weight Entry");
               };
             }
@@ -689,7 +679,7 @@ function ExerciseSelectedTrack({
                 console.log("Reps Entry updated successfully");
               };
               updateRepsEntryRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error - FTURE!")
+                toast.error("Oops, deleteEntry has an error - FTURE!");
                 console.log("Failed to update Reps Entry");
               };
             }
@@ -704,7 +694,7 @@ function ExerciseSelectedTrack({
               };
 
               primaryKeyRequest.onerror = function () {
-                toast.error("Oops, couldn't delete the entry!")
+                toast.error("Oops, couldn't delete the entry!");
                 console.log("Error deleting entry");
               };
 
@@ -713,18 +703,18 @@ function ExerciseSelectedTrack({
               };
             })
             .catch((error) => {
-              toast.error("Oops, deleteEntry has an error!")
+              toast.error("Oops, deleteEntry has an error!");
               console.error("An error occurred:", error);
             });
         };
 
         request.onerror = function () {
-          toast.error("Oops, couldn't open the database!")
+          toast.error("Oops, couldn't open the database!");
           console.log("Error opening database in deleteEntry!");
         };
       };
     } catch (error) {
-      toast.error("Oops, found an error in deleteEntry!")
+      toast.error("Oops, found an error in deleteEntry!");
       console.error(error);
     }
   }

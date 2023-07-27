@@ -63,13 +63,11 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
         );
 
         const groupedEntries = groupEntriesByDate(filteredEntries);
-        console.log("logging groupedEntries");
-        console.log(groupedEntries);
         setBodyTrackerEntries(groupedEntries);
       };
 
       getAllEntriesRequest.onerror = function () {
-        toast.error("Oops, getBodyTrackerHistory has an error!")
+        toast.error("Oops, getBodyTrackerHistory has an error!");
         console.error("Error retrieving body tracker entries");
       };
 

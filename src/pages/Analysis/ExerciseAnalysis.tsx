@@ -61,7 +61,7 @@ const callChartFunction = (
   >,
   chartType: string
 ) => {
-  console.log("inside chart function");
+
   switch (selectedGraph) {
     case "Volume per Workout":
       calculateVolumePerWorkout(
@@ -335,7 +335,7 @@ function ExerciseAnalysis() {
           value={selectedOption}
           onChange={(event, selectedOption) => {
             setSelectedOption(selectedOption || "");
-            console.log("calling call chart function now:");
+
             callChartFunction(
               selectedGraph,
               selectedOption || "",

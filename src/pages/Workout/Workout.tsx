@@ -17,7 +17,8 @@ import WorkoutCalendar from "./WorkoutCalendar";
 import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
 import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
-import EditExercise from "./EditExercise";
+import SendFeedback from "../Settings/SendFeedback";
+import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -92,6 +93,7 @@ function Workout({
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = function (event) {
+      toast.error("Oops, getDataPreferences has an error!")
       // Handle errors
     };
 
@@ -114,7 +116,7 @@ function Workout({
       };
     };
   }, [setUnitsSystem, setWeightIncrementPreference]);
- 
+
   return (
     <Box>
       <Box
@@ -126,11 +128,10 @@ function Workout({
           width: "100%",
           height: "100%",
           backgroundColor: "#F0F2F5",
-        }} 
+        }}
       >
-        
-        <Toaster position="top-center"/>
-         
+        <Toaster position="top-center" />
+
         <Routes>
           <Route
             path=""
@@ -149,6 +150,8 @@ function Workout({
               />
             }
           />
+
+          <Route path="settings/send-feedback" element={<SendFeedback />} />
 
           <Route
             path="workout_categories/*"

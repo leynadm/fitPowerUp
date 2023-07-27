@@ -22,7 +22,7 @@ interface ExerciseSelectionProps {
 function ExerciseSelectedHistory({
   selectedExercise,
   unitsSystem,
-  weightIncrementPreference
+  weightIncrementPreference,
 }: ExerciseSelectionProps) {
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [openEditExerciseModal, setOpenEditExerciseModal] = useState(false);
@@ -85,7 +85,7 @@ function ExerciseSelectedHistory({
       };
 
       exercisesRequest.onerror = function () {
-        toast.error("Oops, getExerciseHistory has an error!")
+        toast.error("Oops, getExerciseHistory has an error!");
         console.error("Error retrieving existing exercises");
       };
 
@@ -95,7 +95,7 @@ function ExerciseSelectedHistory({
     };
 
     request.onerror = function () {
-      toast.error("Oops, couldn't open the database in getExerciseHistory!")
+      toast.error("Oops, couldn't open the database in getExerciseHistory!");
       console.log("Error opening database");
     };
   }
@@ -118,7 +118,7 @@ function ExerciseSelectedHistory({
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <Typography variant="body1" align="center">
@@ -128,11 +128,16 @@ function ExerciseSelectedHistory({
     );
   }
 
-  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
     const reversedIndex = existingExercises.length - 1 - index;
     const group = existingExercises[reversedIndex];
-    
+
     return (
       <Box key={index} style={style}>
         <Typography
@@ -140,7 +145,7 @@ function ExerciseSelectedHistory({
           sx={{
             textAlign: "left",
             fontSize: "medium",
-            paddingLeft: "1rem"
+            paddingLeft: "1rem",
           }}
         >
           {group.date.toLocaleString()}
@@ -153,13 +158,13 @@ function ExerciseSelectedHistory({
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 2fr",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr"
+                gridTemplateColumns: "1fr 1fr",
               }}
             >
               {exercise.comment ? ( // Check if 'comment' property exists
@@ -168,9 +173,7 @@ function ExerciseSelectedHistory({
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  onClick={() =>
-                    handleViewCommentModalVisibility(exercise.id)
-                  }
+                  onClick={() => handleViewCommentModalVisibility(exercise.id)}
                 >
                   <CommentIcon sx={{ zIndex: 0 }} />
                 </IconButton>
@@ -216,11 +219,11 @@ function ExerciseSelectedHistory({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 justifyItems: "center",
-                borderLeft: exercise.dropset ? "5px solid red" : "5px solid transparent"
+                borderLeft: exercise.dropset
+                  ? "5px solid red"
+                  : "5px solid transparent",
               }}
-              onClick={() =>
-                handleEditExerciseModalVisibility(exercise.id)
-              }
+              onClick={() => handleEditExerciseModalVisibility(exercise.id)}
             >
               {exercise.weight !== 0 && (
                 <Typography>
@@ -272,9 +275,9 @@ function ExerciseSelectedHistory({
             xs: "0.5rem", // Padding for extra small screens
             sm: "0.75rem", // Padding for small screens
             md: "1rem", // Padding for medium screens
-            lg: "1.5rem" // Padding for large screens
+            lg: "1.5rem", // Padding for large screens
           },
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         {selectedExercise.name.toLocaleUpperCase()}
@@ -284,19 +287,20 @@ function ExerciseSelectedHistory({
       <Container
         sx={{
           width: "100vw",
-          paddingBottom:"56px",
+          paddingBottom: "56px",
           height: "calc(100vh - 185px)",
         }}
       >
         <VariableSizeList
-          height={window.innerHeight-185}
+          height={window.innerHeight - 185}
           itemCount={existingExercises.length}
-          itemSize={index => {
+          itemSize={(index) => {
             // Calculate the dynamic height for each item based on its content
-            const group = existingExercises[existingExercises.length - 1 - index];
+            const group =
+              existingExercises[existingExercises.length - 1 - index];
             const numExercises = group.exercises.length;
             const exerciseHeight = numExercises * 48; // Assuming each exercise takes 120px height
-            return exerciseHeight +24; // Add some extra height for the group header
+            return exerciseHeight + 24; // Add some extra height for the group header
           }}
           width="100%"
         >

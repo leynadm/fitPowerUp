@@ -32,8 +32,6 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
       getUserPosts();
     }
 
-    console.log("logging queried user:");
-    console.log(queriedUser);
   }, [queriedUser]);
 
   async function getUserPosts() {

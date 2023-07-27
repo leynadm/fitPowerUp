@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -18,33 +18,27 @@ interface ParentProps {
 }
 
 function UsersListItem({ usersFound }: ParentProps) {
-
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-    console.log('what?')
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-
   }, []);
 
-  if(!isOnline){
-    return (
-      <NoConnection/>
-    );
+  if (!isOnline) {
+    return <NoConnection />;
   }
 
   return (
-    <Box sx={{paddingBottom:"64px"}}>
+    <Box sx={{ paddingBottom: "64px" }}>
       {usersFound.map((user, index) => (
         <Box
           key={index}
@@ -104,71 +98,71 @@ function UsersListItem({ usersFound }: ParentProps) {
                       color: "black",
                       display: "flex",
                       textAlign: "center",
-                      alignItems:"center",
+                      alignItems: "center",
                       gap: 1,
                     }}
                   >
                     {`${user.name} ${user.surname}`}
 
                     {user.verified && (
-                      <VerifiedIcon sx={{ color: "#3f51b5",width:"1rem",height:"1rem" }} />
+                      <VerifiedIcon
+                        sx={{ color: "#3f51b5", width: "1rem", height: "1rem" }}
+                      />
                     )}
                   </Typography>
                 </Link>
 
-                {user.hidePowerLevel || (user.powerLevel === undefined && user.strengthLevel===undefined && user.experienceLevel===undefined)? (
-
+                {user.hidePowerLevel ||
+                (user.powerLevel === undefined &&
+                  user.strengthLevel === undefined &&
+                  user.experienceLevel === undefined) ? (
                   <Typography>Unknown Power Level</Typography>
-
-                ):(
+                ) : (
                   <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
-                  <Typography
                     sx={{
-                      fontSize: "1.25rem",
                       display: "flex",
-                      gap: 1,
-                      justifyContent: "center",
                       alignItems: "center",
+                      gap: 1,
                     }}
                   >
-                    <PowerLevelIcon width="1.35rem" height="1.35rem" />
-                    {user.powerLevel}
-                  </Typography>{" "}
-                  <Typography
-                    sx={{
-                      fontSize: "1.25rem",
-                      display: "flex",
-                      gap: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <StrengthIcon width="1.15rem" height="1.15rem" />
-                    {user.strengthLevel}
-                  </Typography>{" "}
-                  <Typography
-                    sx={{
-                      fontSize: "1.25rem",
-                      display: "flex",
-                      gap: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ExperienceIcon width="1.15rem" height="1.15rem" />
-                    {user.experienceLevel}
-                  </Typography>{" "}
-                </Box>
+                    <Typography
+                      sx={{
+                        fontSize: "1.25rem",
+                        display: "flex",
+                        gap: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <PowerLevelIcon width="1.35rem" height="1.35rem" />
+                      {user.powerLevel}
+                    </Typography>{" "}
+                    <Typography
+                      sx={{
+                        fontSize: "1.25rem",
+                        display: "flex",
+                        gap: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <StrengthIcon width="1.15rem" height="1.15rem" />
+                      {user.strengthLevel}
+                    </Typography>{" "}
+                    <Typography
+                      sx={{
+                        fontSize: "1.25rem",
+                        display: "flex",
+                        gap: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ExperienceIcon width="1.15rem" height="1.15rem" />
+                      {user.experienceLevel}
+                    </Typography>{" "}
+                  </Box>
                 )}
-          
-
-              
               </Box>
             </ListItem>
           </List>

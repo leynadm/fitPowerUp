@@ -11,6 +11,7 @@ import { db } from "../../config/firebase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteReplyModal from "../../components/ui/DeleteReplyModal";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import toast from "react-hot-toast";
 interface PostCommentProps {
   reply: any;
   postId: string;
@@ -38,11 +39,12 @@ function PostReply({
       [`${commentId}.replies`]: arrayRemove(reply),
     })
       .then(() => {
-        console.log("Reply deleted successfully");
+
         getPostComments();
         setDeleteReplyModalOpen(!deleteReplyModalOpen);
       })
       .catch((error) => {
+        toast.error("Oops, deleteReply has an error!")
         console.error("Error deleting reply:", error);
       });
   }

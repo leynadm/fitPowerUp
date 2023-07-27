@@ -5,12 +5,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-
 import Paper from "@mui/material/Paper";
-
-import Divider from "@mui/material/Divider";
-import MenuIcon from "@mui/icons-material/Menu";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

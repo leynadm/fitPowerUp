@@ -26,7 +26,7 @@ import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
 import UserViewCharacterProgressModal from "../../components/ui/UserViewCharacterProgressModal";
-
+import toast from "react-hot-toast";
 function UserProfile() {
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
@@ -50,7 +50,7 @@ function UserProfile() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    console.log("what?");
+
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -80,19 +80,28 @@ function UserProfile() {
   }
 
   async function getProfileFollowers() {
-    const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
-    const documentSnapshot = await getDoc(followersFeedRef);
-
-    if (documentSnapshot.exists()) {
-      const data = documentSnapshot.data();
-      const users = data.users || [];
-      const following = data.following || [];
-      setUserFollowers(users.length);
-      setUserFollowing(following.length);
-      setUserIndividualFollowers(users);
-      setUserIndividualFollowing(following);
+    try {
+      const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
+      const documentSnapshot = await getDoc(followersFeedRef);
+  
+      if (documentSnapshot.exists()) {
+        const data = documentSnapshot.data();
+        const users = data.users || [];
+        const following = data.following || [];
+        setUserFollowers(users.length);
+        setUserFollowing(following.length);
+        setUserIndividualFollowers(users);
+        setUserIndividualFollowing(following);
+      }
+    } catch (error) {
+      toast.error("Oops, getProfileFollowers has an error!")
+      // Handle the error here
+      console.error("Error fetching profile followers:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to fetch followers data. Please try again later.");
     }
   }
+  
 
   if (!isOnline) {
     return <NoConnection />;
@@ -151,22 +160,20 @@ function UserProfile() {
         </Container>
       </AppBar>
 
-      {
-      
-      (currentUserData.powerLevel &&
-        openUserViewCharacterProgressModal &&
-        !currentUserData.hidePowerLevel)  ? (
-
-          <UserViewCharacterProgressModal
-            openUserViewCharacterProgressModal={
-              openUserViewCharacterProgressModal
-            }
-            setOpenUserViewCharacterProgressModal={
-              setOpenUserViewCharacterProgressModal
-            }
-          />
-          
-        ):(<div></div>)}
+      {currentUserData.powerLevel &&
+      openUserViewCharacterProgressModal &&
+      !currentUserData.hidePowerLevel ? (
+        <UserViewCharacterProgressModal
+          openUserViewCharacterProgressModal={
+            openUserViewCharacterProgressModal
+          }
+          setOpenUserViewCharacterProgressModal={
+            setOpenUserViewCharacterProgressModal
+          }
+        />
+      ) : (
+        <div></div>
+      )}
 
       <Box
         sx={{
@@ -185,11 +192,12 @@ function UserProfile() {
             borderTopRightRadius: "5px",
             boxShadow: 1,
           }}
-
         >
           {currentUserData.profileImage !== "" ? (
-            <Stack direction="row" spacing={2}
-            onClick={handleUserViewCharacterProgressModalClick}
+            <Stack
+              direction="row"
+              spacing={2}
+              onClick={handleUserViewCharacterProgressModalClick}
             >
               <Avatar
                 alt="user profile"
@@ -198,8 +206,10 @@ function UserProfile() {
               />
             </Stack>
           ) : (
-            <Stack direction="row" spacing={2}
-            onClick={handleUserViewCharacterProgressModalClick}
+            <Stack
+              direction="row"
+              spacing={2}
+              onClick={handleUserViewCharacterProgressModalClick}
             >
               <Avatar
                 alt="Remy Sharp"
@@ -249,7 +259,8 @@ function UserProfile() {
           </Box>
         </Box>
 
-        <Box className="CheckingForTheLevel"
+        <Box
+          className="CheckingForTheLevel"
           sx={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -262,7 +273,6 @@ function UserProfile() {
             boxShadow: 1,
           }}
         >
-
           {currentUserData.hidePowerLevel ||
           (currentUserData.powerLevel === undefined &&
             currentUserData.strengthLevel === undefined &&

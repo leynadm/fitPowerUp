@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
 import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
-
+import toast from "react-hot-toast";
 function PathCarousel(props: any) {
   const firebaseApp = getApp();
   const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
@@ -17,9 +17,9 @@ function PathCarousel(props: any) {
 
     try {
       const matchedImageURL = await getDownloadURL(matchedImageRef);
-      console.log(matchedImageURL);
       props.setImageMatched(matchedImageURL);
-    } catch (error) {
+    } catch (error) { 
+      toast.error("Oops, getPowerLevelImagePerIndex has an error!")
       // Handle the error here
     }
   }
@@ -51,66 +51,81 @@ function PathCarousel(props: any) {
   }
 
   return (
+    /*
     <Carousel
+
+      sx={{ width: "100%", height: "100%" }}
+     
       next={handleNextClick}
       prev={handlePrevClick}
-      sx={{ width: "100%", height: "100%" }}
       PrevIcon={<KeyboardArrowLeftIcon />}
       NextIcon={<KeyboardArrowRightIcon />}
-      fullHeightHover={true}
-      navButtonsAlwaysVisible={true}
+        fullHeightHover={true}
+      navButtonsAlwaysVisible={false}
       animation="slide"
       autoPlay={false}
+     
+
+
+
+
+    > */
+
+    <Box
+      sx={{
+        width: "100%",
+
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      <Box
-        sx={{
-          width: "100%", 
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{paddingTop:"16px",paddingBottom:"16px"}}>
+      <Box sx={{ paddingTop: "16px", paddingBottom: "16px" }}>
         <Typography sx={{ fontSize: "1.25rem", padding: "0.25rem" }}>
           Your Power Level: {props.powerLevel}
         </Typography>
-        </Box>
-        {props.powerLevel > props.currentImagePowerLevel ? (
-          <CardMedia
-            component="img"
-            image={props.imageMatched}
-            alt="level hero"
-            sx={{ objectFit: "contain", 
-            width: "100%", 
-          justifySelf:"center",
-            alignSelf:"center",
-            animation: "fade-in 0.5s ease-in-out" // Apply the animation
-           }}
-          />
-        ) : (
-          <CardMedia
-            component="img"
-            image={props.imageMatched}
-            alt="level hero"
-            sx={{
-              objectFit: "contain",
-              width: "100%",
-              height: "80%",
-              filter: "blur(3px) grayscale(100%)",
-              opacity: "25%",
-              animation: "fade-in 0.5s ease-in-out", // Apply the animation
-            }}
-          />
-        )}
+      </Box>
+      {props.powerLevel >= props.currentImagePowerLevel ? (
+        <CardMedia
+          component="img"
+          image={props.imageMatched}
+          alt="level hero"
+          sx={{
+            objectFit: "contain",
+            width: "100%",
+            justifySelf: "center",
+            alignSelf: "center",
+            animation: "fade-in 0.5s ease-in-out", // Apply the animation
+          }}
+        />
+      ) : (
+        <CardMedia
+          component="img"
+          image={props.imageMatched}
+          alt="level hero"
+          sx={{
+            objectFit: "contain",
+            width: "100%",
+            height: "80%",
+            filter: "blur(3px) grayscale(100%)",
+            opacity: "25%",
+            animation: "fade-in 0.5s ease-in-out", // Apply the animation
+          }}
+        />
+      )}
 
+      {/* 
         <Box sx={{  }}>
           <Typography sx={{ fontSize: "1.25rem" }}>
-            Warrior Power Level: {props.currentImagePowerLevel}
+            {props.currentImagePowerLevel}
           </Typography>
         </Box>
-      </Box>
+     */}
+    </Box>
+    /* 
     </Carousel>
+     */
   );
 }
 

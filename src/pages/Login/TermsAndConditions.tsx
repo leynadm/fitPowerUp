@@ -4,7 +4,7 @@ function TermsAndConditions() {
   return (
     <Box sx={{ display: "flex", padding: "1rem", flexDirection: "column" }}>
       <br></br>
-      Effective Date: 01/08/2023
+      Effective Date: 01/07/2023
       <br></br>
       <br></br>
       Welcome to fitPowerUp!

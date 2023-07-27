@@ -26,7 +26,6 @@ export default function FollowersLimitModal({
   followersLimitModalOpen,
   setFollowersLimitModalOpen,
 }: UserWorkoutCardProps) {
-
   const handleClose = () => setFollowersLimitModalOpen(false);
 
   return (
@@ -38,37 +37,40 @@ export default function FollowersLimitModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <IconButton sx={{display:"flex", gap:1}}>
+          <IconButton sx={{ display: "flex", gap: 1 }}>
             <InfoIcon />
             Info
           </IconButton>
           <Typography sx={{ padding: "8px" }}>
-          Scalability Testing Limitation. 
+            Scalability Testing Limitation.
             <br></br>
-            Please note that for scalability testing reasons, there is a temporary maximum limit of 50 followed users per account. 
+            Please note that for scalability testing reasons, there is a
+            temporary maximum limit of 50 followed users per account.
             <br></br>
-            Thank you for your cooperation and understanding during this phase.<br></br> 
-            There will be further updates in order to enhance the platform for a better user experience. 
+            Thank you for your cooperation and understanding during this phase.
+            <br></br>
+            There will be further updates in order to enhance the platform for a
+            better user experience.
             <br></br>
             Thank you!"
           </Typography>
-        
+
           <Box
-              sx={{
-                display: "flex",
-              }}
+            sx={{
+              display: "flex",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+              onClick={() =>
+                setFollowersLimitModalOpen(!followersLimitModalOpen)
+              }
             >
-              <Button
-                variant="contained"
-                sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                onClick={()=>setFollowersLimitModalOpen(!followersLimitModalOpen)}
-              >
-                Cancel
-              </Button>
-            </Box>        
+              Cancel
+            </Button>
+          </Box>
         </Box>
-
-
       </Modal>
     </div>
   );

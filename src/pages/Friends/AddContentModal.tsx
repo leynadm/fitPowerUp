@@ -20,13 +20,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Dialog from "@mui/material/Dialog";
 import InfoIcon from "@mui/icons-material/Info";
-import Exercise from "../../utils/interfaces/Exercise";
 import formatTime from "../../utils/formatTime";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
+import toast from "react-hot-toast";
 import {
   collection,
   setDoc,
@@ -121,7 +121,7 @@ function AddContentModal({
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    console.log("what?");
+
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -207,9 +207,9 @@ function AddContentModal({
           imageUrlResized = await getDownloadURL(imageRefResized);
         } catch (error) {
           console.error("Error fetching resized image:", error);
-
           // Retry logic
           let retryAttempts = 9;
+
           while (retryAttempts > 0) {
             await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
 
@@ -223,6 +223,7 @@ function AddContentModal({
           }
 
           if (retryAttempts === 0) {
+            toast.error("Oops, we encountered an error! Try again later!")
             console.error("Retries exhausted. Unable to fetch resized image.");
             // Handle the error and display an error message to the user
           }

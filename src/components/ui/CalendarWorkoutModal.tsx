@@ -12,7 +12,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
 import ViewCommentModal from "./ViewCommentModal";
-import Modal from "@mui/material/Modal";
+
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,

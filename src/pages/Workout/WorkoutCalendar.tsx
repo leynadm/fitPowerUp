@@ -9,10 +9,10 @@ import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import AdbIcon from "@mui/icons-material/Adb";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import getWorkoutDates from "../../utils/CRUDFunctions/getWorkoutDates";
 import CalendarWorkoutModal from "../../components/ui/CalendarWorkoutModal";
+import toast from "react-hot-toast";
 interface WorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
@@ -35,6 +35,7 @@ function WorkoutCalendar({
         setUniqueDates(dates as string[]);
       })
       .catch((error) => {
+        toast.error("Oops, getWorkoutDates has an error!")
         console.error("Error retrieving unique dates from IndexedDB:", error);
       });
   }, []);

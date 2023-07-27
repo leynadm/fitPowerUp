@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import getProgressExercises from "../../utils/progressFunctions/getProgressExercises";
+import toast from "react-hot-toast";
 interface Exercise {
   name: string;
   category: string;
@@ -16,15 +17,27 @@ export default function PowerLevelSelect(props: any) {
 
   useEffect(() => {
     const fetchExercises = async () => {
-      const exercises: any = await getProgressExercises();
-      const filteredExercises = exercises.filter(
-        (exercise: Exercise) =>
-          exercise.measurement.includes("weight") &&
-          exercise.measurement.includes("reps")
-      );
-      setAllExercises(filteredExercises);
+      try {
+        const exercises: any = await getProgressExercises();
+        if (!exercises || exercises.length === 0) {
+          throw new Error("No exercises found.");
+        }
+    
+        const filteredExercises = exercises.filter(
+          (exercise: Exercise) =>
+            exercise.measurement.includes("weight") &&
+            exercise.measurement.includes("reps")
+        );
+        setAllExercises(filteredExercises);
+      } catch (error) {
+        toast.error("Oops, fetchExercises has an error!")
+        // Handle the error here
+        console.error("Error fetching exercises:", error);
+        // Optionally, you can set a default value for allExercises or show an error message to the user.
+        setAllExercises([]);
+      }
     };
-
+    
     fetchExercises();
   }, []);
 

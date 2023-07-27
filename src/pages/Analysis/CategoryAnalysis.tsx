@@ -58,7 +58,7 @@ const callChartFunction = (
   >,
   chartType: string
 ) => {
-  console.log("inside chart function");
+
   switch (selectedGraph) {
     case "Volume per Workout":
       calculateVolumePerWorkout(
@@ -311,7 +311,7 @@ function CategoryAnalysis() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <FormControl sx={{ width: "100%", marginTop: "8px" }}>
@@ -327,7 +327,7 @@ function CategoryAnalysis() {
           onChange={(event) => {
             const selectedOption = event.target.value;
             setSelectedOption(selectedOption);
-            console.log("calling call chart function now:");
+
             callChartFunction(
               selectedGraph,
               selectedOption,

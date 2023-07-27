@@ -25,6 +25,7 @@ import { db } from "../../config/firebase";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import SuccessfulProfilePowerUploadAlert from "../../components/ui/SuccessfulProfilePowerUploadAlert";
 import FailedGenericAlert from "../../components/ui/FailedGenericAlert";
+import toast from "react-hot-toast";
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -162,10 +163,12 @@ function ProgressLevel({
               );
             })
             .catch((error) => {
+              toast.error("Oops, countUniqueEntriesByDate has an error!")
               console.error("Error:", error);
             });
         })
         .catch((error) => {
+          toast.error("Oops, calculatePowerLevel has an error!")
           console.error("Error occurred:", error);
         });
     } else { 
@@ -229,9 +232,6 @@ function ProgressLevel({
       updatedUserData.thirdPowerExercise = thirdExerciseSelected
       // Add more modifications as needed
 
-      console.log("checking the value AFTER Update:");
-      console.log({ updatedUserData });
-
       // Update the state with the modified user data
       setCurrentUserData(updatedUserData);
     };
@@ -286,10 +286,13 @@ function ProgressLevel({
           setExperiencePowerLevel(lastEntry.experience);
         } else {
           // No entries found
+          /* 
           console.log("No entries found");
+          */
         }
       })
       .catch((error) => {
+        
         console.error("Error occurred:", error);
       });
   }, []);

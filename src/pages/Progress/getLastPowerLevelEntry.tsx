@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 function getLastPowerLevelEntry() {
     return new Promise((resolve, reject) => {
       const request = window.indexedDB.open("fitScouterDb", 1);
@@ -29,6 +31,7 @@ function getLastPowerLevelEntry() {
         };
   
         getRequest.onerror = () => {
+          toast.error("Oops, getLastPowerLevelEntry has an error!")
           console.error("Failed to retrieve the last entry");
           reject();
         };

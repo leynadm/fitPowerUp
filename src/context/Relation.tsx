@@ -1,4 +1,10 @@
-import React, { useEffect, useState, createContext, ReactNode, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  ReactNode,
+  useContext,
+} from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import UserRelations from "../utils/interfaces/UserRelations";
@@ -8,18 +14,17 @@ interface RelationProviderProps {
   children: ReactNode;
 }
 
-
 export const RelationContext = createContext<any>({
-  userRelations: []
+  userRelations: [],
 });
 
 export const RelationProvider = ({ children }: RelationProviderProps) => {
   // Set the current user in case the user is already logged in
-  const {currentUser} = useContext(AuthContext)
+  const { currentUser } = useContext(AuthContext);
   const [userRelations, setUserRelations] = useState<UserRelations>();
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
 
   async function fetchData() {
@@ -38,7 +43,6 @@ export const RelationProvider = ({ children }: RelationProviderProps) => {
       }
     }
   }
-
 
   return (
     <RelationContext.Provider value={{ userRelations }}>

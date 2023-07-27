@@ -16,7 +16,7 @@ import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import LoadingCircle from "../../components/ui/LoadingCircle";
-
+import toast from "react-hot-toast";
 interface UserData {
   id: string;
   [key: string]: any; // Add this if there are other properties in the user data object.
@@ -42,37 +42,64 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
   }, [currentPage]);
 
   async function getUserDocumentById(documentId: any) {
-    const documentRef = doc(db, "users", documentId); // Replace with your collection name
+    try {
+      const documentRef = doc(db, "users", documentId); // Replace with your collection name
 
-    const snapshot = await getDoc(documentRef);
+      const snapshot = await getDoc(documentRef);
 
-    if (snapshot.exists()) {
-      const documentData = snapshot.data();
-      return { ...documentData, id: snapshot.id };
+      if (snapshot.exists()) {
+        const documentData = snapshot.data();
+        return { ...documentData, id: snapshot.id };
+      }
+      return null;
+    } catch (error) {
+      toast.error("Oops, getUserDocumentById has an error!");
+      // Handle the error here
+      console.error("Error fetching user document:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to fetch user data. Please try again later.");
+      return null; // Return null or an empty object to indicate that there was an error.
     }
-    return null;
   }
 
   async function fetchUserIndividualFollowersData() {
-    setLoading(true);
-    const startIdx = (currentPage - 1) * resultsPerPage;
-    const endIdx = startIdx + resultsPerPage;
+    try {
+      setLoading(true);
+      const startIdx = (currentPage - 1) * resultsPerPage;
+      const endIdx = startIdx + resultsPerPage;
 
-    const tempData: UserData[] = [...userIndividualFollowersData]; // Copy the existing array
+      const tempData: UserData[] = [...userIndividualFollowersData]; // Copy the existing array
 
-    for (const docId of userIndividualFollowers.slice(startIdx, endIdx)) {
-      const documentData = await getUserDocumentById(docId);
-      if (documentData) {
-        tempData.push(documentData);
+      for (const docId of userIndividualFollowers.slice(startIdx, endIdx)) {
+        try {
+          const documentData = await getUserDocumentById(docId);
+          if (documentData) {
+            tempData.push(documentData);
+          }
+        } catch (error) {
+          toast.error("Oops, fetchUserIndividualFollowersData has an error!")
+          // Handle the error for an individual user document fetch
+          console.error(
+            `Error fetching data for user with ID ${docId}:`,
+            error
+          );
+          // You can choose to continue with the loop and skip the problematic user
+          // or handle it in a way that fits your specific use case.
+        }
       }
-    }
 
-    if (tempData.length > 0) {
-      setHasFollowers(true);
-    }
+      if (tempData.length > 0) {
+        setHasFollowers(true);
+      }
 
-    setUserIndividualFollowersData(tempData);
-    setLoading(false);
+      setUserIndividualFollowersData(tempData);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Oops, fetchUserIndividualFollowersData has an error!");
+      // Handle any other unexpected errors that might occur during the function execution
+      console.error("An unexpected error occurred:", error);
+      // You can show a user-friendly error message or take appropriate actions.
+    }
   }
 
   if (loading && !hasFollowers) {
@@ -86,7 +113,6 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
-          
         }}
       >
         <LoadingCircle />
@@ -115,7 +141,7 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
               </Typography>
             </Box>
           ) : (
-            <Box sx={{paddingBottom:"56px"}}>
+            <Box sx={{ paddingBottom: "56px" }}>
               {userIndividualFollowersData.map((user, index) => (
                 <Box
                   key={index}
@@ -155,87 +181,93 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
                       </ListItemAvatar>
 
                       <Link
-                    to={`/home/friends/results/u/${user.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Typography
-                      sx={{
-                        flexGrow: 1,
-                        alignSelf: "center",
-                        fontSize: "large",
-                        fontWeight: "bold",
-                        color: "black",
-                        display: "flex",
-                        gap: 1,
-                        alignItems: "center",
-                      }}
-                    >
-                      {`${user.name} ${user.surname}`}
-                      {user.verified && (
-                        <VerifiedIcon
-                          sx={{
-                            color: "#3f51b5",
-                            width: "1rem",
-                            height: "1rem",
-                          }}
-                        />
-                      )}
-                    </Typography>
-
-                    {user.hidePowerLevel ||
-                    (user.powerLevel === undefined &&
-                      user.strengthLevel === undefined &&
-                      user.experienceLevel === undefined) ? (
-                      <Typography sx={{ textDecoration: "none" }}>
-                        Unknown Power Level
-                      </Typography>
-                    ) : (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                        }}
+                        to={`/home/friends/results/u/${user.id}`}
+                        style={{ textDecoration: "none" }}
                       >
                         <Typography
                           sx={{
-                            fontSize: "1.25rem",
+                            flexGrow: 1,
+                            alignSelf: "center",
+                            fontSize: "large",
+                            fontWeight: "bold",
+                            color: "black",
                             display: "flex",
                             gap: 1,
-                            justifyContent: "center",
                             alignItems: "center",
                           }}
                         >
-                          <PowerLevelIcon width="1.35rem" height="1.35rem" />
-                          {user.powerLevel}
-                        </Typography>{" "}
-                        <Typography
-                          sx={{
-                            fontSize: "1.25rem",
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <StrengthIcon width="1.15rem" height="1.15rem" />
-                          {user.strengthLevel}
-                        </Typography>{" "}
-                        <Typography
-                          sx={{
-                            fontSize: "1.25rem",
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ExperienceIcon width="1.15rem" height="1.15rem" />
-                          {user.experienceLevel}
-                        </Typography>{" "}
-                      </Box>
-                    )}
-                  </Link>
+                          {`${user.name} ${user.surname}`}
+                          {user.verified && (
+                            <VerifiedIcon
+                              sx={{
+                                color: "#3f51b5",
+                                width: "1rem",
+                                height: "1rem",
+                              }}
+                            />
+                          )}
+                        </Typography>
+
+                        {user.hidePowerLevel ||
+                        (user.powerLevel === undefined &&
+                          user.strengthLevel === undefined &&
+                          user.experienceLevel === undefined) ? (
+                          <Typography sx={{ textDecoration: "none" }}>
+                            Unknown Power Level
+                          </Typography>
+                        ) : (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                            }}
+                          >
+                            <Typography
+                              sx={{
+                                fontSize: "1.25rem",
+                                display: "flex",
+                                gap: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <PowerLevelIcon
+                                width="1.35rem"
+                                height="1.35rem"
+                              />
+                              {user.powerLevel}
+                            </Typography>{" "}
+                            <Typography
+                              sx={{
+                                fontSize: "1.25rem",
+                                display: "flex",
+                                gap: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <StrengthIcon width="1.15rem" height="1.15rem" />
+                              {user.strengthLevel}
+                            </Typography>{" "}
+                            <Typography
+                              sx={{
+                                fontSize: "1.25rem",
+                                display: "flex",
+                                gap: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ExperienceIcon
+                                width="1.15rem"
+                                height="1.15rem"
+                              />
+                              {user.experienceLevel}
+                            </Typography>{" "}
+                          </Box>
+                        )}
+                      </Link>
                       <Box
                         sx={{
                           flexGrow: 1,
@@ -243,8 +275,7 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
                           alignItems: "center",
                           textAlign: "center",
                         }}
-                      >
-                      </Box>
+                      ></Box>
                     </ListItem>
                   </List>
                 </Box>

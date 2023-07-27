@@ -19,7 +19,6 @@ const mobileStyle = {
   borderRadius: 1,
   gap: 5,
   maxHeight: "80vh", // Limit max height to 70% of the viewport height
-
 };
 
 const desktopStyle = {
@@ -37,7 +36,6 @@ const desktopStyle = {
   left: "50%", // Center horizontally
   transform: "translate(-50%, -50%)", // Center both horizontally and vertically
   maxHeight: "80vh", // Limit max height to 70% of the viewport height
-
 };
 
 interface ParentComponentProps {
@@ -59,8 +57,8 @@ function InstallInstructionsModal({
 
   const boxShadowStyle = {
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
-    borderRadius:"10px"
-};
+    borderRadius: "10px",
+  };
 
   return (
     <div>
@@ -72,11 +70,10 @@ function InstallInstructionsModal({
         sx={{ overflow: "scroll" }}
       >
         <Box sx={{ ...style, overflowY: "auto" }}>
-          <Typography sx={{textAlign:"center"}}>
+          <Typography sx={{ textAlign: "center" }}>
             In case the installation didn't start automatically, you can install
             the app manually:
           </Typography>
-
 
           <Box
             sx={{
@@ -85,18 +82,28 @@ function InstallInstructionsModal({
               justifyContent: "center",
               alignItems: "center",
               gap: 1,
-              boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom:"15px"
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+              paddingBottom: "15px",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1,marginTop:"15px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                marginTop: "15px",
+              }}
+            >
               <img
                 src={ChromeIcon}
                 alt="chrome browser"
                 width="24px"
                 height="24px"
               ></img>
-              <Typography sx={{fontWeight:"bold",fontSize:"larger"}}>Google Chrome</Typography>
+              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
+                Google Chrome
+              </Typography>
             </Box>
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FChrome_01_1024x1024.jpg?alt=media&token=40006ee6-33d1-422e-8bcc-43d0801aaeee"
@@ -121,20 +128,30 @@ function InstallInstructionsModal({
               justifyContent: "center",
               alignItems: "center",
               gap: 1,
-              boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom:"15px"
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+              paddingBottom: "15px",
             }}
           >
-           <Box sx={{ display: "flex", alignItems: "center", gap: 1,marginTop:"15px" }}>
-               <img
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                marginTop: "15px",
+              }}
+            >
+              <img
                 src={FirefoxIcon}
                 alt="chrome browser"
                 width="24px"
                 height="24px"
               ></img>
-              <Typography sx={{fontWeight:"bold",fontSize:"larger"}}>Mozilla Firefox</Typography>
+              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
+                Mozilla Firefox
+              </Typography>
             </Box>
-            
+
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FFirefox_01_1024x1024.jpg?alt=media&token=314a9326-e839-4319-be74-4238b6dba704"
               alt="step 1 Google Chrome"
@@ -148,7 +165,6 @@ function InstallInstructionsModal({
               width="90%"
               style={boxShadowStyle}
               loading="lazy"
-              
             ></img>
           </Box>
 
@@ -159,18 +175,28 @@ function InstallInstructionsModal({
               justifyContent: "center",
               alignItems: "center",
               gap: 1,
-              boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom:"15px"
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+              paddingBottom: "15px",
             }}
           >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 ,marginTop:"15px"}}>
-                <img
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                marginTop: "15px",
+              }}
+            >
+              <img
                 src={EdgeIcon}
                 alt="chrome browser"
                 width="24px"
                 height="24px"
               ></img>
-              <Typography sx={{fontWeight:"bold",fontSize:"larger"}}>Microsoft Edge</Typography>
+              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
+                Microsoft Edge
+              </Typography>
             </Box>
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FEdge_01_1024x1024.jpg?alt=media&token=d12b4928-b0d3-4ed9-9da6-795066d526ae"
@@ -195,18 +221,28 @@ function InstallInstructionsModal({
               justifyContent: "center",
               alignItems: "center",
               gap: 1,
-              boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom:"15px"
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+              paddingBottom: "15px",
             }}
           >
-         <Box sx={{ display: "flex", alignItems: "center", gap: 1,marginTop:"15px"}}>
-                 <img
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                marginTop: "15px",
+              }}
+            >
+              <img
                 src={SafariIcon}
                 alt="chrome browser"
                 width="24px"
                 height="24px"
               ></img>
-              <Typography sx={{fontWeight:"bold",fontSize:"larger"}}>Safari</Typography>
+              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
+                Safari
+              </Typography>
             </Box>
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FSafari_01_1024x1024.jpg?alt=media&token=cbb15bbf-9921-4d7c-890b-4490b28ee567"

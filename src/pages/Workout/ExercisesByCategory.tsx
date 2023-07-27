@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import toast from "react-hot-toast";
 interface ExercisesCategoriesProps {
   todayDate: Date | undefined;
   selectedCategoryExercises: {
@@ -128,13 +129,14 @@ function ExercisesByCategory({
   function addExerciseToFavorites() {
     // If selectedExerciseId is not available or empty, no need to fetch the record
     if (!selectedExerciseId) {
-      console.log("No exercise selected.");
+
       return;
     }
 
     const request = indexedDB.open("fitScouterDb");
 
     request.onerror = (event) => {
+      toast.error("Oops, addExerciseToFavorites couldn't open the database!")
       console.log("Error opening IndexedDB:", request.error);
     };
 
@@ -154,7 +156,6 @@ function ExercisesByCategory({
         const exercise = event.target.result;
 
         if (!exercise) {
-          console.log("Exercise not found.");
           return;
         }
 
@@ -167,15 +168,17 @@ function ExercisesByCategory({
         const putRequest = store.put(updatedExercise);
 
         putRequest.onsuccess = () => {
-          console.log("Exercise added to favorites successfully.");
+
         };
 
         putRequest.onerror = () => {
+          toast.error("Oops, putRequest inside addExerciseToFavorites has an error!")
           console.log("Error updating exercise:", putRequest.error);
         };
       };
 
       getRequest.onerror = () => {
+        toast.error("Oops, getRequest inside addExerciseToFavorites has an error!")
         console.log("Error fetching exercise:", getRequest.error);
       };
 

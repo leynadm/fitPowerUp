@@ -208,7 +208,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
     } else if (selectedExercise.measurement.includes("time")) {
       setStatisticsOptionsToUse(statisticsOptionsTime);
     }
-    console.log("loading first use effect");
+
   }, []);
 
   useEffect(() => {
@@ -219,13 +219,11 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
       setInitialRawData,
       selectedExercise
     );
-    console.log("loading second use effect");
+
   }, [selectedExercise, selectedTimeframe, selectedOption]);
 
   useEffect(() => {
-    console.log("logging initial Raw Data");
-    console.log(initialRawData);
-    console.log("loading third use effect");
+
   }, [initialRawData]);
 
   const statisticsOptions = [

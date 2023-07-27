@@ -5,7 +5,6 @@ function SocialSearchResults() {
   const location = useLocation();
   const usersFound = location.state?.usersFound || [];
 
-
   return <UsersListItem usersFound={usersFound} />;
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -12,8 +12,9 @@ import ExerciseSelectedGraph from "./ExerciseSelectedGraph";
 import { useNavigate } from "react-router-dom";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Routes, Route } from "react-router-dom";
-import RestTimer from "../../components/ui/RestTimer";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { LogDataContext } from "../../context/LogData";
+
 interface ExerciseSelectionProps {
   todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
@@ -27,9 +28,9 @@ function ExerciseSelected({
   unitsSystem,
   weightIncrementPreference,
 }: ExerciseSelectionProps) {
-  const [showRestTimer, setShowRestTimer] = useState(false);
+
   const [countdownValue, setCountdownValue] = useState(120);
-  
+    const {showRestTimer,setShowRestTimer} = useContext(LogDataContext)
   
   
   
@@ -48,21 +49,15 @@ function ExerciseSelected({
     navigate("graph");
   };
 
+  
   function handleShowRestTimer() {
     setShowRestTimer(!showRestTimer);
-  }
+  } 
 
-  useEffect(() => {
-
-    console.log({todayDate});
-  }, []);
 
   return (
     <Box sx={{ height: "100%", }}>
-      <RestTimer
-        showRestTimer={showRestTimer}
-        setShowRestTimer={setShowRestTimer}
-      />
+
       
       <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
         <Container maxWidth="xl">
@@ -124,16 +119,6 @@ function ExerciseSelected({
                   <TimerIcon />
                 </IconButton>
 
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={() => console.log("yes")}
-                >
-                  <EmojiEventsIcon />
-                </IconButton>
               </Box>
             </Box>
           </Toolbar>

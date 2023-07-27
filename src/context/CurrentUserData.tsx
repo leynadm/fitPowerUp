@@ -1,13 +1,17 @@
 import React, { useState, createContext, ReactNode } from "react";
 
 export const CurrentUserDataContext = createContext<any>({
-  currentUserData: null
+  currentUserData: null,
 });
 
-export const CurrentUserDataProvider = ({ children }: { children: ReactNode }) => {
+export const CurrentUserDataProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [currentUserData, setCurrentUserData] = useState(null);
 
-  function setContext(userData:any) {
+  function setContext(userData: any) {
     setCurrentUserData(userData);
   }
 

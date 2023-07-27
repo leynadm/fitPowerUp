@@ -3,6 +3,7 @@ import PathCarousel from "./PathCarousel";
 import Container from "@mui/material/Container";
 import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import { getApp } from "firebase/app";
+import toast from "react-hot-toast";
 interface ProgressProps {
   powerLevel: number;
   setPowerLevel: Dispatch<SetStateAction<number>>;
@@ -58,15 +59,16 @@ function ProgressPath({ powerLevel, setPowerLevel }: ProgressProps) {
 
     try {
       const matchedImageURL = await getDownloadURL(matchedImageRef);
-      console.log(matchedImageURL);
+ 
       setImageMatched(matchedImageURL);
     } catch (error) {
+      toast.error("Oops, getPowerLevelImage has an error!")
       // Handle the error here
     }
   }
 
   return (
-    <Container sx={{ height: "100%", width: "100%", display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center" }}>
+    <Container sx={{ height: "100%", width: "100%", display:"flex",flexDirection:"column" }}>
       <PathCarousel 
         setImageMatched={setImageMatched}
         imageMatched={imageMatched}

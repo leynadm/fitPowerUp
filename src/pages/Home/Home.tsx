@@ -10,9 +10,9 @@ import Exercise from "../../utils/interfaces/Exercise";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import { AuthContext } from "../../context/Auth";
-import { Typography } from "@mui/material";
-import NewWorkout from "../../components/ui/NewWorkout";
+import RestTimer from "../../components/ui/RestTimer";
 import { SocialDataProvider } from "../../context/SocialData";
+import { LogDataProvider } from "../../context/LogData";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: React.Dispatch<
@@ -25,7 +25,7 @@ function Home({
   setSessionVerificationEmailCheck,
 }: AppProps) {
   const [preselectedExercises, setPreselectedExercises] = useState<
-    { category: string; name: string; measurement: any[],favorite?:boolean }[]
+    { category: string; name: string; measurement: any[]; favorite?: boolean }[]
   >([]);
   const [existingExercises, setExistingExercises] = useState<
     { name: string; exercises: Exercise[] }[]
@@ -39,7 +39,6 @@ function Home({
   const [initialCategoriesLoaded, setInitialCategoriesLoaded] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
-
 
   useEffect(() => {
     setPreselectedExercises(importedPreselectedExercises);
@@ -89,7 +88,7 @@ function Home({
           name: exercise.name,
           category: exercise.category,
           measurement: exercise.measurement,
-          favorite:exercise.favorite
+          favorite: exercise.favorite,
         };
 
         const exerciseNameQuery = exerciseNameIndex.getAll(exercise.name);
@@ -98,7 +97,7 @@ function Home({
           const result = (event.target as IDBRequest).result;
           if (result.length === 0) {
             store.add(formattedExercise);
-          } 
+          }
         };
       });
 
@@ -142,7 +141,6 @@ function Home({
       success: {
         main: "#FF8C00",
       },
- 
     },
     typography: {
       button: {
@@ -152,55 +150,57 @@ function Home({
     },
     shape: {},
   });
- 
+
   return (
     <ThemeProvider theme={theme}>
       <SocialDataProvider>
-      <Box
-        sx={{
-          height: "calc(100vh - 56px)",
-          backgroundColor: "#F0F2F5",
-        }}
-      >
-        <VerifyEmailDialog
-          verifyEmailModalOpen={verifyEmailModalOpen}
-          setVerifyEmailModalOpen={setVerifyEmailModalOpen}
-        />
-        <Navbar />
-        <Routes>
-          <Route
-            path="workout/*"
-            index
-            element={
-              <Workout
-                setExercisesCategories={setExercisesCategories}
-                exercisesCategories={exercisesCategories} // Passed as a prop
-                
-                setUnitsSystem={setUnitsSystem}
-                
-                existingExercises={existingExercises}
-                selectedCategoryExercises={selectedCategoryExercises}
+        <LogDataProvider>
+          <Box
+            sx={{
+              height: "calc(100vh - 56px)",
+              backgroundColor: "#F0F2F5",
+            }}
+          >
+            <VerifyEmailDialog
+              verifyEmailModalOpen={verifyEmailModalOpen}
+              setVerifyEmailModalOpen={setVerifyEmailModalOpen}
+            />
 
-                setSelectedCategoryExercises={setSelectedCategoryExercises}
-                setExistingExercises={setExistingExercises}
-                unitsSystem={unitsSystem}
+            <RestTimer />
+
+            <Navbar />
+            <Routes>
+              <Route
+                path="workout/*"
+                index
+                element={
+                  <Workout
+                    setExercisesCategories={setExercisesCategories}
+                    exercisesCategories={exercisesCategories} // Passed as a prop
+                    setUnitsSystem={setUnitsSystem}
+                    existingExercises={existingExercises}
+                    selectedCategoryExercises={selectedCategoryExercises}
+                    setSelectedCategoryExercises={setSelectedCategoryExercises}
+                    setExistingExercises={setExistingExercises}
+                    unitsSystem={unitsSystem}
+                  />
+                }
               />
-            }
-          /> 
- 
-          <Route
-            path="friends/*"
-            element={
-              <Friends
-                existingExercises={existingExercises}
-                unitsSystem={unitsSystem}
-                setUnitsSystem={setUnitsSystem}
+
+              <Route
+                path="friends/*"
+                element={
+                  <Friends
+                    existingExercises={existingExercises}
+                    unitsSystem={unitsSystem}
+                    setUnitsSystem={setUnitsSystem}
+                  />
+                }
               />
-            }
-          />
-          <Route path="progress/*" element={<Progress />} />
-        </Routes>
-      </Box>
+              <Route path="progress/*" element={<Progress />} />
+            </Routes>
+          </Box>
+        </LogDataProvider>
       </SocialDataProvider>
     </ThemeProvider>
   );

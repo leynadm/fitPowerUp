@@ -14,10 +14,10 @@ function LandingPage() {
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
-  const [openInstallInstructionsModal,setOpenInstallInstructionsModal] = useState(false)
+  const [openInstallInstructionsModal, setOpenInstallInstructionsModal] =
+    useState(false);
 
   useEffect(() => {
-      console.log('waiting for the listener')
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     return () => {
       window.removeEventListener(
@@ -34,7 +34,7 @@ function LandingPage() {
 
   useEffect(() => {
     const mediaQueryList = window.matchMedia("(display-mode: standalone)");
-    const handleMediaQueryChange = (event:any) => {
+    const handleMediaQueryChange = (event: any) => {
       setShowInstallButton(!event.matches);
     };
 
@@ -45,24 +45,21 @@ function LandingPage() {
       mediaQueryList.removeEventListener("change", handleMediaQueryChange);
     };
   }, []);
-  
+
   function handleInstallClick() {
-
-    console.log({ deferredPrompt });
-
-    if(deferredPrompt===null){
-      setOpenInstallInstructionsModal(!openInstallInstructionsModal)
+    if (deferredPrompt === null) {
+      setOpenInstallInstructionsModal(!openInstallInstructionsModal);
     }
 
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult: any) => {
+        /* 
         if (choiceResult.outcome === "accepted") {
           console.log("User accepted the installation prompt");
         } else {
           console.log("User dismissed the installation prompt");
-        }
-        setDeferredPrompt(null);
+        } */
       });
     }
   }
@@ -101,7 +98,6 @@ function LandingPage() {
             <Button
               variant="contained"
               sx={{
-
                 fontWeight: "bold",
                 color: "black",
               }}
@@ -109,7 +105,6 @@ function LandingPage() {
             >
               Install
             </Button>
-
           </Toolbar>
         </Container>
       </AppBar>
@@ -124,11 +119,10 @@ function LandingPage() {
           height: "calc(100% - 56px)",
         }}
       >
-
-      <InstallInstructionsModal
-      openInstallInstructionsModal={openInstallInstructionsModal}
-      setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
-      />
+        <InstallInstructionsModal
+          openInstallInstructionsModal={openInstallInstructionsModal}
+          setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
+        />
 
         <Box sx={{ display: "flex" }}>
           <Typography
@@ -172,7 +166,7 @@ function LandingPage() {
           and also <span style={{ fontWeight: "bold" }}>100% FREE</span> workout
           tracking experience.
         </Typography>
-{/* 
+        {/* 
         <img src={fitImageLogo} alt="fit person" height="90%" width="90%" />
  */}
         <img
@@ -199,7 +193,6 @@ function LandingPage() {
         >
           Get Started
         </Button>
-
       </Container>
 
       <Box sx={{ backgroundColor: "white" }}></Box>

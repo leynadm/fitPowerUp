@@ -44,6 +44,7 @@ import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
 import SearchViewCharacterProgressModal from "../../components/ui/SearchViewCharacterProgressModal";
+import toast from "react-hot-toast";
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
 
@@ -78,7 +79,6 @@ function SearchUserProfile() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    console.log("what?");
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -96,42 +96,57 @@ function SearchUserProfile() {
   const navigate = useNavigate();
 
   async function getRelationshipStatus() {
-    if (!id) {
-      console.error("User ID is undefined");
-      return;
-    }
-
-    const followersFeedRef = doc(db, "followers-feed", id);
-    const documentSnapshot = await getDoc(followersFeedRef);
-
-    if (documentSnapshot.exists()) {
-      const data = documentSnapshot.data();
-      const users = data.users || [];
-      setUserFollowers(users.length);
-      if (users.includes(currentUser.uid)) {
-        setFollow("Stop Spotting");
+    try {
+      if (!id) {
+        throw new Error("User ID is undefined");
+      }
+  
+      const followersFeedRef = doc(db, "followers-feed", id);
+      const documentSnapshot = await getDoc(followersFeedRef);
+  
+      if (documentSnapshot.exists()) {
+        const data = documentSnapshot.data();
+        const users = data.users || [];
+        setUserFollowers(users.length);
+        if (users.includes(currentUser.uid)) {
+          setFollow("Stop Spotting");
+        } else {
+          setFollow("Start Spotting");
+        }
       } else {
         setFollow("Start Spotting");
       }
-    } else {
-      setFollow("Start Spotting");
+    } catch (error) {
+      toast.error("Oops, getRelationshipStatus has an error!")
+      // Handle the error here
+      console.error("Error getting relationship status:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to get relationship status. Please try again later.");
     }
   }
+  
 
   async function getProfileData() {
-    const userRef = doc(collection(db, "users"), id);
-    const docSnap = await getDoc(userRef);
+    try {
+      const userRef = doc(collection(db, "users"), id);
+      const docSnap = await getDoc(userRef);
+  
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as User;
+        const userDataWithId = { ...userData, id: docSnap.id };
+        setQueriedUser(userDataWithId);
+      } else {
 
-    if (docSnap.exists()) {
-      //console.log("Document data:", docSnap.data());
-      const userData = docSnap.data() as User;
-      const userDataWithId = { ...userData, id: docSnap.id };
-      setQueriedUser(userDataWithId);
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+      }
+    } catch (error) {
+      toast.error("Oops, getProfileData has an error!")
+      // Handle the error here
+      console.error("Error fetching profile data:", error);
+      // You can also show a user-friendly error message to the user
+      // For example: setErrorState("Failed to fetch profile data. Please try again later.");
     }
   }
+  
 
   async function followUser() {
     if (currentUser.isAnonymous === true) {
@@ -153,7 +168,7 @@ function SearchUserProfile() {
       setUserFollowers(userFollowers + 1);
     } else {
       const followersFeedData = followersFeedDoc.data();
-      console.log(followersFeedData);
+      
       // Access specific fields:
       const users = followersFeedData.users;
 
@@ -181,13 +196,6 @@ function SearchUserProfile() {
     }
   }
 
-  function handleFollowerClick() {
-    if (follow === "Start Spotting") {
-      followUser();
-    } else {
-      unfollowUser();
-    }
-  }
 
   async function unfollowUser() {
     const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
@@ -220,6 +228,18 @@ function SearchUserProfile() {
     getSearchProfileFollowers();
     navigate("");
   }
+
+
+
+
+  function handleFollowerClick() {
+    if (follow === "Start Spotting") {
+      followUser();
+    } else {
+      unfollowUser();
+    }
+  }
+
 
   function handleSearchUserProfilePostsBtn() {
     navigate("");
@@ -343,7 +363,9 @@ function SearchUserProfile() {
         </Container>
       </AppBar>
 
-      {queriedUser?.powerLevel && !queriedUser.hidePowerLevel && (
+      {queriedUser?.powerLevel &&
+      openSearchViewCharacterProgressModal &&
+      !currentUserData.hidePowerLevel ? (
         <SearchViewCharacterProgressModal
           openSearchViewCharacterProgressModal={
             openSearchViewCharacterProgressModal
@@ -353,6 +375,8 @@ function SearchUserProfile() {
           }
           queriedUser={queriedUser}
         />
+      ) : (
+        <div></div>
       )}
 
       {queriedUser !== undefined && (
@@ -375,19 +399,22 @@ function SearchUserProfile() {
               }}
             >
               {queriedUser.profileImage !== "" ? (
-                <Stack direction="row" spacing={2}
-                onClick={handleSearchViewCharacterProgressModalClick}
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  onClick={handleSearchViewCharacterProgressModalClick}
                 >
                   <Avatar
                     alt="user profile"
                     sx={{ width: 64, height: 64, alignSelf: "center" }}
                     src={queriedUser.profileImage}
-                  >
-                  </Avatar>
+                  ></Avatar>
                 </Stack>
               ) : (
-                <Stack direction="row" spacing={2}
-                onClick={handleSearchViewCharacterProgressModalClick}
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  onClick={handleSearchViewCharacterProgressModalClick}
                 >
                   <Avatar
                     alt="Remy Sharp"
