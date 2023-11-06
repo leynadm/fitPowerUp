@@ -1,7 +1,7 @@
 import Exercise from "../interfaces/Exercise";
 import toast from "react-hot-toast";
 
-function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
+async function getNewWorkoutExercises(setExistingExercises: any) {
   const request = indexedDB.open("fitScouterDb", 1);
 
   request.onsuccess = function () {
@@ -16,12 +16,7 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
       "user-exercises-entries"
     );
 
-    const dateIndex = userEntryTransactionStore.index("exercise_date");
-
-    const dateToQuery = currentDate;
-    const range = IDBKeyRange.only(dateToQuery);
-
-    const exercisesRequest = dateIndex.openCursor(range);
+    const exercisesRequest = userEntryTransactionStore.openCursor();
     const groupedExercisesByName: { [name: string]: Exercise[] } = {};
 
     exercisesRequest.onsuccess = function (event) {
@@ -29,7 +24,6 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
 
       if (cursor) {
         const exercise = cursor.value;
-
         // Find the group for the current exercise name, or create a new group if it doesn't exist
         const group = groupedExercisesByName[exercise.exercise];
         if (group) {
@@ -54,7 +48,7 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
     };
 
     exercisesRequest.onerror = function () {
-      toast.error("Oops, getExercisesByDate has an error!");
+      toast.error("Oops, getNewWorkoutExercises has an error!");
       console.error("Error retrieving existing exercises");
     };
 
@@ -64,9 +58,9 @@ function getExercisesByDate(currentDate: Date, setExistingExercises: any) {
   };
 
   request.onerror = function () {
-    toast.error("Oops, couldn't open the database in getExercisesByDate!");
+    toast.error("Oops, couldn't open the database in getNewWorkoutExercises!");
     console.error("Error opening database");
   };
 }
 
-export default getExercisesByDate;
+export default getNewWorkoutExercises;

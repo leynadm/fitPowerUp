@@ -3,10 +3,6 @@ function calculateDOTS(
     weightLifted: number,
     isFemale: boolean) {
 
-console.log('loading bodyweight, weightlifter and isfemale:')
-console.log(bodyWeight)
-console.log(weightLifted)
-console.log(isFemale)
     const maleCoeff = [
       -307.75076,
       24.0900756,

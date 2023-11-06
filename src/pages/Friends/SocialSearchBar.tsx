@@ -60,7 +60,8 @@ function SocialSearchBar() {
       q = query(
         collection(db, "users"),
         where("hideProfile", "==", false),
-        limit(10)
+        where("fullname", "array-contains", "daniel matei"),
+        limit(5)
       );
     }
 
@@ -87,6 +88,7 @@ function SocialSearchBar() {
     setUserToSearch(event.target.value.toLocaleLowerCase());
     // Perform any necessary operations with the value
   };
+
 
   return (
     <Box>

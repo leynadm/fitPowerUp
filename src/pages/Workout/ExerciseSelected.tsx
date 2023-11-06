@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -9,37 +9,28 @@ import TimerIcon from "@mui/icons-material/Timer";
 import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseSelectedGraph from "./ExerciseSelectedGraph";
-import { useNavigate } from "react-router-dom";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import { Routes, Route } from "react-router-dom";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { useNavigate, useParams, Routes, Route } from "react-router-dom";
 import { LogDataContext } from "../../context/LogData";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import Fab from "@mui/material/Fab";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import AddHomeIcon from "@mui/icons-material/AddHome";
 
 interface ExerciseSelectionProps {
-  todayDate: Date | undefined;
   selectedExercise: { category: string; name: string; measurement: any[] };
-  unitsSystem: string;
-  weightIncrementPreference: number;
 }
 
-function ExerciseSelected({
-  todayDate,
-  selectedExercise,
-  unitsSystem,
-  weightIncrementPreference,
-}: ExerciseSelectionProps) {
-
+function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
   const [countdownValue, setCountdownValue] = useState(120);
-    const {showRestTimer,setShowRestTimer} = useContext(LogDataContext)
-  
-  
-  
+  const { showRestTimer, setShowRestTimer } = useContext(LogDataContext);
+  const { exerciseName } = useParams();
+
+  console.log(exerciseName);
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
     navigate("");
   };
-
-
 
   const handleNavigateHistory = () => {
     navigate("history");
@@ -49,27 +40,32 @@ function ExerciseSelected({
     navigate("graph");
   };
 
-  
   function handleShowRestTimer() {
     setShowRestTimer(!showRestTimer);
-  } 
-
+  }
+  const handleNewWorkout = () => {
+    navigate("/home/workout/new");
+  };
 
   return (
-    <Box sx={{ height: "100%", }}>
-
-      
-      <AppBar elevation={0} position="fixed" style={{ top: 0,height:"56px" }}>
+    <>
+      <AppBar
+        elevation={3}
+        position="fixed"
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <LibraryBooksIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            <EditNoteIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -83,15 +79,12 @@ function ExerciseSelected({
               Add
             </Typography>
 
-            <LibraryBooksIcon
-              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            <EditNoteIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
 
             <Typography
               variant="h5"
               noWrap
               component="a"
-              
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -103,7 +96,7 @@ function ExerciseSelected({
                 textDecoration: "none",
               }}
             >
-              Add 
+              Add
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -119,78 +112,42 @@ function ExerciseSelected({
                   <TimerIcon />
                 </IconButton>
 
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={handleNewWorkout}
+                >
+                  <AddHomeIcon />
+                </IconButton>
               </Box>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "32px",
-          width: "100vw",
-          backgroundColor: "#FF8C00",
-          borderBottom:"2px black solid"
-        }}
+      <ButtonGroup
+        variant="text"
+        aria-label="outlined button group"
+        sx={{ width: "100%" }}
+        className="aaa-button-group"
       >
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateTrack}
-        >
-          TRACK
+        <Button sx={{ width: "100%" }} onClick={handleNavigateTrack}>
+          Track
         </Button>
-
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateHistory}
-        >
-          HISTORY
+        <Button sx={{ width: "100%" }} onClick={handleNavigateHistory}>
+          History
         </Button>
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateGraph}
-        >
-          GRAPH
+        <Button sx={{ width: "100%" }} onClick={handleNavigateGraph}>
+          Graph
         </Button>
-      </Box>
+      </ButtonGroup>
 
       <Routes>
-        <Route
-          path=""
-          element={
-            <ExerciseSelectedTrack
-              selectedExercise={selectedExercise}
-              todayDate={todayDate}
-              unitsSystem={unitsSystem}
-              weightIncrementPreference={weightIncrementPreference}
-            />
-          }
-        />
-        <Route
-          path="history"
-          element={
-            <ExerciseSelectedHistory
-              selectedExercise={selectedExercise}
-              unitsSystem={unitsSystem}
-              weightIncrementPreference={weightIncrementPreference}
-            />
-          }
-        />
+        <Route path="" element={<ExerciseSelectedTrack />} />
+        <Route path="history" element={<ExerciseSelectedHistory />} />
         <Route
           path="graph"
           element={
@@ -198,7 +155,7 @@ function ExerciseSelected({
           }
         />
       </Routes>
-    </Box>
+    </>
   );
 }
 

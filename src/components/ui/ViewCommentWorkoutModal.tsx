@@ -111,7 +111,7 @@ function ViewCommentWorkoutModal({
               size="large"
               name="simple-controlled"
               value={workoutValue}
-
+              max={7}
               sx={{ paddingBottom: "8px" }}
               icon={<StarsIcon fontSize="inherit"/>}
               emptyIcon={<StarBorderIcon fontSize="inherit" />}

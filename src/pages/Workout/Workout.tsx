@@ -4,53 +4,37 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
+  useContext,
 } from "react";
+import CompletedWorkoutsTabs from "./CompletedWorkoutsTabs";
 import Box from "@mui/material/Box";
 import ExercisesCategories from "./ExercisesCategories";
 import { Routes, Route } from "react-router-dom";
-import NewWorkout from "../../components/ui/NewWorkout";
+import NewWorkout from "./NewWorkout";
 import ExercisesByCategory from "./ExercisesByCategory";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
 import Exercise from "../../utils/interfaces/Exercise";
 import WorkoutCalendar from "./WorkoutCalendar";
-import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
+import getExercisesByDate from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
 import SendFeedback from "../Settings/SendFeedback";
-import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
+import CompletedWorkouts from "./CompletedWorkouts";
+import { AuthContext } from "../../context/Auth";
+import WorkoutCongratulations from "./WorkoutCongratulations";
+import MuscleGroupsSelectionMenu from "./MuscleGroupsSelectionMenu";
+import ExerciseSelectionMenu from "./ExerciseSelectionMenu";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
-  selectedCategoryExercises: {
-    category: string;
-    name: string;
-    measurement: any[];
-  }[];
-  exercisesCategories: string[];
-  setExercisesCategories: Dispatch<SetStateAction<string[]>>;
-
   setExistingExercises: Dispatch<
     SetStateAction<{ name: string; exercises: Exercise[] }[]>
   >;
-  setSelectedCategoryExercises: Dispatch<
-    SetStateAction<{ category: string; name: string; measurement: any[] }[]>
-  >;
-  unitsSystem: string;
-  setUnitsSystem: Dispatch<SetStateAction<string>>;
 }
 
-function Workout({
-  existingExercises,
-  selectedCategoryExercises,
-  exercisesCategories,
-  setExercisesCategories,
-  setSelectedCategoryExercises,
-  setExistingExercises,
-  unitsSystem,
-  setUnitsSystem,
-}: HomeProps) {
+function Workout({ existingExercises, setExistingExercises }: HomeProps) {
   const [todayDate, setTodayDate] = useState<Date>();
+  const { currentUserData } = useContext(AuthContext);
 
   const [selectedExercise, setSelectedExercise] = useState<{
     category: string;
@@ -66,7 +50,8 @@ function Workout({
       const currentDate = new Date();
       setTodayDate(currentDate);
     }
-    getDataPreferences();
+
+    setWeightIncrementPreference(currentUserData.defaultWeightIncrement);
   }, []);
 
   /* Use this useEffect to force requerying of data and update state when user navigates with back button */
@@ -84,38 +69,9 @@ function Workout({
 
   const handleEffectLogic = useCallback(() => {
     if (todayDate) {
-      getExercisesByDate(todayDate, setExistingExercises);
-      getDataPreferences();
+      getExercisesByDate(setExistingExercises);
     }
-  }, [todayDate, setExistingExercises]);
-
-  const getDataPreferences = useCallback(() => {
-    const request = indexedDB.open("fitScouterDb");
-
-    request.onerror = function (event) {
-      toast.error("Oops, getDataPreferences has an error!")
-      // Handle errors
-    };
-
-    request.onsuccess = function (event) {
-      const db = request.result;
-
-      // Retrieve the record with id 1 from the object store
-      const transaction = db.transaction("user-data-preferences", "readonly");
-      const objectStore = transaction.objectStore("user-data-preferences");
-      const getRequest = objectStore.get(1);
-
-      getRequest.onsuccess = function (event) {
-        const record = getRequest.result;
-        if (record) {
-          // Extract the unitsSystem value from the record
-          const { unitsSystem, defaultWeightIncrement } = record;
-          setUnitsSystem(unitsSystem);
-          setWeightIncrementPreference(defaultWeightIncrement);
-        }
-      };
-    };
-  }, [setUnitsSystem, setWeightIncrementPreference]);
+  }, []);
 
   return (
     <Box>
@@ -125,27 +81,31 @@ function Workout({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "#F0F2F5",
         }}
       >
-        <Toaster position="top-center" />
-
         <Routes>
           <Route
-            path=""
+            path="/completed-details/:exerciseName/*"
+            element={<CompletedWorkoutsTabs />}
+          />
+
+          <Route
+            path="/*"
+            index
+            element={
+              <CompletedWorkouts
+                todayDate={todayDate}
+                setTodayDate={setTodayDate}
+              />
+            }
+          />
+
+          <Route
+            path="new/*"
             index
             element={
               <NewWorkout
-                unitsSystem={unitsSystem}
-                todayDate={todayDate}
-                setTodayDate={setTodayDate}
                 existingExercises={existingExercises}
-                setSelectedCategoryExercises={setSelectedCategoryExercises}
-                selectedCategoryExercises={selectedCategoryExercises}
-                setSelectedExercise={setSelectedExercise}
-                selectedExercise={selectedExercise}
                 setExistingExercises={setExistingExercises}
               />
             }
@@ -154,52 +114,24 @@ function Workout({
           <Route path="settings/send-feedback" element={<SendFeedback />} />
 
           <Route
-            path="workout_categories/*"
-            element={
-              <ExercisesCategories
-                setExercisesCategories={setExercisesCategories}
-                todayDate={todayDate}
-                setTodayDate={setTodayDate}
-                selectedCategoryExercises={selectedCategoryExercises}
-                setSelectedCategoryExercises={setSelectedCategoryExercises}
-                exercisesCategories={exercisesCategories}
-                setSelectedExercise={setSelectedExercise}
-              />
-            }
+            path="/new/workout_categories/exercises/selected/:exerciseName/*"
+            element={<ExerciseSelected selectedExercise={selectedExercise} />}
           />
 
           <Route
-            path="workout_categories/exercises"
-            element={
-              <ExercisesByCategory
-                setExercisesCategories={setExercisesCategories}
-                todayDate={todayDate}
-                selectedCategoryExercises={selectedCategoryExercises}
-                setSelectedCategoryExercises={setSelectedCategoryExercises}
-                setSelectedExercise={setSelectedExercise}
-                exercisesCategories={exercisesCategories}
-              />
-            }
+            path="/new/workout_categories/*"
+            element={<MuscleGroupsSelectionMenu />}
           />
 
           <Route
-            path="workout_categories/exercises/selected/*"
-            element={
-              <ExerciseSelected
-                todayDate={todayDate}
-                selectedExercise={selectedExercise}
-                unitsSystem={unitsSystem}
-                weightIncrementPreference={weightIncrementPreference}
-              />
-            }
+            path="/new/workout_categories/exercises"
+            element={<ExerciseSelectionMenu />}
           />
 
           <Route
             path="settings"
             element={
               <Settings
-                unitsSystem={unitsSystem}
-                setUnitsSystem={setUnitsSystem}
                 weightIncrementPreference={weightIncrementPreference}
                 setWeightIncrementPreference={setWeightIncrementPreference}
               />
@@ -209,10 +141,11 @@ function Workout({
           <Route
             path="calendar"
             element={
+
               <WorkoutCalendar
                 todayDate={todayDate}
                 setTodayDate={setTodayDate}
-                unitsSystem={unitsSystem}
+
               />
             }
           />
@@ -222,8 +155,13 @@ function Workout({
           <Route
             path="bodytracker/*"
             element={
-              <BodyTracker todayDate={todayDate} unitsSystem={unitsSystem} />
+              <BodyTracker todayDate={todayDate} unitsSystem={currentUserData.unitsSystem} />
             }
+          />
+
+          <Route
+            path="new/congratulations"
+            element={<WorkoutCongratulations />}
           />
         </Routes>
       </Box>

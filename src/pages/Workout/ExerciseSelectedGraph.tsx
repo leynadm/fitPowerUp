@@ -20,6 +20,7 @@ import getMaxPace from "../../utils/chartFunctions/getMaxPace";
 import { ChartOptions } from "chart.js";
 import { Select, MenuItem } from "@mui/material";
 import Container from "@mui/material/Container";
+import Slide from '@mui/material/Slide';
 import {
   Chart as ChartJS,
   Tooltip,
@@ -368,6 +369,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
   };
 
   return (
+
     <Container sx={{ width: "100%", height: "100%" }}>
       <Select
         value={selectedOption}
@@ -426,6 +428,7 @@ function ExerciseSelectedGraph({ selectedExercise }: ParentComponentProps) {
         ) : null}
       </Box>
     </Container>
+
   );
 }
 

@@ -4,6 +4,7 @@ import React, {
   SetStateAction,
   useRef,
   ChangeEvent,
+  useContext,
 } from "react";
 import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
@@ -18,7 +19,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import deleteAllEntries from "../../utils/CRUDFunctions/deleteAllEntries";
+import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntries";
 import exportData from "../../utils/exportData";
 import * as XLSX from "xlsx";
 import DeleteAllDataModal from "../../components/ui/DeleteAllDataModal";
@@ -30,6 +31,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/Auth";
 const style = {
   width: "100%",
 
@@ -41,20 +43,19 @@ const style = {
 };
 
 interface WorkoutProps {
-  unitsSystem: string;
-  setUnitsSystem: Dispatch<SetStateAction<string>>;
+
   weightIncrementPreference: number;
   setWeightIncrementPreference: Dispatch<SetStateAction<number>>;
 }
 
 function Settings({
-  unitsSystem,
-  setUnitsSystem,
   weightIncrementPreference,
   setWeightIncrementPreference,
 }: WorkoutProps) {
-  const [enabled, setEnabled] = useState(unitsSystem === "imperial");
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const {currentUserData} = useContext(AuthContext)
+  const [enabled, setEnabled] = useState(currentUserData.unitsSystem === "imperial");
 
   const [openDeleteAllData, setOpenDeleteAllData] = useState(false);
   const [genericSuccessAlert, setGenericSuccessAlert] = useState(false);
@@ -69,6 +70,7 @@ function Settings({
     setDatasetOrigin(e.target.value);
   };
 
+  /*  
   const updateToImperial = () => {
     const request = indexedDB.open("fitScouterDb");
 
@@ -264,7 +266,7 @@ function Settings({
       updateToMetric();
     }
   };
-
+*/
   function updateDefaultWeightIncrement(selectedValue: number) {
     const dbName = "fitScouterDb";
     const objectStoreName = "user-data-preferences";
@@ -705,7 +707,7 @@ function Settings({
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Switch checked={enabled} onChange={handleSwitchChange} />
+                  <Switch checked={enabled} /* onChange={handleSwitchChange} */ />
                 }
                 label={enabled ? "Imperial" : "Metric"}
               />

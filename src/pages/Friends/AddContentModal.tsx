@@ -324,7 +324,7 @@ function AddContentModal({
                     sx={{ width: 48, height: 48, alignSelf: "center" }}
                   />
                 }
-                title={currentUserData.fullname[2]}
+                title={`${currentUserData.name} ${currentUserData.surname}` }
                 titleTypographyProps={{ variant: "h6", padding: 0, margin: 0 }}
                 subheader={postDate.toDateString()}
               />

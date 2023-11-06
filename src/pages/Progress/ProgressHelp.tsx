@@ -17,7 +17,6 @@ function ProgressHelp() {
         flexDirection: "column",
         alignItems: "center",
         paddingBottom: "56px",
-        backgroundColor: "#F0F2F5",
       }}
     >
       <Typography sx={{ textAlign: "center", marginTop: "1rem" }}>
@@ -26,7 +25,7 @@ function ProgressHelp() {
       <br></br>
       <Typography sx={{ textAlign: "center" }}>
         Get started by selecting three different exercises you excel at the
-        most, like the Deadlift, Squat, or Bench.
+        most, like the Deadlift, Squat, and Bench.
       </Typography>
       <br></br>
       <Typography sx={{ textAlign: "center" }}>

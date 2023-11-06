@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { SocialDataContext } from "../../context/SocialData";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   doc,
@@ -45,9 +46,10 @@ import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
 import SearchViewCharacterProgressModal from "../../components/ui/SearchViewCharacterProgressModal";
 import toast from "react-hot-toast";
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
-
+  const {setUserFeed,setFeedDataNullCheck, setHasPosts,setUsersDataCache}=useContext(SocialDataContext)
   const { currentUser,currentUserData,setCurrentUserData } = useContext(AuthContext);
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
@@ -92,7 +94,7 @@ function SearchUserProfile() {
       getSearchProfileFollowers();
     }
   }, [id]);
-
+ 
   const navigate = useNavigate();
 
   async function getRelationshipStatus() {
@@ -111,10 +113,10 @@ function SearchUserProfile() {
         if (users.includes(currentUser.uid)) {
           setFollow("Stop Spotting");
         } else {
-          setFollow("Start Spotting");
+          setFollow("Start To Spot");
         }
       } else {
-        setFollow("Start Spotting");
+        setFollow("Start To Spot");
       }
     } catch (error) {
       toast.error("Oops, getRelationshipStatus has an error!")
@@ -149,91 +151,123 @@ function SearchUserProfile() {
   
 
   async function followUser() {
-    if (currentUser.isAnonymous === true) {
-      setGuestProfileModalOpen(true);
-      return;
-    }
+    try {
 
-    const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
 
-    const followersFeedDoc = await getDoc(followersFeedRef);
-    if (!followersFeedDoc.exists()) {
-      await setDoc(followersFeedRef, {
-        lastPost: null,
-        recentPosts: [],
-        users: arrayUnion(currentUser.uid),
-      });
+      if (currentUser.isAnonymous === true) {
+        setGuestProfileModalOpen(true);
+        return;
+      }
 
-      setFollow("Stop Spotting");
-      setUserFollowers(userFollowers + 1);
-    } else {
-      const followersFeedData = followersFeedDoc.data();
-      
-      // Access specific fields:
-      const users = followersFeedData.users;
-
-      if (users.length < 25) {
-        await updateDoc(followersFeedRef, {
+      if (currentUser.emailVerified === false) {
+        toast("You need to verify your email first!")
+        return;
+      }
+  
+      const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
+      const followersFeedDoc = await getDoc(followersFeedRef);
+  
+      if (!followersFeedDoc.exists()) {
+        await setDoc(followersFeedRef, {
+          lastPost: null,
+          recentPosts: [],
           users: arrayUnion(currentUser.uid),
         });
-
-        const currentUserfollowersFeedRef = doc(
-          collection(db, "followers-feed"),
-          `${currentUser.uid}`
-        );
-        await updateDoc(currentUserfollowersFeedRef, {
-          following: arrayUnion(id),
-        });
-
+  
         setFollow("Stop Spotting");
         setUserFollowers(userFollowers + 1);
-
-        getSearchProfileFollowers();
-        navigate("");
       } else {
-        setFollowersLimitModalOpen(!followersLimitModalOpen);
+        const followersFeedData = followersFeedDoc.data();
+        const users = followersFeedData.users;
+  
+        if (users.length < 25) {
+          await updateDoc(followersFeedRef, {
+            users: arrayUnion(currentUser.uid),
+          });
+  
+          const currentUserfollowersFeedRef = doc(
+            collection(db, "followers-feed"),
+            `${currentUser.uid}`
+          );
+          await updateDoc(currentUserfollowersFeedRef, {
+            following: arrayUnion(id),
+          });
+  
+          setFollow("Stop Spotting");
+          setUserFollowers(userFollowers + 1);
+  
+          getSearchProfileFollowers();
+          navigate("");
+          setUserFeed([])
+          setHasPosts(false)
+          setFeedDataNullCheck(true)
+        } else {
+          setFollowersLimitModalOpen(!followersLimitModalOpen);
+  
+        }
       }
+    } catch (error) {
+      toast.error("Oops, followUser has an error!")
+      // Handle any errors that occur during the execution of the function
+      console.error("Error in followUser():", error);
+      // You can add specific error handling here based on the error type if needed.
     }
   }
+  
 
-
+ 
   async function unfollowUser() {
-    const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
-    const followersFeedDoc = await getDoc(followersFeedRef);
-    if (!followersFeedDoc.exists()) {
-      // If the followers feed document doesn't exist, there's nothing to unfollow
-      return;
+    try {
+      const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
+      const followersFeedDoc = await getDoc(followersFeedRef);
+  
+      if (!followersFeedDoc.exists()) {
+        // If the followers feed document doesn't exist, there's nothing to unfollow
+        return;
+      }
+  
+      const followersFeedData = followersFeedDoc.data();
+      if (!followersFeedData.users.includes(currentUser.uid)) {
+        // If the current user is not in the users array, they're not following this user
+        return;
+      }
+  
+      await updateDoc(followersFeedRef, {
+        users: arrayRemove(currentUser.uid),
+      });
+  
+      setFollow("Start To Spot");
+      setUserFollowers(userFollowers - 1);
+  
+      const currentUserfollowersFeedRef = doc(
+        collection(db, "followers-feed"),
+        `${currentUser.uid}`
+      );
+   
+      await updateDoc(currentUserfollowersFeedRef, {
+        following: arrayRemove(id),
+      });
+    
+      getSearchProfileFollowers();
+      setUserFeed([])
+      setHasPosts(false)
+      setFeedDataNullCheck(true)
+
+      navigate("");
+    } catch (error) {
+      toast.error("Oops, unfollowUser has an error!")
+      // Handle any errors that occur during the execution of the function
+      console.error("Error in unfollowUser():", error);
+      // You can add specific error handling here based on the error type if needed.
     }
-
-    const followersFeedData = followersFeedDoc.data();
-    if (!followersFeedData.users.includes(currentUser.uid)) {
-      // If the current user is not in the users array, they're not following this user
-      return;
-    }
-
-    await updateDoc(followersFeedRef, {
-      users: arrayRemove(currentUser.uid),
-    });
-    setFollow("Start Spotting");
-    setUserFollowers(userFollowers - 1);
-
-    const currentUserfollowersFeedRef = doc(
-      collection(db, "followers-feed"),
-      `${currentUser.uid}`
-    );
-    await updateDoc(currentUserfollowersFeedRef, {
-      following: arrayRemove(id),
-    });
-
-    getSearchProfileFollowers();
-    navigate("");
   }
+  
 
 
 
 
   function handleFollowerClick() {
-    if (follow === "Start Spotting") {
+    if (follow === "Start To Spot") {
       followUser();
     } else {
       unfollowUser();
@@ -277,6 +311,12 @@ function SearchUserProfile() {
       setGuestProfileModalOpen(true);
       return;
     }
+    
+    if (currentUser.emailVerified === false) {
+      toast("You need to verify your email first!")
+      return;
+    }
+
 
     const userRef = doc(collection(db, "users"), currentUser.uid);
 
@@ -459,7 +499,7 @@ function SearchUserProfile() {
                   onClick={handleFollowerClick}
                 >
                   {follow}
-                  {follow === "Start Spotting" ? (
+                  {follow === "Start To Spot" ? (
                     <FavoriteIcon />
                   ) : (
                     <HeartBrokenIcon />

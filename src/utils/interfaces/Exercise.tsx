@@ -1,6 +1,6 @@
 interface Exercise {
     exercise: string;
-    date: Date | string;
+    date: string;
     weight: number;
     reps: number;
     distance: number;

@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { AuthContext } from "../../context/Auth";
-import { doc, getDoc } from "firebase/firestore";
-import User from "../../utils/interfaces/User";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {
   collection,
   query,
@@ -32,7 +31,7 @@ function Newsfeed() {
   const [hasPosts, setHasPosts] = useState(false);
     const [feedDataNullCheck, setFeedDataNullCheck] = useState(false);
  */
-  
+   
   const {
     userFeed,
     setUserFeed,
@@ -69,8 +68,6 @@ function Newsfeed() {
   }, []);
 
   useEffect(() => {
-    console.log("logging current user data inside newsfeeed");
-    console.log(currentUserData);
 
     if (
       isOnline &&
@@ -82,12 +79,6 @@ function Newsfeed() {
   }, []);
 
   useEffect(() => {
-    console.log('logging inside check.')
-    console.log(userFeed)
-    console.log(postIDsCache)
-    console.log(usersDataCache)
-    console.log(latestDoc)
-    console.log(hasPosts)
 
   }, [userFeed, loading]);
 
@@ -168,6 +159,7 @@ function Newsfeed() {
 
 
   async function getFeed() {
+    
     renderedOnce = true;
 
     try {
@@ -183,7 +175,6 @@ function Newsfeed() {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
-      console.log({ sevenDaysAgoTimestamp });
       // Retrieve the documents from the "followers-feed" collection that match the specified query conditions
 
       const followedUsersSnapshot = await getDocs(
@@ -199,12 +190,7 @@ function Newsfeed() {
       // Extract the document IDs of the followed users
       const documentIds = followedUsersSnapshot.docs.map((doc) => doc.id);
 
-
-      console.log("logging documentIds of the followed users:");
-      console.log(documentIds);
-
       if (documentIds.length === 0) {
-        console.log("No post IDs found.");
         if (renderedOnce) {
           setLoading(false);
         }
@@ -230,8 +216,6 @@ function Newsfeed() {
         setUsersDataCache(usersData);
       }
 
-      console.log('logging users data:')
-      console.log(usersData)
       let postIds;
       // Extract the post IDs from the "recentPosts" field of the followed users' documents
 
@@ -412,15 +396,20 @@ function Newsfeed() {
       ) : (
         <Box
           sx={{
-            paddingBottom: "56px",
-            marginTop: "8px",
-            textAlign: "center",
-            height: "100%",
+            display:"flex",
+            flexDirection:"column",
+            justifyContent:"center",
+            alignItems:"center",
+            height: "80vh",
+            gap:1
           }}
         >
-          <Typography sx={{ height: "100%" }}>
-            No posts, follow others to see their activity!
+          <PersonSearchIcon fontSize="large"/>
+          <Typography sx={{textAlign:"center" }}>
+            No posts yet!<br></br> 
+            Spot others to see their activity!
           </Typography>
+
         </Box>
       )}
     </>

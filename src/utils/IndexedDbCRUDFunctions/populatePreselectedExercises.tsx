@@ -4,8 +4,6 @@ function populatePreselectedExercises(setExercisesCategories:any) {
     const request = indexedDB.open("fitScouterDb", 1);
   
     if (!request) {
-      console.log("request value:");
-      console.log(request);
       return;
     }
   
@@ -75,7 +73,6 @@ function populatePreselectedExercises(setExercisesCategories:any) {
               cursor.continue();
             } else {
               const categories = Array.from(uniqueCategories);
-              console.log("Categories:", categories);
               setExercisesCategories(categories);
             }
           };

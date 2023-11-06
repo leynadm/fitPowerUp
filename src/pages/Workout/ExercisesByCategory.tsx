@@ -11,10 +11,10 @@ import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntries";
-import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
+import deleteExerciseEntries from "../../utils/IndexedDbCRUDFunctions/deleteExerciseEntries";
+import handleCategoryClick from "../../utils/IndexedDbCRUDFunctions/handleCategoryClick";
 import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
-import getExercisesByCategory from "../../utils/CRUDFunctions/getExercisesByCategory";
+import getExercisesByCategory from "../../utils/IndexedDbCRUDFunctions/getExercisesByCategory";
 import EditExercisePropertiesModal from "../../components/ui/EditExercisePropertiesModal";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,9 +31,11 @@ interface ExercisesCategoriesProps {
     id?: any;
     favorite?: boolean;
   }[];
+  
   setSelectedExercise: Dispatch<
     SetStateAction<{ name: string; category: string; measurement: any[] }>
   >;
+
   exercisesCategories: string[];
   setExercisesCategories: Dispatch<SetStateAction<string[]>>;
   setSelectedCategoryExercises: Dispatch<
@@ -60,7 +62,7 @@ function ExercisesByCategory({
     setSelectedExercise(exercise);
     navigate(`selected`);
   };
-
+ 
   const handleEditExerciseClick = () => {
     setOpenEditExercisePropertiesModal(true);
     setAnchorEl(null);
@@ -114,6 +116,7 @@ function ExercisesByCategory({
 
   function deleteExerciseClick() {
     deleteExerciseEntries(exerciseToDelete);
+    handleCategoryClick(categoryToRefresh, setSelectedCategoryExercises);
     setAnchorEl(null);
   }
 
@@ -224,7 +227,9 @@ function ExercisesByCategory({
         />
       )}
 
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={3} position="fixed" style={{ top: 0,
+ background: "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)"     
+      }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FitnessCenterIcon
@@ -293,7 +298,6 @@ function ExercisesByCategory({
         sx={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#F0F2F5",
           paddingBottom: "56px",
         }}
       >
@@ -353,7 +357,6 @@ function ExercisesByCategory({
                       justifyContent: "center",
                       alignItems: "center",
                       height: "100%",
-                      backgroundColor: "#F0F2F5",
                       width: "100%",
                     }}
                   >
@@ -452,7 +455,6 @@ function ExercisesByCategory({
           Select Favorite
         </MenuItem>
       </Menu>
-
     </Container>
   );
 }

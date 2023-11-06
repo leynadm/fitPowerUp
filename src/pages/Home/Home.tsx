@@ -5,14 +5,14 @@ import Progress from "../Progress/Progress";
 import Friends from "../Friends/Friends";
 import Workout from "../Workout/Workout";
 import Box from "@mui/material/Box";
-import importedPreselectedExercises from "../../utils/preselectedExercises";
 import Exercise from "../../utils/interfaces/Exercise";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import { AuthContext } from "../../context/Auth";
 import RestTimer from "../../components/ui/RestTimer";
 import { SocialDataProvider } from "../../context/SocialData";
 import { LogDataProvider } from "../../context/LogData";
+import getAllPreselectedExercises from "../../utils/IndexedDbCRUDFunctions/getAllPreselectedExercises";
+import { TrainingDataProvider } from "../../context/TrainingData";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: React.Dispatch<
@@ -41,7 +41,22 @@ function Home({
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    setPreselectedExercises(importedPreselectedExercises);
+    // Fetch the preselected exercises and save them in the state variable
+    getAllPreselectedExercises()
+      .then((exercises) => {
+        setPreselectedExercises(
+          exercises as {
+            category: string;
+            name: string;
+            measurement: any[];
+            favorite?: boolean;
+          }[]
+        );
+      })
+      .catch((error) => {
+        console.error("Error getting preselected exercises:", error);
+      });
+
     if (
       !currentUser.emailVerified &&
       !currentUser.isAnonymous &&
@@ -56,6 +71,7 @@ function Home({
     if (preselectedExercises.length > 0) {
       populatePreselectedExercises();
     }
+    console.log("loading now");
   }, [preselectedExercises]);
 
   useEffect(() => {
@@ -124,41 +140,13 @@ function Home({
     };
   }
 
-  let theme = createTheme({
-    palette: {
-      primary: {
-        main: "#000000",
-      },
-      secondary: {
-        main: "#808080",
-      },
-      /* 
-      success: {
-        main: "#3f51b5",
-      },
-
-*/
-      success: {
-        main: "#FF8C00",
-      },
-    },
-    typography: {
-      button: {
-        // Here is where you can customise the button
-        fontWeight: "bold",
-      },
-    },
-    shape: {},
-  });
-
   return (
-    <ThemeProvider theme={theme}>
-      <SocialDataProvider>
+    <SocialDataProvider>
+      <TrainingDataProvider>
         <LogDataProvider>
           <Box
             sx={{
               height: "calc(100vh - 56px)",
-              backgroundColor: "#F0F2F5",
             }}
           >
             <VerifyEmailDialog
@@ -169,20 +157,15 @@ function Home({
             <RestTimer />
 
             <Navbar />
+
             <Routes>
               <Route
                 path="workout/*"
                 index
                 element={
                   <Workout
-                    setExercisesCategories={setExercisesCategories}
-                    exercisesCategories={exercisesCategories} // Passed as a prop
-                    setUnitsSystem={setUnitsSystem}
                     existingExercises={existingExercises}
-                    selectedCategoryExercises={selectedCategoryExercises}
-                    setSelectedCategoryExercises={setSelectedCategoryExercises}
                     setExistingExercises={setExistingExercises}
-                    unitsSystem={unitsSystem}
                   />
                 }
               />
@@ -201,8 +184,8 @@ function Home({
             </Routes>
           </Box>
         </LogDataProvider>
-      </SocialDataProvider>
-    </ThemeProvider>
+      </TrainingDataProvider>
+    </SocialDataProvider>
   );
 }
 

@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import updateExerciseCategory from "../../utils/CRUDFunctions/updateExerciseCategory";
+import updateExerciseCategory from "../../utils/IndexedDbCRUDFunctions/updateExerciseCategory";
 import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];

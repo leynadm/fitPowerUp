@@ -34,7 +34,6 @@ function handleCategoryClick(
         cursor.continue();
       } else {
         setSelectedCategoryExercises(tempSelectedCategoryExercises);
-        console.log("Selected Category Exercises:", tempSelectedCategoryExercises);
       }
     };
 

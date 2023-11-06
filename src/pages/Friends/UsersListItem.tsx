@@ -94,7 +94,6 @@ function UsersListItem({ usersFound }: ParentProps) {
                       flexGrow: 1,
                       alignSelf: "center",
                       fontSize: "large",
-                      fontWeight: "bold",
                       color: "black",
                       display: "flex",
                       textAlign: "center",

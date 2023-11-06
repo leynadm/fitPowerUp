@@ -11,8 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
-import createNotificationsDoc from "../../utils/socialFunctions/createNotificationsDoc";
+import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
 import toast from "react-hot-toast";
 
 import {
@@ -27,7 +26,7 @@ import { auth } from "../../config/firebase";
 import GoogleIcon from "@mui/icons-material/Google";
 import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
-import createUserDoc from "../../utils/socialFunctions/createUserDoc";
+
 
 function Copyright(props: any) {
   const navigate = useNavigate();
@@ -50,11 +49,10 @@ function Copyright(props: any) {
         align="center"
         {...props}
       >
-        {/*  
-      <Link color="inherit"  href="https://github.com/leynadm" >
-        Developed by Daniel Matei {new Date().getFullYear()}
-      </Link> */}
-        Developed by Daniel Matei {new Date().getFullYear()}
+
+      <Link color="inherit"  href="https://mateidaniel.com" target="_blank" >
+        Developed by Daniel Matei 2023{/* {new Date().getFullYear()} */}
+      </Link>
       </Typography>
 
       <Typography
@@ -71,7 +69,6 @@ function Copyright(props: any) {
   );
 }
 
-const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -101,8 +98,6 @@ export default function SignIn() {
           const newUserCheck = getAdditionalUserInfo(result);
           if (newUserCheck?.isNewUser) {
             createUserDoc(user.uid, user.displayName);
-            createFollowersFeedDoc(user.uid);
-            createNotificationsDoc(user.uid);
           }
 
           // Query the users collection to retrieve the document with the given userID
@@ -167,97 +162,108 @@ export default function SignIn() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{minHeight:"15rem",width:"15rem",height:"15rem"}}>
+        <img
+          style={{
+            width: "100%",
+            WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+            maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fyoung-goku_512x512_sign_in.png?alt=media&token=e2bff5cd-d48c-449c-a25a-141dc199e267&_gl=1*1ymru67*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjcyNjAuOC4wLjA."
+          alt=""
+          loading="lazy"
+        ></img>
+</div>
+        <Typography component="h1" variant="h5">
+          Sign in and get fit!
+        </Typography>
 
-          <Box
-            component="form"
-            onSubmit={handleLogIn}
-            noValidate
-            sx={{ mt: 1 }}
+        <Box component="form" onSubmit={handleLogIn} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="dbz"
+            sx={{
+              mt: 3,
+              mb: 2,
+              gap: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <TextField
-              margin="normal"
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, gap: 1, backgroundColor: "black" }}
-            >
-              <LoginIcon sx={{ marginRight: "8px" }} /> Sign In
-            </Button>
+            <LoginIcon sx={{ marginRight: "8px" }} />
+            Sign In
+          </Button>
 
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mb: 2, gap: 1 }}
-              onClick={SignInWithGoogle}
-            >
-              <GoogleIcon />
-              LOG IN WITH GOOGLE
-            </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2, gap: 1 }}
+            onClick={SignInWithGoogle}
+          >
+            <GoogleIcon />
+            LOG IN WITH GOOGLE
+          </Button>
 
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mb: 2, color: "black", gap: 1 }}
-              onClick={signInAsGuest}
-            >
-              <PersonIcon />
-              LOG IN AS GUEST ONLY
-            </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2, color: "black", gap: 1 }}
+            onClick={signInAsGuest}
+          >
+            <PersonIcon />
+            LOG IN AS GUEST ONLY
+          </Button>
 
-            <Grid container>
-              <Grid item xs>
-                <Link variant="body2" onClick={handleForgotPasswordClick}>
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link variant="body2" onClick={handleSignUpClick}>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+          <Grid container>
+            <Grid item xs>
+              <Link variant="body2" onClick={handleForgotPasswordClick}>
+                Forgot password?
+              </Link>
             </Grid>
-          </Box>
+            <Grid item>
+              <Link variant="body2" onClick={handleSignUpClick}>
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+      </Box>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
+    </Container>
   );
 }

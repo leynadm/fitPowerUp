@@ -22,21 +22,22 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-/* 
+/*  
 window.self.FIREBASE_APPCHECK_DEBUG_TOKEN=true;
- */
+
 
 if (process.env.NODE_ENV !== 'production') {
   window.self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 } 
-
+*/ 
 // Initialize Firebase
+/*  */
 const app = initializeApp(firebaseConfig);
-
+/* 
 initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('6Lc5XU0nAAAAAF57wPxnBD_JZoA4GayiJFB15Q6h'),
   isTokenAutoRefreshEnabled: true
-}); 
+}); */ 
 
 const analytics = getAnalytics(app);
 const auth = getAuth(app);

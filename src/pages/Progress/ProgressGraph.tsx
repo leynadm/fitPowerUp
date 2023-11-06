@@ -143,7 +143,7 @@ function ProgressGraph() {
   };
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",padding:0,backgroundColor:"#F0F2F5" }}>
+    <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",backgroundColor:"#F0F2F5" }}>
       <Select
         id="combo-box-demo"
         value={selectedOption}
@@ -201,7 +201,7 @@ function ProgressGraph() {
       >
         {initialRawData ? (
           initialRawData.labels && initialRawData.labels.length === 0 ? (
-            <Typography>No data for this exercise yet.</Typography>
+            <Typography>No data yet.</Typography>
           ) : (
             <Line data={initialRawData} options={options as any} />
           )

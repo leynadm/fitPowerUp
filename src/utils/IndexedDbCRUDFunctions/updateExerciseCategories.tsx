@@ -38,13 +38,7 @@ function updateExerciseCategories(setExercisesCategories: any) {
         cursor.continue();
       } else {
         const categories: string[] = Array.from(uniqueCategories).sort(); // Specify string[] type
-        console.log("Categories:", categories);
-
-        console.log("categories");
-
         setExercisesCategories(categories);
-
-        console.log(categories);
       }
     };
 

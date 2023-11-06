@@ -1,10 +1,9 @@
 import toast from "react-hot-toast";
-
+import populatePreselectedExercisesTbl from "./populatePreselectedExerciseTbl";
 function createInitialDbTables(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const request = indexedDB.open("fitScouterDb", 1); 
-  
-      console.log('inside createInitialDbTables:')
+      
       if (!request) {
         toast.error("Oops, failed to open the database in createInitialDbTables!");
         reject(new Error("Failed to open IndexedDB"));
@@ -20,6 +19,7 @@ function createInitialDbTables(): Promise<void> {
       };
   
       request.onupgradeneeded = function () {
+
         const db = request.result; // Result of our open request
 
         // Create first table with its indexes
@@ -208,11 +208,19 @@ function createInitialDbTables(): Promise<void> {
         };
 
         objectStore.add(defaultRecord);
+
+
+        populatePreselectedExercisesTbl()
       };
-  
+
+
+
       request.onsuccess = function () {
+        
+
+
         const db = request.result;
-         
+
         db.close();
          
         resolve();

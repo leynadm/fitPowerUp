@@ -247,6 +247,18 @@ export default function UserWorkoutCard({
   }
 
   function addComment() {
+
+    if (currentUser.isAnonymous === true) {
+      setGuestProfileModalOpen(true);
+      return;
+    }
+
+    if (currentUser.emailVerified === false) {
+      toast("You need to verify your email first!")
+      return;
+    }
+
+
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
       const commentsCollectionRef = collection(postRef, "comments");
@@ -390,6 +402,12 @@ export default function UserWorkoutCard({
 
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
+      return;
+    }
+
+
+    if (currentUser.emailVerified === false) {
+      toast("You need to verify your email first!")
       return;
     }
     

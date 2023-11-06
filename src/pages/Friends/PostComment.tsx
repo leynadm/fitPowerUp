@@ -67,6 +67,14 @@ function PostComment({
   const [deleteCommentModalOpen, setDeleteCommentModalOpen] = useState(false);
 
   function addReply() {
+
+
+    if (currentUser.emailVerified === false) {
+      toast("Please verify your email before!")
+      return;
+    }
+
+
     if (replyText !== "") {
       const postRef = doc(db, "posts", postId);
       const serverTimestampObj = serverTimestamp();
@@ -84,7 +92,7 @@ function PostComment({
         surname: currentUserData.surname,
         profileImage: currentUserData.profileImage,
       }; 
-
+ 
       const action = "replied to one of your comments!";
       // Update the document to add the new array field to the map field
       updateDoc(commentDocRef, {

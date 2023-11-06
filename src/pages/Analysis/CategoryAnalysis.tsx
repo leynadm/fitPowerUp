@@ -26,7 +26,7 @@ import calculateWorkoutsPerYear from "../../utils/analysisFunctions/calculateWor
 import calculateRepsPerYear from "../../utils/analysisFunctions/calculateRepsPerYear";
 import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolumePerYear";
 import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
-import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
+import populatePreselectedExercises from "../../utils/IndexedDbCRUDFunctions/populatePreselectedExercises";
 import Container from "@mui/material/Container";
 
 import {

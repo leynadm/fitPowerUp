@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
@@ -17,48 +17,16 @@ const style = {
 
 interface ParentComponentProps {
   openViewCommentModal: boolean;
-  setOpenViewCommentModal: React.Dispatch<React.SetStateAction<boolean>>;
-  exerciseCommentId: number;
+  setOpenViewCommentModal: Dispatch<SetStateAction<boolean>>;
+  exerciseComment: string;
 }
 
 function ViewCommentModal({
   openViewCommentModal,
   setOpenViewCommentModal,
-  exerciseCommentId,
+  exerciseComment,
 }: ParentComponentProps) {
-  useEffect(() => {
-    getComment();
-  }, [openViewCommentModal]);
-
   const handleClose = () => setOpenViewCommentModal(false);
-  const [commentText, setCommentText] = useState<string>("");
-
-  function getComment() {
-    // Open IndexedDB database connection
-    const request = window.indexedDB.open("fitScouterDb");
-
-    request.onsuccess = function (event: any) {
-      const db = event.target.result;
-
-      // Open transaction to access the object store
-      const transaction = db.transaction(
-        ["user-exercises-entries"],
-        "readonly"
-      );
-      const objectStore = transaction.objectStore("user-exercises-entries");
-
-      // Get the comment based on exerciseCommentId
-      const getRequest = objectStore.get(exerciseCommentId);
-      getRequest.onsuccess = function (event: any) {
-        const comment = event.target.result?.comment || "";
-        setCommentText(comment);
-      };
-
-      transaction.oncomplete = function () {
-        db.close();
-      };
-    };
-  }
 
   return (
     <div>
@@ -71,11 +39,11 @@ function ViewCommentModal({
         <Box sx={style}>
           <TextField
             id="outlined-multiline-flexible"
-            label="Add your comment"
+            label="You made this comment..."
             multiline
             maxRows={4}
             disabled
-            value={commentText}
+            value={exerciseComment}
             sx={{
               width: "100%",
             }}

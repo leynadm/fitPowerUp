@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import RemoveIcon from "@mui/icons-material/Remove";
-import saveBodyTrackerEntry from "../../utils/CRUDFunctions/saveBodyTrackerEntry";
+import saveBodyTrackerEntry from "../../utils/IndexedDbCRUDFunctions/saveBodyTrackerEntry";
 import Container from "@mui/material/Container";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";

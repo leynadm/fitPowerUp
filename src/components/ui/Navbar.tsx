@@ -37,7 +37,7 @@ function Navbar() {
           right: 0,
           backgroundColor: "white",
         }}
-        elevation={0}
+        elevation={3}
       >
         <BottomNavigation
           sx={{ backgroundColor: "white", zIndex: 9999 }}

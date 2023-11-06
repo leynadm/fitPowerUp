@@ -12,7 +12,7 @@ function NoConnection() {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
-        padding: "1rem",
+        gap:1
       }}
     >
       <Typography sx={{ textAlign: "center" }}>

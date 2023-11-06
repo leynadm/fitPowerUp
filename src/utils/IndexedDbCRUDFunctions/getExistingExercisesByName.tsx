@@ -30,9 +30,7 @@ function getExistingExercisesByName(setExistingExercises:any) {
           tempExistingExercises.push(cursor.value);
           cursor.continue();
         } else {
-          console.log("Logging existing exercises:");
-          console.log(tempExistingExercises);
-  
+
           setExistingExercises(tempExistingExercises);
         }
       };

@@ -42,8 +42,7 @@ function Progress() {
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
-        backgroundColor: "#F0F2F5",
+        height: "100%"
       }}
     >
       <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>

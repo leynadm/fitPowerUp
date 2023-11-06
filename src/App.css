@@ -17,6 +17,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
@@ -24,6 +25,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	overscroll-behavior: none;
 }
 ol, ul {
 	list-style: none;
@@ -42,5 +44,11 @@ table {
 }
 
 .App{
-	height: 100%;
+	/* height: 100%; */
+	font-family:'Kanit', Courier, monospace
+
+}
+
+html, body {
+	overscroll-behavior: none;  
 }

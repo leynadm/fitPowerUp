@@ -12,6 +12,8 @@ export const LogDataContext = createContext<any>({
   setShowRestTimer: () => {},
   autoStar: 120,
   setAutoStart: () => {},
+  selectedExercise:"",
+  setSelectedExercise:() => {}
 });
 
 export const LogDataProvider = ({ children }: LogDataProviderProps) => {
@@ -19,6 +21,11 @@ export const LogDataProvider = ({ children }: LogDataProviderProps) => {
   const [time, setTime] = useState<number>(0);
   const [showRestTimer, setShowRestTimer] = useState<boolean>(false);
   const [autoStart, setAutoStart] = useState<boolean>(false);
+  const [selectedExercise, setSelectedExercise] = useState<{
+    category: string;
+    name: string;
+    measurement: any[];
+  }>({ category: "", name: "", measurement: [] });
 
   return (
     <LogDataContext.Provider
@@ -29,6 +36,8 @@ export const LogDataProvider = ({ children }: LogDataProviderProps) => {
         setShowRestTimer,
         autoStart,
         setAutoStart,
+        selectedExercise,
+        setSelectedExercise
       }}
     >
       {children}

@@ -1,116 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Exercise from "../../utils/interfaces/Exercise";
 import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "../../components/ui/ViewCommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
-import EditExerciseModal from "../../components/ui/EditExerciseModal";
 import { VariableSizeList } from "react-window";
-import toast from "react-hot-toast";
-
-interface ExerciseSelectionProps {
-  selectedExercise: { category: string; name: string; measurement: any[] };
-  unitsSystem: string;
-  weightIncrementPreference: number;
-}
-
-function ExerciseSelectedHistory({
-  selectedExercise,
-  unitsSystem,
-  weightIncrementPreference,
-}: ExerciseSelectionProps) {
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { TrainingDataContext } from "../../context/TrainingData";
+import { AuthContext } from "../../context/Auth";
+import getCompletedExercisesHistory from "../../utils/firebaseDataFunctions/getCompletedExercisesHistory";
+function ExerciseSelectedHistory() {
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
-  const [openEditExerciseModal, setOpenEditExerciseModal] = useState(false);
-  const [exerciseCommentId, setExerciseCommentId] = useState(0);
-  const [updateRenderTrigger, setUpdateRenderTrigger] = useState(0);
-  const [existingExercises, setExistingExercises] = useState<
-    { date: Date | string; exercises: Exercise[] }[]
-  >([]);
+  const [exerciseComment, setExerciseComment] = useState("");
+  const { exerciseName } = useParams();
+  const { userTrainingData } = useContext(TrainingDataContext);
+  const { currentUserData } = useContext(AuthContext);
 
-  useEffect(() => {
-    getExerciseHistory();
-  }, []);
-
-  useEffect(() => {
-    getExerciseHistory();
-  }, [updateRenderTrigger]);
-
-  function getExerciseHistory() {
-    const request = indexedDB.open("fitScouterDb");
-
-    request.onsuccess = function () {
-      const db = request.result;
-
-      const userEntryTransaction = db.transaction(
-        "user-exercises-entries",
-        "readonly"
-      );
-
-      const userEntryTransactionStore = userEntryTransaction.objectStore(
-        "user-exercises-entries"
-      );
-
-      const exerciseNameIndex =
-        userEntryTransactionStore.index("exercise_name");
-
-      const range = IDBKeyRange.only(selectedExercise.name);
-
-      const exercisesRequest = exerciseNameIndex.openCursor(range);
-      const groupedExercises: { date: Date | string; exercises: Exercise[] }[] =
-        [];
-      exercisesRequest.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-
-        if (cursor) {
-          const exercise = cursor.value;
-          const date = exercise.date.toDateString(); // Convert the date to a string for grouping
-
-          // Find the group for the current date, or create a new group if it doesn't exist
-          const group = groupedExercises.find((group) => group.date === date);
-          if (group) {
-            group.exercises.push(exercise);
-          } else {
-            groupedExercises.push({ date, exercises: [exercise] });
-          }
-
-          cursor.continue();
-        } else {
-          setExistingExercises(groupedExercises);
-        }
-      };
-
-      exercisesRequest.onerror = function () {
-        toast.error("Oops, getExerciseHistory has an error!");
-        console.error("Error retrieving existing exercises");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-
-    request.onerror = function () {
-      toast.error("Oops, couldn't open the database in getExerciseHistory!");
-      console.log("Error opening database");
-    };
+  const exerciseHistoryArr = getCompletedExercisesHistory(
+    userTrainingData,
+    exerciseName
+  );
+  console.log(exerciseHistoryArr);
+  function handleViewCommentModalVisibility(
+    exerciseComment: string | undefined
+  ) {
+    if (exerciseComment !== undefined) {
+      setExerciseComment(exerciseComment);
+      setOpenViewCommentModal(true);
+    }
   }
 
-  function handleViewCommentModalVisibility(exerciseId: number) {
-    setExerciseCommentId(exerciseId);
-    setOpenViewCommentModal(!openViewCommentModal);
-  }
-
-  function handleEditExerciseModalVisibility(exerciseId: number) {
-    setExerciseCommentId(exerciseId);
-    setOpenEditExerciseModal(!openEditExerciseModal);
-  }
-
-  if (existingExercises.length === 0) {
+  if (exerciseHistoryArr === undefined || exerciseHistoryArr.length === 0) {
     return (
       <Box
         sx={{
@@ -122,7 +47,7 @@ function ExerciseSelectedHistory({
         }}
       >
         <Typography variant="body1" align="center">
-          No existing exercises found.
+          No data for this exercise.
         </Typography>
       </Box>
     );
@@ -135,120 +60,151 @@ function ExerciseSelectedHistory({
     index: number;
     style: React.CSSProperties;
   }) => {
-    const reversedIndex = existingExercises.length - 1 - index;
-    const group = existingExercises[reversedIndex];
+    const group = exerciseHistoryArr[index];
 
     return (
-      <Box key={index} style={style}>
-        <Typography
-          variant="h6"
-          sx={{
-            textAlign: "left",
-            fontSize: "medium",
-            paddingLeft: "1rem",
-          }}
-        >
-          {group.date.toLocaleString()}
-        </Typography>
-        <Divider />
-
-        {group.exercises.map((exercise, exerciseIndex) => (
-          <Box
-            key={exerciseIndex}
+      <>
+        <Box key={index} style={style} className="exercise-complete">
+          <Typography
+            variant="h6"
             sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 2fr",
-              alignItems: "center",
+              textAlign: "left",
+              fontSize: "medium",
+              paddingLeft: "1rem",
+              backgroundColor: "orange",
+              borderRadius: "5px",
             }}
           >
+            {group.date.toLocaleString()}
+          </Typography>
+
+          <Divider />
+
+          {group.exercises.map((exercise, exerciseIndex) => (
             <Box
+              key={exerciseIndex}
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: "1fr 2fr",
+                alignItems: "center",
               }}
             >
-              {exercise.comment ? ( // Check if 'comment' property exists
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={() => handleViewCommentModalVisibility(exercise.id)}
-                >
-                  <CommentIcon sx={{ zIndex: 0 }} />
-                </IconButton>
-              ) : (
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  disabled // Placeholder element
-                >
-                  <CommentIcon style={{ opacity: 0 }} />
-                </IconButton>
-              )}
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                }}
+              >
+                {exercise.comment ? ( // Check if 'comment' property exists
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={() =>
+                      handleViewCommentModalVisibility(exercise.comment)
+                    }
+                  >
+                    <CommentIcon sx={{ zIndex: 0 }} />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    disabled // Placeholder element
+                  >
+                    <CommentIcon style={{ opacity: 0 }} />
+                  </IconButton>
+                )}
 
-              {exercise.is_pr ? (
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  disabled // Placeholder element
-                >
-                  <EmojiEventsIcon sx={{ zIndex: 0 }} />
-                </IconButton>
-              ) : (
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  disabled // Placeholder element
-                >
-                  <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
-                </IconButton>
-              )}
+                {exercise.is_pr ? (
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    disabled // Placeholder element
+                  >
+                    <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    disabled // Placeholder element
+                  >
+                    <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                  </IconButton>
+                )}
+              </Box>
+
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  justifyItems: "center",
+                  borderLeft: exercise.dropset
+                    ? "5px solid red"
+                    : "5px solid transparent",
+                }}
+              >
+                {exercise.weight !== 0 && (
+                  <Typography>
+                    {`${exercise.weight.toFixed(2)} ${
+                      currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                    }`}
+                  </Typography>
+                )}
+                {exercise.reps !== 0 && (
+                  <Typography>{exercise.reps} reps</Typography>
+                )}
+
+                {exercise.distance !== 0 && (
+                  <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                )}
+
+                {exercise.time !== 0 && (
+                  <Typography>
+                    {exercise.time !== 0 ? formatTime(exercise.time) : ""}
+                  </Typography>
+                )}
+              </Box>
             </Box>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                justifyItems: "center",
-                borderLeft: exercise.dropset
-                  ? "5px solid red"
-                  : "5px solid transparent",
-              }}
-              onClick={() => handleEditExerciseModalVisibility(exercise.id)}
-            >
-              {exercise.weight !== 0 && (
-                <Typography>
-                  {`${exercise.weight.toFixed(2)} ${
-                    unitsSystem === "metric" ? "kgs" : "lbs"
-                  }`}
-                </Typography>
-              )}
-              {exercise.reps !== 0 && (
-                <Typography>{exercise.reps} reps</Typography>
-              )}
+          ))}
+          <Box display="flex" justifyContent="space-around">
+            <Typography variant="subtitle2">
+              Sets: {group.stats.totalSets !== 0 && group.stats.totalSets}
+            </Typography>
 
-              {exercise.distance !== 0 && (
-                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-              )}
+            <Typography variant="subtitle2">
+              {group.stats.totalWeight !== 0 &&
+                `Weight: ${group.stats.totalWeight} ${
+                  currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                }`}
+            </Typography>
+            <Typography variant="subtitle2">
+              {group.stats.totalReps !== 0 && `Reps: ${group.stats.totalReps}`}
+            </Typography>
 
-              {exercise.time !== 0 && (
-                <Typography>
-                  {exercise.time !== 0 ? formatTime(exercise.time) : ""}
-                </Typography>
-              )}
-            </Box>
+            <Typography variant="subtitle2">
+              {group.stats.totalDistance !== 0 &&
+                `Distance: ${group.stats.totalDistance}`}
+            </Typography>
+
+            <Typography variant="subtitle2">
+              {group.stats.totalTime !== 0 &&
+                `Time: ${formatTime(group.stats.totalTime)}`}
+            </Typography>
           </Box>
-        ))}
-      </Box>
+        </Box>
+      </>
     );
   };
 
@@ -257,30 +213,22 @@ function ExerciseSelectedHistory({
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
-        exerciseCommentId={exerciseCommentId}
-      />
-
-      <EditExerciseModal
-        openEditExerciseModal={openEditExerciseModal}
-        setOpenEditExerciseModal={setOpenEditExerciseModal}
-        exerciseCommentId={exerciseCommentId}
-        selectedExercise={selectedExercise}
-        weightIncrementPreference={weightIncrementPreference}
-        setUpdateRenderTrigger={setUpdateRenderTrigger}
+        exerciseComment={exerciseComment}
       />
 
       <Typography
         sx={{
           padding: {
-            xs: "0.5rem", // Padding for extra small screens
-            sm: "0.75rem", // Padding for small screens
-            md: "1rem", // Padding for medium screens
-            lg: "1.5rem", // Padding for large screens
+            xs: "0.25rem", // Padding for extra small screens
+            sm: "0.5rem", // Padding for small screens
+            md: "0.75rem", // Padding for medium screens
+            lg: "1.25rem", // Padding for large screens
           },
           textAlign: "center",
         }}
+        variant="h6"
       >
-        {selectedExercise.name.toLocaleUpperCase()}
+        {exerciseName && exerciseName.toLocaleUpperCase()}
       </Typography>
       <Divider sx={{ width: "100vw" }} />
 
@@ -289,18 +237,19 @@ function ExerciseSelectedHistory({
           width: "100vw",
           paddingBottom: "56px",
           height: "calc(100vh - 185px)",
+          maxWidth: "md",
         }}
       >
         <VariableSizeList
-          height={window.innerHeight - 185}
-          itemCount={existingExercises.length}
+          height={window.innerHeight - 190}
+          itemCount={exerciseHistoryArr.length}
           itemSize={(index) => {
             // Calculate the dynamic height for each item based on its content
             const group =
-              existingExercises[existingExercises.length - 1 - index];
+              exerciseHistoryArr[exerciseHistoryArr.length - 1 - index];
             const numExercises = group.exercises.length;
             const exerciseHeight = numExercises * 48; // Assuming each exercise takes 120px height
-            return exerciseHeight + 24; // Add some extra height for the group header
+            return exerciseHeight + 64; // Add some extra height for the group header
           }}
           width="100%"
         >

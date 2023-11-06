@@ -31,7 +31,7 @@ import calculateVolumePerYear from "../../utils/analysisFunctions/calculateVolum
 import calculateSetsPerYear from "../../utils/analysisFunctions/calculateSetsPerYear";
 import Autocomplete from "@mui/material/Autocomplete";
 
-import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
+import getAllExercises from "../../utils/IndexedDbCRUDFunctions/getAllExercises";
 import {
   Chart as ChartJS,
   Tooltip,

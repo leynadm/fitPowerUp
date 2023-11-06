@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 
-function findMaxReps(exerciseName: string, id: number) {
-  return new Promise<{ id: number, maxReps: number }>((resolve, reject) => {
+function findMaxWeight(exerciseName: string, id: number) {
+  return new Promise<{ id: number, maxWeight: number }>((resolve, reject) => {
     const request = indexedDB.open("fitScouterDb", 1);
 
     request.onsuccess = (event) => {
@@ -9,14 +9,12 @@ function findMaxReps(exerciseName: string, id: number) {
 
       const transaction = db.transaction("user-exercises-entries", "readonly");
       const objectStore = transaction.objectStore("user-exercises-entries");
-      const index = objectStore.index("exercise_name_and_reps");
+      const index = objectStore.index("exercise_name_and_weight");
 
       const lowerBound = [exerciseName, 0];
       const upperBound = [exerciseName, Number.MAX_SAFE_INTEGER];
       const range = IDBKeyRange.bound(lowerBound, upperBound, false, true);
 
-      console.log('logging range');
-      console.log(range);
       const order = "prev";
 
       const cursorRequest = index.openCursor(range, order);
@@ -25,18 +23,18 @@ function findMaxReps(exerciseName: string, id: number) {
         if (cursor) {
           const entryId = cursor.value.id;
           if (entryId !== id) {
-            const maxReps = cursor.value.reps;
-            resolve({ id: entryId, maxReps: maxReps });
+            const maxWeight = cursor.value.weight;
+            resolve({ id: entryId, maxWeight: maxWeight });
           } else {
             cursor.continue(); // Skip the entry with the specified id
           }
         } else {
-          resolve({ id: 0, maxReps: 0 }); // Return 0 if no records found
+          resolve({ id: 0, maxWeight: 0 }); // Return 0 if no records found
         }
       };
 
       cursorRequest.onerror = (event) => {
-        toast.error("Oops, findMaxReps cursor has an error!");
+        toast.error("Oops, findMaxWeight cursor has an error!");
         reject(request.error);
         transaction.abort();
         db.close();
@@ -44,10 +42,10 @@ function findMaxReps(exerciseName: string, id: number) {
     };
 
     request.onerror = (event) => {
-      toast.error("Oops, couldn't open the database in findMaxReps!");
+      toast.error("Oops, couldn't open the database in findMaxWeight!");
       reject(request.error);
     };
   });
 }
 
-export default findMaxReps;
+export default findMaxWeight;

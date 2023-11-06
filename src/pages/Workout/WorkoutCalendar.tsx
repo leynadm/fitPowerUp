@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction, useContext } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,25 +10,24 @@ import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import getWorkoutDates from "../../utils/CRUDFunctions/getWorkoutDates";
+import getWorkoutDates from "../../utils/IndexedDbCRUDFunctions/getWorkoutDates";
 import CalendarWorkoutModal from "../../components/ui/CalendarWorkoutModal";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../context/Auth";
 interface WorkoutProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-  unitsSystem: string;
 }
 
 function WorkoutCalendar({
   todayDate,
   setTodayDate,
-  unitsSystem,
 }: WorkoutProps) {
   const [uniqueDates, setUniqueDates] = useState<string[]>([]);
   const [initialValue, setInitialValue] = useState(dayjs(todayDate));
   const [calendarWorkoutModalVisibility, setCalendarWorkoutModalVisibility] =
     useState(false);
-
+  const {currentUserData} = useContext(AuthContext)
   useEffect(() => {
     getWorkoutDates()
       .then((dates) => {
@@ -124,7 +123,7 @@ function WorkoutCalendar({
       </LocalizationProvider>
 
       <CalendarWorkoutModal
-        unitsSystem={unitsSystem}
+        unitsSystem={currentUserData.unitsSystem}
         calendarWorkoutModalVisibility={calendarWorkoutModalVisibility}
         setCalendarWorkoutModalVisibility={setCalendarWorkoutModalVisibility}
         todayDate={todayDate}

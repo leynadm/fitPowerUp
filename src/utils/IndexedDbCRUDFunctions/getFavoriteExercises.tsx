@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 
 function getFavoriteExercises(setExercisesToSearch: any) {
 
-    console.log("inside getFaavoriteExercises:")
     const request = indexedDB.open("fitScouterDb", 1);
 
   request.onerror = function (event) {

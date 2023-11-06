@@ -8,8 +8,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import handleCategoryClick from "../../utils/CRUDFunctions/handleCategoryClick";
-import updateExerciseCategories from "../../utils/CRUDFunctions/updateExerciseCategories";
+import handleCategoryClick from "../../utils/IndexedDbCRUDFunctions/handleCategoryClick";
+import updateExerciseCategories from "../../utils/IndexedDbCRUDFunctions/updateExerciseCategories";
 import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];

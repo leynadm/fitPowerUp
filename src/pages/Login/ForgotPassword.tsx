@@ -15,7 +15,6 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import toast from "react-hot-toast";
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -44,7 +43,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <>
       {isEmailSent ? ( // Conditional rendering of the Container component
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -56,9 +55,20 @@ export default function ForgotPassword() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOpenIcon />
-            </Avatar>
+            <div
+              style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                  WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                  maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                }}
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fvegeta_register_512x512.png?alt=media&token=0ff23098-7abc-4160-8683-a25b6fbc73f0&_gl=1*1f4jiyl*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjg0ODAuMzMuMC4w"
+                alt=""
+                loading="lazy"
+              ></img>
+            </div>
             <Typography component="h1" variant="h5">
               Forgotten Password
             </Typography>
@@ -90,11 +100,25 @@ export default function ForgotPassword() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOpenIcon />
-            </Avatar>
+
+<div
+              style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                  WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                  maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                }}
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fforgotten-password_young_512x512.png?alt=media&token=fb09d2b8-4bd1-4f45-ad16-3a6a6152cc64&_gl=1*xlzgyf*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMzNzYyMS45NC4xLjE2OTgzMzc2MzkuNDIuMC4w"
+                alt=""
+                loading="lazy"
+              ></img>
+            </div>
+
+
             <Typography component="h1" variant="h5">
-              Forgotten Password
+              Reset your password
             </Typography>
             <Box
               component="form"
@@ -125,8 +149,8 @@ export default function ForgotPassword() {
               <Button
                 type="submit"
                 fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: "black" }}
+                variant="dbz"
+                sx={{ mt: 3, mb: 2 }}
                 onClick={sendEmailReset}
               >
                 Reset Password
@@ -142,6 +166,6 @@ export default function ForgotPassword() {
           </Box>
         </Container>
       )}
-    </ThemeProvider>
+    </>
   );
 }

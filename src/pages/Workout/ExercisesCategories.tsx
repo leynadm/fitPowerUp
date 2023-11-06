@@ -5,24 +5,24 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
-import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import deleteEntriesByCategory from "../../utils/CRUDFunctions/deleteEntriesByCategory";
-import populatePreselectedExercises from "../../utils/CRUDFunctions/populatePreselectedExercises";
-import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
-import getAllExercises from "../../utils/CRUDFunctions/getAllExercises";
-import toast from "react-hot-toast";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import getFavoriteExercises from "../../utils/CRUDFunctions/getFavoriteExercises";
+import getFavoriteExercises from "../../utils/IndexedDbCRUDFunctions/getFavoriteExercises";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
-import deleteExerciseEntries from "../../utils/CRUDFunctions/deleteExerciseEntries";
+import { useNavigate } from "react-router-dom";
+import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
+import deleteEntriesByCategory from "../../utils/IndexedDbCRUDFunctions/deleteEntriesByCategory";
+import populatePreselectedExercises from "../../utils/IndexedDbCRUDFunctions/populatePreselectedExercises";
+import ExerciseSearchBar from "../../components/ui/ExerciseSearchBar";
+import getAllExercises from "../../utils/IndexedDbCRUDFunctions/getAllExercises";
+import toast from "react-hot-toast";
+import deleteExerciseEntries from "../../utils/IndexedDbCRUDFunctions/deleteExerciseEntries";
 import EditExercisePropertiesModal from "../../components/ui/EditExercisePropertiesModal";
 interface NewWorkoutProps {
   todayDate: Date | undefined;
@@ -265,7 +265,7 @@ function ExercisesCategories({
       };
     };
   }
-
+ 
   function deleteCategoryClick() {
     deleteEntriesByCategory(categoryToDelete);
     populatePreselectedExercises(setExercisesCategories);
@@ -312,7 +312,9 @@ function ExercisesCategories({
         />
       )}
 
-      <AppBar elevation={0} position="fixed" style={{ top: 0 }}>
+      <AppBar elevation={3} position="fixed" style={{ top: 0,
+      background: "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)"
+      }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FitnessCenterIcon

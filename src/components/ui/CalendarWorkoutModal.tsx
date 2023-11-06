@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import getExercisesByDate from "../../utils/CRUDFunctions/getExercisesByDate";
+import getExercisesByDate from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import Exercise from "../../utils/interfaces/Exercise";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -45,7 +45,7 @@ function CalendarWorkoutModal({
 
   useEffect(() => {
     if (todayDate) {
-      getExercisesByDate(todayDate, setWorkoutDateExercises);
+      //getExercisesByDate(todayDate, setWorkoutDateExercises);
     }
   }, [todayDate]);
 
@@ -69,11 +69,12 @@ function CalendarWorkoutModal({
         sx={{ marginBottom: "56px",width:"100%" }}
 
       >
+        {/* 
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
         exerciseCommentId={exerciseCommentId}
-      />
+      /> */}
 
         <Box sx={style}>
           <Typography sx={{ width: "100%", textAlign: "center" }}>
