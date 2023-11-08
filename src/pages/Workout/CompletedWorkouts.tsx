@@ -29,10 +29,10 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import Zoom from "@mui/material/Zoom";
 import Fab from "@mui/material/Fab";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
@@ -400,7 +400,7 @@ function CompletedWorkouts({
               </Toolbar>
             </Container>
           </AppBar>
-          <Box
+          <Container
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -437,7 +437,7 @@ function CompletedWorkouts({
                 }}
               />
             </IconButton>
-          </Box>
+          </Container>
           <Fab
             sx={{
               backgroundColor: "#FFA500",
@@ -478,50 +478,50 @@ function CompletedWorkouts({
                         </Typography>
                       )}
 
-                      <Accordion sx={{borderRadius:"4px"}}>
+                      <Accordion sx={{ borderRadius: "4px" }}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header"
-                          sx={{display:"flex", justifyContent:"center",width:"100%",alignItems:"center"
-                        }}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "100%",
+                            alignItems: "center",
+                          }}
                         >
-                        <Rating
-                        
-                          readOnly
-                          max={7}
-                          size="large"
-                          name="simple-controlled"
-                          value={entry.workoutEvaluation.workoutValue}
-                          icon={<StarsIcon fontSize="inherit" />}
-
-                        />
-
+                          <Rating
+                            readOnly
+                            max={7}
+                            size="large"
+                            name="simple-controlled"
+                            value={entry.workoutEvaluation.workoutValue}
+                            icon={<StarsIcon fontSize="inherit" />}
+                          />
                         </AccordionSummary>
                         <AccordionDetails>
                           <Typography>
                             "{entry.workoutEvaluation.workoutComment}"
                           </Typography>
                           <Box>
-                          <FormControlLabel
-                            control={<Switch />}
-                            label="Trained better than the last time?"
-                            checked={entry.workoutEvaluation.trainHarderCheck}
-                          />
-                          <FormControlLabel
-                            control={<Switch />}
-                            label="Warmed up & stretched properly?"
-                            checked={entry.workoutEvaluation.warmStretchCheck}
-                          />
-                          <FormControlLabel
-                            control={<Switch />}
-                            label="Any discomfort/pain?"
-                            checked={entry.workoutEvaluation.feelPainCheck}
-                          />
-                        </Box>
+                            <FormControlLabel
+                              control={<Switch />}
+                              label="Trained better than the last time?"
+                              checked={entry.workoutEvaluation.trainHarderCheck}
+                            />
+                            <FormControlLabel
+                              control={<Switch />}
+                              label="Warmed up & stretched properly?"
+                              checked={entry.workoutEvaluation.warmStretchCheck}
+                            />
+                            <FormControlLabel
+                              control={<Switch />}
+                              label="Any discomfort/pain?"
+                              checked={entry.workoutEvaluation.feelPainCheck}
+                            />
+                          </Box>
                         </AccordionDetails>
                       </Accordion>
-
 
                       {entry.workoutExercises.map(
                         (

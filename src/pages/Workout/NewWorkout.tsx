@@ -5,7 +5,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-
 import Container from "@mui/material/Container";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import IconButton from "@mui/material/IconButton";
@@ -109,7 +108,7 @@ function NewWorkout({
 
       <Box position="fixed" sx={{ width: "100%" }}>
         <AppBar
-          elevation={3}
+          elevation={0}
           style={{
             top: 0,
             width: "100%",

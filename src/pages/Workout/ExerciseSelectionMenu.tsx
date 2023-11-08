@@ -46,7 +46,7 @@ function ExerciseSelectionMenu() {
 
   return (
     <>
-      <Container sx={{}} maxWidth="md">
+      <Container maxWidth="md">
         <AppBar
           elevation={0}
           position="fixed"
@@ -56,7 +56,7 @@ function ExerciseSelectionMenu() {
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
-          <Container maxWidth="xl">
+          <Container maxWidth="md">
             <Toolbar disableGutters>
               <FitnessCenterIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}

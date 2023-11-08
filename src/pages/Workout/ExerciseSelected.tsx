@@ -16,7 +16,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Fab from "@mui/material/Fab";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AddHomeIcon from "@mui/icons-material/AddHome";
-
+import ExerciseDetailsGraph from "./ExerciseDetailsGraph";
 interface ExerciseSelectionProps {
   selectedExercise: { category: string; name: string; measurement: any[] };
 }
@@ -50,7 +50,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
   return (
     <>
       <AppBar
-        elevation={3}
+        elevation={0}
         position="fixed"
         style={{
           top: 0,
@@ -151,7 +151,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
         <Route
           path="graph"
           element={
-            <ExerciseSelectedGraph selectedExercise={selectedExercise} />
+            <ExerciseDetailsGraph />
           }
         />
       </Routes>

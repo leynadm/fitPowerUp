@@ -12,7 +12,6 @@ interface Exercise {
     id:number
     is_pr?:boolean
     dropset:boolean
-    // Add other properties here as per your exercise object structure
   }
 
   export default Exercise

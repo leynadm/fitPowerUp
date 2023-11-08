@@ -5,13 +5,13 @@ import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CompletedDetailsGraph from "./CompletedDetailsGraph";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Routes, Route } from "react-router-dom";
 import { TrainingDataContext } from "../../context/TrainingData";
 import CompletedDetailsOverview from "./CompletedDetailsOverview";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
+import ExerciseDetailsGraph from "./ExerciseDetailsGraph";
 function CompletedWorkoutsTabs() {
   const { userTrainingData } = useContext(TrainingDataContext);
 
@@ -112,7 +112,7 @@ function CompletedWorkoutsTabs() {
       <Routes>
         <Route path="" element={<CompletedDetailsOverview />} />
         <Route path="history" element={<ExerciseSelectedHistory />} />
-        <Route path="graph" element={<CompletedDetailsGraph />} /> {/* */}
+        <Route path="graph" element={<ExerciseDetailsGraph />} /> {/* */}
       </Routes>
     </>
   );

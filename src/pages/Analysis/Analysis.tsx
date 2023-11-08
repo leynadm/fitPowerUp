@@ -8,10 +8,11 @@ import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
 import BreakdownAnalysis from "./BreakdownAnalysis";
 import ExerciseAnalysis from "./ExerciseAnalysis";
-import CategoryAnalysis from "./CategoryAnalysis";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import { useNavigate } from "react-router-dom";
-
+import MuscleGroupsAnalysis from "./MuscleGroupsAnalysis";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import ExerciseDetailsGraph from "../Workout/ExerciseDetailsGraph";
 function Analysis() {
   const navigate = useNavigate();
 
@@ -28,16 +29,17 @@ function Analysis() {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        backgroundColor: "#F0F2F5",
-      }}
-    >
-      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
+    <>
+      <AppBar
+        elevation={0}
+        position="fixed"
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <InsertChartIcon
@@ -85,57 +87,30 @@ function Analysis() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "32px",
-          width: "100vw",
-          backgroundColor: "#FF8C00",
-          borderBottom: "2px black solid",
-        }}
+
+      <ButtonGroup
+        variant="text"
+        aria-label="outlined button group"
+        sx={{ width: "100%" }}
+        className="aaa-button-group"
       >
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateCategoryAnalysis}
-        >
-          Category
+        <Button sx={{ width: "100%" }} onClick={handleNavigateCategoryAnalysis}>
+          Muscle Group
         </Button>
-
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateProgressRecords}
-        >
-          Exercise
+        <Button sx={{ width: "100%" }} onClick={handleNavigateProgressRecords}>
+          Exercises
         </Button>
-
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateBreakdown}
-        >
+        <Button sx={{ width: "100%" }} onClick={handleNavigateBreakdown}>
           Breakdown
         </Button>
-      </Box>
+      </ButtonGroup>
 
       <Routes>
-        <Route path="" element={<CategoryAnalysis />} />
-        <Route path="exercise-analysis" element={<ExerciseAnalysis />} />
+        <Route path="" element={<MuscleGroupsAnalysis />} />
+        <Route path="exercise-analysis" element={<ExerciseDetailsGraph />} />
         <Route path="breakdown" element={<BreakdownAnalysis />} />
       </Routes>
-    </Box>
+    </>
   );
 }
 

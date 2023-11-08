@@ -275,6 +275,7 @@ function CompleteWorkoutModal({
             sx={{ width: "100%", paddingBottom: "8px" }}
             onChange={handleWorkoutDateChange}
             value={workoutDate}
+            variant="filled"
           ></TextField>
 
           <TextField
@@ -283,6 +284,7 @@ function CompleteWorkoutModal({
             multiline
             maxRows={6}
             minRows={2}
+            variant="filled"
             sx={{
               width: "100%",
             }}

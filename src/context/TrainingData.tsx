@@ -26,6 +26,8 @@ interface IUserTrainingData {
   workoutSessions: IWorkoutData;
 }
 
+
+
 export interface IUserSelectedExercises {
   category: string;
   favorite: boolean;

@@ -15,13 +15,16 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectionTile from "../../components/ui/ExerciseSelectionTile";
+import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExercisesMuscleGroups";
 
 function MuscleGroupsSelectionMenu() {
   const [query, setQuery] = useState("");
 
   const { userSelectedExercises } = useContext(TrainingDataContext);
 
-  const exercisesMuscleGroupsArr = getExercisesMuscleGroups();
+  const exercisesMuscleGroupsArr = getExercisesMuscleGroups(
+    userSelectedExercises
+  );
 
   const muscleGroupExercises: IUserSelectedExercises[] =
     getMuscleGroupExercises();
@@ -38,24 +41,6 @@ function MuscleGroupsSelectionMenu() {
 
   if (userSelectedExercises === undefined) {
     return <>Querying Data...</>;
-  }
-
-  function getExercisesMuscleGroups() {
-    let uniqueMuscleGroupsArr: string[] = [];
-    let userSelectedExercisesArr: IUserSelectedExercises[] =
-      userSelectedExercises[0].exercises;
-
-    for (let index = 0; index < userSelectedExercisesArr.length; index++) {
-      const element = userSelectedExercisesArr[index];
-
-      if (!uniqueMuscleGroupsArr.includes(element.category)) {
-        uniqueMuscleGroupsArr.push(element.category);
-      }
-    }
-
-    uniqueMuscleGroupsArr.sort();
-
-    return uniqueMuscleGroupsArr;
   }
 
   function getMuscleGroupExercises() {
@@ -88,6 +73,7 @@ function MuscleGroupsSelectionMenu() {
           width: "100%",
           height: "100%",
         }}
+        maxWidth="md"
       >
         <AppBar
           elevation={0}
@@ -98,7 +84,7 @@ function MuscleGroupsSelectionMenu() {
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
-          <Container maxWidth="xl">
+          <Container maxWidth="md">
             <Toolbar disableGutters>
               <FitnessCenterIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -140,37 +126,33 @@ function MuscleGroupsSelectionMenu() {
                 Muscle Groups
               </Typography>
 
-
-                
-                <Box sx={{ marginLeft: "auto" }} display="flex">
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    //onClick={getOnlyFavorites}
-                  >
-                    
+              <Box sx={{ marginLeft: "auto" }} display="flex">
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  //onClick={getOnlyFavorites}
+                >
                   <BookmarkIcon
                     sx={{
                       color: true ? "orange" : "white",
                     }}
                   />
-                  </IconButton>
+                </IconButton>
 
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    //              onClick={handleAddNewExerciseModal}
-                  >
-                    <AddOutlinedIcon />
-                  </IconButton>
-                </Box>
-
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  //              onClick={handleAddNewExerciseModal}
+                >
+                  <AddOutlinedIcon />
+                </IconButton>
+              </Box>
             </Toolbar>
           </Container>
         </AppBar>
@@ -179,11 +161,12 @@ function MuscleGroupsSelectionMenu() {
         <ExerciseSearchingBar query={query} setQuery={setQuery} />
       </Container>
 
-      <Box
+      <Container
         sx={{
           width: "100%",
           paddingBottom: "56px",
         }}
+        maxWidth="md"
       >
         {query === "" &&
           exercisesMuscleGroupsArr.map((muscleGroup: string, index) => (
@@ -256,7 +239,7 @@ function MuscleGroupsSelectionMenu() {
           >
             {filteredExercises.map(
               (exercise: IUserSelectedExercises, index: number) => (
-                <ExerciseSelectionTile 
+                <ExerciseSelectionTile
                   key={index}
                   exerciseName={exercise.name}
                   exerciseIcon={exercise.iconURL}
@@ -266,7 +249,7 @@ function MuscleGroupsSelectionMenu() {
             )}
           </Box>
         )}
-      </Box>
+      </Container>
     </>
   );
 }
