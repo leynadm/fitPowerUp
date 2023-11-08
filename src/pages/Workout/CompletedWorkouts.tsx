@@ -42,7 +42,7 @@ import { Rating } from "@mui/material";
 import StarsIcon from "@mui/icons-material/Stars";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-
+import DataBadge from "../../components/ui/DataBadge";
 interface CompletedWorkoutsProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
@@ -92,9 +92,9 @@ function CompletedWorkouts({
 
       if (Math.abs(amountSwipe) > SENSITIVITY && swipe.moved) {
         if (amountSwipe < 0) {
-          addDays();
+          handleRightArrowClick();
         } else {
-          subtractDays();
+          handleLeftArrowClick();
         }
       }
     }
@@ -105,22 +105,6 @@ function CompletedWorkouts({
   useEffect(() => {
     filterUserTrainingsPerDay(dateForWorkout);
   }, [userTrainingData, dateForWorkout]);
-
-  const subtractDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() - 1);
-      setTodayDate(newDate);
-    }
-  };
-
-  const addDays = () => {
-    if (todayDate) {
-      const newDate = new Date(todayDate);
-      newDate.setDate(todayDate.getDate() + 1);
-      setTodayDate(newDate);
-    }
-  };
 
   const handleLeftArrowClick = () => {
     const newDate = convertStringToDate(dateForWorkout);
@@ -156,7 +140,6 @@ function CompletedWorkouts({
 
   const pages = [
     "Settings",
-    "Evaluate Workout",
     "Body Tracker",
     "Analysis",
     "Sign Out",
@@ -518,6 +501,28 @@ function CompletedWorkouts({
                               control={<Switch />}
                               label="Any discomfort/pain?"
                               checked={entry.workoutEvaluation.feelPainCheck}
+                            />
+                          </Box>
+                          <Box display="flex" justifyContent="space-around">
+                            <DataBadge
+                              dataValue={entry.workoutSessionPowerLevel}
+                              dataLabel="PL"
+                            />
+                            <DataBadge
+                              dataValue={entry.workoutStats.totalReps}
+                              dataLabel="reps"
+                            />
+                            <DataBadge
+                              dataValue={entry.workoutStats.totalWeight}
+                              dataLabel={
+                                currentUserData.unitsSystem === "metric"
+                                  ? "kgs"
+                                  : "lbs"
+                              }
+                            />
+                            <DataBadge
+                              dataValue={entry.workoutStats.totalLoad}
+                              dataLabel="x BW"
                             />
                           </Box>
                         </AccordionDetails>

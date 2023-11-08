@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext,useEffect } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
 import Container from "@mui/material/Container";
 import { Select, MenuItem } from "@mui/material";
@@ -17,12 +17,12 @@ import { SelectChangeEvent } from "@mui/material";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
 import getTotalRepsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalRepsForMuscleGroup";
 import getTotalSetsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSetsForMuscleGroup";
-import getTotalWeightForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalWeightForMuscleGroup";
 import getTotalVolumeForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalVolumeForMuscleGroup";
 import getFlattenedMuscleGroupData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedMuscleGroupData";
 import groupDataByTimePeriodSummed from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSummed";
 import groupDataByTimePeriodSets from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSets";
 import getTotalSeriesForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSeriesForMuscleGroup";
+
 import {
   LineChart,
   Line,
@@ -51,18 +51,44 @@ function MuscleGroupsAnalysis() {
   );
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
   const [modeledData, setModeledData] = useState<
-    { exerciseDate: string; value: number }[]
-  >([{ exerciseDate: "2023-11-7", value: 20 }]);
+    { exerciseDate: string; value: number }[] | undefined | null
+  >([]);
 
   const handleMuscleGroupSelectChange = (event: SelectChangeEvent<string>) => {
     const selectedMuscleGroup = event.target.value;
     setSelectedMuscleGroup(selectedMuscleGroup);
+    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, selectedDataGroup));
   };
 
   const handleKPISelectChange = (event: SelectChangeEvent<string>) => {
     const selectedKPI = event.target.value;
     setSelectedKPI(selectedKPI);
+    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, selectedDataGroup));
   };
+
+  const handleStandardTimeframeChange = (option:any) => {
+    const clickedTimeframe = option; 
+    setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
+    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, clickedTimeframe, selectedDataGroup));
+  };
+
+  const handleDataGroupChange = (option:any) => {
+    const clickedDataGroup = option;
+    setSelectedDataGroup(clickedDataGroup); // Update the selected timeframe
+    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, clickedDataGroup));
+  };
+
+  useEffect(() => {
+    setModeledData(
+     fetchModeledData(
+       userTrainingData,
+       exercisesMuscleGroupsArr[0],
+       selectedKPI,
+       selectedTimeframe,
+       selectedDataGroup
+     )
+   );
+}, []);
 
 
   function handleGetTotalRepsForMuscleGroup(
@@ -86,26 +112,6 @@ function MuscleGroupsAnalysis() {
     return modeledData;
   }
 
-  function handleGetTotalWeightForMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    muscleGroup: string,
-    timeframe: string,
-    dataGroup: string
-  ) {
-    const flattenedData = getFlattenedMuscleGroupData(
-      userTrainingData,
-      muscleGroup,
-      timeframe
-    );
-    const groupedData = flattenedData
-      ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
-      : null;
-    const modeledData = groupedData
-      ? getTotalWeightForMuscleGroup(groupedData)
-      : null;
-
-    return modeledData;
-  }
 
   function handleGetTotalVolumeForMuscleGroup(
     userTrainingData: IWorkoutData[],
@@ -173,53 +179,51 @@ function MuscleGroupsAnalysis() {
 
   }
 
-  const fetchModeledData = () => {
+  const fetchModeledData = (
+    userTrainingData: IWorkoutData[],
+    muscleGroup: string,
+    kpi: string,
+    timeframe: string,
+    dataGroup: string
+  ) => {
     if (!selectedMuscleGroup) {
       return;
     }
 
     let data;
-    switch (selectedKPI) {
+    
+    switch (kpi) {
       case "Total Reps":
         data = handleGetTotalRepsForMuscleGroup(
           userTrainingData,
-          selectedMuscleGroup,
-          selectedTimeframe,
-          selectedDataGroup
-        );
-        break;
-
-      case "Total Weight":
-        data = handleGetTotalWeightForMuscleGroup(
-          userTrainingData,
-          selectedMuscleGroup,
-          selectedTimeframe,
-          selectedDataGroup
+          muscleGroup,
+          timeframe,
+          dataGroup
         );
         break;
       
         case "Total Series":
         data = handleGetTotalSeriesForMuscleGroup(
           userTrainingData,
-          selectedMuscleGroup,
-          selectedTimeframe,
-          selectedDataGroup
+          muscleGroup,
+          timeframe,
+          dataGroup
         );
         break;
         case "Total Sets":
         data = handleGetTotalSetsForMuscleGroup(
             userTrainingData,
-            selectedMuscleGroup,
-            selectedTimeframe,
-            selectedDataGroup
+            muscleGroup,
+            timeframe,
+            dataGroup
         );
         break;
         case "Total Volume":
         data = handleGetTotalVolumeForMuscleGroup(
           userTrainingData,
-          selectedMuscleGroup,
-          selectedTimeframe,
-          selectedDataGroup
+          muscleGroup,
+          timeframe,
+          dataGroup
         );
         break;
          
@@ -227,14 +231,14 @@ function MuscleGroupsAnalysis() {
         break;
     }
 
-    if (data) {
-      setModeledData(data);
-    }
+    return data;
+
   };
 
-  useEffect(() => {
-    fetchModeledData();
-  }, [selectedKPI, selectedTimeframe, selectedDataGroup, selectedMuscleGroup]);
+  if(!modeledData){
+    return<>
+    No Data</>
+  }
 
   return (
     <Container
@@ -274,7 +278,7 @@ function MuscleGroupsAnalysis() {
             ))}
         </Select>
 
-        <Typography variant="subtitle1">Standard timeframe</Typography>
+        <Typography variant="subtitle1">Select timeframe</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -284,7 +288,7 @@ function MuscleGroupsAnalysis() {
             <Button
               key={option.label}
               style={{ flexGrow: 1 }}
-              onClick={() => setSelectedTimeframe(option.value)}
+              onClick={()=>handleStandardTimeframeChange(option.value)}
               sx={{ backgroundColor: "#520975" }}
             >
               {option.label}
@@ -302,7 +306,7 @@ function MuscleGroupsAnalysis() {
             <Button
               key={option.label}
               style={{ flexGrow: 1 }}
-              onClick={() => setSelectedDataGroup(option.value)}
+              onClick={() => handleDataGroupChange(option.value)}
               sx={{ backgroundColor: "#FFA500" }}
             >
               {option.label}

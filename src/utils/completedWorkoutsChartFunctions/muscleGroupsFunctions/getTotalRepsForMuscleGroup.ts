@@ -20,12 +20,11 @@ function getTotalRepsForMuscleGroup(
       summedTime: number;
       count: number;
     }) => {
-      const avgReps = exercise.summedReps;
-      const avgWeight = exercise.summedWeight;
+      const sumReps = exercise.summedReps;
       const exerciseDate = exercise.date;
 
-      if (avgReps > 0 && avgWeight > 0) {
-        const value = parseFloat(avgReps.toFixed(1));
+      if (sumReps > 0) {
+        const value = parseFloat(sumReps.toFixed(1));
         muscleGroupData.push({ exerciseDate, value });
       }
     }

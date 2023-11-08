@@ -21,10 +21,9 @@ function getTotalSeriesForMuscleGroup(
       count: number;
     }) => {
       const sumReps = exercise.summedReps;
-      const sumWeight = exercise.summedWeight;
       const exerciseDate = exercise.date;
       const series = exercise.count
-      if (sumReps > 0 && sumWeight > 0) {
+      if (sumReps > 0) {
         const value = parseFloat((series).toFixed(1));
         muscleGroupData.push({ exerciseDate, value });
       }

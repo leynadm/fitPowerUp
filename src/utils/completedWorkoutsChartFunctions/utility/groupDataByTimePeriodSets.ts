@@ -1,4 +1,4 @@
-import { format, getISOWeek, set } from "date-fns";
+import { format, getISOWeek} from "date-fns";
 import Exercise from "../../interfaces/Exercise";
 
 interface IExerciseStringKey{

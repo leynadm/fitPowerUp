@@ -3,16 +3,14 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
-import BreakdownAnalysis from "./BreakdownAnalysis";
-import ExerciseAnalysis from "./ExerciseAnalysis";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import { useNavigate } from "react-router-dom";
 import MuscleGroupsAnalysis from "./MuscleGroupsAnalysis";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ExerciseDetailsGraph from "../Workout/ExerciseDetailsGraph";
+import ExerciseBreakdownAnalysis from "./ExerciseBreakdownAnalysis";
 function Analysis() {
   const navigate = useNavigate();
 
@@ -108,7 +106,7 @@ function Analysis() {
       <Routes>
         <Route path="" element={<MuscleGroupsAnalysis />} />
         <Route path="exercise-analysis" element={<ExerciseDetailsGraph />} />
-        <Route path="breakdown" element={<BreakdownAnalysis />} />
+        <Route path="breakdown" element={<ExerciseBreakdownAnalysis />} />
       </Routes>
     </>
   );

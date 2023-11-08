@@ -147,6 +147,29 @@ function App() {
               },
             }
             }
+        }     ,
+        MuiAutocomplete:{
+          styleOverrides:{
+            root: {
+              '& label.Mui-focused': {
+                color: '#520975',
+              },
+              '& .MuiInput-underline:after': {
+                borderBottomColor: '#520975',
+              },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#520975',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#520975',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#520975',
+                },
+              },
+            }
+            }
         }     
       },
     

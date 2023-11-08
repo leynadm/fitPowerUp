@@ -21,10 +21,9 @@ function getTotalSetsForMuscleGroup(
       sets: number;
     }) => {
       const sumReps = exercise.summedReps;
-      const sumWeight = exercise.summedWeight;
       const exerciseDate = exercise.date;
       const sets = exercise.sets;
-      if (sumReps > 0 && sumWeight > 0) {
+      if (sumReps > 0) {
         const value = parseFloat(sets.toFixed(1));
         muscleGroupData.push({ exerciseDate, value });
       }

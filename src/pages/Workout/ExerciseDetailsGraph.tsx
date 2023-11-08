@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
 import Container from "@mui/material/Container";
 import { IUserSelectedExercises } from "../../context/TrainingData";
@@ -7,7 +7,7 @@ import { Select, MenuItem } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
 import Button from "@mui/material/Button";
 import getFlattenedExerciseData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
@@ -21,9 +21,14 @@ import getMaxVolumeForExercise from "../../utils/completedWorkoutsChartFunctions
 import getWorkoutVolumeForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getWorkoutVolumeForExercise";
 import getWorkoutRepsForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getWorkoutRepsForExercise";
 import getMaxWeightForReps from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxWeightForReps";
+import getMaxDistanceForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxDistanceForExercise";
+import getWorkoutDistanceForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getWorkoutDistanceForExercise";
+import getMaxTimeForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxTimeForExercise";
+import getWorkoutTimeForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getWorkoutTimeForExercise";
+import getMaxSpeedForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxSpeedForExercise";
+import getMaxPaceForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxPaceForExercise";
 import Autocomplete from "@mui/material/Autocomplete";
 import { TextField } from "@mui/material";
-import { ChangeEvent } from "react";
 
 import {
   statisticsOptionsWeightAndReps,
@@ -72,10 +77,10 @@ function ExerciseDetailsGraph() {
             exercise.name.toUpperCase() === exerciseName.toUpperCase()
         )
       : userSelectedExercises[0].exercises[0] // Assign the first entry when exerciseName is empty
-  );
+      );
 
   const [statisticsOptions, setStatisticsOptions] = useState(() => {
-    return getStatisticOptions() || [];
+    return getStatisticOptions(exerciseSelected) || [];
   });
 
   const [selectedKPI, setSelectedKPI] = useState(
@@ -84,34 +89,91 @@ function ExerciseDetailsGraph() {
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m");
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
+  
+    useEffect(() => {
+         setModeledData(
+          fetchModeledData(
+            userTrainingData,
+            exerciseSelected.name,
+            selectedKPI,
+            selectedTimeframe,
+            selectedDataGroup
+          )
+        );
+    }, []);
+
   const [modeledData, setModeledData] = useState<
-    { exerciseDate: string; value: number }[]
-  >([{ exerciseDate: "2023-11-7", value: 20 }]);
+    { exerciseDate: string; value: number }[] | undefined | null
+  >([{ exerciseDate: "2023-11-7", value: 100 }]);
   const [weightForRepsModeledData, setWeightForRepsModeledData] = useState<
     { date: string; reps6: number; reps8: number; reps12: number }[]
   >([{ date: "2023-11-7", reps6: 20, reps8: 15, reps12: 10 }]);
 
-  const handleKPISelectChange = (event: SelectChangeEvent<string>) => {
-    const selectedKPI = event.target.value;
-    setSelectedKPI(selectedKPI);
+  const handleAutocompleteChange = (newValue: string | null) => {
+    if (newValue) {
+      const exercise = findExerciseByName(newValue);
+      const newStatisticOptions = getStatisticOptions(exercise);
+      setStatisticsOptions(newStatisticOptions);
+      const newStatisticKPI = newStatisticOptions[0].label;
+      setSelectedKPI(newStatisticKPI);
+
+      setExerciseSelected(exercise);
+
+      setModeledData(
+        fetchModeledData(
+          userTrainingData,
+          newValue,
+          newStatisticKPI,
+          selectedTimeframe,
+          selectedDataGroup
+        )
+      );
+    }
   };
 
-  useEffect(() => {
-    fetchModeledData();
+  const handleKPISelectChange = (event: SelectChangeEvent<string>) => {
+    const clickedKPI = event.target.value;
+    setSelectedKPI(clickedKPI);
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        exerciseSelected.name,
+        clickedKPI,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
+  };
 
-  }, [selectedKPI, selectedTimeframe, selectedDataGroup,statisticsOptions,exerciseSelected]);
+  const handleStandardTimeframeChange = (option: any) => {
+    const clickedTimeframe = option;
+    setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        exerciseSelected.name,
+        selectedKPI,
+        clickedTimeframe,
+        selectedDataGroup
+      )
+    );
+  };
 
-  useEffect(() => {
-    const newStatisticOptions = getStatisticOptions();
-    setStatisticsOptions(newStatisticOptions);
-   // Check if selectedKPI exists in the new options; if not, set the first option as selectedKPI
-   if (!newStatisticOptions.some((option) => option.label === selectedKPI)) {
-    setSelectedKPI(newStatisticOptions[0]?.label);
-  }
-  
-  }, [exerciseSelected]);
+  const handleSelectedDataGroupChange = (option: any) => {
+    const clickedDataGroup = option;
+    setSelectedDataGroup(clickedDataGroup); // Update the selected timeframe
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        exerciseSelected.name,
+        selectedKPI,
+        selectedTimeframe,
+        clickedDataGroup
+      )
+    );
+  };
 
-  function getStatisticOptions() {
+  function getStatisticOptions(exerciseSelected: any) {
     let statisticsOptions;
 
     if (!exerciseSelected) {
@@ -161,56 +223,96 @@ function ExerciseDetailsGraph() {
     return statisticsOptions || [];
   }
 
+  const fetchModeledData = (
+    userTrainingData: IWorkoutData[],
+    userExerciseName: string,
+    kpi: string,
+    timeframe: string,
+    dataGroup: string
+  ) => {
 
-  const fetchModeledData = () => {
-    
     if (!exerciseSelected) {
       return;
     }
+
     let data;
     let weightRepsModeledData;
 
-    switch (selectedKPI) {
+    switch (kpi) {
       case "Estimated 1RM":
         data = handleGet1RepMaxForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         break;
       case "Max Weight":
         data = handleGetMaxWeightForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         break;
       case "Max Reps":
         data = handleGetMaxRepsForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
-          console.log('logging max reps:')
-          console.log(data)
         break;
+      case "Max Distance":
+        data = handleGetMaxDistanceForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
+      case "Max Time":
+        data = handleGetMaxTimeForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
+      case "Max Speed":
+        data = handleGetMaxSpeedForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
+      case "Max Pace":
+        data = handleGetMaxPaceForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
       case "Max Volume":
         data = handleGetMaxVolumeForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         break;
       case "Max Weight for Reps":
         weightRepsModeledData = handleGetMaxWeightForReps(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         if (weightRepsModeledData) {
           setWeightForRepsModeledData(weightRepsModeledData);
@@ -219,26 +321,43 @@ function ExerciseDetailsGraph() {
       case "Workout Volume":
         data = handleGetWorkoutVolumeForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         break;
+      case "Workout Time":
+        data = handleGetWorkoutTimeForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
       case "Workout Reps":
         data = handleGetWorkoutRepsForExercise(
           userTrainingData,
-          exerciseSelected.name,
-          selectedTimeframe,
-          selectedDataGroup
+          userExerciseName,
+          timeframe,
+          dataGroup
+        );
+        break;
+
+      case "Workout Distance":
+        data = handleGetWorkoutDistanceForExercise(
+          userTrainingData,
+          userExerciseName,
+          timeframe,
+          dataGroup
         );
         break;
 
       default:
         break;
     }
-    if (data) {
-      setModeledData(data);
-    }
+
+    return data;
   };
 
   function handleGet1RepMaxForExercise(
@@ -290,12 +409,32 @@ function ExerciseDetailsGraph() {
       exerciseName,
       timeframe
     );
-    console.log({flattenedData})
     const groupedData = flattenedData
       ? groupDataByTimePeriodMax(flattenedData, dataGroup)
       : null;
-      console.log({groupedData})
+
     const modeledData = groupedData ? getMaxRepsForExercise(groupedData) : null;
+    return modeledData;
+  }
+
+  function handleGetMaxDistanceForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodMax(flattenedData, dataGroup)
+      : null;
+
+    const modeledData = groupedData
+      ? getMaxDistanceForExercise(groupedData)
+      : null;
     return modeledData;
   }
 
@@ -319,6 +458,62 @@ function ExerciseDetailsGraph() {
     return modeledData;
   }
 
+  function handleGetMaxTimeForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodMax(flattenedData, dataGroup)
+      : null;
+    const modeledData = groupedData ? getMaxTimeForExercise(groupedData) : null;
+    return modeledData;
+  }
+
+  function handleGetMaxSpeedForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodMax(flattenedData, dataGroup)
+      : null;
+    const modeledData = groupedData
+      ? getMaxSpeedForExercise(groupedData)
+      : null;
+    return modeledData;
+  }
+
+  function handleGetMaxPaceForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodMax(flattenedData, dataGroup)
+      : null;
+    const modeledData = groupedData ? getMaxPaceForExercise(groupedData) : null;
+    return modeledData;
+  }
+
   function handleGetWorkoutVolumeForExercise(
     userTrainingData: IWorkoutData[],
     exerciseName: string,
@@ -339,6 +534,26 @@ function ExerciseDetailsGraph() {
     return modeledData;
   }
 
+  function handleGetWorkoutTimeForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
+      : null;
+    const modeledData = groupedData
+      ? getWorkoutTimeForExercise(groupedData)
+      : null;
+    return modeledData;
+  }
+
   function handleGetWorkoutRepsForExercise(
     userTrainingData: IWorkoutData[],
     exerciseName: string,
@@ -355,6 +570,26 @@ function ExerciseDetailsGraph() {
       : null;
     const modeledData = groupedData
       ? getWorkoutRepsForExercise(groupedData)
+      : null;
+    return modeledData;
+  }
+
+  function handleGetWorkoutDistanceForExercise(
+    userTrainingData: IWorkoutData[],
+    exerciseName: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedExerciseData(
+      userTrainingData,
+      exerciseName,
+      timeframe
+    );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
+      : null;
+    const modeledData = groupedData
+      ? getWorkoutDistanceForExercise(groupedData)
       : null;
     return modeledData;
   }
@@ -383,17 +618,10 @@ function ExerciseDetailsGraph() {
     );
   };
 
-  const handleAutocompleteChange = (
-    event: ChangeEvent<any>,
-    newValue: string
-  ) => {
-    if (newValue) {
-      const exercise = findExerciseByName(newValue);
-      setExerciseSelected(exercise);
-    } else {
-      setExerciseSelected(null);
-    }
-  };
+  if (!modeledData) {
+    return <>No Data</>;
+  }
+
   return (
     <Container
       maxWidth="md"
@@ -413,7 +641,7 @@ function ExerciseDetailsGraph() {
                 variant="outlined"
               />
             )}
-            onChange={handleAutocompleteChange}
+            onChange={(event, value) => handleAutocompleteChange(value)}
           />
         )}
 
@@ -443,7 +671,7 @@ function ExerciseDetailsGraph() {
             <Button
               key={option.label}
               style={{ flexGrow: 1 }}
-              onClick={() => setSelectedTimeframe(option.value)}
+              onClick={() => handleStandardTimeframeChange(option.value)}
               sx={{ backgroundColor: "#520975" }}
             >
               {option.label}
@@ -461,7 +689,7 @@ function ExerciseDetailsGraph() {
             <Button
               key={option.label}
               style={{ flexGrow: 1 }}
-              onClick={() => setSelectedDataGroup(option.value)}
+              onClick={() => handleSelectedDataGroupChange(option.value)}
               sx={{ backgroundColor: "#FFA500" }}
             >
               {option.label}
