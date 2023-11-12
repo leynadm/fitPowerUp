@@ -7,20 +7,29 @@ import {
 } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import ListSubheader from "@mui/material/ListSubheader";
 import { timeframeOptions } from "../../utils/completedWorkoutsChartFunctions/statisticsOptions";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-import groupDataByMuscleG from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByMuscleG";
-import getNumberOfRepsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getNumberOfRepsByMuscleGroup";
-import getFlattenedOverallMuscleGroupData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedOverallMuscleGroupData";
-import getTrainingVolumeByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getTrainingVolumeByMuscleGroup";
-import groupDataByWorkoutsMuscleGroup from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByWorkoutsMuscleGroups";
-import groupDataByWorkoutsExercise from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByWorkoutsExercise";
-import getNumberOfSetsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getNumberOfSetsByMuscleGroup";
-import getNumberOfWorkoutsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getNumberOfWorkoutsByMuscleGroup";
-
+import groupDataByMuscleG from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleG";
+import getNumberOfRepsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfRepsByMuscleGroup";
+import getFlattenedOverallMuscleGroupData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallMuscleGroupData";
+import getTrainingVolumeByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getTrainingVolumeByMuscleGroup";
+import groupDataByWorkoutsMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByWorkoutsMuscleGroups";
+import groupDataByWorkoutsExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByWorkoutsExercise";
+import getNumberOfSetsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfSetsByMuscleGroup";
+import getNumberOfWorkoutsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfWorkoutsByMuscleGroup";
+import getNumberOfRepsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfRepsByExercise";
+import getNumberOfSetsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfSetsByExercise";
+import getNumberOfWorkoutsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfWorkoutsByExercise";
+import getTrainingVolumeByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getTrainingVolumeByExercise";
+import groupDataOverall from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataOverall";
+import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
+import Replay10Icon from "@mui/icons-material/Replay10";
+import ScaleIcon from "@mui/icons-material/Scale";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
+import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
 import {
   Radar,
   RadarChart,
@@ -39,9 +48,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  LabelList
 } from "recharts";
-import groupDataBySetsMuscleGroup from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByWorkoutsMuscleGroups";
+
 import { useContext } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { AuthContext } from "../../context/Auth";
@@ -56,7 +64,8 @@ import {
   TableBody,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByExercise";
+import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExercise";
+import getFlattenedOverallExerciseData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
 
 function ExerciseBreakdownAnalysis() {
   const { userTrainingData } = useContext(TrainingDataContext);
@@ -68,8 +77,11 @@ function ExerciseBreakdownAnalysis() {
 
   const { currentUserData } = useContext(AuthContext);
   const [muscleGroupChart, setMuscleGroupChart] = useState(true);
+
   const [modeledData, setModeledData] = useState<
-    { exerciseMuscleGroup: string; value: number }[] | null | undefined
+    | { exerciseName?: string; exerciseMuscleGroup?: string; value: number }[]
+    | null
+    | undefined
   >([]);
 
   const [startDate, setStartDate] = useState("");
@@ -112,8 +124,21 @@ function ExerciseBreakdownAnalysis() {
     );
   };
 
+  const overallStatsObj = getOverallStats();
 
-    // MUSCLE GROUPS ONLY - 4 FUNCTIONS
+  function getOverallStats() {
+    const flattenedData = getFlattenedOverallExerciseData(
+      userTrainingData,
+      "all",
+      "",
+      ""
+    );
+
+    const groupedData = groupDataOverall(flattenedData);
+    return groupedData;
+  }
+
+  // MUSCLE GROUPS ONLY - 4 FUNCTIONS
 
   function handleGetNumberOfRepsByMuscleGroup(
     userTrainingData: IWorkoutData[],
@@ -128,17 +153,14 @@ function ExerciseBreakdownAnalysis() {
       endDate
     );
 
-    const groupedData = flattenedData
-      ? groupDataByMuscleG(flattenedData)
-      : null;
+    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
 
     const modeledData = groupedData
       ? getNumberOfRepsByMuscleGroup(groupedData)
-      : null;
+      : [];
 
     return modeledData;
   }
-
 
   function handleGetNumberOfSetsByMuscleGroup(
     userTrainingData: IWorkoutData[],
@@ -153,13 +175,11 @@ function ExerciseBreakdownAnalysis() {
       endDate
     );
 
-    const groupedData = flattenedData
-      ? groupDataByMuscleG(flattenedData)
-      : null;
+    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
 
     const modeledData = groupedData
       ? getNumberOfSetsByMuscleGroup(groupedData)
-      : null;
+      : [];
 
     return modeledData;
   }
@@ -178,11 +198,11 @@ function ExerciseBreakdownAnalysis() {
     );
     const groupedData = flattenedData
       ? groupDataByWorkoutsMuscleGroup(flattenedData)
-      : null;
+      : [];
 
     const modeledData = groupedData
       ? getNumberOfWorkoutsByMuscleGroup(groupedData)
-      : null;
+      : [];
 
     return modeledData;
   }
@@ -200,17 +220,14 @@ function ExerciseBreakdownAnalysis() {
       endDate
     );
 
-    const groupedData = flattenedData
-      ? groupDataByMuscleG(flattenedData)
-      : null;
+    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
 
     const modeledData = groupedData
       ? getTrainingVolumeByMuscleGroup(groupedData)
-      : null;
+      : [];
 
     return modeledData;
   }
-
 
   // EXERCISE GROUPS ONLY ONLY - 4 FUNCTIONS
 
@@ -220,20 +237,22 @@ function ExerciseBreakdownAnalysis() {
     startDate: string,
     endDate: string
   ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
+    const flattenedData = getFlattenedOverallExerciseData(
       userTrainingData,
       timeframe,
       startDate,
       endDate
     );
 
-    const groupedData = flattenedData
-      ? groupDataByExercise(flattenedData)
-      : null;
+    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
 
     const modeledData = groupedData
-      ? getNumberOfRepsByMuscleGroup(groupedData)
-      : null;
+      ? getNumberOfRepsByExercise(groupedData)
+      : [];
+
+    if (modeledData) {
+      modeledData.sort((a, b) => b.value - a.value);
+    }
 
     return modeledData;
   }
@@ -244,7 +263,7 @@ function ExerciseBreakdownAnalysis() {
     startDate: string,
     endDate: string
   ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
+    const flattenedData = getFlattenedOverallExerciseData(
       userTrainingData,
       timeframe,
       startDate,
@@ -252,16 +271,70 @@ function ExerciseBreakdownAnalysis() {
     );
     const groupedData = flattenedData
       ? groupDataByWorkoutsExercise(flattenedData)
-      : null;
+      : [];
 
     const modeledData = groupedData
-      ? getNumberOfWorkoutsByMuscleGroup(groupedData)
-      : null;
+      ? getNumberOfWorkoutsByExercise(groupedData)
+      : [];
+
+    if (modeledData) {
+      modeledData.sort((a, b) => b.value - a.value);
+    }
 
     return modeledData;
   }
 
+  function handleGetTrainingVolumeByExercise(
+    userTrainingData: IWorkoutData[],
+    timeframe: string,
+    startDate: string,
+    endDate: string
+  ) {
+    const flattenedData = getFlattenedOverallExerciseData(
+      userTrainingData,
+      timeframe,
+      startDate,
+      endDate
+    );
 
+    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
+
+    const modeledData = groupedData
+      ? getTrainingVolumeByExercise(groupedData)
+      : [];
+
+    if (modeledData) {
+      modeledData.sort((a, b) => b.value - a.value);
+    }
+
+    return modeledData;
+  }
+
+  function handleGetNumberOfSetsByExercise(
+    userTrainingData: IWorkoutData[],
+    timeframe: string,
+    startDate: string,
+    endDate: string
+  ) {
+    const flattenedData = getFlattenedOverallExerciseData(
+      userTrainingData,
+      timeframe,
+      startDate,
+      endDate
+    );
+
+    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
+
+    const modeledData = groupedData
+      ? getNumberOfSetsByExercise(groupedData)
+      : [];
+
+    if (modeledData) {
+      modeledData.sort((a, b) => b.value - a.value);
+    }
+
+    return modeledData;
+  }
 
   const fetchModeledData = (
     userTrainingData: IWorkoutData[],
@@ -279,7 +352,7 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(true)
+        setMuscleGroupChart(true);
         break;
 
       case "Number of Workouts by Muscle Group":
@@ -289,7 +362,7 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(true)
+        setMuscleGroupChart(true);
         break;
 
       case "Training Volume by Muscle Group":
@@ -299,7 +372,7 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(true)
+        setMuscleGroupChart(true);
         break;
 
       case "Number of Sets by Muscle Group":
@@ -309,7 +382,7 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(true)
+        setMuscleGroupChart(true);
         break;
       case "Number of Reps by Exercise":
         data = handleGetNumberOfRepsByExercise(
@@ -318,7 +391,7 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(false)
+        setMuscleGroupChart(false);
         break;
 
       case "Number of Workouts by Exercise":
@@ -328,7 +401,27 @@ function ExerciseBreakdownAnalysis() {
           startDate,
           endDate
         );
-        setMuscleGroupChart(false)
+        setMuscleGroupChart(false);
+        break;
+
+      case "Training Volume by Exercise":
+        data = handleGetTrainingVolumeByExercise(
+          userTrainingData,
+          timeframe,
+          startDate,
+          endDate
+        );
+        setMuscleGroupChart(false);
+        break;
+
+      case "Number of Sets by Exercise":
+        data = handleGetNumberOfSetsByExercise(
+          userTrainingData,
+          timeframe,
+          startDate,
+          endDate
+        );
+        setMuscleGroupChart(false);
         break;
 
       default:
@@ -380,6 +473,10 @@ function ExerciseBreakdownAnalysis() {
     return <>No Data</>;
   }
 
+  function formatNumberWithComma(number: number) {
+    return new Intl.NumberFormat("en-US").format(number);
+  }
+
   return (
     <Container
       maxWidth="md"
@@ -387,7 +484,17 @@ function ExerciseBreakdownAnalysis() {
     >
       <Box display="flex" flexDirection="column" gap={1}>
         <Select
-          sx={{ marginTop: "8px" }}
+          sx={{ marginTop: "8px"
+        
+        }}
+        MenuProps={{
+          PaperProps: {
+            style: {
+            
+              maxHeight:getMenuMaxHeight(),
+            },
+          },
+        }}
           defaultValue="Number of Reps by Muscle Group"
           id="grouped-select"
           label="Grouping"
@@ -455,11 +562,20 @@ function ExerciseBreakdownAnalysis() {
         </Box>
       </Box>
 
-      {muscleGroupChart && (
+      {modeledData.length === 0 ? (
+        <Box
+          display="flex"
+          minHeight="500px"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <NoAvailableDataBox />
+        </Box>
+      ) : muscleGroupChart ? (
         <ResponsiveContainer minHeight="500px">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
             <PolarGrid />
-
             <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={15} />
             <PolarRadiusAxis
               fontSize={20}
@@ -479,100 +595,149 @@ function ExerciseBreakdownAnalysis() {
             />
           </RadarChart>
         </ResponsiveContainer>
-      )}
-
-      {!muscleGroupChart && (
+      ) : (
         <ResponsiveContainer minHeight="500px">
           <BarChart
             width={500}
             height={300}
             data={modeledData}
             margin={{
-              top: 5,
-              right: 30,
-              left: 20,
+              top: 15,
+              right: 0,
+              left: 0,
               bottom: 5,
             }}
             layout="vertical"
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis
-              fontSize={12}
-              dataKey="exerciseMuscleGroup"
-              type="category"
-            />
+            <YAxis fontSize={12} dataKey="exerciseName" type="category" />
             <Tooltip />
             <Legend />
             <Bar
               dataKey="value"
               fill="#520975"
               activeBar={<Rectangle fill="pink" stroke="blue" />}
-              
-              >               <LabelList dataKey="value" position="right" />
-
-              </Bar>
-
+            >
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       )}
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell align="right">Value</TableCell>
-              <TableCell align="center">Measure</TableCell>
-              <TableCell align="right">%</TableCell> {/* New column */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {modeledData
-              .slice()
-              .sort((a, b) => b.value - a.value)
-              .map((entry: any, index: number) => {
-                const totalValue = modeledData.reduce(
-                  (total, e) => total + e.value,
-                  0
-                );
-                const percentage =
-                  totalValue !== 0
-                    ? ((entry.value / totalValue) * 100).toFixed(2)
-                    : 0;
-                return (
-                  <TableRow
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {entry.exerciseMuscleGroup}
-                    </TableCell>
-                    <TableCell align="right">{entry.value}</TableCell>
-                    <TableCell align="center">
-                      {selectedKPI === "Training Volume by Muscle Group"
-                        ? currentUserData.unitsSystem === "metric"
+      {modeledData.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Category</TableCell>
+                <TableCell align="right">Value</TableCell>
+                <TableCell align="center">Measure</TableCell>
+                <TableCell align="right">%</TableCell> {/* New column */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {modeledData
+                .slice()
+                .sort((a, b) => b.value - a.value)
+                .map((entry: any, index: number) => {
+                  const totalValue = modeledData.reduce(
+                    (total, e) => total + e.value,
+                    0
+                  );
+                  const percentage =
+                    totalValue !== 0
+                      ? ((entry.value / totalValue) * 100).toFixed(0)
+                      : 0;
+                  return (
+                    <TableRow
+                      key={index}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {entry.exerciseMuscleGroup
+                          ? entry.exerciseMuscleGroup
+                          : entry.exerciseName}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {formatNumberWithComma(entry.value)}
+                      </TableCell>
+
+                      <TableCell align="center">
+                        {selectedKPI === "Training Volume by Muscle Group"
+                          ? currentUserData.unitsSystem === "metric"
+                            ? "kgs"
+                            : "lbs"
+                          : selectedKPI === "Number of Reps by Muscle Group"
+                          ? "reps"
+                          : selectedKPI === "Number of Sets by Muscle Group"
+                          ? "sets"
+                          : selectedKPI === "Number of Workouts by Muscle Group"
+                          ? "workouts"
+                          : selectedKPI === "Number of Workouts by Exercise"
+                          ? "workouts"
+                          : selectedKPI === "Number of Reps by Exercise"
+                          ? "reps"
+                          : selectedKPI === "Number of Sets by Exercise"
+                          ? "sets"
+                          : selectedKPI === "Training Volume by Exercise"
                           ? "kgs"
-                          : "lbs"
-                        : selectedKPI === "Number of Reps by Muscle Group"
-                        ? "reps"
-                        : selectedKPI === "Number of Sets by Muscle Group"
-                        ? "sets"
-                        : selectedKPI === "Number of Workouts by Muscle Group"
-                        ? "workouts"
-                        : selectedKPI === "Number of Workouts by Exercise"
-                        ? "workouts"
-                        : selectedKPI === "Number of Reps by Exercise"
-                        ? "reps"                      
-                        : "DefaultFallbackValue"}
-                    </TableCell>
-                    <TableCell align="right">{percentage}%</TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                          : "value"}
+                      </TableCell>
+
+                      <TableCell align="right">{percentage}%</TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      <Typography variant="subtitle1" textAlign="center">
+        HISTORIC STATS
+      </Typography>
+      <Box
+        display="grid"
+        gridTemplateColumns="1fr 1fr"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="100%"
+        gap={3}
+      >
+        <ExerciseCompletedStatTile
+          statName="TOTAL VOLUME"
+          statIcon={<ScaleIcon fontSize="small" />}
+          statValue={formatNumberWithComma(overallStatsObj.summedVolume || 0)}
+          statDetail="kgs"
+          statColor="#520975"
+          statTextColor="white"
+        />
+        <ExerciseCompletedStatTile
+          statName="TOTAL REPS"
+          statIcon={<Replay10Icon fontSize="medium" />}
+          statDetail="reps"
+          statValue={overallStatsObj.summedReps || 0}
+          statColor="#520975"
+          statTextColor="white"
+        />
+        <ExerciseCompletedStatTile
+          statName="TOTAL SETS"
+          statIcon={<ViewListIcon fontSize="small" />}
+          statValue={overallStatsObj.count || 0}
+          statDetail="sets"
+          statColor="#520975"
+          statTextColor="white"
+        />
+        <ExerciseCompletedStatTile
+          statName="NO. WORKOUTS"
+          statIcon={<FitnessCenterIcon fontSize="small" />}
+          statValue={overallStatsObj.summedWorkouts || 0}
+          statDetail="WO"
+          statColor="#520975"
+          statTextColor="white"
+        />
+      </Box>
     </Container>
   );
 }

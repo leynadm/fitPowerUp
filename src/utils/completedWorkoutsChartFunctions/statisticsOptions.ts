@@ -78,7 +78,7 @@ export const intervalOptions = [
 
 export const statisticsOptionsMuscleGroups = [
   { label: "Total Reps" },
-  { label: "Total Series" },
   { label: "Total Sets" },
+  { label: "Total Workouts" },
   { label: "Total Volume" },
 ];

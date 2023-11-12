@@ -9,7 +9,9 @@ import InsertChartIcon from "@mui/icons-material/InsertChart";
 import { useNavigate } from "react-router-dom";
 import MuscleGroupsAnalysis from "./MuscleGroupsAnalysis";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import ExerciseDetailsGraph from "../Workout/ExerciseDetailsGraph";
+import Box from "@mui/material/Box";
+
+import ExerciseDetailsGraph from "./ExerciseDetailsGraph";
 import ExerciseBreakdownAnalysis from "./ExerciseBreakdownAnalysis";
 function Analysis() {
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ function Analysis() {
   return (
     <>
       <AppBar
-        elevation={0}
+        elevation={3}
         position="fixed"
         style={{
           top: 0,
@@ -46,12 +48,10 @@ function Analysis() {
             <Typography
               variant="h6"
               noWrap
-              component="a"
+              component="text"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -67,14 +67,12 @@ function Analysis() {
             <Typography
               variant="h5"
               noWrap
-              component="a"
+              component="text"
               href=""
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -85,23 +83,41 @@ function Analysis() {
           </Toolbar>
         </Container>
       </AppBar>
+      {/*      <Box display="flex" width="100%">  */}
 
       <ButtonGroup
-        variant="text"
         aria-label="outlined button group"
         sx={{ width: "100%" }}
-        className="aaa-button-group"
+        variant="text"
       >
-        <Button sx={{ width: "100%" }} onClick={handleNavigateCategoryAnalysis}>
-          Muscle Group
+        <Button
+          sx={{
+            width:
+              "100%" /*  marginTop:"2px",marginLeft:"2px", backgroundColor:"#520975" */,
+          }}
+          onClick={handleNavigateCategoryAnalysis}
+        >
+          Muscles
         </Button>
-        <Button sx={{ width: "100%" }} onClick={handleNavigateProgressRecords}>
+        <Button
+          sx={{
+            width: "100%" /*  marginTop:"2px",backgroundColor:"#520975" */,
+          }}
+          onClick={handleNavigateProgressRecords}
+        >
           Exercises
         </Button>
-        <Button sx={{ width: "100%" }} onClick={handleNavigateBreakdown}>
+        <Button
+          sx={{
+            width:
+              "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
+          }}
+          onClick={handleNavigateBreakdown}
+        >
           Breakdown
         </Button>
       </ButtonGroup>
+      {/*  </Box>*/}
 
       <Routes>
         <Route path="" element={<MuscleGroupsAnalysis />} />

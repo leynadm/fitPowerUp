@@ -1,287 +1,438 @@
-import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, Container } from "@mui/material";
+import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
+import PercentIcon from "@mui/icons-material/Percent";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
-import RemoveIcon from "@mui/icons-material/Remove";
-import saveBodyTrackerEntry from "../../utils/IndexedDbCRUDFunctions/saveBodyTrackerEntry";
-import Container from "@mui/material/Container";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-import toast from "react-hot-toast";
+import { AuthContext } from "../../context/Auth";
+import { ChangeEvent, useContext, useState } from "react";
+import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 
-interface BodyTrackerProps {
-  todayDate: Date | undefined;
-  unitsSystem: string;
-}
+function BodyTrackerTrack() {
+  const { currentUserData } = useContext(AuthContext);
 
-function BodyTrackerTrack({ todayDate, unitsSystem }: BodyTrackerProps) {
-  const measurementOptions = ["Bodyweight", "Body Fat"];
+  const [bodyKPIDataObj, setBodyKPIDataObj] = useState({
+    date: new Date().toISOString().substring(0, 16), // Initialize with current date in the correct format
+    weight: 0,
+    bodyFat: 0,
+    caloricIntake: 0,
+    neck: 0,
+    shoulders: 0,
+    chest: 0,
+    leftBicep: 0,
+    rightBicep: 0,
+    leftForearm: 0,
+    rightForearm: 0,
+    waist: 0,
+    hips: 0,
+    leftThigh: 0,
+    rightThigh: 0,
+    leftCalf: 0,
+    rightCalf: 0,
+  });
 
-  const [selectedOption, setSelectedOption] = useState<string>("Bodyweight");
-
-  const [value, setValue] = useState(0);
-
-  const [bodyweightData, setBodyweightData] = useState([]);
-
-  useEffect(() => {
-    getBodyweightData("Bodyweight");
-  }, []);
-
-  function handleSubtractButtonClick() {
-    if (value === 0) {
-      return; // Don't allow the value to go below 0
-    }
-    setValue((prevValue) => prevValue - 1);
-  }
-
-  const handleSaveButtonClick = async () => {
-    try {
-      await saveBodyTrackerEntry(selectedOption, value, todayDate);
-      getBodyweightData(selectedOption);
-    } catch (error) {
-      toast.error("Oops, failed to save entry in saveBodyTrackerEntry!")
-      console.error("Failed to save the record");
+  const handleKPIChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    //console.log(inputValue)
+    const elementId = event.target.id;
+    // Validate the input to allow only numeric values or an empty string
+    if (/^\d*\.?\d*$/.test(inputValue) || inputValue === "") {
+      setBodyKPIDataObj((prevState) => ({
+        ...prevState,
+        [elementId]: parseFloat(inputValue) || 0,
+      }));
     }
   };
 
-  function handleAddButtonClick() {
-    setValue((prevValue) => prevValue + 1);
-  }
-
-  function getBodyweightData(typeOfData: string) {
-    if (!todayDate) {
-      return;
-    }
-
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    request.onsuccess = function () {
-      const db = request.result;
-
-      const userEntryTransaction = db.transaction(
-        "user-body-tracker",
-         "readonly"
-      );
-
-      const userEntryTransactionStore =
-        userEntryTransaction.objectStore("user-body-tracker");
-
-      const bodyTrackerNameAndDateIndex = userEntryTransactionStore.index(
-        "bodytracker_name_and_date"
-      );
-
-      const range = IDBKeyRange.bound(
-        [typeOfData, todayDate],
-        [typeOfData, todayDate] // Use the same date for both bounds
-      );
-
-      const exercisesRequest = bodyTrackerNameAndDateIndex.openCursor(range);
-
-      const tempBodyweightData: any = [];
-
-      exercisesRequest.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-
-        if (cursor) {
-          tempBodyweightData.push(cursor.value);
-          cursor.continue();
-        } else {
-          setBodyweightData(tempBodyweightData);
-        }
-      };
-
-      exercisesRequest.onerror = function () {
-        toast.error("Oops, getBodyweightData has an error!")
-        console.error("Error retrieving existing exercises");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-
-    request.onerror = function () {
-      toast.error("Oops, couldn't open the database in getBodyweightData!")
-      console.log("Error opening database");
-    };
-  }
-
-  async function deleteEntry(entryId: string) {
-    try {
-      const request = indexedDB.open("fitScouterDb", 1);
-  
-      request.onsuccess = function () {
-        const db = request.result;
-  
-        const userEntryTransaction = db.transaction(
-          "user-body-tracker",
-          "readwrite"
-        );
-  
-        const userEntryTransactionStore =
-          userEntryTransaction.objectStore("user-body-tracker");
-  
-        const deleteRequest = userEntryTransactionStore.delete(entryId);
-  
-        deleteRequest.onsuccess = function () {
-          console.log("Entry deleted successfully");
-          getBodyweightData(selectedOption);
-        };
-  
-        deleteRequest.onerror = function () {
-          toast.error("Oops, deleteEntry has an error!")
-          console.error("Failed to delete the entry");
-        };
-  
-        userEntryTransaction.oncomplete = function () {
-          db.close();
-        };
-      };
-  
-      request.onerror = function () {
-        toast.error("Oops, couldn't open the database in deleteEntry!")
-        console.log("Error opening database");
-      };
-    } catch (error) {
-      toast.error("Oops, failed to delete the entry in deleteEntry!")
-      console.error("Failed to delete the entry");
-    }
-  }
-  
+  console.log(bodyKPIDataObj);
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Box sx={{ width: "100%", marginTop: "8px" }}>
-        <FormControl sx={{ width: "100%" }}>
-          <InputLabel id="demo-simple-select-autowidth-label">
-            Measurement
-          </InputLabel>
-
-          <Select
-            label="Category Filter"
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
-            value={selectedOption}
-            sx={{ width: "100%" }}
-            onChange={(event) => {
-              const selectedOption = event.target.value;
-              setSelectedOption(selectedOption);
-              getBodyweightData(selectedOption);
-            }}
-          >
-            {measurementOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+    <Container maxWidth="md" sx={{ paddingBottom: "80px" }}>
+      <Box
+        display="flex"
+        paddingTop="0.5rem"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        width="100%"
+      >
+        <InsertInvitationIcon fontSize="large" />
+        <TextField
+          id="filled-basic"
+          size="small"
+          variant="filled"
+          type="datetime-local"
+          fullWidth
+          onChange={(event) =>
+            setBodyKPIDataObj((prevState) => ({
+              ...prevState,
+              date: event.target.value,
+            }))
+          }
+          value={bodyKPIDataObj.date}
+        />
       </Box>
 
       <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          paddingTop: "16px",
-          paddingLeft: "8px",
-          paddingRight: "8px",
-        }}
+        display="flex"
+        paddingTop="0.5rem"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        width="100%"
       >
-        <Button
-          sx={{ backgroundColor: "white" }}
-          variant="outlined"
-          onClick={handleSubtractButtonClick}
-        >
-          <RemoveIcon />
-        </Button>
-
+        <MonitorWeightIcon fontSize="large" />
         <TextField
-          type="number"
+          id="weight"
+          label={`${
+            currentUserData.unitsSystem === "metric"
+              ? "Weight (kgs)"
+              : "Weight (lbs)"
+          }`}
+          size="small"
           variant="filled"
-          inputProps={{
-            style: { fontSize: "large", textAlign: "center" },
-            step: 0.1, // Set the step to allow one decimal place
-          }}
-          value={value.toFixed(1)}
-          onChange={(event) => setValue(Number(event.target.value))}
-          sx={{ width: "100%" }}
+          fullWidth
+          type="number"
+          onChange={handleKPIChange}
+          value={bodyKPIDataObj.weight}
         />
-
-        <Button
-          sx={{ backgroundColor: "white" }}
-          variant="outlined"
-          onClick={handleAddButtonClick}
-        >
-          <AddIcon />
-        </Button>
+      </Box>
+      <Box
+        display="flex"
+        paddingTop="0.5rem"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        width="100%"
+      >
+        <PercentIcon fontSize="large" />
+        <TextField
+          id="bodyFat"
+          label="Body Fat"
+          size="small"
+          variant="filled"
+          type="number"
+          fullWidth
+          onChange={handleKPIChange}
+        />
+      </Box>
+      <Box
+        display="flex"
+        paddingTop="0.5rem"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        width="100%"
+      >
+        <RestaurantIcon fontSize="large" />
+        <TextField
+          id="caloricIntake"
+          label="Caloric Intake"
+          size="small"
+          variant="filled"
+          fullWidth
+          type="number"
+          onChange={handleKPIChange}
+        />
       </Box>
 
+      <Accordion sx={{ marginTop: "0.5rem", borderRadius: "3px" }}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Additional Body Measurements</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ marginTop: 0, paddingTop: 0, marginBottom: 0 }}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Neck ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="neck"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Shoulders ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="shoulders"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Chest ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="chest"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Left Bicep ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="leftBicep"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Right Bicep ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="rightBicep"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Left Forearm ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="leftForearm"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Right Forearm ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="rightForearm"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Waist ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="waist"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Hips ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="hips"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Left Thigh ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="leftThigh"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Right Thigh ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="rightThigh"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Left Calf ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="leftCalf"
+              onChange={handleKPIChange}
+            />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={2}
+            paddingTop="0.5rem"
+            width="100%"
+          >
+            <TextField
+              label={`Right Calf ${
+                currentUserData.unitsSystem === "metric" ? "(cm)" : "(in)"
+              }`}
+              size="small"
+              variant="filled"
+              fullWidth
+              id="rightCalf"
+              onChange={handleKPIChange}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
       <Box
         sx={{
           width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
-          alignItems: "center",
+          paddingTop: "0.5rem",
         }}
       >
         <Button
-          variant="contained"
-          color="success"
-          sx={{ width: "100%", margin: "0.25rem" }}
-          onClick={handleSaveButtonClick}
+          variant="dbz_save"
+          sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
         >
           SAVE
         </Button>
-        <Button variant="contained" sx={{ width: "100%", margin: "0.25rem" }}>
+
+        <Button
+          variant="dbz_clear"
+          sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
+        >
           CLEAR
         </Button>
       </Box>
-
-      {bodyweightData.map((entry: any, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <div>{entry.date.toDateString()}</div>
-
-          <div>{entry.value}</div>
-
-          {selectedOption === "Bodyweight" && (
-            <div>{unitsSystem === "metric" ? "kgs" : "lbs"}</div>
-          )}
-          {selectedOption === "Body Fat" && <div>%</div>}
-
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={() => deleteEntry(entry.id)} 
-          >
-            <DeleteIcon
-              sx={{
-                zIndex: 0,
-              }}
-            />
-          </IconButton>
-        </Box>
-      ))}
     </Container>
   );
 }

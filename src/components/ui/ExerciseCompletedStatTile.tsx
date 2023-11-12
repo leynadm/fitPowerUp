@@ -4,9 +4,9 @@ interface ExerciseStatProps {
   statName: string;
   statIcon: ReactNode;
   statDetail: string;
-  statValue:number|string
-  statColor:string
-  statTextColor:string
+  statValue: number | string;
+  statColor: string;
+  statTextColor: string;
 }
 
 function ExerciseCompletedStatTile({
@@ -15,7 +15,7 @@ function ExerciseCompletedStatTile({
   statDetail,
   statValue,
   statColor,
-  statTextColor
+  statTextColor,
 }: ExerciseStatProps) {
   return (
     <div
@@ -27,7 +27,7 @@ function ExerciseCompletedStatTile({
         backgroundColor: statColor,
         borderRadius: "5px",
         padding: "4px",
-        color:statTextColor,
+        color: statTextColor,
         boxShadow:
           "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
       }}
@@ -41,11 +41,12 @@ function ExerciseCompletedStatTile({
         }}
       >
         <div>{statName}</div>
-
-        {statIcon}
+        <div>{statIcon}</div>
       </div>
 
-      <div style={{ fontSize: "1.5rem" }}>{statValue} {statDetail}</div>
+      <div style={{ fontSize: "1.25rem" }}>
+        {statValue} {statDetail}
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ function checkExercisePR(name:string) {
 
     return new Promise((resolve, reject) => {
       // Open the IndexedDB database
-      const request = indexedDB.open("fitScouterDb");
+      const request = indexedDB.open("fitScouterDb",2);
   
       // Handle success event
       request.onsuccess = (event) => {

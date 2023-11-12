@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,12 +23,10 @@ import formatTime from "../../utils/formatTime";
 import CommentWorkoutModal from "./CompleteWorkoutModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
-import toast from "react-hot-toast";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
-import IWorkoutEvaluationData from "../../utils/interfaces/WorkoutEvaluationData";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
-
+import { Paper } from "@mui/material";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -35,17 +39,17 @@ function NewWorkout({
   setExistingExercises,
 }: NewWorkoutProps) {
   const navigate = useNavigate();
-  
+
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
-  const [openCompleteWorkoutModal, setOpenCompleteWorkoutModal] = useState(false);
+  const [openCompleteWorkoutModal, setOpenCompleteWorkoutModal] =
+    useState(false);
   const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] =
     useState(0);
 
   const [workoutEvaluationCheck, setWorkoutEvaluationCheck] = useState(false);
-  const {currentUserData} = useContext(AuthContext)
-  const [workoutEvaluationData, setWorkoutEvaluationData] =
-    useState<IWorkoutEvaluationData | null>(null);
+  const { currentUserData } = useContext(AuthContext);
+
   const [todayDate, setTodayDate] = useState<Date>();
 
   useEffect(() => {
@@ -64,7 +68,6 @@ function NewWorkout({
     navigate("workout_categories");
   };
 
-
   const handleSelectWorkoutExercise = (exerciseName: string) => {
     navigate(`workout_categories/exercises/selected/${exerciseName}`);
   };
@@ -73,7 +76,6 @@ function NewWorkout({
     setOpenCompleteWorkoutModal(!openCompleteWorkoutModal);
   }
 
-  
   function handleViewCommentModalVisibility(
     exerciseComment: string | undefined
   ) {
@@ -81,7 +83,7 @@ function NewWorkout({
       setExerciseComment(exerciseComment);
       setOpenViewCommentModal(!openViewCommentModal);
     }
-  } 
+  }
 
   return (
     <Box
@@ -108,7 +110,7 @@ function NewWorkout({
 
       <Box position="fixed" sx={{ width: "100%" }}>
         <AppBar
-          elevation={0}
+          elevation={2}
           style={{
             top: 0,
             width: "100%",
@@ -126,11 +128,9 @@ function NewWorkout({
               <Typography
                 variant="h6"
                 noWrap
-                component="a"
                 sx={{
                   mr: 2,
                   display: { xs: "none", md: "flex" },
-                  fontWeight: 700,
                   letterSpacing: ".3rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -146,12 +146,10 @@ function NewWorkout({
               <Typography
                 variant="h5"
                 noWrap
-                component="a"
                 sx={{
                   mr: 2,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  fontWeight: 700,
                   letterSpacing: ".1rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -192,14 +190,16 @@ function NewWorkout({
         </AppBar>
       </Box>
 
-      <Container sx={{ padding: 0, height: "calc(100vh - 112px)" }}>
+      <Container
+        sx={{ padding: 0, height: "calc(100vh - 112px)" }}
+        maxWidth="md"
+      >
         {existingExercises.length === 0 ? (
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-
-              height: "calc(100%)",
+              height: "100%",
             }}
           >
             {workoutEvaluationCheck && (
@@ -235,6 +235,7 @@ function NewWorkout({
                 alignItems: "center",
                 flexGrow: 1,
                 height: "100%",
+                paddingBottom:"56px"
               }}
             >
               <Typography
@@ -254,12 +255,11 @@ function NewWorkout({
                   mb: 2,
                   display: "flex",
                   flexDirection: "column",
-                  paddingBottom: "56px",
                 }}
                 onClick={handleNewWorkout}
               >
-                <AddIcon />
-                <Typography variant="body2">Add an exercise</Typography>
+                <AddIcon fontSize="large" />
+                <Typography fontSize="1rem">Add an exercise</Typography>
               </IconButton>
             </Box>
           </Box>
@@ -403,7 +403,9 @@ function NewWorkout({
                       {exercise.weight !== 0 && (
                         <Typography>
                           {`${exercise.weight.toFixed(2)} ${
-                            currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                            currentUserData.unitsSystem === "metric"
+                              ? "kgs"
+                              : "lbs"
                           }`}
                         </Typography>
                       )}

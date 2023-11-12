@@ -8,20 +8,14 @@ import IconButton from "@mui/material/IconButton";
 import TimerIcon from "@mui/icons-material/Timer";
 import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
-import ExerciseSelectedGraph from "./ExerciseSelectedGraph";
 import { useNavigate, useParams, Routes, Route } from "react-router-dom";
 import { LogDataContext } from "../../context/LogData";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import Fab from "@mui/material/Fab";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import AddHomeIcon from "@mui/icons-material/AddHome";
-import ExerciseDetailsGraph from "./ExerciseDetailsGraph";
-interface ExerciseSelectionProps {
-  selectedExercise: { category: string; name: string; measurement: any[] };
-}
+import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 
-function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
+function ExerciseSelected() {
   const [countdownValue, setCountdownValue] = useState(120);
   const { showRestTimer, setShowRestTimer } = useContext(LogDataContext);
   const { exerciseName } = useParams();
@@ -50,7 +44,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
   return (
     <>
       <AppBar
-        elevation={0}
+        elevation={2}
         position="fixed"
         style={{
           top: 0,
@@ -69,8 +63,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
+
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -89,8 +82,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
+
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -148,12 +140,7 @@ function ExerciseSelected({ selectedExercise }: ExerciseSelectionProps) {
       <Routes>
         <Route path="" element={<ExerciseSelectedTrack />} />
         <Route path="history" element={<ExerciseSelectedHistory />} />
-        <Route
-          path="graph"
-          element={
-            <ExerciseDetailsGraph />
-          }
-        />
+        <Route path="graph" element={<ExerciseDetailsGraph />} />
       </Routes>
     </>
   );

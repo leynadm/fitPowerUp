@@ -11,7 +11,7 @@ import { TrainingDataContext } from "../../context/TrainingData";
 import CompletedDetailsOverview from "./CompletedDetailsOverview";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
-import ExerciseDetailsGraph from "./ExerciseDetailsGraph";
+import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 function CompletedWorkoutsTabs() {
   const { userTrainingData } = useContext(TrainingDataContext);
 

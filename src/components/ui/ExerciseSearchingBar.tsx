@@ -72,7 +72,7 @@ function ExerciseSearchingBar({query,setQuery}:ParentsProps) {
           width: "100%",
         }}
       >
-        <SearchIconWrapper>
+        <SearchIconWrapper >
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
@@ -81,6 +81,7 @@ function ExerciseSearchingBar({query,setQuery}:ParentsProps) {
           sx={{ width: "100%" }}
           type="search"
           onChange={onChange}
+          fullWidth
         />{" "}
       </Paper>
     </Search>

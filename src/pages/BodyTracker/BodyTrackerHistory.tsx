@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
@@ -8,7 +8,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import toast from "react-hot-toast";
-
+import { AuthContext } from "../../context/Auth";
 interface BodyTrackerEntry {
   date: Date;
   name: string;
@@ -20,15 +20,12 @@ interface GroupedBodyTrackerEntries {
   entries: BodyTrackerEntry[];
 }
 
-interface BodyTrackerProps {
-  unitsSystem: string;
-}
 
-function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
+function BodyTrackerHistory() {
   const [bodyTrackerEntries, setBodyTrackerEntries] = useState<
     GroupedBodyTrackerEntries[]
   >([]);
-
+  const {currentUserData} = useContext(AuthContext)
   const measurementOptions = [{ label: "Bodyweight" }, { label: "Body Fat" }];
   const [selectedMeasurement, setSelectedMeasurement] = useState<{
     label: string;
@@ -170,7 +167,7 @@ function BodyTrackerHistory({ unitsSystem }: BodyTrackerProps) {
 
                     {selectedMeasurement.label === "Bodyweight" && (
                       <Typography sx={{ textAlign: "center" }}>
-                        {unitsSystem === "metric" ? "kgs" : "lbs"}
+                        {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
                       </Typography>
                     )}
 

@@ -29,33 +29,24 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/Auth";
 const style = {
   width: "100%",
 
-
   bgcolor: "background.paper",
-  paddingBottom:0,
-  marginBottom:0,
-  marginTop:1
+  paddingBottom: 0,
+  marginBottom: 0,
+  marginTop: 1,
 };
 
-interface WorkoutProps {
-
-  weightIncrementPreference: number;
-  setWeightIncrementPreference: Dispatch<SetStateAction<number>>;
-}
-
-function Settings({
-  weightIncrementPreference,
-  setWeightIncrementPreference,
-}: WorkoutProps) {
-
+function Settings() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {currentUserData} = useContext(AuthContext)
-  const [enabled, setEnabled] = useState(currentUserData.unitsSystem === "imperial");
+  const { currentUserData } = useContext(AuthContext);
+  const [enabled, setEnabled] = useState(
+    currentUserData.unitsSystem === "imperial"
+  );
 
   const [openDeleteAllData, setOpenDeleteAllData] = useState(false);
   const [genericSuccessAlert, setGenericSuccessAlert] = useState(false);
@@ -65,7 +56,7 @@ function Settings({
   );
 
   const [datasetOrigin, setDatasetOrigin] = useState("fitPowerUp");
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleDatasetOriginChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDatasetOrigin(e.target.value);
   };
@@ -275,7 +266,7 @@ function Settings({
     const request = window.indexedDB.open(dbName);
 
     request.onerror = (event) => {
-      toast.error("Oops, updateDefaultWeightIncrement has an error!")
+      toast.error("Oops, updateDefaultWeightIncrement has an error!");
       console.error("Database error:", request.error);
     };
 
@@ -300,7 +291,7 @@ function Settings({
       const getRequest = objectStore.get(1);
 
       getRequest.onerror = (event) => {
-        toast.error("Oops, updateDefaultWeightIncrement has an error!")
+        toast.error("Oops, updateDefaultWeightIncrement has an error!");
         console.error("Error getting entry:", getRequest.error);
       };
 
@@ -311,16 +302,13 @@ function Settings({
         const updateRequest = objectStore.put(entry);
 
         updateRequest.onerror = (event) => {
-          toast.error("Oops, updateRequest has an error!")
+          toast.error("Oops, updateRequest has an error!");
           console.error("Error updating entry:", updateRequest.error);
         };
 
         updateRequest.onsuccess = (event) => {
-
-
           // Commit the transaction
           transaction.oncomplete = () => {
-
             // Close the database connection
             db.close();
           };
@@ -343,7 +331,6 @@ function Settings({
     const reader = new FileReader();
 
     reader.onload = (e) => {
-
       if (e.target && e.target.result) {
         const data = new Uint8Array(e.target.result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: "array" });
@@ -360,7 +347,6 @@ function Settings({
     };
 
     reader.readAsArrayBuffer(file);
-
   }
 
   function processImportedDataFitNotes(jsonData: any) {
@@ -404,14 +390,13 @@ function Settings({
         date.setMinutes(0);
         date.setSeconds(0);
 
-        let weightRow = row[3]
-        let repsRow = row[5]
+        let weightRow = row[3];
+        let repsRow = row[5];
 
         let distanceRow = row[6];
         let distance_unitRow = row[7];
         let timeRow = row[8];
         let commentRow = row[9];
-
 
         if (weightRow === undefined) {
           weightRow = 0;
@@ -453,7 +438,6 @@ function Settings({
           comment: commentRow,
         };
 
-
         if (row[3] !== undefined && row[4] !== undefined)
           objectStore.add(entry);
       }
@@ -463,7 +447,7 @@ function Settings({
       };
 
       request.onerror = () => {
-        toast.error("Oops, processImportedDataFitNotes has an error!")
+        toast.error("Oops, processImportedDataFitNotes has an error!");
         console.error(request.error);
       };
     };
@@ -513,8 +497,8 @@ function Settings({
         date.setMinutes(0);
         date.setSeconds(0);
 
-        let weightRow = row[3]
-        let repsRow = row[4]
+        let weightRow = row[3];
+        let repsRow = row[4];
         let distanceRow = row[5];
         let distance_unitRow = row[6];
         let timeRow = row[7];
@@ -522,8 +506,8 @@ function Settings({
         let dropsetRow = row[9];
         let commentRow = row[10];
 
-        if (weightRow===undefined){
-          weightRow=0
+        if (weightRow === undefined) {
+          weightRow = 0;
         } else if (repsRow === undefined) {
           repsRow = 0;
         } else if (distanceRow === undefined) {
@@ -539,7 +523,6 @@ function Settings({
         } else if (commentRow === undefined) {
           commentRow = "";
         }
-
 
         const entry = {
           // Map the appropriate properties from the Excel file to your object structure
@@ -561,12 +544,11 @@ function Settings({
       }
 
       transaction.oncomplete = () => {
-
         showSuccessfulAlert();
       };
 
       request.onerror = () => {
-        toast.error("Oops, processImportedData has an error!")
+        toast.error("Oops, processImportedData has an error!");
         console.error(request.error);
       };
     };
@@ -608,7 +590,6 @@ function Settings({
 
   const handleWeightIncrementChange = (event: any) => {
     const selectedValue = Number(event.target.value);
-    setWeightIncrementPreference(selectedValue);
     updateDefaultWeightIncrement(selectedValue);
   };
 
@@ -618,8 +599,8 @@ function Settings({
     setOpenDeleteAllData(false);
   }
 
-  function handleSendFeedbackClick(){
-    navigate("send-feedback")
+  function handleSendFeedbackClick() {
+    navigate("send-feedback");
   }
 
   return (
@@ -707,7 +688,9 @@ function Settings({
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Switch checked={enabled} /* onChange={handleSwitchChange} */ />
+                  <Switch
+                    checked={enabled} /* onChange={handleSwitchChange} */
+                  />
                 }
                 label={enabled ? "Imperial" : "Metric"}
               />
@@ -724,7 +707,7 @@ function Settings({
               <Select
                 labelId="weight-increment-label"
                 id="weight-increment"
-                value={weightIncrementPreference}
+                value={currentUserData.weightIncrementPreference}
                 onChange={handleWeightIncrementChange}
                 label="Weight Increment"
                 sx={{ width: "100%" }}
@@ -797,7 +780,6 @@ function Settings({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-
                   importData(file);
                 }
               }}
@@ -834,9 +816,7 @@ function Settings({
             </Button>
           </Box>
         </ListItem>
-
       </List>
-      
     </Container>
   );
 }

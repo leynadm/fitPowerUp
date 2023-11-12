@@ -257,7 +257,7 @@ function WorkoutCongratulations() {
         name="simple-controlled"
         value={workoutData.workoutEvaluation.workoutValue}
         icon={<StarsIcon fontSize="inherit" />}
-        sx={{ paddingBottom: "8px" }}
+        sx={{ paddingBottom: "8px",color:"#FFA500" }}
       />
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>

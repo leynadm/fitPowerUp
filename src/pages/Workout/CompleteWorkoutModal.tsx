@@ -23,6 +23,8 @@ import { elements } from "chart.js";
 import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntries";
 import { useNavigate } from "react-router-dom";
 import WorkoutCongratulations from "./WorkoutCongratulations";
+import { TrainingDataContext } from "../../context/TrainingData";
+import { fetchUserData } from "../../context/TrainingData";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -61,6 +63,8 @@ function CompleteWorkoutModal({
     formatDateForTextField(new Date())
   );
   const { currentUser, currentUserData } = useContext(AuthContext);
+  const { setUserSelectedExercises, setUserTrainingData } =
+    useContext(TrainingDataContext);
   const navigate = useNavigate();
   function handleClose() {
     setOpenCompleteWorkoutModal(false);
@@ -208,6 +212,11 @@ function CompleteWorkoutModal({
     navigate("congratulations", {
       state: { workoutData },
     });
+    await fetchUserData(
+      currentUser,
+      setUserSelectedExercises,
+      setUserTrainingData
+    );
   }
 
   const handleWorkoutDateChange = (
@@ -245,6 +254,7 @@ function CompleteWorkoutModal({
               max={7}
               size="large"
               name="simple-controlled"
+              sx={{color:"#FFA500",paddingBottom: "8px"}}
               value={workoutValue}
               onChange={(event, newValue) => {
                 if (newValue !== null) {
@@ -253,7 +263,7 @@ function CompleteWorkoutModal({
               }}
               icon={<StarsIcon fontSize="inherit" />}
               emptyIcon={<StarBorderIcon fontSize="inherit" />}
-              sx={{ paddingBottom: "8px" }}
+
             />
 
             <IconButton

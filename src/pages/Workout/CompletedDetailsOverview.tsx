@@ -7,11 +7,11 @@ import { Typography, Box } from "@mui/material";
 import Replay10Icon from "@mui/icons-material/Replay10";
 import ScaleIcon from "@mui/icons-material/Scale";
 import TimesOneMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-import ViewListIcon from "@mui/icons-material/ViewList";
-import Exercise from "../../utils/interfaces/Exercise";
 import LuggageIcon from "@mui/icons-material/Luggage";
 import FunctionsIcon from "@mui/icons-material/Functions";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
+import Exercise from "../../utils/interfaces/Exercise";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 
 function CompletedDetailsOverview() {
@@ -21,21 +21,23 @@ function CompletedDetailsOverview() {
 
   const historicStats = getHistoricWorkoutStatsForExercise();
   const workoutStatus = getWorkoutStatsForExercise();
-
+  console.log(historicStats)
+  console.log(historicStats)
   function getWorkoutStatsForExercise() {
     if (!userTrainingData || !exerciseName) {
       return;
     }
 
     let workoutStats = {
-      totalSeries: 0,
+      totalSets: 0,
       totalReps: 0,
       totalWeight: 0,
       totalDistance: 0,
       totalTime: 0,
-      totalSets: 0,
+      totalWorkouts: 0,
       avgRepsPerSet: 0,
       loadVolume: 0,
+      count:0
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
@@ -48,8 +50,8 @@ function CompletedDetailsOverview() {
             completedExerciseName === exerciseName.toUpperCase() &&
             workoutEntry.workoutDate === dateForWorkout
           ) {
-            workoutStats.totalSets += 1;
-            workoutStats.totalSeries += exercises.length;
+            workoutStats.totalWorkouts += 1;
+            workoutStats.totalSets += exercises.length;
             workoutStats.totalDistance += exercises.reduce(
               (acc, exercise) => acc + (exercise.distance || 0),
               0
@@ -66,16 +68,17 @@ function CompletedDetailsOverview() {
               (acc, exercise) => acc + (exercise.time || 0),
               0
             );
+            workoutStats.count +=1
           }
         }
       );
     });
 
     workoutStats.avgRepsPerSet =
-      workoutStats.totalSets > 0
-        ? workoutStats.totalReps / workoutStats.totalSets
+      workoutStats.totalWorkouts > 0
+        ? workoutStats.totalReps / workoutStats.totalWorkouts
         : 0;
-    workoutStats.loadVolume = workoutStats.totalWeight * workoutStats.totalReps;
+    workoutStats.loadVolume = ((workoutStats.totalWeight * workoutStats.totalReps)/workoutStats.totalSets);
 
     return workoutStats;
   }
@@ -86,14 +89,15 @@ function CompletedDetailsOverview() {
     }
 
     let historicStats = {
-      totalSeries: 0,
+      totalSets: 0,
       totalReps: 0,
       totalWeight: 0,
       totalDistance: 0,
       totalTime: 0,
-      totalSets: 0,
+      totalWorkouts: 0,
       avgRepsPerSet: 0,
       loadVolume: 0,
+      count:0
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
@@ -103,8 +107,8 @@ function CompletedDetailsOverview() {
           const exercises = exerciseEntry.exercises;
 
           if (completedExerciseName === exerciseName.toUpperCase()) {
-            historicStats.totalSets += 1;
-            historicStats.totalSeries += exercises.length;
+            historicStats.totalWorkouts += 1; 
+            historicStats.totalSets += exercises.length;
             historicStats.totalDistance += exercises.reduce(
               (acc, exercise) => acc + (exercise.distance || 0),
               0
@@ -121,17 +125,18 @@ function CompletedDetailsOverview() {
               (acc, exercise) => acc + (exercise.time || 0),
               0
             );
+            historicStats.count+=1
           }
         }
       );
     });
 
     historicStats.avgRepsPerSet =
-      historicStats.totalSets > 0
-        ? historicStats.totalReps / historicStats.totalSets
+      historicStats.totalWorkouts > 0
+        ? historicStats.totalReps / historicStats.totalWorkouts
         : 0;
     historicStats.loadVolume =
-      (historicStats.totalWeight * historicStats.totalReps) / 1000;
+      (historicStats.totalWeight * historicStats.totalReps) / 1000/historicStats.totalSets;
 
     return historicStats;
   }
@@ -196,14 +201,6 @@ function CompletedDetailsOverview() {
             gap={3}
           >
             <ExerciseCompletedStatTile
-              statName="WEIGHT"
-              statIcon={<ScaleIcon fontSize="small" />}
-              statValue={workoutStatus?.totalWeight || 0}
-              statDetail="kgs"
-              statColor="#FFA500"
-              statTextColor="black"
-            />
-            <ExerciseCompletedStatTile
               statName="REPS"
               statIcon={<Replay10Icon fontSize="medium" />}
               statDetail="reps"
@@ -219,14 +216,7 @@ function CompletedDetailsOverview() {
               statColor="#FFA500"
               statTextColor="black"
             />
-            <ExerciseCompletedStatTile
-              statName="SERIES"
-              statIcon={<TimesOneMobiledataIcon fontSize="small" />}
-              statDetail="X"
-              statValue={workoutStatus?.totalSeries || 0}
-              statColor="#FFA500"
-              statTextColor="black"
-            />
+
             <ExerciseCompletedStatTile
               statName="AVG. REP PER SET"
               statIcon={<FunctionsIcon fontSize="small" />}
@@ -236,8 +226,8 @@ function CompletedDetailsOverview() {
               statTextColor="black"
             />
             <ExerciseCompletedStatTile
-              statName="LOAD VOLUME"
-              statIcon={<LuggageIcon fontSize="small" />}
+              statName="TOTAL VOLUME"
+              statIcon={<ScaleIcon fontSize="small" />}
               statDetail="kg"
               statValue={workoutStatus?.loadVolume || 0}
               statColor="#FFA500"
@@ -256,15 +246,15 @@ function CompletedDetailsOverview() {
             width="100%"
             height="100%"
             gap={3}
-          >
+          >{/* 
             <ExerciseCompletedStatTile
-              statName="TOTAL WEIGHT"
+              statName="TOTAL VOLUME"
               statIcon={<ScaleIcon fontSize="small" />}
-              statValue={historicStats?.totalWeight || 0}
+              statValue={(historicStats?.totalWeight? || 0}
               statDetail="kgs"
               statColor="#520975"
               statTextColor="white"
-            />
+            /> */}
             <ExerciseCompletedStatTile
               statName="TOTAL REPS"
               statIcon={<Replay10Icon fontSize="medium" />}
@@ -282,14 +272,6 @@ function CompletedDetailsOverview() {
               statTextColor="white"
             />
             <ExerciseCompletedStatTile
-              statName="TOTAL SERIES"
-              statIcon={<TimesOneMobiledataIcon fontSize="small" />}
-              statDetail="X"
-              statValue={historicStats?.totalSeries || 0}
-              statColor="#520975"
-              statTextColor="white"
-            />
-            <ExerciseCompletedStatTile
               statName="AVG. REP PER SET"
               statIcon={<FunctionsIcon fontSize="small" />}
               statValue={historicStats?.avgRepsPerSet.toFixed(1) || 0}
@@ -298,8 +280,8 @@ function CompletedDetailsOverview() {
               statTextColor="white"
             />
             <ExerciseCompletedStatTile
-              statName="LOAD VOLUME"
-              statIcon={<LuggageIcon fontSize="small" />}
+              statName="TOTAL VOLUME"
+              statIcon={<ScaleIcon fontSize="small" />}
               statDetail="t"
               statValue={historicStats?.loadVolume || 0}
               statColor="#520975"

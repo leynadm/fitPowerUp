@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useContext,
 } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { db } from "../config/firebase";
 import toast from "react-hot-toast";
 import { IWorkoutData } from "../utils/firebaseDataFunctions/completeWorkout";
@@ -26,8 +27,6 @@ interface IUserTrainingData {
   workoutSessions: IWorkoutData;
 }
 
-
-
 export interface IUserSelectedExercises {
   category: string;
   favorite: boolean;
@@ -43,7 +42,9 @@ export const TrainingDataProvider = ({
   children,
 }: TrainingDataProviderProps) => {
   // Set the current user in case the user is already logged in
-  const [userTrainingData, setUserTrainingData] = useState<IWorkoutData | undefined>();
+  const [userTrainingData, setUserTrainingData] = useState<
+    IWorkoutData | undefined
+  >();
   const [userSelectedExercises, setUserSelectedExercises] = useState<
     IUserSelectedExercises[]
   >([]);
@@ -53,49 +54,8 @@ export const TrainingDataProvider = ({
   );
 
   useEffect(() => {
-    fetchUserData()
+    fetchUserData(currentUser, setUserSelectedExercises, setUserTrainingData);
   }, []);
-
-  async function fetchUserData() {
-    if (currentUser === null) {
-      return;
-    }
-
-    try {
-      const usersDocRef = doc(db, "users", currentUser.uid);
-      const userCollectionRef = collection(usersDocRef, "userCollection");
-
-      const preselectedExercisesDocRef = doc(
-        userCollectionRef,
-        "userSelectedExercises"
-      );
-
-      const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
-
-      const preselectedExercisesDocSnap = await getDoc(
-        preselectedExercisesDocRef
-      );
-
-      if (preselectedExercisesDocSnap.exists()) {
-        const userSelectedExercisesData =
-          preselectedExercisesDocSnap.data() as IUserSelectedExercises;
-        setUserSelectedExercises([userSelectedExercisesData]);
-      }
-
-      const userTrainingDataDocSnap = await getDoc(userTrainingDataDocRef);
-
-      if (userTrainingDataDocSnap.exists()) {
-        const userTrainingExercisesData =
-          userTrainingDataDocSnap.data() as IUserTrainingData;
-          
-        //console.log(userTrainingExercisesData.workoutSessions)
-        setUserTrainingData(userTrainingExercisesData.workoutSessions);
-      }
-    } catch (error) {
-      toast.error("We couldn't fetch the data...");
-      console.error("Error while fetching user data:", error);
-    }
-  }
 
   return (
     <TrainingDataContext.Provider
@@ -105,10 +65,55 @@ export const TrainingDataProvider = ({
         userSelectedExercises,
         setUserSelectedExercises,
         dateForWorkout,
-        setDateForWorkout
+        setDateForWorkout,
       }}
     >
       {children}
     </TrainingDataContext.Provider>
   );
 };
+
+export async function fetchUserData(
+  currentUser: any,
+  setUserSelectedExercises: Dispatch<SetStateAction<IUserSelectedExercises[]>>,
+  setUserTrainingData: Dispatch<SetStateAction<IWorkoutData | undefined>>
+) {
+  if (currentUser === null) {
+    return;
+  }
+
+  try {
+    const usersDocRef = doc(db, "users", currentUser.uid);
+    const userCollectionRef = collection(usersDocRef, "userCollection");
+
+    const preselectedExercisesDocRef = doc(
+      userCollectionRef,
+      "userSelectedExercises"
+    );
+
+    const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
+
+    const preselectedExercisesDocSnap = await getDoc(
+      preselectedExercisesDocRef
+    );
+
+    if (preselectedExercisesDocSnap.exists()) {
+      const userSelectedExercisesData =
+        preselectedExercisesDocSnap.data() as IUserSelectedExercises;
+      setUserSelectedExercises([userSelectedExercisesData]);
+    }
+
+    const userTrainingDataDocSnap = await getDoc(userTrainingDataDocRef);
+
+    if (userTrainingDataDocSnap.exists()) {
+      const userTrainingExercisesData =
+        userTrainingDataDocSnap.data() as IUserTrainingData;
+
+      //console.log(userTrainingExercisesData.workoutSessions)
+      setUserTrainingData(userTrainingExercisesData.workoutSessions);
+    }
+  } catch (error) {
+    toast.error("We couldn't fetch the data...");
+    console.error("Error while fetching user data:", error);
+  }
+}

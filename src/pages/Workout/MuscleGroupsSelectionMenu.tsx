@@ -63,15 +63,10 @@ function MuscleGroupsSelectionMenu() {
   }
 
   return (
-    <>
+
       <Container
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          width: "100%",
-          height: "100%",
+
         }}
         maxWidth="md"
       >
@@ -96,7 +91,7 @@ function MuscleGroupsSelectionMenu() {
                 sx={{
                   mr: 2,
                   display: { xs: "none", md: "flex" },
-                  fontWeight: 700,
+                  
                   letterSpacing: ".1rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -117,7 +112,7 @@ function MuscleGroupsSelectionMenu() {
                   mr: 2,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  fontWeight: 700,
+                  
                   letterSpacing: ".1rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -157,16 +152,14 @@ function MuscleGroupsSelectionMenu() {
           </Container>
         </AppBar>
 
-        <Divider sx={{ width: "100%" }} />
-        <ExerciseSearchingBar query={query} setQuery={setQuery} />
-      </Container>
+      <ExerciseSearchingBar query={query} setQuery={setQuery} />
 
-      <Container
+      <Box
         sx={{
           width: "100%",
           paddingBottom: "56px",
         }}
-        maxWidth="md"
+
       >
         {query === "" &&
           exercisesMuscleGroupsArr.map((muscleGroup: string, index) => (
@@ -249,8 +242,8 @@ function MuscleGroupsSelectionMenu() {
             )}
           </Box>
         )}
+      </Box>
       </Container>
-    </>
   );
 }
 

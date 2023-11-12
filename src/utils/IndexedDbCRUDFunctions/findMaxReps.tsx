@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 
 function findMaxReps(exerciseName: string, id: number) {
   return new Promise<{ id: number, maxReps: number }>((resolve, reject) => {
-    const request = indexedDB.open("fitScouterDb", 1);
+    const request = indexedDB.open("fitScouterDb", 2);
 
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;

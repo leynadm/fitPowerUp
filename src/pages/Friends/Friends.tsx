@@ -36,14 +36,10 @@ import { Toaster } from "react-hot-toast";
 import BlockedUsers from "./BlockedUsers";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
-  unitsSystem: string;
-  setUnitsSystem: Dispatch<SetStateAction<string>>;
 }
 
 function Friends({
-  existingExercises,
-  unitsSystem,
-  setUnitsSystem,
+  existingExercises
 }: HomeProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -265,7 +261,7 @@ function Friends({
           addContentModalOpen={addContentModalOpen}
           setAddContentModalOpen={setAddContentModalOpen}
           existingExercises={existingExercises}
-          unitsSystem={unitsSystem}
+          unitsSystem={currentUserData.unitsSystem}
         />
       )}
 

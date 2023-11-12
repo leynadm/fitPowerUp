@@ -8,8 +8,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import handleCategoryClick from "../../utils/IndexedDbCRUDFunctions/handleCategoryClick";
-import updateExerciseCategories from "../../utils/IndexedDbCRUDFunctions/updateExerciseCategories";
+
 import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];
@@ -77,57 +76,7 @@ function AddNewExerciseModal({
     value: string[];
   } | null>(null);
 
-  const saveNewExercise = () => {
-    if (!isFormValid()) {
-      return; // If the form is not valid, exit the function without saving
-    }
-
-    const measurementValue = measurement ? measurement.value : [];
-    const newExercise = {
-      name: exerciseName,
-      category,
-      measurement: measurementValue,
-      favorite: false,
-    };
-
-    // Open a connection to the IndexedDB database
-    const request = indexedDB.open("fitScouterDb", 1);
-
-    request.onerror = (event) => {
-      toast.error("Oops, saveNewExercise has an error!");
-      console.log("Error opening IndexedDB:", request.error);
-    };
-
-    request.onsuccess = (event) => {
-      const db = (event.target as IDBRequest).result;
-
-      // Start a new transaction
-      const transaction = db.transaction("preselected-exercises", "readwrite");
-
-      // Retrieve the object store
-      const store = transaction.objectStore("preselected-exercises");
-
-      // Add the new exercise to the object store
-      const request = store.add(newExercise);
-
-      request.onsuccess = () => {
-        db.close();
-        updateExerciseCategories(setExercisesCategories);
-        handleCategoryClick(category, setSelectedCategoryExercises);
-        handleClose();
-      };
-
-      request.onerror = () => {
-        toast.error("Oops, saveNewExercise has an error!");
-        console.log("Error saving new exercise:", request.error);
-
-        // Close the transaction and the database connection
-
-        db.close();
-      };
-    };
-  };
-
+ 
   const isFormValid = () => {
     if (exerciseName.trim() === "") {
       return false;
@@ -269,7 +218,7 @@ function AddNewExerciseModal({
               variant="contained"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={saveNewExercise}
+
               disabled={!isFormValid}
             >
               Save

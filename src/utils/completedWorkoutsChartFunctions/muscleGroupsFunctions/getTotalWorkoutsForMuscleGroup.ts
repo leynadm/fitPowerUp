@@ -1,4 +1,4 @@
-function getTotalSetsForMuscleGroup(
+function getTotalWorkoutsForMuscleGroup(
   groupedData: {
     date: string;
     summedWeight: number;
@@ -6,11 +6,10 @@ function getTotalSetsForMuscleGroup(
     summedDistance: number;
     summedTime: number;
     count: number;
+    sets: number;
   }[]
 ) {
-
   const muscleGroupData: { exerciseDate: string; value: number }[] = [];
- 
   groupedData.forEach(
     (exercise: {
       date: string;
@@ -19,19 +18,18 @@ function getTotalSetsForMuscleGroup(
       summedDistance: number;
       summedTime: number;
       count: number;
+      sets: number;
     }) => {
       const sumReps = exercise.summedReps;
       const exerciseDate = exercise.date;
-      const series = exercise.count
+      const sets = exercise.sets;
       if (sumReps > 0) {
-        const value = parseFloat((series).toFixed(1));
+        const value = parseFloat(sets.toFixed(1));
         muscleGroupData.push({ exerciseDate, value });
       }
     }
   );
-
   return muscleGroupData;
-
 }
 
-export default getTotalSetsForMuscleGroup;
+export default getTotalWorkoutsForMuscleGroup;

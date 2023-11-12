@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import updateExerciseCategory from "../../utils/IndexedDbCRUDFunctions/updateExerciseCategory";
+
 import toast from "react-hot-toast";
 interface ParentProps {
   exercisesCategories: string[];
@@ -118,52 +118,7 @@ function EditExercisePropertiesModal({
     };
   }
 
-  const saveUpdatedExercise = () => {
-    // Prepare the updated exercise object
-    const updatedExercise = {
-      id: selectedExerciseId,
-      name: exerciseName,
-      category: selectedRadio === "existing" ? category : category.trim(),
-      measurement: measurement,
-    };
-
-    const request = indexedDB.open("fitScouterDb");
-
-    request.onerror = (event) => {
-      toast.error("Oops, saveUpdatedExercise couldn't open the database!")
-      console.log("Error opening IndexedDB:", request.error);
-    };
-
-    request.onsuccess = (event) => {
-      const db = (event.target as IDBRequest).result;
-
-      // Start a new transaction with readwrite access
-      const transaction = db.transaction("preselected-exercises", "readwrite");
-
-      // Retrieve the object store
-      const store = transaction.objectStore("preselected-exercises");
-
-      // Update the exercise record with the updatedExercise object
-      const putRequest = store.put(updatedExercise);
-
-      putRequest.onsuccess = () => {
-        updateExerciseCategory(updatedExercise.name, updatedExercise.category);
-
-        handleClose();
-      };
-
-      putRequest.onerror = () => {
-        toast.error("Oops, saveUpdatedExercise has an error!")
-        console.log("Error updating exercise:", putRequest.error);
-      };
-
-      // Close the transaction and the database connection
-      transaction.oncomplete = () => {
-        toast.success("Exercise updated succesfully!")
-        db.close();
-      };
-    };
-  };
+  
 
   return (
     <Box>
@@ -223,7 +178,6 @@ function EditExercisePropertiesModal({
               variant="contained"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={saveUpdatedExercise}
             >
               Save
             </Button>

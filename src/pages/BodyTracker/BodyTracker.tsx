@@ -10,13 +10,9 @@ import BodyTrackerHistory from "./BodyTrackerHistory";
 import BodyTrackerGraph from "./BodyTrackerGraph";
 import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
-interface WorkoutProps {
-  todayDate: Date | undefined;
-  unitsSystem: string;
-}
-
-function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
+function BodyTracker() {
   const navigate = useNavigate();
 
   const handleNavigateTrack = () => {
@@ -40,7 +36,16 @@ function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
         flexDirection: "column",
       }}
     >
-      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
+      <AppBar
+        elevation={3}
+        position="fixed"
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AccessibilityIcon
@@ -49,19 +54,17 @@ function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
             <Typography
               variant="h6"
               noWrap
-              component="a"
-              href="/"
+              component="text"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
+
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
             >
-              Tracker
+              Analysis
             </Typography>
 
             <AccessibilityIcon
@@ -71,79 +74,64 @@ function BodyTracker({ todayDate, unitsSystem }: WorkoutProps) {
             <Typography
               variant="h5"
               noWrap
-              component="a"
+              component="text"
               href=""
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
+
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
             >
-              Tracker
+              Analysis
             </Typography>
           </Toolbar>
         </Container>
       </AppBar>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "32px",
-          width: "100vw",
-          backgroundColor: "#FF8C00",
-          borderBottom: "2px black solid",
-        }}
+      <ButtonGroup
+        aria-label="outlined button group"
+        sx={{ width: "100%" }}
+        variant="text"
       >
         <Button
           sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
+            width:
+              "100%" /*  marginTop:"2px",marginLeft:"2px", backgroundColor:"#520975" */,
           }}
-          onClick={handleNavigateTrack}
         >
-          TRACK
-        </Button>
-
-        <Button
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
-          }}
-          onClick={handleNavigateHistory}
-        >
-          HISTORY
+          Track
         </Button>
         <Button
           sx={{
-            color: "white",
-            fontWeight: "bold",
-            width: "100%",
+            width: "100%" /*  marginTop:"2px",backgroundColor:"#520975" */,
           }}
-          onClick={handleNavigateGraph}
         >
-          GRAPH
+          History
         </Button>
-      </Box>
+        <Button
+          sx={{
+            width:
+              "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
+          }}
+        >
+          Graph
+        </Button>
+      </ButtonGroup>
 
       <Routes>
         <Route
           path=""
           element={
-            <BodyTrackerTrack todayDate={todayDate} unitsSystem={unitsSystem} />
+            <BodyTrackerTrack />
           }
         />
         <Route
           path="history"
-          element={<BodyTrackerHistory unitsSystem={unitsSystem} />}
+          element={<BodyTrackerHistory />}
         />
         <Route path="graph" element={<BodyTrackerGraph />} />
       </Routes>

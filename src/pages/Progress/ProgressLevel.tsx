@@ -13,7 +13,6 @@ import TextField from "@mui/material/TextField";
 import calculateMax1RM from "../../utils/progressFunctions/calculateMax1RM";
 import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
 import { useSpring, animated } from "react-spring";
-import savePowerLevelEntry from "../../utils/IndexedDbCRUDFunctions/savePowerLevelEntry";
 import getLastPowerLevelEntry from "./getLastPowerLevelEntry";
 import countUniqueEntriesByDate from "../../utils/progressFunctions/countUniqueEntriesByDate";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
@@ -151,16 +150,7 @@ function ProgressLevel({
               setExperiencePowerLevel(count);
               const currentDate = new Date();
               currentDate.setHours(0, 0, 0, 0);
-              savePowerLevelEntry(
-                finalPowerLevel,
-                weight,
-                firstExerciseSelected,
-                secondExerciseSelected,
-                thirdExerciseSelected,
-                currentDate,
-                finalNumber,
-                count
-              );
+              
             })
             .catch((error) => {
               toast.error("Oops, countUniqueEntriesByDate has an error!")

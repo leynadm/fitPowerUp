@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import {
   timeframeOptions,
   intervalOptions,
@@ -16,13 +17,13 @@ import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExerc
 import { SelectChangeEvent } from "@mui/material";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
 import getTotalRepsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalRepsForMuscleGroup";
-import getTotalSetsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSetsForMuscleGroup";
+import getTotalWorkoutsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalWorkoutsForMuscleGroup";
 import getTotalVolumeForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalVolumeForMuscleGroup";
 import getFlattenedMuscleGroupData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedMuscleGroupData";
 import groupDataByTimePeriodSummed from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSummed";
 import groupDataByTimePeriodSets from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSets";
-import getTotalSeriesForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSeriesForMuscleGroup";
-
+import getTotalSetsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSetsForMuscleGroup";
+import { Paper } from "@mui/material";
 import {
   LineChart,
   Line,
@@ -51,7 +52,7 @@ function MuscleGroupsAnalysis() {
   );
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
   const [modeledData, setModeledData] = useState<
-    { exerciseDate: string; value: number }[] | undefined | null
+    { exerciseDate: string; value: number }[] | undefined | []
   >([]);
 
   const handleMuscleGroupSelectChange = (event: SelectChangeEvent<string>) => {
@@ -104,11 +105,12 @@ function MuscleGroupsAnalysis() {
     );
     const groupedData = flattenedData
       ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
-      : null;
+      : [];
     const modeledData = groupedData
       ? getTotalRepsForMuscleGroup(groupedData)
-      : null;
+      : [];
 
+    
     return modeledData;
   }
 
@@ -126,32 +128,10 @@ function MuscleGroupsAnalysis() {
       );
     const groupedData = flattenedData
       ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
-      : null;
+      : [];
     const modeledData = groupedData
       ? getTotalVolumeForMuscleGroup(groupedData)
-      : null;
-
-    return modeledData;
-
-  }
-
-  function handleGetTotalSeriesForMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    muscleGroup: string,
-    timeframe: string,
-    dataGroup: string
-  ) {
-    const flattenedData = getFlattenedMuscleGroupData(
-        userTrainingData,
-        muscleGroup,
-        timeframe
-      );
-    const groupedData = flattenedData
-      ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
-      : null;
-    const modeledData = groupedData
-      ? getTotalSeriesForMuscleGroup(groupedData)
-      : null;
+      : [];
 
     return modeledData;
 
@@ -169,11 +149,33 @@ function MuscleGroupsAnalysis() {
         timeframe
       );
     const groupedData = flattenedData
-      ? groupDataByTimePeriodSets(flattenedData, dataGroup)
-      : null;
+      ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
+      : [];
     const modeledData = groupedData
       ? getTotalSetsForMuscleGroup(groupedData)
-      : null;
+      : [];
+
+    return modeledData;
+
+  }
+
+  function handleGetTotalWorkoutsForMuscleGroup(
+    userTrainingData: IWorkoutData[],
+    muscleGroup: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+    const flattenedData = getFlattenedMuscleGroupData(
+        userTrainingData,
+        muscleGroup,
+        timeframe
+      );
+    const groupedData = flattenedData
+      ? groupDataByTimePeriodSets(flattenedData, dataGroup)
+      : [];
+    const modeledData = groupedData
+      ? getTotalWorkoutsForMuscleGroup(groupedData)
+      : [];
 
     return modeledData;
 
@@ -202,16 +204,16 @@ function MuscleGroupsAnalysis() {
         );
         break;
       
-        case "Total Series":
-        data = handleGetTotalSeriesForMuscleGroup(
+        case "Total Sets":
+        data = handleGetTotalSetsForMuscleGroup(
           userTrainingData,
           muscleGroup,
           timeframe,
           dataGroup
         );
         break;
-        case "Total Sets":
-        data = handleGetTotalSetsForMuscleGroup(
+        case "Total Workouts":
+        data = handleGetTotalWorkoutsForMuscleGroup(
             userTrainingData,
             muscleGroup,
             timeframe,
@@ -234,11 +236,6 @@ function MuscleGroupsAnalysis() {
     return data;
 
   };
-
-  if(!modeledData){
-    return<>
-    No Data</>
-  }
 
   return (
     <Container
@@ -316,7 +313,8 @@ function MuscleGroupsAnalysis() {
       </Box>
 
       <ResponsiveContainer minHeight="500px">
-        <LineChart
+        { modeledData && modeledData?.length>0?(
+          <LineChart
           width={500}
           height={500}
           data={modeledData}
@@ -353,6 +351,17 @@ function MuscleGroupsAnalysis() {
             }}
           />
         </LineChart>
+        ):(
+          <Box       display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center">
+          <NoAvailableDataBox/>
+          </Box>
+        )
+
+        }
+        
       </ResponsiveContainer>
     </Container>
   );

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import Box from "@mui/material/Box";
+import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -43,6 +44,7 @@ import StarsIcon from "@mui/icons-material/Stars";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DataBadge from "../../components/ui/DataBadge";
+import { Paper } from "@mui/material";
 interface CompletedWorkoutsProps {
   todayDate: Date | undefined;
   setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
@@ -138,12 +140,7 @@ function CompletedWorkouts({
     return newDate;
   }
 
-  const pages = [
-    "Settings",
-    "Body Tracker",
-    "Analysis",
-    "Sign Out",
-  ];
+  const pages = ["Settings", "Body Tracker", "Analysis", "Sign Out"];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -238,7 +235,7 @@ function CompletedWorkouts({
 
         <Box position="fixed" sx={{ width: "100%" }}>
           <AppBar
-            elevation={0}
+            elevation={2}
             style={{
               top: 0,
               width: "100%",
@@ -247,7 +244,7 @@ function CompletedWorkouts({
                 "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
             }}
           >
-            <Container maxWidth="xl">
+            <Container maxWidth="md">
               <Toolbar disableGutters>
                 <FitnessCenterIcon
                   sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -256,11 +253,9 @@ function CompletedWorkouts({
                 <Typography
                   variant="h6"
                   noWrap
-                  component="a"
                   sx={{
                     mr: 2,
                     display: { xs: "none", md: "flex" },
-                    fontWeight: 700,
                     letterSpacing: ".3rem",
                     color: "inherit",
                     textDecoration: "none",
@@ -276,12 +271,10 @@ function CompletedWorkouts({
                 <Typography
                   variant="h5"
                   noWrap
-                  component="a"
                   sx={{
                     mr: 2,
                     display: { xs: "flex", md: "none" },
                     flexGrow: 1,
-                    fontWeight: 700,
                     letterSpacing: ".3rem",
                     color: "inherit",
                     textDecoration: "none",
@@ -294,7 +287,12 @@ function CompletedWorkouts({
                     <Button
                       key={page}
                       onClick={() => handleDesktopBtnClick(page)}
-                      sx={{ my: 2, color: "white", display: "block" }}
+                      sx={{
+                        my: 2,
+                        color: "white",
+                        fontFamily: "inherit",
+                        fontWeight: "400",
+                      }}
                     >
                       {page}
                     </Button>
@@ -383,7 +381,9 @@ function CompletedWorkouts({
               </Toolbar>
             </Container>
           </AppBar>
+
           <Container
+            maxWidth="md"
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -402,14 +402,34 @@ function CompletedWorkouts({
               />
             </IconButton>
 
+            <Button
+              variant="outlined"
+              fullWidth
+              sx={{
+                /*background:"radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)", */ color:
+                  "black",
+                padding: 0,
+                fontSize: "1.25rem",
+                fontWeight: "500",
+              }}
+              disableRipple
+              disableFocusRipple
+              disableTouchRipple
+              disableElevation
+            >
+              {dateForWorkout}
+            </Button>
+
+            {/*         
             <IconButton
               aria-label="left arrow"
               onClick={handleLeftArrowClick}
               sx={{ fontFamily: "Kanit" }}
+              
             >
               <p>{dateForWorkout}</p>
             </IconButton>
-
+  */}
             <IconButton aria-label="left arrow" onClick={handleRightArrowClick}>
               <KeyboardArrowRightIcon
                 sx={{
@@ -421,6 +441,7 @@ function CompletedWorkouts({
               />
             </IconButton>
           </Container>
+
           <Fab
             sx={{
               backgroundColor: "#FFA500",
@@ -437,7 +458,7 @@ function CompletedWorkouts({
           </Fab>
           <Zoom in={true}>
             <Container
-              maxWidth="lg"
+              maxWidth="md"
               sx={{
                 height: "calc(100vh - 112px)",
                 overflow: "scroll",
@@ -478,6 +499,7 @@ function CompletedWorkouts({
                             max={7}
                             size="large"
                             name="simple-controlled"
+                            sx={{ color: "#FFA500" }}
                             value={entry.workoutEvaluation.workoutValue}
                             icon={<StarsIcon fontSize="inherit" />}
                           />
@@ -522,7 +544,7 @@ function CompletedWorkouts({
                             />
                             <DataBadge
                               dataValue={entry.workoutStats.totalLoad}
-                              dataLabel="x BW"
+                              dataLabel="BW"
                             />
                           </Box>
                         </AccordionDetails>
@@ -686,12 +708,23 @@ function CompletedWorkouts({
                     </Box>
                   )
                 )}
+
               {filteredUserTrainingData.length === 0 && (
-                <Typography textAlign="center">
-                  You haven't completed
-                  <br /> any workout
-                  <br /> for this date.
-                </Typography>
+                <Paper elevation={1} sx={{ height: "100%" }}>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    height="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={0}
+                  >
+                    <SearchIcon fontSize="large" />
+                    <Typography textAlign="center" fontSize="1rem">
+                      Workout log empty for this date.
+                    </Typography>
+                  </Box>
+                </Paper>
               )}
             </Container>
           </Zoom>

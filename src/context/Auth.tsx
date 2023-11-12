@@ -4,6 +4,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import User from "../utils/interfaces/User";
 import toast from "react-hot-toast";
+import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
+import enablePersistentData from "../utils/enablePersistentData";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -28,6 +30,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (user) {
         if (user?.isAnonymous === false) {
+          enablePersistentData();
+          createInitialDbTables(user.uid)
+            .then(() => {
+              console.log("Tables are inside the database.");
+            })
+            .catch((error) => {
+              console.error("Error creating tables:", error);
+            })
+            .finally(() => {
+              console.log("IndexedDb tables creation completed.");
+            });
+
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
 

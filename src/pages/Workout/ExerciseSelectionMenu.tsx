@@ -17,7 +17,7 @@ function ExerciseSelectionMenu() {
   const muscleGroup: string = useLocation().state.muscleGroup;
   const { userSelectedExercises } = useContext(TrainingDataContext);
   const [query, setQuery] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const muscleGroupExercises: IUserSelectedExercises[] =
     getMuscleGroupExercises();
 
@@ -68,8 +68,7 @@ function ExerciseSelectionMenu() {
                 sx={{
                   mr: 2,
                   display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
+
                   letterSpacing: ".3rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -91,7 +90,6 @@ function ExerciseSelectionMenu() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
 
-                  fontWeight: 700,
                   letterSpacing: ".3rem",
                   color: "inherit",
                   textDecoration: "none",
@@ -133,7 +131,9 @@ function ExerciseSelectionMenu() {
             </Toolbar>
           </Container>
         </AppBar>
+
         <ExerciseSearchingBar query={query} setQuery={setQuery} />
+
         <Box
           sx={{
             display: "grid",
@@ -150,7 +150,7 @@ function ExerciseSelectionMenu() {
                 key={index}
                 exerciseName={exercise.name}
                 exerciseIcon={exercise.iconURL}
-                handleTileClick={()=>handleTileClick(exercise.name)}
+                handleTileClick={() => handleTileClick(exercise.name)}
               />
             )
           )}

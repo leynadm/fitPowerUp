@@ -1,15 +1,12 @@
 import React, { useState, ChangeEvent } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
 import toast from "react-hot-toast";
@@ -26,7 +23,6 @@ import { auth } from "../../config/firebase";
 import GoogleIcon from "@mui/icons-material/Google";
 import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
-
 
 function Copyright(props: any) {
   const navigate = useNavigate();
@@ -49,10 +45,9 @@ function Copyright(props: any) {
         align="center"
         {...props}
       >
-
-      <Link color="inherit"  href="https://mateidaniel.com" target="_blank" >
-        Developed by Daniel Matei 2023{/* {new Date().getFullYear()} */}
-      </Link>
+        <Link color="inherit" href="https://mateidaniel.com" target="_blank">
+          Developed by Daniel Matei {new Date().getFullYear()}
+        </Link>
       </Typography>
 
       <Typography
@@ -68,7 +63,6 @@ function Copyright(props: any) {
     </Box>
   );
 }
-
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -172,18 +166,18 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <div style={{minHeight:"15rem",width:"15rem",height:"15rem"}}>
-        <img
-          style={{
-            width: "100%",
-            WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
-            maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
-          }}
-          src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fyoung-goku_512x512_sign_in.png?alt=media&token=e2bff5cd-d48c-449c-a25a-141dc199e267&_gl=1*1ymru67*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjcyNjAuOC4wLjA."
-          alt=""
-          loading="lazy"
-        ></img>
-</div>
+        <div style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}>
+          <img
+            style={{
+              width: "100%",
+              WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+              maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+            }}
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fyoung-goku_512x512_sign_in.png?alt=media&token=e2bff5cd-d48c-449c-a25a-141dc199e267&_gl=1*1ymru67*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjcyNjAuOC4wLjA."
+            alt=""
+            loading="lazy"
+          ></img>
+        </div>
         <Typography component="h1" variant="h5">
           Sign in and get fit!
         </Typography>
