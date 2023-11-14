@@ -43,7 +43,9 @@ function getFlattenedExerciseData(userTrainingData:IWorkoutData[],exerciseName:s
         timeframeDate.setMonth(today.getMonth() - 6);
       } else if (timeframe === "1y") {
         timeframeDate.setFullYear(today.getFullYear() - 1);
-      } 
+      } else {
+        timeframeDate.setFullYear(today.getFullYear() - 100);
+      }
 
       if (exerciseDate > timeframeDate) {
         filteredAndFlattenedExerciseData.push(exercise);

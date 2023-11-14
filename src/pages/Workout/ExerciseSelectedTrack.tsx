@@ -15,10 +15,6 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import ValidationAlert from "../../components/ui/ValidationAlert";
 import Autocomplete from "@mui/material/Autocomplete";
 import formatTime from "../../utils/formatTime";
-import checkExercisePR from "../../utils/IndexedDbCRUDFunctions/checkExercisePR";
-import updateExerciseIsPrToFalse from "../../utils/IndexedDbCRUDFunctions/updateExerciseIsPrToFalse";
-import findMaxReps from "../../utils/IndexedDbCRUDFunctions/findMaxReps";
-import findMaxWeight from "../../utils/IndexedDbCRUDFunctions/findMaxWeight";
 import Container from "@mui/material/Container";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
@@ -26,13 +22,15 @@ import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserSelectedExercises } from "../../context/TrainingData";
 import { AuthContext } from "../../context/Auth";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-
+import checkExerciseIsPR from "../../utils/IndexedDbCRUDFunctions/checkExerciseIsPR";
+import updateExercisesPRAfterDeletion from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterDeletion";
+import updateExercisesPRAfterSaving from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterSaving";
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userSelectedExercises, userTrainingData } =
     useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
-
+  console.log({exerciseName})
   const exerciseSelected = userSelectedExercises[0].exercises.find(
     (exercise: IUserSelectedExercises) => exercise.name === exerciseName
   );
@@ -41,13 +39,15 @@ function ExerciseSelectedTrack() {
   const lastExercise = getLastCompletedExerciseEntry();
 
   function getLastCompletedExerciseEntry() {
-    if (userTrainingData) {
+
+    const userTrainingDataArr = userTrainingData
+    if (userTrainingDataArr) {
       const groupedCompletedExercises: {
         date: string;
         exercises: Exercise[];
       }[] = [];
 
-      userTrainingData.forEach((workoutEntry: IWorkoutData) => {
+      userTrainingDataArr.forEach((workoutEntry: IWorkoutData) => {
         workoutEntry.workoutExercises.forEach(
           (exerciseEntry: { name: string; exercises: Exercise[] }) => {
             const completedExerciseName = exerciseEntry.name.toUpperCase();
@@ -129,10 +129,11 @@ function ExerciseSelectedTrack() {
       await getExistingExercises();
     };
     fetchData();
-  }, [dropsetRenderTrigger]);
+  }, []);
 
   async function getExistingExercises() {
     const request = indexedDB.open("fitScouterDb",2);
+
 
     request.onsuccess = function () {
       const db = request.result;
@@ -231,7 +232,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("reps") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if (repsValue === 0||weightValue==='' ) {
+      if (repsValue === 0 || repsValue===null|| isNaN(repsValue) || weightValue==='' || weightValue===null || weightValue===undefined) {
         return "invalid";
       }
     }
@@ -241,7 +242,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("distance") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if (weightValue === '' && distanceValue === 0) {
+      if ((weightValue === '' || weightValue === null || weightValue===undefined) && distanceValue === 0) {
         return "invalid";
       }
     }
@@ -251,7 +252,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("time") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if (weightValue === '' && timeValue === 0) {
+      if ((weightValue === '' || weightValue===null || weightValue === undefined) && timeValue === 0) {
         return "invalid";
       }
     }
@@ -290,7 +291,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("weight") &&
       exerciseSelected.measurement.length === 1
     ) {
-      if (weightValue === '') {
+      if ((weightValue === '' || weightValue === null || weightValue === undefined)) {
         return "invalid";
       }
     }
@@ -324,10 +325,24 @@ function ExerciseSelectedTrack() {
 
   }
 
-  async function saveExerciseEntry() {
-    
+  function safelyParseFloat(value: string | number): number | null {
+    if (typeof value === 'string') {
+      // If it's a string, parse it to a float
+      return parseFloat(value) || null; // Use null if parsing fails
+    } else if (typeof value === 'number') {
+      // If it's already a number, return it
+      return value;
+    } else {
+      // Handle other types (optional)
+      console.error("Unsupported type");
+      return null;
+    }
+  }
 
+
+  async function saveExerciseEntry() {
     const checkEntriesValidity = exerciseFieldValidation();
+
     if (checkEntriesValidity) {
       setShowAlert(true);
 
@@ -345,41 +360,37 @@ function ExerciseSelectedTrack() {
       return;
     }
 
+    let weightValueFloat: number | null;
+
+    weightValueFloat = safelyParseFloat(entryToSave.weight);
+
+    if (weightValueFloat === null) {
+      return;
+    }
+
+    const updatedEntryToSave = {
+      date: entryToSave.date,
+      exercise: entryToSave.exercise,
+      category: entryToSave.category,
+      reps: entryToSave.reps,
+      distance: entryToSave.distance,
+      distance_unit: entryToSave.distance_unit,
+      time: entryToSave.time,
+      is_pr: entryToSave.is_pr,
+      dropset: entryToSave.dropset,
+      weight: 0,
+    };
+    updatedEntryToSave.weight = weightValueFloat;
+
+    const isPRCheck = await checkExerciseIsPR(
+      userTrainingData,
+      updatedEntryToSave.exercise,
+      updatedEntryToSave
+    );
+
     try {
 
-      
-      const prResult: any = await checkExercisePR(exerciseSelected.name);
-
-      const checkEntriesValidity = exerciseFieldValidation();
-
-      if (checkEntriesValidity) {
-        setShowAlert(true);
-
-        // Clear previous timeout if it exists
-        if (alertTimeoutId) {
-          clearTimeout(alertTimeoutId);
-        }
-
-        // Set new timeout to hide the alert after 2 seconds
-        const timeoutId = setTimeout(() => {
-          setShowAlert(false);
-        }, 2000);
-
-        setAlertTimeoutId(timeoutId);
-        return;
-      }
-
-      const request = indexedDB.open("fitScouterDb",2);
-
-      request.onupgradeneeded = (e) => {
-        const db = (e.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains("user_exercises-entries")) {
-          const userEntries = db.createObjectStore("user_exercises-entries", {
-            keyPath: "id",
-            autoIncrement: true,
-          });
-        }
-      };
+      const request = indexedDB.open("fitScouterDb", 2);
 
       request.onsuccess = function () {
         const db = request.result;
@@ -393,138 +404,31 @@ function ExerciseSelectedTrack() {
           "user-exercises-entries"
         );
 
-        if (prResult === null) {
-          const transaction = db.transaction(
-            "user-records-entries",
-            "readwrite"
-          );
-          const objectStore = transaction.objectStore("user-records-entries");
-          entryToSave.is_pr = true;
-          userEntryTransactionStore.add(entryToSave);
-          objectStore.add(entryToSave);
-        } else {
-          if (
-            entryToSave.reps > prResult.reps &&
-            entryToSave.weight > prResult.weight &&
-            entryToSave.reps !== 0 &&
-            entryToSave.weight !== 0
-          ) {
-            prResult.reps = entryToSave.reps;
-            entryToSave.is_pr = true;
-            userEntryTransactionStore.add(entryToSave);
-
-            const transaction = db.transaction(
-              "user-records-entries",
-              "readwrite"
-            );
-            const objectStore = transaction.objectStore("user-records-entries");
-            const index = objectStore.index("exercise_name");
-            
-            const getRequest = index.get(exerciseSelected.name);
-            getRequest.onsuccess = function () {
-              const existingRecord = getRequest.result;
-              if (existingRecord) {
-                existingRecord.reps = entryToSave.reps;
-                existingRecord.weight = entryToSave.weight;
-                const updateRequest = objectStore.put(existingRecord);
-                updateRequest.onsuccess = function () {};
-                updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error!");
-                  console.log("Failed to update PR");
-                };
-              }
-            };
-          } else if (
-            entryToSave.reps > prResult.reps &&
-            entryToSave.reps !== 0
-          ) {
-            prResult.reps = entryToSave.reps;
-            entryToSave.is_pr = true;
-            userEntryTransactionStore.add(entryToSave);
-
-            const transaction = db.transaction(
-              "user-records-entries",
-              "readwrite"
-            );
-            const objectStore = transaction.objectStore("user-records-entries");
-            const index = objectStore.index("exercise_name");
-
-            const getRequest = index.get(exerciseSelected.name);
-            getRequest.onsuccess = function () {
-              const existingRecord = getRequest.result;
-              if (existingRecord) {
-                existingRecord.reps = entryToSave.reps;
-                const updateRequest = objectStore.put(existingRecord);
-                updateRequest.onsuccess = function () {};
-                updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error - FTUPR!");
-                  console.log("Failed to update PR");
-                };
-              }
-            };
-          } else if (
-            entryToSave.weight > prResult.weight &&
-            entryToSave.weight !== 0
-          ) {
-            prResult.weight = entryToSave.weight;
-            entryToSave.is_pr = true;
-            userEntryTransactionStore.add(entryToSave);
-            const transaction = db.transaction(
-              "user-records-entries",
-              "readwrite"
-            );
-            const objectStore = transaction.objectStore("user-records-entries");
-            const index = objectStore.index("exercise_name");
-
-            const getRequest = index.get(exerciseSelected.name);
-            getRequest.onsuccess = function () {
-              const existingRecord = getRequest.result;
-              if (existingRecord) {
-                existingRecord.weight = entryToSave.weight;
-                const updateRequest = objectStore.put(existingRecord);
-                updateRequest.onsuccess = function () {};
-                updateRequest.onerror = function () {
-                  toast.error("Oops, saveExerciseEntry has an error - FTUPR");
-                  console.log("Failed to update PR");
-                };
-              }
-            };
-          } else {
-            entryToSave.is_pr = false;
-            userEntryTransactionStore.add(entryToSave);
-          }
+        if (isPRCheck) {
+          updatedEntryToSave.is_pr = true;
         }
 
-        userEntryTransaction.oncomplete = function () {
+        userEntryTransactionStore.add(updatedEntryToSave);
+
+        userEntryTransaction.oncomplete = async function () {
           db.close();
-          getExistingExercises();
+          await updateExercisesPRAfterSaving(userTrainingData,exerciseSelected.name)
+          await getExistingExercises();
+        };
+
+        request.onerror = function () {
+          toast.error("Oops, saveExerciseEntry has an error!");
+          console.log("found error:");
         };
       };
 
-      request.onerror = function () {
-        toast.error("Oops, saveExerciseEntry has an error!");
-        console.log("found error:");
-      };
-
-
     } catch (error) {
-      toast.error("Oops, saveExerciseEntry has an error!");
-      console.error(error);
+      console.error("Error:", error);
     }
   }
 
   async function deleteEntry(id: number, exerciseName: string) {
     try {
-      const prResult: any = await checkExercisePR(exerciseSelected.name);
-
-      const weightResult = await findMaxWeight(exerciseSelected.name, id);
-      const maxWeightResult: any = weightResult.maxWeight;
-      const weightEntryId: number = weightResult.id;
-
-      const repsResult = await findMaxReps(exerciseSelected.name, id);
-      const maxRepsResult: any = repsResult.maxReps;
-      const repsEntryId: number = repsResult.id;
-
       const request = indexedDB.open("fitScouterDb", 2);
 
       request.onsuccess = function (event) {
@@ -540,122 +444,46 @@ function ExerciseSelectedTrack() {
         );
 
         const getRecordRequest = userEntryTransactionStore.get(id);
+        
+        getRecordRequest.onsuccess = async function (event: any) {
+           
+           const deleteRecordRequest = userEntryTransactionStore.delete(id);
 
-        getRecordRequest.onsuccess = function (event: any) {
-          const record = (event.target as IDBRequest).result;
-
-          // Access the properties of the record
-          const weight = record.weight;
-          const reps = record.reps;
-
-          const userRecordTransaction = db.transaction(
-            "user-records-entries",
-            "readwrite"
-          );
-          const userRecordObjectStore = userRecordTransaction.objectStore(
-            "user-records-entries"
-          );
-
-          const userRecordIndex = userRecordObjectStore.index("exercise_name");
-
-          const getExerciseRecord = userRecordIndex.get(exerciseSelected.name);
-
-          getExerciseRecord.onsuccess = function () {
-            const existingRecord = getExerciseRecord.result;
-            if (existingRecord) {
-              if (existingRecord.weight >= weight) {
-                existingRecord.weight = maxWeightResult;
-              }
-              if (existingRecord.reps >= reps) {
-                existingRecord.reps = maxRepsResult;
-              }
-              const updateRequest = userRecordObjectStore.put(existingRecord);
-              updateRequest.onsuccess = function () {};
-              updateRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error!");
-                console.log("Failed to update PR");
-              };
-            }
+          deleteRecordRequest.onsuccess = async function () {
+            console.log(`Record with ID ${id} deleted successfully.`);
+            console.log('about to run updateExercisesPRAfterDeletion')
+            await updateExercisesPRAfterDeletion(userTrainingData,exerciseName)
+            console.log('just ran it:')
+            await getExistingExercises();
           };
 
-          const weightEntryRequest =
-            userEntryTransactionStore.get(weightEntryId);
-          const repsEntryRequest = userEntryTransactionStore.get(repsEntryId);
-
-          weightEntryRequest.onsuccess = function (event: any) {
-            const weightEntry = (event.target as IDBRequest).result;
-
-            if (weightEntry !== undefined && weightEntry.weight < weight) {
-              weightEntry.is_pr = true;
-              const updateWeightEntryRequest =
-                userEntryTransactionStore.put(weightEntry);
-              updateWeightEntryRequest.onsuccess = function () {};
-              updateWeightEntryRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error!");
-                console.log("Failed to update Weight Entry");
-              };
-            }
+          deleteRecordRequest.onerror = function (event: Event) {
+            console.error(
+              "Error deleting record:",
+              (event.target as IDBRequest).error
+            );
           };
-
-          repsEntryRequest.onsuccess = function (event: any) {
-            const repsEntry = (event.target as IDBRequest).result;
-
-            if (repsEntry !== undefined && repsEntry.reps < reps) {
-              repsEntry.is_pr = true;
-              const updateRepsEntryRequest =
-                userEntryTransactionStore.put(repsEntry);
-              updateRepsEntryRequest.onsuccess = function () {};
-              updateRepsEntryRequest.onerror = function () {
-                toast.error("Oops, deleteEntry has an error - FTURE!");
-                console.log("Failed to update Reps Entry");
-              };
-            }
-          };
-
-          Promise.all([weightEntryRequest, repsEntryRequest])
-            .then(() => {
-              const primaryKeyRequest = userEntryTransactionStore.delete(id);
-
-              primaryKeyRequest.onsuccess = function () {
-                getExistingExercises(); // Update the list of existing exercises
-              };
-
-              primaryKeyRequest.onerror = function () {
-                toast.error("Oops, couldn't delete the entry!");
-                console.log("Error deleting entry");
-              };
-
-              userEntryTransaction.oncomplete = function () {
-                db.close();
-              };
-            })
-            .catch((error) => {
-              toast.error("Oops, deleteEntry has an error!");
-              console.error("An error occurred:", error);
-            });
         };
-
-        request.onerror = function () {
-          toast.error("Oops, couldn't open the database!");
-          console.log("Error opening database in deleteEntry!");
+        getRecordRequest.onerror = function (event: Event) {
+          console.error(
+            "Error getting record:",
+            (event.target as IDBRequest).error
+          );
         };
       };
     } catch (error) {
-      toast.error("Oops, found an error in deleteEntry!");
-      console.error(error);
+      console.error("Error opening database:", error);
     }
   }
 
   function handleTextFieldChange(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
-    console.log(value);
+    console.log({value});
   
     if (/^-?\d*[\.,]?\d*$/.test(value) || value === "" || value === null) {
-      let parsedValue: number | null = null;
-
-      console.log({parsedValue})
 
         if (id === "reps") {
+          setRepsValue(parseInt(value,10))
         } else if (id === "weight") {
           console.log(typeof value)
           setWeightValue(value);
@@ -729,11 +557,6 @@ function ExerciseSelectedTrack() {
     }
   };
   
-  
-  
-  
-  
-
   function handleClearButtonClick() {
     setWeightValue('');
     setRepsValue(0);
