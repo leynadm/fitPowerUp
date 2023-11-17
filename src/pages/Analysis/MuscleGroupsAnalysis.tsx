@@ -79,6 +79,7 @@ function MuscleGroupsAnalysis() {
     setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, clickedDataGroup));
   };
 
+  
   useEffect(() => {
     setModeledData(
      fetchModeledData(
@@ -103,6 +104,7 @@ function MuscleGroupsAnalysis() {
       muscleGroup,
       timeframe
     );
+
     const groupedData = flattenedData
       ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
       : [];

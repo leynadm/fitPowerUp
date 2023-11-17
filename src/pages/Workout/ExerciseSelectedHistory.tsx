@@ -178,30 +178,40 @@ function ExerciseSelectedHistory() {
               </Box>
             </Box>
           ))}
-          <Box display="flex" justifyContent="space-around">
+
+          <Box
+            display="flex"
+            justifyContent="space-around"
+            flexDirection="row-reverse"
+          >
             <Typography variant="subtitle2">
-              Sets: {group.stats.totalSets !== 0 && group.stats.totalSets}
+              {group.stats.totalReps !== 0 && `${group.stats.totalReps} reps`}
             </Typography>
 
+            {group.stats.totalWeight !== 0 && (
+              <Typography variant="subtitle2">
+                {group.stats.totalWeight !== 0 &&
+                  `${group.stats.totalWeight} ${
+                    currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                  }`}
+              </Typography>
+            )}
+            {group.stats.totalDistance !== 0 && (
+              <Typography variant="subtitle2">
+                {group.stats.totalDistance !== 0 &&
+                  `Distance: ${group.stats.totalDistance}`}
+              </Typography>
+            )}
+            {group.stats.totalTime !== 0 && (
+              <Typography variant="subtitle2">
+                {group.stats.totalTime !== 0 &&
+                  `Time: ${formatTime(group.stats.totalTime)}`}
+              </Typography>
+            )}
             <Typography variant="subtitle2">
-              {group.stats.totalWeight !== 0 &&
-                `Weight: ${group.stats.totalWeight} ${
-                  currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
-                }`}
+              {group.stats.totalSets !== 0 && group.stats.totalSets} sets
             </Typography>
-            <Typography variant="subtitle2">
-              {group.stats.totalReps !== 0 && `Reps: ${group.stats.totalReps}`}
-            </Typography>
-
-            <Typography variant="subtitle2">
-              {group.stats.totalDistance !== 0 &&
-                `Distance: ${group.stats.totalDistance}`}
-            </Typography>
-
-            <Typography variant="subtitle2">
-              {group.stats.totalTime !== 0 &&
-                `Time: ${formatTime(group.stats.totalTime)}`}
-            </Typography>
+            
           </Box>
         </Box>
       </>
@@ -245,11 +255,12 @@ function ExerciseSelectedHistory() {
           itemCount={exerciseHistoryArr.length}
           itemSize={(index) => {
             // Calculate the dynamic height for each item based on its content
-            const group =
-              exerciseHistoryArr[exerciseHistoryArr.length - 1 - index];
+            const group = exerciseHistoryArr[index];
+            console.log({ group });
             const numExercises = group.exercises.length;
+            console.log({ numExercises });
             const exerciseHeight = numExercises * 48; // Assuming each exercise takes 120px height
-            return exerciseHeight + 64; // Add some extra height for the group header
+            return exerciseHeight + 56; // Add some extra height for the group header
           }}
           width="100%"
         >

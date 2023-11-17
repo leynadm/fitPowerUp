@@ -19,11 +19,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { timeframeOptions } from "../../utils/completedWorkoutsChartFunctions/statisticsOptions";
 import { useState } from "react";
+import { SelectChangeEvent } from "@mui/material";
+import { IBodyTrackerGroupedData } from "../../utils/completedWorkoutsChartFunctions/utility/groupBodyTrackerDataByTimePeriodAvg";
 import {
   statisticsOptionsBodyTracker,
   intervalOptions,
 } from "../../utils/completedWorkoutsChartFunctions/statisticsOptions";
-
+import groupBodyTrackerDataByTimePeriodAvg from "../../utils/completedWorkoutsChartFunctions/utility/groupBodyTrackerDataByTimePeriodAvg";
 function BodyTrackerGraph() {
   const { userBodyTrackerData } = useContext(TrainingDataContext);
 
@@ -32,6 +34,7 @@ function BodyTrackerGraph() {
 
   const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
 
+  const [selectedStatisticsOptionsBodyTracker,setSelectedStatisticsOptionsBodyTracker]=useState(statisticsOptionsBodyTracker[0].label)
   userBodyTrackerDataArr.sort(
     (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
       const dateA = new Date(a.date);
@@ -41,11 +44,64 @@ function BodyTrackerGraph() {
     }
   );
 
+  const [bodyTrackerModeledData, setBodyTrackerModeledData] = useState<
+  IBodyTrackerGroupedData[]|undefined|[]
+>([]);
+
   const handleStandardTimeframeChange = (option: any) => {
     const clickedTimeframe = option;
     setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
+    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedStatisticsOptionsBodyTracker, clickedTimeframe, selectedDataGroup));
+  };
 
-    //setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, clickedTimeframe, selectedDataGroup));
+  const handleDataGroupChange = (option:string) => {
+    const clickedDataGroup = option;
+    setSelectedDataGroup(clickedDataGroup); // Update the selected timeframe
+    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedStatisticsOptionsBodyTracker, selectedTimeframe, clickedDataGroup));
+  };
+  
+  const handleStatisticsBodyTrackerChange = (event: SelectChangeEvent<string>) => {
+    const selectedBodyTrackerOption = event.target.value;
+    setSelectedStatisticsOptionsBodyTracker(selectedBodyTrackerOption);    
+    console.log('checking statistics')
+    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedBodyTrackerOption, selectedTimeframe, selectedDataGroup));
+  };
+
+  function handleGetGroupedData(
+    bodyTrackerData: IUserBodyTrackerDataEntry[],
+    kpi: string,
+    timeframe: string,
+    dataGroup: string
+  ) {
+
+    groupBodyTrackerDataByTimePeriodAvg(
+      bodyTrackerData,dataGroup
+    )
+
+    const groupedData = groupBodyTrackerDataByTimePeriodAvg(bodyTrackerData, dataGroup);
+      return groupedData
+  }
+
+  const fetchBodyTrackerModeledData = (
+    bodyTrackerData: IUserBodyTrackerDataEntry[],
+    kpi: string,
+    timeframe: string,
+    dataGroup: string
+  ) => {
+    if (!selectedStatisticsOptionsBodyTracker) {
+      return;
+    }
+
+    let data = handleGetGroupedData(
+      bodyTrackerData,
+      kpi,
+      timeframe,
+      dataGroup
+    );
+
+    console.log({data})
+    return data;
+
   };
 
   return (
@@ -59,18 +115,14 @@ function BodyTrackerGraph() {
             width: "100%",
             marginTop: "8px",
           }}
-          /* 
-          onChange={handleMuscleGroupSelectChange}
-          value={selectedMuscleGroup}
-         */
+          value={selectedStatisticsOptionsBodyTracker}
+          onChange={handleStatisticsBodyTrackerChange}
         >
-          {/* 
-          {exercisesMuscleGroupsArr &&
-            exercisesMuscleGroupsArr.map((option: string) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))} */}
+      {statisticsOptionsBodyTracker.map((stat:any, index) => (
+        <MenuItem key={index} value={stat.label}>
+          {stat.label}
+        </MenuItem>
+      ))}  
         </Select>
 
         <Typography variant="subtitle1">Select timeframe</Typography>
@@ -102,6 +154,7 @@ function BodyTrackerGraph() {
               key={option.label}
               style={{ flexGrow: 1 }}
               sx={{ backgroundColor: "#FFA500" }}
+              onClick={() => handleDataGroupChange(option.value)}
             >
               {option.label}
             </Button>
@@ -113,12 +166,12 @@ function BodyTrackerGraph() {
         <LineChart
           width={500}
           height={400}
-          data={userBodyTrackerDataArr}
+          data={bodyTrackerModeledData}
           margin={{
             top: 10,
             bottom: 1,
           }}
-        >
+        > 
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="date" scale="band" />
           <YAxis

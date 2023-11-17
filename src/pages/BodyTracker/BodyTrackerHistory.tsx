@@ -85,7 +85,7 @@ function BodyTrackerHistory() {
                   }}
                 >
                   <RestaurantIcon fontSize="medium" />
-                  <Typography>{userBodyTrackerEntry.caloricIntake}</Typography>
+                  <Typography>{userBodyTrackerEntry.caloricIntake} cal</Typography>
                 </div>
               </Box>
             </AccordionSummary>

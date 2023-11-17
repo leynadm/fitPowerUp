@@ -45,12 +45,20 @@ function BodyTrackerTrack() {
   const handleKPIChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     const elementId = event.target.id;
-    if (/^\d*\.?\d*$/.test(inputValue) || inputValue === "" || inputValue === null) {
-      setBodyKPIDataObj((prevState) => ({
-        ...prevState,
-        [elementId]: parseFloat(inputValue),
-      }));
-    }
+    console.log(inputValue)
+      // Check if the input value is an empty string
+  if (inputValue === "") {
+    setBodyKPIDataObj((prevState) => ({
+      ...prevState,
+      [elementId]: "", // Set the value to an empty string to avoid a NaN
+    }));
+  } else if (/^\d*\.?\d*$/.test(inputValue)) {
+    // If it's a valid number, update the state with the parsed float value
+    setBodyKPIDataObj((prevState) => ({
+      ...prevState,
+      [elementId]: parseFloat(inputValue),
+    }));
+  }
   };
   if (!userBodyTrackerData) {
     return <>Loading</>;

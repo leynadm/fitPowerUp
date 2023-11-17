@@ -76,7 +76,7 @@ function CompletedDetailsOverview() {
 
     workoutStats.avgRepsPerSet =
       workoutStats.totalWorkouts > 0
-        ? workoutStats.totalReps / workoutStats.totalWorkouts
+        ? workoutStats.totalReps / workoutStats.totalSets
         : 0;
     workoutStats.loadVolume = ((workoutStats.totalWeight * workoutStats.totalReps)/workoutStats.totalSets);
 
@@ -133,7 +133,7 @@ function CompletedDetailsOverview() {
 
     historicStats.avgRepsPerSet =
       historicStats.totalWorkouts > 0
-        ? historicStats.totalReps / historicStats.totalWorkouts
+        ? historicStats.totalReps / historicStats.totalSets
         : 0;
     historicStats.loadVolume =
       (historicStats.totalWeight * historicStats.totalReps) / 1000/historicStats.totalSets;

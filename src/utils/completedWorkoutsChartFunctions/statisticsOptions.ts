@@ -96,5 +96,4 @@ export const statisticsOptionsBodyTracker = [
   { label: "Left Thigh" },
   { label: "Left Calf" },
   { label: "Right Calf" },
-
 ];

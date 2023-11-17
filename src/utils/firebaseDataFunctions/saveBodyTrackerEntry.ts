@@ -21,6 +21,7 @@ export interface IBodyTrackerObj {
   rightThigh: number | string;
   leftCalf: number | string;
   rightCalf: number | string;
+  [key: string]: number | string;
 }
 
 async function saveBodyTrackerEntry(
@@ -34,6 +35,13 @@ async function saveBodyTrackerEntry(
     userDocRef,
     "userCollection/userBodyTracker/"
   );
+
+  // CONVERT THE "" entries to a 0
+  for (const [key, value] of Object.entries(bodyTrackerData)) {
+    if((typeof value==='string' && key!=="date")){
+      bodyTrackerData[key]=0
+    }
+  }
 
   if (saveButtonText === "save") {
     await updateDoc(userBodyTrackerDocRef, {
@@ -55,8 +63,7 @@ async function saveBodyTrackerEntry(
         filteredData.push(bodyTrackerData);
 
         await setDoc(userBodyTrackerDocRef, {
-          bodyTrackerData: filteredData,
-          bodyTrackerDates: arrayUnion(bodyTrackerData.date),
+          bodyTrackerData: filteredData
         });
         toast.success("Your data was added!");
       }
