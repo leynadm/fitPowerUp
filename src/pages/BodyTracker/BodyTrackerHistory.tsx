@@ -1,200 +1,169 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import CommentIcon from "@mui/icons-material/Comment";
+import ViewCommentModal from "../../components/ui/ViewCommentModal";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import toast from "react-hot-toast";
+import { VariableSizeList } from "react-window";
+import { TrainingDataContext } from "../../context/TrainingData";
+import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
+import { FixedSizeList, ListChildComponentProps } from "react-window";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
+import PercentIcon from "@mui/icons-material/Percent";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { AuthContext } from "../../context/Auth";
-interface BodyTrackerEntry {
-  date: Date;
-  name: string;
-  value: number;
-}
-
-interface GroupedBodyTrackerEntries {
-  date: string;
-  entries: BodyTrackerEntry[];
-}
-
 
 function BodyTrackerHistory() {
-  const [bodyTrackerEntries, setBodyTrackerEntries] = useState<
-    GroupedBodyTrackerEntries[]
-  >([]);
+  const { userBodyTrackerData } = useContext(TrainingDataContext);
   const {currentUserData} = useContext(AuthContext)
-  const measurementOptions = [{ label: "Bodyweight" }, { label: "Body Fat" }];
-  const [selectedMeasurement, setSelectedMeasurement] = useState<{
-    label: string;
-  }>(measurementOptions[0]);
 
-  useEffect(() => {
-    getBodyTrackerHistory();
-  }, [selectedMeasurement]);
+  const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
 
-  function getBodyTrackerHistory() {
-    const request = indexedDB.open("fitScouterDb", 1);
+  userBodyTrackerDataArr.sort((a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+  
+    return dateB.getTime() - dateA.getTime();
+  });
 
-    request.onsuccess = function () {
-      const db = request.result;
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const userBodyTrackerEntry = userBodyTrackerDataArr[index];
 
-      const userEntryTransaction = db.transaction(
-        "user-body-tracker",
-        "readonly"
-      );
+    return (
+      <>
+        <Box gap={2}>
+          <Typography variant="subtitle1" paddingLeft="8px">
+            {userBodyTrackerEntry.date}
+          </Typography>
 
-      const userEntryTransactionStore =
-        userEntryTransaction.objectStore("user-body-tracker");
+          <Accordion sx={{ margin: "8px" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Box display="flex" width="100%" justifyContent="space-between">
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  <MonitorWeightIcon fontSize="medium" />
+                  <Typography>
+                    {userBodyTrackerEntry.weight}{" "}
+                    {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
+                  </Typography>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  <PercentIcon fontSize="medium" />
+                  <Typography>{userBodyTrackerEntry.bodyFat}</Typography>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  <RestaurantIcon fontSize="medium" />
+                  <Typography>{userBodyTrackerEntry.caloricIntake}</Typography>
+                </div>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              >
+              <Typography>
+                Neck: {userBodyTrackerEntry.neck}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Shoulders: {userBodyTrackerEntry.shoulders}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Chest: {userBodyTrackerEntry.chest}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Waist: {userBodyTrackerEntry.waist}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Bicep: {userBodyTrackerEntry.leftBicep}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Bicep: {userBodyTrackerEntry.rightBicep}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Forearm: {userBodyTrackerEntry.leftForearm}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Forearm: {userBodyTrackerEntry.rightForearm}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Thigh: {userBodyTrackerEntry.leftThigh}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Thigh: {userBodyTrackerEntry.rightThigh}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Calf: {userBodyTrackerEntry.leftCalf}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Calf: {userBodyTrackerEntry.rightCalf}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
 
-      const getAllEntriesRequest = userEntryTransactionStore.getAll();
-
-      getAllEntriesRequest.onsuccess = function (event: any) {
-        const entries = event.target.result as BodyTrackerEntry[];
-
-        // Filter entries by selected measurement name
-        const filteredEntries = entries.filter(
-          (entry) => entry.name === selectedMeasurement.label
-        );
-
-        const groupedEntries = groupEntriesByDate(filteredEntries);
-        setBodyTrackerEntries(groupedEntries);
-      };
-
-      getAllEntriesRequest.onerror = function () {
-        toast.error("Oops, getBodyTrackerHistory has an error!");
-        console.error("Error retrieving body tracker entries");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-  }
-
-  function groupEntriesByDate(
-    entries: BodyTrackerEntry[]
-  ): GroupedBodyTrackerEntries[] {
-    const groupedEntries: GroupedBodyTrackerEntries[] = [];
-
-    entries.forEach((entry) => {
-      const date = entry.date.toDateString();
-      const existingGroup = groupedEntries.find((group) => group.date === date);
-
-      if (existingGroup) {
-        existingGroup.entries.push(entry);
-      } else {
-        groupedEntries.push({ date, entries: [entry] });
-      }
-    });
-
-    return groupedEntries;
-  }
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
+      </>
+    );
+  };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Box sx={{ width: "100%", marginTop: "8px" }}>
-        <FormControl sx={{ width: "100%" }}>
-          <InputLabel id="measurement-label">Measurement</InputLabel>
-          <Select
-            labelId="measurement-label"
-            id="measurement-select"
-            value={selectedMeasurement.label}
-            onChange={(event) => {
-              const newValue = event.target.value as string;
-              const newSelectedMeasurement = measurementOptions.find(
-                (option) => option.label === newValue
-              );
-              setSelectedMeasurement(newSelectedMeasurement!);
-            }}
-            label="Measurement"
-            sx={{ width: "100%", marginBottom: "1rem" }}
-          >
-            {measurementOptions.map((option) => (
-              <MenuItem key={option.label} value={option.label}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-
-      {bodyTrackerEntries.length !== 0 ? (
-        bodyTrackerEntries
-          .sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
-          .map((group, index) => (
-            <Box key={index} sx={{ width: "100%" }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  textAlign: "left",
-                  fontSize: "medium",
-                  paddingLeft: "1rem",
-                }}
-              >
-                {group.date.toLocaleString()}
-              </Typography>
-              <Divider />
-
-              {group.entries.map(
-                (groupedEntry: any, groupedEntryIndex: number) => (
-                  <Box
-                    key={groupedEntryIndex}
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
-                      width: "100%",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>
-                      {groupedEntry.name}
-                    </Typography>
-
-                    <Typography sx={{ textAlign: "center" }}>
-                      {groupedEntry.value}
-                    </Typography>
-
-                    {selectedMeasurement.label === "Bodyweight" && (
-                      <Typography sx={{ textAlign: "center" }}>
-                        {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
-                      </Typography>
-                    )}
-
-                    {selectedMeasurement.label === "Body Fat" && (
-                      <Typography sx={{ textAlign: "center" }}>%</Typography>
-                    )}
-                  </Box>
-                )
-              )}
-            </Box>
-          ))
-      ) : (
-        <Box
-          sx={{
-            height: "calc(100vh - 144px)",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+    <>
+      <Container maxWidth="md">
+        <FixedSizeList
+          height={window.innerHeight - 190}
+          itemCount={userBodyTrackerDataArr.length}
+          itemSize={50}
+          width="100%"
         >
-          <Typography variant="body1" align="center">
-            No existing exercises found.
-          </Typography>
-        </Box>
-      )}
-    </Container>
+          {Row}
+        </FixedSizeList>
+      </Container>
+    </>
   );
 }
 

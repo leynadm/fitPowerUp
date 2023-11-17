@@ -82,3 +82,19 @@ export const statisticsOptionsMuscleGroups = [
   { label: "Total Workouts" },
   { label: "Total Volume" },
 ];
+
+export const statisticsOptionsBodyTracker = [
+  { label: "Neck" },
+  { label: "Shoulders" },
+  { label: "Chest" },
+  { label: "Left Bicep" },
+  { label: "Right Bicep" },
+  { label: "Left Forearm" },
+  { label: "Right Forearm" },
+  { label: "Waist" },
+  { label: "Hips" },
+  { label: "Left Thigh" },
+  { label: "Left Calf" },
+  { label: "Right Calf" },
+
+];

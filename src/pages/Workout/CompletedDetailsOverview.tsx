@@ -218,7 +218,7 @@ function CompletedDetailsOverview() {
             />
 
             <ExerciseCompletedStatTile
-              statName="AVG. REP PER SET"
+              statName="AVG. REP/SET"
               statIcon={<FunctionsIcon fontSize="small" />}
               statValue={workoutStatus?.avgRepsPerSet.toFixed(1) || 0}
               statDetail="sets"
@@ -272,7 +272,7 @@ function CompletedDetailsOverview() {
               statTextColor="white"
             />
             <ExerciseCompletedStatTile
-              statName="AVG. REP PER SET"
+              statName="AVG. REP/SET"
               statIcon={<FunctionsIcon fontSize="small" />}
               statValue={historicStats?.avgRepsPerSet.toFixed(1) || 0}
               statDetail="sets"

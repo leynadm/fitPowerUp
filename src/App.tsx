@@ -189,7 +189,7 @@ function App() {
         // Here is where you can customise the button
         fontWeight: "bold",
       },
-      fontFamily: "Kanit",
+      fontFamily: "Outfit",
     },
 
     shape: {},
@@ -223,7 +223,7 @@ function App() {
               {/* If the user is signed in and tries to access login, reroute him to home */}
               <Route element={<AuthRoute type="home" />}>
                 <Route
-                index
+                  index
                   path="/home/*"
                   element={
                     <Home

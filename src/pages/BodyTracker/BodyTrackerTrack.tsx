@@ -10,46 +10,126 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../context/Auth";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
-
+import saveBodyTrackerEntry from "../../utils/firebaseDataFunctions/saveBodyTrackerEntry";
+import { TrainingDataContext } from "../../context/TrainingData";
+import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
+import { fetchUserBodyTrackerData } from "../../context/TrainingData";
 function BodyTrackerTrack() {
-  const { currentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData } = useContext(AuthContext);
 
+  const { userBodyTrackerData, setUserBodyTrackerData } =
+    useContext(TrainingDataContext);
+  const [saveButtonText, setSaveButtonText] = useState("Save");
   const [bodyKPIDataObj, setBodyKPIDataObj] = useState({
-    date: new Date().toISOString().substring(0, 16), // Initialize with current date in the correct format
-    weight: 0,
-    bodyFat: 0,
-    caloricIntake: 0,
-    neck: 0,
-    shoulders: 0,
-    chest: 0,
-    leftBicep: 0,
-    rightBicep: 0,
-    leftForearm: 0,
-    rightForearm: 0,
-    waist: 0,
-    hips: 0,
-    leftThigh: 0,
-    rightThigh: 0,
-    leftCalf: 0,
-    rightCalf: 0,
+    date: "",
+    weight: "",
+    bodyFat: "",
+    caloricIntake: "",
+    neck: "",
+    shoulders: "",
+    chest: "",
+    leftBicep: "",
+    rightBicep: "",
+    leftForearm: "",
+    rightForearm: "",
+    waist: "",
+    hips: "",
+    leftThigh: "",
+    rightThigh: "",
+    leftCalf: "",
+    rightCalf: "",
   });
 
   const handleKPIChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
-    //console.log(inputValue)
     const elementId = event.target.id;
-    // Validate the input to allow only numeric values or an empty string
-    if (/^\d*\.?\d*$/.test(inputValue) || inputValue === "") {
+    if (/^\d*\.?\d*$/.test(inputValue) || inputValue === "" || inputValue === null) {
       setBodyKPIDataObj((prevState) => ({
         ...prevState,
-        [elementId]: parseFloat(inputValue) || 0,
+        [elementId]: parseFloat(inputValue),
       }));
     }
   };
+  if (!userBodyTrackerData) {
+    return <>Loading</>;
+  }
 
-  console.log(bodyKPIDataObj);
+  async function handleSaveBodyTrackerEntry() {
+    await saveBodyTrackerEntry(currentUser.uid, bodyKPIDataObj, saveButtonText);
+    await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+  }
+
+  const handleOnChangeForDate = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newDate = event.target.value;
+    const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
+
+    const isPropertyEqual = userBodyTrackerDataArr.some(
+      (item: IUserBodyTrackerDataEntry) => item.date === newDate
+    );
+
+    if (isPropertyEqual) {
+      setSaveButtonText("Update");
+
+      for (let index = 0; index < userBodyTrackerDataArr.length; index++) {
+        const userBodyTrackerEntry = userBodyTrackerDataArr[index];
+
+        setBodyKPIDataObj({
+          date: userBodyTrackerEntry.date,
+          weight: String(userBodyTrackerEntry.weight),
+          bodyFat: String(userBodyTrackerEntry.bodyFat),
+          caloricIntake: String(userBodyTrackerEntry.caloricIntake),
+          neck: String(userBodyTrackerEntry.neck),
+          shoulders: String(userBodyTrackerEntry.shoulders),
+          chest: String(userBodyTrackerEntry.chest),
+          leftBicep: String(userBodyTrackerEntry.leftBicep),
+          rightBicep: String(userBodyTrackerEntry.rightBicep),
+          leftForearm: String(userBodyTrackerEntry.leftForearm),
+          rightForearm: String(userBodyTrackerEntry.rightForearm),
+          waist: String(userBodyTrackerEntry.waist),
+          hips: String(userBodyTrackerEntry.hips),
+          leftThigh: String(userBodyTrackerEntry.leftThigh),
+          rightThigh: String(userBodyTrackerEntry.rightThigh),
+          leftCalf: String(userBodyTrackerEntry.leftCalf),
+          rightCalf: String(userBodyTrackerEntry.rightCalf),
+        });
+      }
+
+      return;
+    } else {
+      setSaveButtonText("Save");
+    }
+
+    setBodyKPIDataObj((prevState) => ({
+      ...prevState,
+      date: event.target.value,
+    }));
+  };
+
+  const handleClearButton = () => {
+    setBodyKPIDataObj((prevState) => ({
+      ...prevState,
+      weight: "",
+      bodyFat: "",
+      caloricIntake: "",
+      neck: "",
+      shoulders: "",
+      chest: "",
+      leftBicep: "",
+      rightBicep: "",
+      leftForearm: "",
+      rightForearm: "",
+      waist: "",
+      hips: "",
+      leftThigh: "",
+      rightThigh: "",
+      leftCalf: "",
+      rightCalf: "",
+    }));
+  };
 
   return (
     <Container maxWidth="md" sx={{ paddingBottom: "80px" }}>
@@ -62,20 +142,20 @@ function BodyTrackerTrack() {
         width="100%"
       >
         <InsertInvitationIcon fontSize="large" />
-        <TextField
-          id="filled-basic"
-          size="small"
-          variant="filled"
-          type="datetime-local"
-          fullWidth
-          onChange={(event) =>
-            setBodyKPIDataObj((prevState) => ({
-              ...prevState,
-              date: event.target.value,
-            }))
-          }
-          value={bodyKPIDataObj.date}
-        />
+        <Box display="flex" flexDirection="column" width="100%">
+          <TextField
+            id="filled-basic"
+            size="small"
+            variant="filled"
+            type="date"
+            fullWidth
+            onChange={(event) => handleOnChangeForDate(event)}
+            value={bodyKPIDataObj.date}
+          />
+          {saveButtonText === "Update" && (
+            <Typography>You've already added data for this date.</Typography>
+          )}
+        </Box>
       </Box>
 
       <Box
@@ -119,6 +199,7 @@ function BodyTrackerTrack() {
           type="number"
           fullWidth
           onChange={handleKPIChange}
+          value={bodyKPIDataObj.bodyFat}
         />
       </Box>
       <Box
@@ -138,6 +219,7 @@ function BodyTrackerTrack() {
           fullWidth
           type="number"
           onChange={handleKPIChange}
+          value={bodyKPIDataObj.caloricIntake}
         />
       </Box>
 
@@ -167,6 +249,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="neck"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.neck}
             />
           </Box>
 
@@ -187,6 +271,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="shoulders"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.shoulders}
             />
           </Box>
 
@@ -207,6 +293,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="chest"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.chest}
             />
           </Box>
 
@@ -227,6 +315,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="leftBicep"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.leftBicep}
             />
           </Box>
 
@@ -247,6 +337,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="rightBicep"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.rightBicep}
             />
           </Box>
 
@@ -267,6 +359,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="leftForearm"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.leftForearm}
             />
           </Box>
 
@@ -287,6 +381,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="rightForearm"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.rightForearm}
             />
           </Box>
 
@@ -307,6 +403,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="waist"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.waist}
             />
           </Box>
 
@@ -327,6 +425,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="hips"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.hips}
             />
           </Box>
 
@@ -347,6 +447,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="leftThigh"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.leftThigh}
             />
           </Box>
 
@@ -367,6 +469,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="rightThigh"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.rightThigh}
             />
           </Box>
 
@@ -387,6 +491,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="leftCalf"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.leftCalf}
             />
           </Box>
 
@@ -407,6 +513,8 @@ function BodyTrackerTrack() {
               fullWidth
               id="rightCalf"
               onChange={handleKPIChange}
+              type="number"
+              value={bodyKPIDataObj.rightCalf}
             />
           </Box>
         </AccordionDetails>
@@ -422,13 +530,15 @@ function BodyTrackerTrack() {
         <Button
           variant="dbz_save"
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
+          onClick={handleSaveBodyTrackerEntry}
         >
-          SAVE
+          {saveButtonText}
         </Button>
 
         <Button
           variant="dbz_clear"
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
+          onClick={handleClearButton}
         >
           CLEAR
         </Button>

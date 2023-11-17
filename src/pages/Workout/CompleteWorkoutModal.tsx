@@ -254,7 +254,7 @@ function CompleteWorkoutModal({
               max={7}
               size="large"
               name="simple-controlled"
-              sx={{color:"#FFA500",paddingBottom: "8px"}}
+              sx={{ color: "#FFA500", paddingBottom: "8px" }}
               value={workoutValue}
               onChange={(event, newValue) => {
                 if (newValue !== null) {
@@ -263,7 +263,6 @@ function CompleteWorkoutModal({
               }}
               icon={<StarsIcon fontSize="inherit" />}
               emptyIcon={<StarBorderIcon fontSize="inherit" />}
-
             />
 
             <IconButton

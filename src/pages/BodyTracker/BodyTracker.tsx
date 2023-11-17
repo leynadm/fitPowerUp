@@ -46,7 +46,7 @@ function BodyTracker() {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="md">
           <Toolbar disableGutters>
             <AccessibilityIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -64,7 +64,7 @@ function BodyTracker() {
                 textDecoration: "none",
               }}
             >
-              Analysis
+              Body Tracker
             </Typography>
 
             <AccessibilityIcon
@@ -86,7 +86,7 @@ function BodyTracker() {
                 textDecoration: "none",
               }}
             >
-              Analysis
+              Body Tracker
             </Typography>
           </Toolbar>
         </Container>
@@ -102,6 +102,7 @@ function BodyTracker() {
             width:
               "100%" /*  marginTop:"2px",marginLeft:"2px", backgroundColor:"#520975" */,
           }}
+          onClick={handleNavigateTrack}
         >
           Track
         </Button>
@@ -109,6 +110,7 @@ function BodyTracker() {
           sx={{
             width: "100%" /*  marginTop:"2px",backgroundColor:"#520975" */,
           }}
+          onClick={handleNavigateHistory}
         >
           History
         </Button>
@@ -117,22 +119,15 @@ function BodyTracker() {
             width:
               "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
           }}
+          onClick={handleNavigateGraph}
         >
           Graph
         </Button>
       </ButtonGroup>
 
       <Routes>
-        <Route
-          path=""
-          element={
-            <BodyTrackerTrack />
-          }
-        />
-        <Route
-          path="history"
-          element={<BodyTrackerHistory />}
-        />
+        <Route path="" element={<BodyTrackerTrack />} />
+        <Route path="history" element={<BodyTrackerHistory />} />
         <Route path="graph" element={<BodyTrackerGraph />} />
       </Routes>
     </Box>

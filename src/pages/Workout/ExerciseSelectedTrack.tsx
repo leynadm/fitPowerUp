@@ -22,15 +22,14 @@ import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserSelectedExercises } from "../../context/TrainingData";
 import { AuthContext } from "../../context/Auth";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-import checkExerciseIsPR from "../../utils/IndexedDbCRUDFunctions/checkExerciseIsPR";
-import updateExercisesPRAfterDeletion from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterDeletion";
-import updateExercisesPRAfterSaving from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterSaving";
+import updateExercisesPRAfterAction from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterAction";
+
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userSelectedExercises, userTrainingData } =
     useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
-  console.log({exerciseName})
+  console.log({ exerciseName });
   const exerciseSelected = userSelectedExercises[0].exercises.find(
     (exercise: IUserSelectedExercises) => exercise.name === exerciseName
   );
@@ -39,8 +38,7 @@ function ExerciseSelectedTrack() {
   const lastExercise = getLastCompletedExerciseEntry();
 
   function getLastCompletedExerciseEntry() {
-
-    const userTrainingDataArr = userTrainingData
+    const userTrainingDataArr = userTrainingData;
     if (userTrainingDataArr) {
       const groupedCompletedExercises: {
         date: string;
@@ -77,27 +75,27 @@ function ExerciseSelectedTrack() {
   }
 
   const [weightValue, setWeightValue] = useState(
-    lastExercise?.weight !== undefined && lastExercise.weight !== 0?
-       lastExercise.weight:''
-
+    lastExercise?.weight !== undefined && lastExercise.weight !== 0
+      ? lastExercise.weight
+      : ""
   );
   const [repsValue, setRepsValue] = useState(
-    lastExercise?.reps !== undefined && lastExercise.reps !== 0?
-       lastExercise.reps:0
-      
+    lastExercise?.reps !== undefined && lastExercise.reps !== 0
+      ? lastExercise.reps
+      : 0
   );
   const [distanceValue, setDistanceValue] = useState(
     lastExercise?.distance !== undefined && lastExercise.distance !== 0
-      ? lastExercise.distance:0
-      
+      ? lastExercise.distance
+      : 0
   );
   const [distanceUnit, setDistanceUnit] = useState(
     lastExercise?.distance_unit || "m"
   );
   const [timeValue, setTimeValue] = useState(
-    lastExercise?.time !== undefined && lastExercise.time !== 0?
-       lastExercise.time:0
-      
+    lastExercise?.time !== undefined && lastExercise.time !== 0
+      ? lastExercise.time
+      : 0
   );
 
   const [openCommentModal, setOpenCommentModal] = useState(false);
@@ -132,8 +130,7 @@ function ExerciseSelectedTrack() {
   }, []);
 
   async function getExistingExercises() {
-    const request = indexedDB.open("fitScouterDb",2);
-
+    const request = indexedDB.open("fitScouterDb", 2);
 
     request.onsuccess = function () {
       const db = request.result;
@@ -226,13 +223,19 @@ function ExerciseSelectedTrack() {
   }
 
   function exerciseFieldValidation() {
-
     if (
       exerciseSelected.measurement.includes("weight") &&
       exerciseSelected.measurement.includes("reps") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if (repsValue === 0 || repsValue===null|| isNaN(repsValue) || weightValue==='' || weightValue===null || weightValue===undefined) {
+      if (
+        repsValue === 0 ||
+        repsValue === null ||
+        isNaN(repsValue) ||
+        weightValue === "" ||
+        weightValue === null ||
+        weightValue === undefined
+      ) {
         return "invalid";
       }
     }
@@ -242,7 +245,12 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("distance") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if ((weightValue === '' || weightValue === null || weightValue===undefined) && distanceValue === 0) {
+      if (
+        (weightValue === "" ||
+          weightValue === null ||
+          weightValue === undefined) &&
+        distanceValue === 0
+      ) {
         return "invalid";
       }
     }
@@ -252,7 +260,12 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("time") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if ((weightValue === '' || weightValue===null || weightValue === undefined) && timeValue === 0) {
+      if (
+        (weightValue === "" ||
+          weightValue === null ||
+          weightValue === undefined) &&
+        timeValue === 0
+      ) {
         return "invalid";
       }
     }
@@ -262,7 +275,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("distance") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if ((repsValue === 0  || repsValue===null ) && distanceValue === 0) {
+      if ((repsValue === 0 || repsValue === null) && distanceValue === 0) {
         return "invalid";
       }
     }
@@ -272,7 +285,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("time") &&
       exerciseSelected.measurement.length > 0
     ) {
-      if ((repsValue === 0  || repsValue===null ) && timeValue === 0) {
+      if ((repsValue === 0 || repsValue === null) && timeValue === 0) {
         return "invalid";
       }
     }
@@ -291,7 +304,11 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("weight") &&
       exerciseSelected.measurement.length === 1
     ) {
-      if ((weightValue === '' || weightValue === null || weightValue === undefined)) {
+      if (
+        weightValue === "" ||
+        weightValue === null ||
+        weightValue === undefined
+      ) {
         return "invalid";
       }
     }
@@ -300,7 +317,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("reps") &&
       exerciseSelected.measurement.length === 1
     ) {
-      if (repsValue === 0  || repsValue===null ) {
+      if (repsValue === 0 || repsValue === null) {
         return "invalid";
       }
     }
@@ -322,14 +339,13 @@ function ExerciseSelectedTrack() {
         return "invalid";
       }
     }
-
   }
 
   function safelyParseFloat(value: string | number): number | null {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // If it's a string, parse it to a float
       return parseFloat(value) || null; // Use null if parsing fails
-    } else if (typeof value === 'number') {
+    } else if (typeof value === "number") {
       // If it's already a number, return it
       return value;
     } else {
@@ -338,7 +354,6 @@ function ExerciseSelectedTrack() {
       return null;
     }
   }
-
 
   async function saveExerciseEntry() {
     const checkEntriesValidity = exerciseFieldValidation();
@@ -382,14 +397,7 @@ function ExerciseSelectedTrack() {
     };
     updatedEntryToSave.weight = weightValueFloat;
 
-    const isPRCheck = await checkExerciseIsPR(
-      userTrainingData,
-      updatedEntryToSave.exercise,
-      updatedEntryToSave
-    );
-
     try {
-
       const request = indexedDB.open("fitScouterDb", 2);
 
       request.onsuccess = function () {
@@ -404,15 +412,15 @@ function ExerciseSelectedTrack() {
           "user-exercises-entries"
         );
 
-        if (isPRCheck) {
-          updatedEntryToSave.is_pr = true;
-        }
-
         userEntryTransactionStore.add(updatedEntryToSave);
 
         userEntryTransaction.oncomplete = async function () {
           db.close();
-          await updateExercisesPRAfterSaving(userTrainingData,exerciseSelected.name)
+          await updateExercisesPRAfterAction(
+            userTrainingData,
+            exerciseSelected.name,
+            updatedEntryToSave
+          );
           await getExistingExercises();
         };
 
@@ -421,7 +429,6 @@ function ExerciseSelectedTrack() {
           console.log("found error:");
         };
       };
-
     } catch (error) {
       console.error("Error:", error);
     }
@@ -444,16 +451,18 @@ function ExerciseSelectedTrack() {
         );
 
         const getRecordRequest = userEntryTransactionStore.get(id);
-        
-        getRecordRequest.onsuccess = async function (event: any) {
-           
-           const deleteRecordRequest = userEntryTransactionStore.delete(id);
+
+        getRecordRequest.onsuccess = async function (event: Event) {
+          const record = (event.target as IDBRequest).result;
+
+          const deleteRecordRequest = userEntryTransactionStore.delete(id);
 
           deleteRecordRequest.onsuccess = async function () {
-            console.log(`Record with ID ${id} deleted successfully.`);
-            console.log('about to run updateExercisesPRAfterDeletion')
-            await updateExercisesPRAfterDeletion(userTrainingData,exerciseName)
-            console.log('just ran it:')
+            await updateExercisesPRAfterAction(
+              userTrainingData,
+              exerciseSelected.name,
+              record
+            );
             await getExistingExercises();
           };
 
@@ -478,39 +487,35 @@ function ExerciseSelectedTrack() {
 
   function handleTextFieldChange(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
-    console.log({value});
-  
-    if (/^-?\d*[\.,]?\d*$/.test(value) || value === "" || value === null) {
+    console.log({ value });
 
-        if (id === "reps") {
-          setRepsValue(parseInt(value,10))
-        } else if (id === "weight") {
-          console.log(typeof value)
-          setWeightValue(value);
-        } else if (id === "distance") {
-          setDistanceValue(parseFloat(value));
-        } else if (id === "time") {
-          setTimeValue(parseFloat(value));
-        }
-      
+    if (/^-?\d*[\.,]?\d*$/.test(value) || value === "" || value === null) {
+      if (id === "reps") {
+        setRepsValue(parseInt(value, 10));
+      } else if (id === "weight") {
+        console.log(typeof value);
+        setWeightValue(value);
+      } else if (id === "distance") {
+        setDistanceValue(parseFloat(value));
+      } else if (id === "time") {
+        setTimeValue(parseFloat(value));
+      }
     }
   }
-  
 
-  const handleAddButtonClick =(measurement: string)=> {
-      console.log(weightValue)
-      console.log(typeof weightValue)
+  const handleAddButtonClick = (measurement: string) => {
+    console.log(weightValue);
+    console.log(typeof weightValue);
 
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
-        if(weightValue===""||weightValue===null){
-          setWeightValue(0+currentUserData.defaultWeightIncrement)
-        }else{
-          setWeightValue(
-            (prevWeight) => 
-              typeof prevWeight==='string'?
-              parseFloat(prevWeight)+currentUserData.defaultWeightIncrement:            
-            prevWeight + currentUserData.defaultWeightIncrement
+        if (weightValue === "" || weightValue === null) {
+          setWeightValue(0 + currentUserData.defaultWeightIncrement);
+        } else {
+          setWeightValue((prevWeight) =>
+            typeof prevWeight === "string"
+              ? parseFloat(prevWeight) + currentUserData.defaultWeightIncrement
+              : prevWeight + currentUserData.defaultWeightIncrement
           );
         }
         break;
@@ -520,18 +525,18 @@ function ExerciseSelectedTrack() {
       default:
         break;
     }
-  }
+  };
 
   const handleSubtractButtonClick = (measurement: string) => {
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
         if (weightValue === "" || weightValue === null) {
-          
         } else {
           setWeightValue((prevWeight) =>
-            typeof prevWeight === 'string'
+            typeof prevWeight === "string"
               ? parseFloat(prevWeight) > 0
-                ? parseFloat(prevWeight) - currentUserData.defaultWeightIncrement
+                ? parseFloat(prevWeight) -
+                  currentUserData.defaultWeightIncrement
                 : 0
               : prevWeight > 0
               ? prevWeight - currentUserData.defaultWeightIncrement
@@ -539,10 +544,10 @@ function ExerciseSelectedTrack() {
           );
         }
         break;
-  
+
       case "reps":
         setRepsValue((prevReps) =>
-          typeof prevReps === 'string'
+          typeof prevReps === "string"
             ? parseInt(prevReps, 10) > 0
               ? parseInt(prevReps, 10) - 1
               : 0
@@ -551,14 +556,14 @@ function ExerciseSelectedTrack() {
             : 0
         );
         break;
-  
+
       default:
         break;
     }
   };
-  
+
   function handleClearButtonClick() {
-    setWeightValue('');
+    setWeightValue("");
     setRepsValue(0);
     setDistanceValue(0);
     setTimeValue(0);
@@ -592,7 +597,6 @@ function ExerciseSelectedTrack() {
       });
     }
   };
-
 
   return (
     <Container
@@ -632,7 +636,7 @@ function ExerciseSelectedTrack() {
         {exerciseSelected.name.toLocaleUpperCase()}
       </Typography>
 
-      <Divider sx={{ width: "100vw" }}/>
+      <Divider sx={{ width: "100vw" }} />
 
       {exerciseSelected.measurement.map(
         (measurement: string, index: number) => {
@@ -836,7 +840,7 @@ function ExerciseSelectedTrack() {
                 </Button>
 
                 <TextField
-                  type={measurement==="weight"? "text" : "number"}
+                  type={measurement === "weight" ? "text" : "number"}
                   id={measurement}
                   variant="filled"
                   inputProps={{
@@ -846,21 +850,16 @@ function ExerciseSelectedTrack() {
                       height: "100%",
                       padding: "8px",
                     },
-                    inputMode:"decimal"
+                    inputMode: "decimal",
                   }}
-                  
-                  value={
-                    measurement === "weight"
-                      ? weightValue
-                      : repsValue
-                  } 
+                  value={measurement === "weight" ? weightValue : repsValue}
                   onChange={handleTextFieldChange}
                 />
 
                 <Button
                   sx={{ backgroundColor: "white" }}
                   variant="outlined"
-                  onClick={()=>handleAddButtonClick(measurement)}
+                  onClick={() => handleAddButtonClick(measurement)}
                 >
                   <AddIcon />
                 </Button>
@@ -875,7 +874,7 @@ function ExerciseSelectedTrack() {
           width: "100%",
           display: "flex",
           justifyContent: "space-evenly",
-          paddingTop:"0.5rem"
+          paddingTop: "0.5rem",
         }}
       >
         <Button

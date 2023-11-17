@@ -23,7 +23,7 @@ import getFlattenedMuscleGroupData from "../../utils/completedWorkoutsChartFunct
 import groupDataByTimePeriodSummed from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSummed";
 import groupDataByTimePeriodSets from "../../utils/completedWorkoutsChartFunctions/utility/groupDataByTimePeriodSets";
 import getTotalSetsForMuscleGroup from "../../utils/completedWorkoutsChartFunctions/muscleGroupsFunctions/getTotalSetsForMuscleGroup";
-import { Paper } from "@mui/material";
+
 import {
   LineChart,
   Line,

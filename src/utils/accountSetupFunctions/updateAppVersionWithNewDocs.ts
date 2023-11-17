@@ -1,4 +1,4 @@
-import { doc, collection, writeBatch } from "firebase/firestore";
+import { doc, collection, writeBatch,getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 import preselectedExercises from "../preselectedExercises";
@@ -7,11 +7,19 @@ async function updateAppVersionWithNewDocs(
   userID: string
 ) {
   const batch = writeBatch(db);
-  console.log("INSIDE UPDATEAPPVERSIONWITHNEWDOCS - UPDATING USER DOCS")
+
   try {
+
     const usersDocRef = doc(db, "users", userID);
-    // Create a subcollection "workouts" within the "users" document
     const userCollectionRef = collection(usersDocRef, "userCollection");
+
+    const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
+
+    const userTrainingDataDocSnap = await getDoc(userTrainingDataDocRef);
+
+    if (userTrainingDataDocSnap.exists()) {
+      return
+    }
 
     // Create a document within the "workouts" subcollection
     const userTrainingDoc = doc(userCollectionRef, "userTrainingData");

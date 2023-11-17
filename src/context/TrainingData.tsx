@@ -21,6 +21,7 @@ export const TrainingDataContext = createContext<any>({
   currentUser: null,
   userCredential: null,
   userTrainingData: null,
+  userBodyTrackerData: null,
 });
 
 interface IUserTrainingData {
@@ -38,6 +39,26 @@ export interface IUserSelectedExercises {
   iconURLName: string;
 }
 
+export interface IUserBodyTrackerDataEntry {
+  date: string;
+  weight: number;
+  bodyFat: number;
+  caloricIntake: number;
+  neck: number;
+  shoulders: number;
+  chest: number;
+  leftBicep: number;
+  rightBicep: number;
+  leftForearm: number;
+  rightForearm: number;
+  waist: number;
+  hips: number;
+  leftThigh: number;
+  rightThigh: number;
+  leftCalf: number;
+  rightCalf: number;
+}
+
 export const TrainingDataProvider = ({
   children,
 }: TrainingDataProviderProps) => {
@@ -52,9 +73,21 @@ export const TrainingDataProvider = ({
   const [dateForWorkout, setDateForWorkout] = useState(
     formatDateForTextField(new Date())
   );
+  const [userBodyTrackerData, setUserBodyTrackerData] = useState<
+    IUserBodyTrackerDataEntry[]
+  >([]);
 
   useEffect(() => {
-    fetchUserData(currentUser, setUserSelectedExercises, setUserTrainingData);
+    const fetchData = async () => {
+      await fetchUserData(
+        currentUser,
+        setUserSelectedExercises,
+        setUserTrainingData
+      );
+      await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+    };
+
+    fetchData().catch(console.error);
   }, []);
 
   return (
@@ -66,12 +99,35 @@ export const TrainingDataProvider = ({
         setUserSelectedExercises,
         dateForWorkout,
         setDateForWorkout,
+        userBodyTrackerData,
+        setUserBodyTrackerData,
       }}
     >
       {children}
     </TrainingDataContext.Provider>
   );
 };
+
+export async function fetchUserBodyTrackerData(
+  currentUser: any,
+  setUserBodyTrackerData: Dispatch<SetStateAction<IUserBodyTrackerDataEntry[]>>
+) {
+  try {
+    const usersDocRef = doc(db, "users", currentUser.uid);
+    const userCollectionRef = collection(usersDocRef, "userCollection");
+
+    const userBodyTrackerDataDocRef = doc(userCollectionRef, "userBodyTracker");
+
+    const userBodyTrackerDataDocSnap = await getDoc(userBodyTrackerDataDocRef);
+
+    if (userBodyTrackerDataDocSnap.exists()) {
+      const queriedUserBodyTrackerData =
+        userBodyTrackerDataDocSnap.data() as IUserBodyTrackerDataEntry;
+
+      setUserBodyTrackerData([queriedUserBodyTrackerData]);
+    }
+  } catch (error) {}
+}
 
 export async function fetchUserData(
   currentUser: any,
