@@ -69,8 +69,6 @@ async function saveBodyTrackerEntry(
       }
     }
   }
-
-  console.log("complete");
 }
 
 export default saveBodyTrackerEntry;

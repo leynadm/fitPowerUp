@@ -1,17 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
-import ViewCommentModal from "../../components/ui/ViewCommentModal";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
-import { VariableSizeList } from "react-window";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
-import { FixedSizeList, ListChildComponentProps } from "react-window";
+import { FixedSizeList } from "react-window";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -20,19 +13,24 @@ import MonitorWeightIcon from "@mui/icons-material/MonitorWeight";
 import PercentIcon from "@mui/icons-material/Percent";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { AuthContext } from "../../context/Auth";
-
+import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 function BodyTrackerHistory() {
   const { userBodyTrackerData } = useContext(TrainingDataContext);
-  const {currentUserData} = useContext(AuthContext)
+  const { currentUserData } = useContext(AuthContext);
 
   const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
 
-  userBodyTrackerDataArr.sort((a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
+  if(userBodyTrackerDataArr.length>0){
+    userBodyTrackerDataArr.sort(
+      (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
   
-    return dateB.getTime() - dateA.getTime();
-  });
+        return dateB.getTime() - dateA.getTime();
+      }
+    );
+  }
+  
 
   const Row = ({
     index,
@@ -85,64 +83,62 @@ function BodyTrackerHistory() {
                   }}
                 >
                   <RestaurantIcon fontSize="medium" />
-                  <Typography>{userBodyTrackerEntry.caloricIntake} cal</Typography>
+                  <Typography>
+                    {userBodyTrackerEntry.caloricIntake} cal
+                  </Typography>
                 </div>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Box
-              display="grid"
-              gridTemplateColumns="1fr 1fr"
-              >
-              <Typography>
-                Neck: {userBodyTrackerEntry.neck}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Shoulders: {userBodyTrackerEntry.shoulders}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Chest: {userBodyTrackerEntry.chest}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Waist: {userBodyTrackerEntry.waist}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Left Bicep: {userBodyTrackerEntry.leftBicep}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Right Bicep: {userBodyTrackerEntry.rightBicep}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Left Forearm: {userBodyTrackerEntry.leftForearm}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Right Forearm: {userBodyTrackerEntry.rightForearm}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Left Thigh: {userBodyTrackerEntry.leftThigh}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Right Thigh: {userBodyTrackerEntry.rightThigh}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Left Calf: {userBodyTrackerEntry.leftCalf}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-              <Typography>
-                Right Calf: {userBodyTrackerEntry.rightCalf}{" "}
-                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-              </Typography>
-
+              <Box display="grid" gridTemplateColumns="1fr 1fr">
+                <Typography>
+                  Neck: {userBodyTrackerEntry.neck}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Shoulders: {userBodyTrackerEntry.shoulders}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Chest: {userBodyTrackerEntry.chest}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Waist: {userBodyTrackerEntry.waist}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Left Bicep: {userBodyTrackerEntry.leftBicep}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Right Bicep: {userBodyTrackerEntry.rightBicep}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Left Forearm: {userBodyTrackerEntry.leftForearm}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Right Forearm: {userBodyTrackerEntry.rightForearm}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Left Thigh: {userBodyTrackerEntry.leftThigh}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Right Thigh: {userBodyTrackerEntry.rightThigh}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Left Calf: {userBodyTrackerEntry.leftCalf}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
+                <Typography>
+                  Right Calf: {userBodyTrackerEntry.rightCalf}{" "}
+                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                </Typography>
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -150,6 +146,20 @@ function BodyTrackerHistory() {
       </>
     );
   };
+
+  if (userBodyTrackerDataArr.length === 0) {
+    return (
+      <Box
+        display="flex"
+        minHeight="500px"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <NoAvailableDataBox />
+      </Box>
+    );
+  }
 
   return (
     <>

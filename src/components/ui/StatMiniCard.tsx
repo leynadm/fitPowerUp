@@ -17,7 +17,7 @@ function StatMiniCard({statTitle,statValue,statDetail}:ParentProps){
           }}
         >
           <Typography style={{ textAlign: "center",fontWeight:400 }}>{statTitle}</Typography>
-          <Typography style={{ textAlign: "center", fontSize: "2rem" }} >
+          <Typography style={{ textAlign: "center", fontSize: "1.75rem" }} >
             {statValue} {statDetail}
           </Typography>
         </Box>

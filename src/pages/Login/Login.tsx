@@ -178,7 +178,7 @@ export default function SignIn() {
             loading="lazy"
           ></img>
         </div>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" autoFocus>
           Sign in and get fit!
         </Typography>
 
@@ -216,6 +216,7 @@ export default function SignIn() {
               justifyContent: "center",
               alignItems: "center",
             }}
+            
           >
             <LoginIcon sx={{ marginRight: "8px" }} />
             Sign In

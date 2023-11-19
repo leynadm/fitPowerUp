@@ -27,9 +27,8 @@ function calculateDOTS(
       denominator += coeff[i] * Math.pow(bw, i);
     }
   
-    let score = ((500 / denominator) * weightLifted)*5;
-    console.log('logging score:')
-    console.log(score)
+    //Calculate the normal DOTS score and the multiply by the scale I want
+    let score = ((500 / denominator) * weightLifted) * 10;
     return parseInt(score.toFixed(0), 10);
   }
 

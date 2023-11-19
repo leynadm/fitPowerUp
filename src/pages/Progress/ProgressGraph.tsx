@@ -27,7 +27,7 @@ function ProgressGraph() {
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column",alignItems:"center",backgroundColor:"#F0F2F5" }}>
-     
+     Graph
     </Container>
   );
 }

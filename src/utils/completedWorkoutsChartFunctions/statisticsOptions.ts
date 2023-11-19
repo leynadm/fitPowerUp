@@ -84,6 +84,7 @@ export const statisticsOptionsMuscleGroups = [
 ];
 
 export const statisticsOptionsBodyTracker = [
+  { label: "Body Fat" },
   { label: "Neck" },
   { label: "Shoulders" },
   { label: "Chest" },

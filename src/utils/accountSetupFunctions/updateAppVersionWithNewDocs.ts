@@ -21,6 +21,10 @@ async function updateAppVersionWithNewDocs(
       return
     }
 
+    batch.update(usersDocRef,{
+      appVersion:2.0
+    })
+
     // Create a document within the "workouts" subcollection
     const userTrainingDoc = doc(userCollectionRef, "userTrainingData");
 

@@ -1,396 +1,335 @@
-import React, {
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useContext,
-} from "react";
-import Box from "@mui/material/Box";
-import PowerLevelSelect from "./PowerLevelSelect";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import calculateMax1RM from "../../utils/progressFunctions/calculateMax1RM";
 import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
-import { useSpring, animated } from "react-spring";
-import getLastPowerLevelEntry from "./getLastPowerLevelEntry";
-import countUniqueEntriesByDate from "../../utils/progressFunctions/countUniqueEntriesByDate";
-import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
-import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
-import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
-import { doc, updateDoc } from "firebase/firestore";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
+import {
+  BarChart,
+  Bar,
+  LabelList,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useContext, useState } from "react";
+import { TrainingDataContext } from "../../context/TrainingData";
 import { AuthContext } from "../../context/Auth";
-import { db } from "../../config/firebase";
-import GuestProfileModal from "../../components/ui/GuestProfileModal";
-import SuccessfulProfilePowerUploadAlert from "../../components/ui/SuccessfulProfilePowerUploadAlert";
-import FailedGenericAlert from "../../components/ui/FailedGenericAlert";
-import toast from "react-hot-toast";
-interface ProgressProps {
-  powerLevel: number;
-  setPowerLevel: Dispatch<SetStateAction<number>>;
-  strengthPowerLevel: number;
-  setStrengthPowerLevel: Dispatch<SetStateAction<number>>;
-  experiencePowerLevel: number;
-  setExperiencePowerLevel: Dispatch<SetStateAction<number>>;
-}
+import { IUserSelectedExercises } from "../../context/TrainingData";
+import Button from "@mui/material/Button";
+import getFlattenedExerciseData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
+import Exercise from "../../utils/interfaces/Exercise";
+import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 
-interface PowerLevelNumberProps {
-  n: number;
-}
-
-function PowerLevelNumber({ n }: PowerLevelNumberProps) {
-  const { number } = useSpring({
-    from: { number: 0 },
-    number: n,
-    delay: 0,
-    /* 
-    config: { mass: 1, tension: 100, friction: 25 },
-     */
-  });
-
-  return (
-    <animated.div style={{ fontSize: "4rem", color: "black" }}>
-      {number.to((n) => n.toFixed(0))}
-    </animated.div>
-  );
-}
-
-function SecondaryPowerLevelNumber({ n }: PowerLevelNumberProps) {
-  const { number } = useSpring({
-    from: { number: 0 },
-    number: n,
-    delay: 50,
-    /* 
-    config: { mass: 1, tension: 100, friction: 25 },
-     */
-  });
-
-  return (
-    <animated.div style={{ fontSize: "2rem", color: "black" }}>
-      {number.to((n) => n.toFixed(0))}
-    </animated.div>
-  );
-}
-
-function ProgressLevel({
-  powerLevel,
-  setPowerLevel,
-  strengthPowerLevel,
-  setStrengthPowerLevel,
-  experiencePowerLevel,
-  setExperiencePowerLevel,
-}: ProgressProps) {
-  const [weight, setWeight] = useState(0);
-  const [firstExerciseSelected, setFirstExerciseSelected] = useState<any>(null);
-  const [secondExerciseSelected, setSecondExerciseSelected] =
-    useState<any>(null);
-  const [thirdExerciseSelected, setThirdExerciseSelected] = useState<any>(null);
+function ProgressLevel() {
+  const { userTrainingData, userSelectedExercises } =
+    useContext(TrainingDataContext);
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
-  const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
-  const [profileUploadAlert, setProfileUploadAlert] = useState(false);
-  const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
-    null
+
+  const findDeadlift = findExerciseByName("Deadlift");
+  const findBenchPress = findExerciseByName("Bench Press");
+  const findSquat = findExerciseByName("Barbell Squat");
+
+  const [firstExerciseSelected, setFirstExerciseSelected] = useState(
+    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+      ? userSelectedExercises[0].exercises.find(
+          (exercise: IUserSelectedExercises) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.firstPowerExercise.toUpperCase()
+        )
+      : findBenchPress
   );
 
-  const [genericFailedAlert, setGenericFailedAlert] = useState(false);
-  const [genericFailedAlertText, setGenericFailedAlertText] = useState("")
-  
-  function showFailedAlert() {
-    setGenericFailedAlert(true);
+  const [secondExerciseSelected, setSecondExerciseSelected] = useState(
+    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+      ? userSelectedExercises[0].exercises.find(
+          (exercise: IUserSelectedExercises) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.secondPowerExercise.toUpperCase()
+        )
+      : findSquat
+  );
 
-    // Clear previous timeout if it exists
-    if (alertTimeoutId) {
-      clearTimeout(alertTimeoutId);
+  const [thirdExerciseSelected, setThirdExerciseSelected] = useState(
+    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+      ? userSelectedExercises[0].exercises.find(
+          (exercise: IUserSelectedExercises) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.thirdPowerExercise.toUpperCase()
+        )
+      : findDeadlift
+  );
+
+  const data = [
+    {
+      name: "PL",
+      Strength: currentUserData.strengthLevel,
+      Experience: currentUserData.experiencePoints,
+    },
+  ];
+
+  const userSelectedExercisesStrArr = userSelectedExercises[0].exercises
+    .map((userExercise: IUserSelectedExercises) => userExercise.name)
+    .sort((a: string, b: string) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
+
+  calculatePowerLevel();
+
+  function findExerciseByName(name: string) {
+    return userSelectedExercises[0].exercises.find(
+      (exercise: IUserSelectedExercises) => exercise.name === name
+    );
+  }
+
+  if (!userTrainingData) {
+    return <>Updating...</>;
+  }
+
+  const handleAutocompleteChange = (newValue: string | null, order: string) => {
+    if (newValue) {
+      const exercise = findExerciseByName(newValue);
+      console.log(exercise);
+      if (order === "first") {
+        setFirstExerciseSelected(exercise);
+      } else if (order === "second") {
+        setSecondExerciseSelected(exercise);
+      } else if (order === "third") {
+        setThirdExerciseSelected(exercise);
+      }
     }
+  };
 
-    // Set new timeout to hide the alert after 2 seconds
-    const timeoutId = setTimeout(() => {
-      setGenericFailedAlert(false);
-    }, 3000);
+  async function handleCalculatePowerLevel() {
+    const userWeight = currentUserData.weight;
+    const totalLiftedWeight = calculatePowerLevel();
+    const isFemale = () => {
+      return currentUserData.sex === "female";
+    };
 
-    setAlertTimeoutId(timeoutId);
-    return;
+    const strengthLevel = calculateDOTS(
+      userWeight,
+      totalLiftedWeight,
+      isFemale()
+    );
+    const experiencePoints = userTrainingData.length * 10;
+
+    const maximumPowerLevel = strengthLevel + experiencePoints;
+
+    if (maximumPowerLevel > currentUserData.powerLevel) {
+      await updatePowerLevelInFirestore(
+        currentUser.uid,
+        firstExerciseSelected.name,
+        secondExerciseSelected.name,
+        thirdExerciseSelected.name,
+        maximumPowerLevel,
+        strengthLevel,
+        experiencePoints
+      );
+      await fetchCurrentUserData(currentUser, setCurrentUserData);
+    }
   }
 
   function calculatePowerLevel() {
-    if (
-      firstExerciseSelected !== null &&
-      secondExerciseSelected !== null &&
-      thirdExerciseSelected !== null &&
-      weight !== 0
-    ) {
-      const firstExercisePromise = calculateMax1RM(
-        firstExerciseSelected,
-        "All"
-      );
-      const secondExercisePromise = calculateMax1RM(
-        secondExerciseSelected,
-        "All"
-      );
-      const thirdExercisePromise = calculateMax1RM(
-        thirdExerciseSelected,
-        "All"
-      );
+    const flattenedFirstExercise = getFlattenedExerciseData(
+      userTrainingData,
+      firstExerciseSelected.name,
+      "all"
+    );
+    const flattenedSecondExercise = getFlattenedExerciseData(
+      userTrainingData,
+      secondExerciseSelected.name,
+      "all"
+    );
+    const flattenedThirdExercise = getFlattenedExerciseData(
+      userTrainingData,
+      thirdExerciseSelected.name,
+      "all"
+    );
 
-      Promise.all([
-        firstExercisePromise,
-        secondExercisePromise,
-        thirdExercisePromise,
-      ])
-        .then(([firstExercise, secondExercise, thirdExercise]) => {
-          const total: number = firstExercise + secondExercise + thirdExercise;
-          const finalNumber = calculateDOTS(weight, total, false);
+    let firstExerciseMaxRM = 0;
+    let secondExerciseMaxRM = 0;
+    let thirdExerciseMaxRM = 0;
 
-          countUniqueEntriesByDate()
-            .then((count: number) => {
-              const finalPowerLevel = finalNumber + count;
-              setPowerLevel(finalPowerLevel);
-              setStrengthPowerLevel(finalNumber);
-              setExperiencePowerLevel(count);
-              const currentDate = new Date();
-              currentDate.setHours(0, 0, 0, 0);
-              
-            })
-            .catch((error) => {
-              toast.error("Oops, countUniqueEntriesByDate has an error!")
-              console.error("Error:", error);
-            });
-        })
-        .catch((error) => {
-          toast.error("Oops, calculatePowerLevel has an error!")
-          console.error("Error occurred:", error);
-        });
-    } else { 
-      setGenericFailedAlertText("You need to select 3 exercises and add your weight!")
-      showFailedAlert();
+    if (flattenedFirstExercise) {
+      firstExerciseMaxRM = getMaxRM(flattenedFirstExercise);
     }
+
+    if (flattenedSecondExercise) {
+      secondExerciseMaxRM = getMaxRM(flattenedSecondExercise);
+    }
+    if (flattenedThirdExercise) {
+      thirdExerciseMaxRM = getMaxRM(flattenedThirdExercise);
+    }
+
+    const totalWeight =
+      firstExerciseMaxRM + secondExerciseMaxRM + thirdExerciseMaxRM;
+
+    return totalWeight;
   }
 
-  const uploadPowerLevelToProfile = async (powerLevelData: any) => {
-    const docRef = doc(db, "users", currentUser.uid);
+  function getMaxRM(exerciseArr: Exercise[]) {
+    let maxRM = 0;
 
-    await updateDoc(docRef, powerLevelData);
-  };
+    for (let index = 0; index < exerciseArr.length; index++) {
+      const currentExercise = exerciseArr[index];
 
-  const handleUploadToProfile = async () => {
-    if (currentUser.isAnonymous === true) {
-      setGuestProfileModalOpen(true);
-      return;
+      const currentMaxRem =
+        currentExercise.weight * (1 + currentExercise.reps / 30);
+
+      if (currentMaxRem > maxRM) {
+        maxRM = currentMaxRem;
+      }
     }
 
-    if (
-      weight === 0 ||
-      firstExerciseSelected === null ||
-      secondExerciseSelected === null ||
-      thirdExerciseSelected === null
-    ) {
-      showFailedAlert();
-      setGenericFailedAlertText(
-        "You need to calculate your power level first before uploading!"
-      );
-      return;
-    }
-
-    const count = await countUniqueEntriesByDate();
-
-    const powerLevelData = {
-      powerLevel: strengthPowerLevel + count,
-      weight: weight,
-      firstPowerExercise: firstExerciseSelected,
-      secondPowerExercise: secondExerciseSelected,
-      thirdPowerExercise: thirdExerciseSelected,
-      strengthLevel: strengthPowerLevel,
-      experienceLevel: count,
-    };
-
-    await uploadPowerLevelToProfile(powerLevelData);
-    showSuccessfulAlert();
-
-    const updateCurrentUserData = () => {
-      // Create a copy of the current user data
-      const updatedUserData = { ...currentUserData };
-
-      updatedUserData.powerLevel = strengthPowerLevel + count;
-      updatedUserData.strengthLevel = strengthPowerLevel;
-      updatedUserData.experienceLevel = count;
-      updatedUserData.firstPowerExercise = firstExerciseSelected;
-      updatedUserData.secondPowerExercise = secondExerciseSelected;
-      updatedUserData.thirdPowerExercise = thirdExerciseSelected
-      // Add more modifications as needed
-
-      // Update the state with the modified user data
-      setCurrentUserData(updatedUserData);
-    };
-
-    updateCurrentUserData();
-  };
-
-  function showSuccessfulAlert() {
-    setProfileUploadAlert(true);
-
-    // Clear previous timeout if it exists
-    if (alertTimeoutId) {
-      clearTimeout(alertTimeoutId);
-    }
-
-    // Set new timeout to hide the alert after 2 seconds
-    const timeoutId = setTimeout(() => {
-      setProfileUploadAlert(false);
-    }, 3000);
-
-    setAlertTimeoutId(timeoutId);
-    return;
+    return maxRM;
   }
-
-  useEffect(() => {
-
-    getLastPowerLevelEntry()
-
-      .then((lastEntry: any) => {
-
-        if (lastEntry) {
-          // Handle the last entry
-          
-          setPowerLevel(lastEntry.score);
-
-          setFirstExerciseSelected(
-            lastEntry.first !== undefined || null ? lastEntry.first : "Deadlift"
-          );
-          setSecondExerciseSelected(
-            lastEntry.second !== undefined || null
-              ? lastEntry.second
-              : "Barbell Squat"
-          );
-          setThirdExerciseSelected(
-            lastEntry.third !== undefined || null
-              ? lastEntry.third
-              : "Flat Barbell Bench Press"
-          );
-          setPowerLevel(lastEntry.score);
-          setWeight(lastEntry.bodyweight);
-          setStrengthPowerLevel(lastEntry.strength);
-          setExperiencePowerLevel(lastEntry.experience);
-        } else {
-          // No entries found
-          /* 
-          console.log("No entries found");
-          */
-        }
-      })
-      .catch((error) => {
-        toast.error("Oops, getLastPowerLevelEntry has an error!")
-        console.error("Error occurred:", error);
-      });
-  }, []);
-
+  
   return (
     <Container
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        paddingBottom: "56px",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: "64px",
       }}
+      maxWidth="md"
     >
-      <GuestProfileModal
-        guestProfileModalOpen={guestProfileModalOpen}
-        setGuestProfileModalOpen={setGuestProfileModalOpen}
-      />
-
-      <SuccessfulProfilePowerUploadAlert
-        profileUploadAlert={profileUploadAlert}
-      />
-
-      <FailedGenericAlert
-        genericFailedAlert={genericFailedAlert}
-        genericFailedAlertText={genericFailedAlertText}
-      />
-
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 1,
-        }}
+        width="100%"
+        boxShadow={2}
+        padding="8px"
+        marginTop="1rem"
+        borderRadius="4px"
       >
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <PowerLevelIcon width="3.5rem" height="3.5rem" />
-          <PowerLevelNumber n={powerLevel} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          marginTop="0.25rem"
+          marginBottom="0.25rem"
+          gap={1}
+        >
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2FPowerLevelIcon_256.png?alt=media&token=a7b39274-159b-41e8-b0db-7dcb59263e95"
+            alt=""
+            style={{ minWidth: "3rem", minHeight: "3rem" }}
+            width="3rem"
+            height="3rem"
+          ></img>
+            
+          <Typography variant="h3">{currentUserData.powerLevel}</Typography>
+          
+
         </Box>
+
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 20,
+              right: 0,
+              left: -35,
+              bottom: 5,
+            }}
+            layout="vertical"
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis fontSize={15} type="number" tick={false} />
+            <YAxis dataKey="name" type="category" fontSize={15} />
+            <Tooltip />
+            <Legend
+              align="center"
+              verticalAlign="bottom"
+              iconType="star"
+              iconSize={12}
+            />
+            <Bar dataKey="Strength" stackId="a" fill="#520975">
+              <LabelList dataKey="Strength" position="top" />
+            </Bar>
+            <Bar dataKey="Experience" stackId="a" fill="#FFA500">
+              <LabelList dataKey="Experience" position="top" />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </Box>
+      <Box
+        width="100%"
+        marginTop="16px"
+        gap={1}
+        display="flex"
+        flexDirection="column"
+        boxShadow={2}
+        borderRadius="4px"
+        padding="8px"
+      >
+        <Typography variant="subtitle1" textAlign="center">
+          Select your strongest lifts to calculate your maximum Power Level
+        </Typography>
+        <Autocomplete
+          sx={{ paddingTop: "8px" }}
+          disableClearable
+          fullWidth
+          options={userSelectedExercisesStrArr}
+          value={firstExerciseSelected ? firstExerciseSelected.name : null}
+          renderInput={(params) => (
+            <TextField {...params} label="First Exercise" variant="outlined" />
+          )}
+          onChange={(event, value) => handleAutocompleteChange(value, "first")}
+        />
+
+        <Autocomplete
+          sx={{ paddingTop: "8px" }}
+          disableClearable
+          fullWidth
+          options={userSelectedExercisesStrArr}
+          value={secondExerciseSelected ? secondExerciseSelected.name : null}
+          renderInput={(params) => (
+            <TextField {...params} label="Second Exercise" variant="outlined" />
+          )}
+          onChange={(event, value) => handleAutocompleteChange(value, "second")}
+        />
+
+        <Autocomplete
+          sx={{ paddingTop: "8px" }}
+          disableClearable
+          fullWidth
+          options={userSelectedExercisesStrArr}
+          value={thirdExerciseSelected ? thirdExerciseSelected.name : null}
+          renderInput={(params) => (
+            <TextField {...params} label="Third Exercise" variant="outlined" />
+          )}
+          onChange={(event, value) => handleAutocompleteChange(value, "third")}
+        />
 
         <Box
           sx={{
+            width: "100%",
             display: "flex",
-            justifyContent: "space-around",
-            width: "100%",
+            justifyContent: "space-evenly",
           }}
         >
-          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-            <SecondaryPowerLevelNumber n={strengthPowerLevel} />
-            <StrengthIcon width="2rem" height="2rem" />
-          </Box>
-          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-            <SecondaryPowerLevelNumber n={experiencePowerLevel} />
-            <ExperienceIcon width="2rem" height="2rem" />
-          </Box>
+          <Button
+            variant="dbz"
+            sx={{
+              width: "75%",
+              margin: "0.25rem",
+              fontWeight: "bold",
+              fontSize: "1.25rem",
+            }}
+            onClick={handleCalculatePowerLevel}
+          >
+            CALCULATE
+          </Button>
         </Box>
-      </Box>
-
-      <Box sx={{ width: "100%" }}>
-        <TextField
-          type="number"
-          id="outlined-basic"
-          label="Add your weight"
-          value={weight}
-          variant="filled"
-          InputProps={{ inputProps: { min: 0 } }}
-          sx={{
-            marginTop: "8px",
-            marginBottom: "8px",
-            textAlign: "center",
-            width: "100%",
-          }}
-          onChange={(e) => {
-            const value = parseInt(e.target.value);
-            if (!isNaN(value)) {
-              setWeight(value);
-            }
-          }}
-        />
-        <PowerLevelSelect
-          exerciseSelected={firstExerciseSelected}
-          setSelectedExercise={setFirstExerciseSelected}
-        />
-        <PowerLevelSelect
-          exerciseSelected={secondExerciseSelected}
-          setSelectedExercise={setSecondExerciseSelected}
-        />
-        <PowerLevelSelect
-          exerciseSelected={thirdExerciseSelected}
-          setSelectedExercise={setThirdExerciseSelected}
-        />
-      </Box>
-      <Box>
-        <Button
-          variant="contained"
-          sx={{ width: "100%", marginTop: "8px", marginBottom: "8px" }}
-          onClick={calculatePowerLevel}
-          color="success"
-        >
-          Calculate Power Level
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{ width: "100%", marginTop: "8px", marginBottom: "8px" }}
-          onClick={handleUploadToProfile}
-        >
-          Upload to profile
-        </Button>
       </Box>
     </Container>
   );

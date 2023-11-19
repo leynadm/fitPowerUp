@@ -10,12 +10,14 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../context/Auth";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import saveBodyTrackerEntry from "../../utils/firebaseDataFunctions/saveBodyTrackerEntry";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
 import { fetchUserBodyTrackerData } from "../../context/TrainingData";
+import toast from "react-hot-toast";
+
 function BodyTrackerTrack() {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
@@ -45,7 +47,7 @@ function BodyTrackerTrack() {
   const handleKPIChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     const elementId = event.target.id;
-    console.log(inputValue)
+
       // Check if the input value is an empty string
   if (inputValue === "") {
     setBodyKPIDataObj((prevState) => ({
@@ -65,8 +67,23 @@ function BodyTrackerTrack() {
   }
 
   async function handleSaveBodyTrackerEntry() {
-    await saveBodyTrackerEntry(currentUser.uid, bodyKPIDataObj, saveButtonText);
-    await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+    let checkIfAtLeastOneValueIsAdded = false;
+    for (const [key, value] of Object.entries(bodyKPIDataObj)) {
+      if (parseFloat(value) !== 0 && value !== "" && key !== "date") {
+        checkIfAtLeastOneValueIsAdded = true;
+      }
+    }
+
+    if (checkIfAtLeastOneValueIsAdded) {
+      await saveBodyTrackerEntry(
+        currentUser.uid,
+        bodyKPIDataObj,
+        saveButtonText
+      );
+      await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+    } else {
+      toast.error("You need to add data to at least one field!");
+    }
   }
 
   const handleOnChangeForDate = (

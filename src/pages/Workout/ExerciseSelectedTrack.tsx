@@ -604,10 +604,10 @@ function ExerciseSelectedTrack() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        width: "100vw",
         alignItems: "center",
         paddingBottom: "56px",
       }}
+      maxWidth="md"
     >
       <ValidationAlert showAlert={showAlert} />
       <CommentModal

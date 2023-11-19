@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, ReactNode } from "react";
+import React, { useEffect, useState, createContext, ReactNode,Dispatch,SetStateAction } from "react";
 import { auth } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
@@ -19,8 +19,8 @@ export const AuthContext = createContext<any>({
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
-  const [currentUserData, setCurrentUserData] = useState<User | undefined>(
-    undefined
+  const [currentUserData, setCurrentUserData] = useState<User>(
+    
   );
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
 
@@ -98,30 +98,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   useEffect(() => {
-    fetchData();
+
+    const fetchData = async () => {
+      await fetchCurrentUserData(
+        currentUser,
+        setCurrentUserData,
+      );
+    };
+
+    fetchData().catch(console.error);
+
+ 
   }, [currentUser]);
 
-  async function fetchData() {
-    if (currentUser === null) {
-      return;
-    }
-
-    if (currentUser.isAnonymous === false) {
-      try {
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data() as User;
-          setCurrentUserData(userData);
-          return userData;
-        }
-      } catch (error) {
-        toast.error("We couldn't fetch the data...");
-        console.error("Error while fetching user data:", error);
-      }
-    }
-  }
   return (
     <AuthContext.Provider
       value={{
@@ -135,3 +124,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
+
+export async function fetchCurrentUserData(currentUser:any,setCurrentUserData:Dispatch<SetStateAction<User | undefined>>) {
+  if (currentUser === null) {
+    return;
+  }
+
+  if (currentUser.isAnonymous === false) {
+    try {
+      const docRef = doc(db, "users", currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as User;
+        setCurrentUserData(userData);
+        return userData;
+      }
+    } catch (error) {
+      toast.error("We couldn't fetch the data...");
+      console.error("Error while fetching user data:", error);
+    }
+  }
+}

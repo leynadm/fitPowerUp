@@ -7,7 +7,14 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  BarChart,
+  Bar,
+  Rectangle,
+  AreaChart,
+  Area,
+  LabelList,
 } from "recharts";
+import { useEffect } from "react";
 import Container from "@mui/material/Container";
 import { useContext } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
@@ -21,6 +28,7 @@ import { timeframeOptions } from "../../utils/completedWorkoutsChartFunctions/st
 import { useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
 import { IBodyTrackerGroupedData } from "../../utils/completedWorkoutsChartFunctions/utility/groupBodyTrackerDataByTimePeriodAvg";
+import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import {
   statisticsOptionsBodyTracker,
   intervalOptions,
@@ -34,7 +42,10 @@ function BodyTrackerGraph() {
 
   const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
 
-  const [selectedStatisticsOptionsBodyTracker,setSelectedStatisticsOptionsBodyTracker]=useState(statisticsOptionsBodyTracker[0].label)
+  const [
+    selectedStatisticsOptionsBodyTracker,
+    setSelectedStatisticsOptionsBodyTracker,
+  ] = useState(statisticsOptionsBodyTracker[0].label);
   userBodyTrackerDataArr.sort(
     (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
       const dateA = new Date(a.date);
@@ -45,26 +56,59 @@ function BodyTrackerGraph() {
   );
 
   const [bodyTrackerModeledData, setBodyTrackerModeledData] = useState<
-  IBodyTrackerGroupedData[]|undefined|[]
->([]);
+    IBodyTrackerGroupedData[] | undefined | []
+  >([]);
+
+  useEffect(() => {
+    setBodyTrackerModeledData(
+      fetchBodyTrackerModeledData(
+        userBodyTrackerDataArr,
+        selectedStatisticsOptionsBodyTracker,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
+  }, []);
 
   const handleStandardTimeframeChange = (option: any) => {
     const clickedTimeframe = option;
     setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
-    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedStatisticsOptionsBodyTracker, clickedTimeframe, selectedDataGroup));
+    setBodyTrackerModeledData(
+      fetchBodyTrackerModeledData(
+        userBodyTrackerDataArr,
+        selectedStatisticsOptionsBodyTracker,
+        clickedTimeframe,
+        selectedDataGroup
+      )
+    );
   };
 
-  const handleDataGroupChange = (option:string) => {
+  const handleDataGroupChange = (option: string) => {
     const clickedDataGroup = option;
     setSelectedDataGroup(clickedDataGroup); // Update the selected timeframe
-    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedStatisticsOptionsBodyTracker, selectedTimeframe, clickedDataGroup));
+    setBodyTrackerModeledData(
+      fetchBodyTrackerModeledData(
+        userBodyTrackerDataArr,
+        selectedStatisticsOptionsBodyTracker,
+        selectedTimeframe,
+        clickedDataGroup
+      )
+    );
   };
-  
-  const handleStatisticsBodyTrackerChange = (event: SelectChangeEvent<string>) => {
+
+  const handleStatisticsBodyTrackerChange = (
+    event: SelectChangeEvent<string>
+  ) => {
     const selectedBodyTrackerOption = event.target.value;
-    setSelectedStatisticsOptionsBodyTracker(selectedBodyTrackerOption);    
-    console.log('checking statistics')
-    setBodyTrackerModeledData(fetchBodyTrackerModeledData(userBodyTrackerDataArr, selectedBodyTrackerOption, selectedTimeframe, selectedDataGroup));
+    setSelectedStatisticsOptionsBodyTracker(selectedBodyTrackerOption);
+    setBodyTrackerModeledData(
+      fetchBodyTrackerModeledData(
+        userBodyTrackerDataArr,
+        selectedBodyTrackerOption,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
   };
 
   function handleGetGroupedData(
@@ -73,13 +117,13 @@ function BodyTrackerGraph() {
     timeframe: string,
     dataGroup: string
   ) {
+    groupBodyTrackerDataByTimePeriodAvg(bodyTrackerData, dataGroup);
 
-    groupBodyTrackerDataByTimePeriodAvg(
-      bodyTrackerData,dataGroup
-    )
-
-    const groupedData = groupBodyTrackerDataByTimePeriodAvg(bodyTrackerData, dataGroup);
-      return groupedData
+    const groupedData = groupBodyTrackerDataByTimePeriodAvg(
+      bodyTrackerData,
+      dataGroup
+    );
+    return groupedData;
   }
 
   const fetchBodyTrackerModeledData = (
@@ -92,16 +136,8 @@ function BodyTrackerGraph() {
       return;
     }
 
-    let data = handleGetGroupedData(
-      bodyTrackerData,
-      kpi,
-      timeframe,
-      dataGroup
-    );
-
-    console.log({data})
+    let data = handleGetGroupedData(bodyTrackerData, kpi, timeframe, dataGroup);
     return data;
-
   };
 
   return (
@@ -118,11 +154,11 @@ function BodyTrackerGraph() {
           value={selectedStatisticsOptionsBodyTracker}
           onChange={handleStatisticsBodyTrackerChange}
         >
-      {statisticsOptionsBodyTracker.map((stat:any, index) => (
-        <MenuItem key={index} value={stat.label}>
-          {stat.label}
-        </MenuItem>
-      ))}  
+          {statisticsOptionsBodyTracker.map((stat: any, index) => (
+            <MenuItem key={index} value={stat.label}>
+              {stat.label}
+            </MenuItem>
+          ))}
         </Select>
 
         <Typography variant="subtitle1">Select timeframe</Typography>
@@ -162,59 +198,150 @@ function BodyTrackerGraph() {
         </ButtonGroup>
       </Box>
 
-      <ResponsiveContainer minHeight="500px">
-        <LineChart
-          width={500}
-          height={400}
-          data={bodyTrackerModeledData}
-          margin={{
-            top: 10,
-            bottom: 1,
-          }}
-        > 
-          <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="date" scale="band" />
-          <YAxis
-            fontSize={12}
-            yAxisId="left"
-            type="number"
-            dataKey="weight"
-            name="weight"
-            unit="kg"
-            stroke="#8884d8"
-          />
-          <YAxis
-            fontSize={12}
-            yAxisId="right"
-            type="number"
-            dataKey="caloricIntake"
-            name="caloricIntake"
-            stroke="#8884d8"
-            orientation="right"
-            tickFormatter={(value) =>
-              new Intl.NumberFormat("en-US", {
-                notation: "compact",
-                compactDisplay: "short",
-              }).format(value)
-            }
-          />
-          <Tooltip />
-          <Legend />
-          <Line
-            yAxisId="left"
-            type="monotone"
-            dataKey="weight"
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
-          />
-          <Line
-            yAxisId="right"
-            type="monotone"
-            dataKey="caloricIntake"
-            stroke="#82ca9d"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {bodyTrackerModeledData?.length !== 0 ? (
+        <>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart
+              width={500}
+              height={200}
+              data={bodyTrackerModeledData}
+              syncId="bodyStats"
+              margin={{
+                top: 10,
+                right: 5,
+                left: 5,
+                bottom: 20,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" fontSize={15} tick={{ dy: 10 }} />
+              <YAxis
+                name="Weight"
+                unit=" kg"
+                fontSize={15}
+                interval="preserveEnd"
+              />
+              <Tooltip />
+              <Line
+                type="monotone"
+                name="Weight"
+                dataKey="averageWeight"
+                stroke="#520975"
+                strokeWidth="4"
+                dot={{
+                  fill: "#2e4355",
+                  stroke: "#520975",
+                  strokeWidth: 2,
+                  r: 5,
+                }}
+                activeDot={{
+                  fill: "#2e4355",
+                  stroke: "#8884d8",
+                  strokeWidth: 5,
+                  r: 10,
+                }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+
+          
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              width={500}
+              height={300}
+              data={bodyTrackerModeledData}
+              margin={{
+                top: 25,
+                right: 5,
+                left: 5,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" fontSize={15} tick={{ dy: 5 }} />
+              <YAxis
+                fontSize={15}
+                dataKey="averageCaloricIntake"
+                name="Caloric Intake"
+                unit=" cal"
+                tickFormatter={(value) =>
+                  new Intl.NumberFormat("en-US", {
+                    notation: "compact",
+                    compactDisplay: "short",
+                  }).format(value)
+                }
+              />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey="averageCaloricIntake"
+                name="Caloric Intake"
+                fill="#2e4355"
+                activeBar={<Rectangle fill="pink" stroke="blue" />}
+              >
+                <LabelList
+                  dataKey="averageCaloricIntake"
+                  position="top"
+                  formatter={(value: number) =>
+                    new Intl.NumberFormat("en-US", {
+                      notation: "compact",
+                      compactDisplay: "short",
+                    }).format(value)
+                  }
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+
+          
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart
+              width={500}
+              height={400}
+              data={bodyTrackerModeledData}
+              margin={{
+                top: 15,
+                right: 5,
+                left: 5,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" fontSize={15} tick={{ dy: 5 }} />
+              <YAxis
+                dataKey={`average${selectedStatisticsOptionsBodyTracker.replace(
+                  /\s/g,
+                  ""
+                )}`}
+                name={selectedStatisticsOptionsBodyTracker}
+                fontSize={15}
+              />
+
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey={`average${selectedStatisticsOptionsBodyTracker.replace(
+                  /\s/g,
+                  ""
+                )}`}
+                stroke="#520975"
+                fill="#FFA500"
+                name={selectedStatisticsOptionsBodyTracker}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </>
+      ) : (
+        <Box
+          display="flex"
+          minHeight="500px"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <NoAvailableDataBox />
+        </Box>
+      )}
     </Container>
   );
 }
