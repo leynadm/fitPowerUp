@@ -63,7 +63,7 @@ function ExerciseSelectedHistory() {
     const group = exerciseHistoryArr[index];
 
     return (
-      <>
+      
         <Box key={index} style={style} className="exercise-complete">
           <Typography
             variant="h6"
@@ -214,7 +214,7 @@ function ExerciseSelectedHistory() {
             
           </Box>
         </Box>
-      </>
+      
     );
   };
 

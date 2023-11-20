@@ -11,7 +11,6 @@ import StarsIcon from "@mui/icons-material/Stars";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Routes, Route } from "react-router-dom";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
 import uuid from "react-uuid";
 import Exercise from "../../utils/interfaces/Exercise";
@@ -19,10 +18,8 @@ import completeWorkout from "../../utils/firebaseDataFunctions/completeWorkout";
 import { AuthContext } from "../../context/Auth";
 import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
 import calculateOneRepMax from "../../utils/progressFunctions/calculateOneRepMax";
-import { elements } from "chart.js";
 import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntries";
 import { useNavigate } from "react-router-dom";
-import WorkoutCongratulations from "./WorkoutCongratulations";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { fetchUserData } from "../../context/TrainingData";
 const style = {

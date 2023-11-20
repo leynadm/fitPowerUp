@@ -20,17 +20,16 @@ function BodyTrackerHistory() {
 
   const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
 
-  if(userBodyTrackerDataArr.length>0){
+  if (userBodyTrackerDataArr.length > 0) {
     userBodyTrackerDataArr.sort(
       (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
-  
+
         return dateB.getTime() - dateA.getTime();
       }
     );
   }
-  
 
   const Row = ({
     index,
@@ -42,8 +41,8 @@ function BodyTrackerHistory() {
     const userBodyTrackerEntry = userBodyTrackerDataArr[index];
 
     return (
-      <>
-        <Box gap={2}>
+      
+        <Box gap={2} style={style} >
           <Typography variant="subtitle1" paddingLeft="8px">
             {userBodyTrackerEntry.date}
           </Typography>
@@ -143,7 +142,7 @@ function BodyTrackerHistory() {
             </AccordionDetails>
           </Accordion>
         </Box>
-      </>
+      
     );
   };
 
@@ -162,18 +161,16 @@ function BodyTrackerHistory() {
   }
 
   return (
-    <>
-      <Container maxWidth="md">
-        <FixedSizeList
-          height={window.innerHeight - 190}
-          itemCount={userBodyTrackerDataArr.length}
-          itemSize={50}
-          width="100%"
-        >
-          {Row}
-        </FixedSizeList>
-      </Container>
-    </>
+    <Container maxWidth="md">
+      <FixedSizeList
+        height={window.innerHeight - 190}
+        itemCount={userBodyTrackerDataArr.length}
+        itemSize={100}
+        width="100%"
+      >
+        {Row}
+      </FixedSizeList>
+    </Container>
   );
 }
 

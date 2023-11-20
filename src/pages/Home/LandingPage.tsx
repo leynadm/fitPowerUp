@@ -95,7 +95,7 @@ function LandingPage() {
           >
             <Typography
               variant="h4"
-              sx={{ color: "#FF8C00", fontFamily: "Kanit" }}
+              sx={{ color: "#FF8C00" }}
             >
               fit<span style={{ color: "white" }}>PowerUp</span>
             </Typography>
@@ -137,7 +137,6 @@ function LandingPage() {
                 variant="body1"
                 sx={{
                   textAlign: "center",
-                  fontFamily: "Kanit",
                   fontSize: "1.75rem",
                   paddingTop:"1rem"
                 }}

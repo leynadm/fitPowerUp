@@ -173,7 +173,7 @@ export default function SignIn() {
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fyoung-goku_512x512_sign_in.png?alt=media&token=e2bff5cd-d48c-449c-a25a-141dc199e267&_gl=1*1ymru67*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjcyNjAuOC4wLjA."
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fgoku_login_512.jpg?alt=media&token=c384b0d4-fb68-4369-864f-bf591277c9d2"
             alt=""
             loading="lazy"
           ></img>

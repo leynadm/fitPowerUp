@@ -1,5 +1,4 @@
 import React from "react";
-import Box from "@mui/material/Box";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -27,7 +26,8 @@ function Progress() {
   };
 
   return (
-    <Box
+    <Container
+    maxWidth="md"
       sx={{
         width: "100%",
         height: "100%",
@@ -120,7 +120,7 @@ function Progress() {
           }}
           onClick={handleNavigateGraph}
         >
-          Graph
+          Feats
         </Button>
       </ButtonGroup>
 
@@ -129,7 +129,7 @@ function Progress() {
         <Route path="path" element={<ProgressPath />} />
         <Route path="graph" element={<ProgressGraph />} />
       </Routes>
-    </Box>
+    </Container>
   );
 }
 
