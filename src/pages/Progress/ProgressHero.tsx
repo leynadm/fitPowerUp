@@ -5,15 +5,15 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
-import { render } from "@testing-library/react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useLocation } from "react-router-dom";
 function ProgressHero() {
   const { id } = useParams();
+  const location = useLocation();
+  const heroQuote = location.state;
 
   const [imageUrl, setImageUrl] = useState("");
-
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   useEffect(() => {
     getHeroImage();
   }, []);
@@ -30,37 +30,63 @@ function ProgressHero() {
     }
   }
 
-  if (imageUrl === "") {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="256px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Box
       display="flex"
-      justifyContent="space-around"
       alignItems="center"
       flexDirection="column"
-      gap={1}
+      gap={2}
       height="100%"
       width="100%"
       paddingBottom="56px"
     >
-      <Box>
-        <img src={imageUrl} alt="" width="100%" height="100%" />
-      </Box>
+      {imageUrl === "" ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          minHeight="512px"
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          gap={3}
+        >
+          <img
+            src={imageUrl}
+            alt=""
+            width="100%"
+            style={{maxWidth:"512px",maxHeight:"512px"}}
+            loading="lazy"
+            onLoad={() => setIsImageLoaded(true)}
+          />
 
-      <Box boxShadow={1} display="flex" justifyContent="center" width="100%">
-        <Typography>Test</Typography>
-      </Box>
+          {isImageLoaded && (
+            <Box
+              boxShadow={1}
+              display="flex"
+              justifyContent="center"
+              width="100%"
+              borderRadius="4px"
+              sx={{
+                backgroundColor: "#520975",
+                color: "white",
+              }}
+            >
+              <Typography align="center" fontStyle="italic" padding="4px">
+                {heroQuote}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

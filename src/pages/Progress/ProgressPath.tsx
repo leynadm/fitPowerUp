@@ -50,7 +50,9 @@ function ProgressPath() {
 
     function handleNavigateScreen(){
 
-      navigate(`hero/${pathPointsEntry.id}`)
+      navigate(`hero/${pathPointsEntry.id}`,{
+        state:pathPointsEntry.quote
+      })
 
     }    
 
