@@ -71,7 +71,7 @@ function MuscleGroupsSelectionMenu() {
         maxWidth="md"
       >
         <AppBar
-          elevation={0}
+          elevation={2}
           position="fixed"
           style={{
             top: 0,

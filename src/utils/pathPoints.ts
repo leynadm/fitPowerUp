@@ -1,727 +1,752 @@
 const pathPoints = [
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F1.png?alt=media&token=d9aef053-27b2-4aea-b5c1-ab71b5c9c740",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F1.webp?alt=media&token=8a6d9989-0993-489f-92b2-127cde17d42b",
       bracket: 0,
-      id:1
+      id:1,
+      quote:"If only I hit the gym more, maybe Raditz wouldn't have turned my head into a vegetable with just one punch! Don't repeat my mistake!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F2.png?alt=media&token=fc52335e-6351-4fa1-8c90-4703767c6de6",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F2.webp?alt=media&token=e076ddd0-5489-4af5-8c10-dd1a8b264db8",
       bracket: 618,
-      id:2
+      id:2,
+      quote:"The gym is my ring, and these weights are my challengers. Mr. Satan says, let's knock 'em out together!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F3.png?alt=media&token=6ba8f5c4-8099-4cd8-864a-20544ec43759",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F3.webp?alt=media&token=424da9b9-4e41-4dd3-b0c0-52498e3decf4",
       bracket: 736,
-      id:3
+      id:3,
+      quote:"In the gym, even the Turtle Hermit needs his shell. Time to train like a wise old tortoise on steroids! No need to take steroids though!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F4.png?alt=media&token=3eb63d2e-e049-4467-a690-7189ae0819f8",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F4.webp?alt=media&token=27315818-0efe-4071-91b2-d27ddc8db13d",
       bracket: 854,
-      id:4
+      id:4,
+      quote:"Small in size, big in strength! Let every workout be a testament to the fact that greatness comes in all packages!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F5.png?alt=media&token=c75fa3ef-f181-437e-a7c0-603557a91bf3",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F5.webp?alt=media&token=047a5615-a2f5-462a-bdfa-c21826d58d9a",
       bracket: 972,
-      id:5
+      id:5,
+      quote:"Training's tough, but so is climbing Korin's Tower. Keep pushing, and you'll reach the top of your fitness journey!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F6.png?alt=media&token=00d61365-0a5a-4fa6-ae68-44aaa2f53955",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F6.webp?alt=media&token=ecc70790-bfe7-4247-a8d6-598a8bc2c130",
       bracket: 1090,
-      id:6
+      id:6,
+      quote:"They say I'm unlucky in battles, but in the gym, luck has nothing to do with it. Train like never before, and emerge a hero for your close ones!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F7.png?alt=media&token=54c1b739-cb79-48aa-ae69-6247ae3cc571",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F7.webp?alt=media&token=8f03b025-c6db-496a-b626-e1b263899cbe",
       bracket: 1208,
-      id:7
+      id:7,
+      quote:"Why do I shave my head? So the gains reflect off it better, obviously! Train smart and shine bright, my friend."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F8.png?alt=media&token=9e59c13b-513e-4c5f-8dde-9f3a643ce77b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F8.webp?alt=media&token=27c9d96a-1996-4299-a835-19e0a807062c",
       bracket: 1326,
-      id:8
+      id:8,
+      quote:"Just as I watch over the planet, I watch over your gains. The gym is your sanctuary, and I'm here to bless those lifts."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F9.png?alt=media&token=0b9b705b-9e36-4df7-98c9-7b59d64a9438",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F9.webp?alt=media&token=060f31af-57a6-4f2d-a942-b93b31efe535",
       bracket: 1444,
-      id:9
+      id:9,
+      quote:"The Tri-Beam of workouts: Focus, Discipline, and Flexibility. Master these, and you'll be a true Z warrior in no time."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F10.png?alt=media&token=c044ab26-19c8-4dfc-af38-9817df606041",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F10.webp?alt=media&token=e5ce2a82-7d30-4614-83ed-68f225225c2e",
       bracket: 1562,
-      id:10
+      id:10,
+      quote:"Train like a Namekian - regenerate your energy, push your limits, and rest when needed be. This is the recipe to become green in no time!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F11.png?alt=media&token=0f6d9dfc-a135-4c48-b586-0f25460eaf7d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F11.webp?alt=media&token=c53d39f2-2de6-4a94-864a-05bff981ccfa",
       bracket: 1680,
-      id:11
+      id:11,
+      quote:"Just as I chase after stronger opponents, chase after your fitness goals. The gym is your battlefield, so give it your all! And don't forget to yell while lifting."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F12.png?alt=media&token=dfd65ba4-c57c-422a-bb3c-89e309798f0e",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F12.webp?alt=media&token=7bd994ba-29d2-4bd5-9b27-98ceca984bbb",
       bracket: 1798,
-      id:12
+      id:12,
+      quote:"The gym is your battlefield. Crush those weights and show them you're a true Saiyan elite. If only Kakarot trained like me, he might have stood a chance by himself alone *ptui*!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F13.png?alt=media&token=b258d3ae-36c3-4f09-96a0-1bdcbd272442",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F13.webp?alt=media&token=d0ee3b05-d883-452d-81ea-7e78a581992c",
       bracket: 1916,
-      id:13
+      id:13,
+      quote:"In the gym, I'm like the Destructo Disc – precise, effective, and a bit round. Train like a mini-bald superhero, and you'll be cutting through your fitness goals in no time!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F14.png?alt=media&token=0b78a94b-ec3a-4e16-8e6a-33f5058d5210",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F14.webp?alt=media&token=fcb8de1d-6d0e-4c87-aea7-bc6036fd3cbe",
       bracket: 2034,
-      id:14
+      id:14,
+      quote:"Why do I wear weighted clothing? Well, it's not just for fashion. It's my way of saying, 'Hey, gravity, is that all you got?' Train with the weights, and soon you'll be defying more than just fashion norms!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F15.png?alt=media&token=982746e9-89de-4064-8b5f-b752129bc40b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F15.webp?alt=media&token=5ed68b37-7675-45f5-bde4-0d459e97780d",
       bracket: 2152,
-      id:15
+      id:15,
+      quote:"In the gym, I'm like the black sheep of the Saiyan family. But hey, black is slimming, right? Train like the rebellious Saiyan, and watch your physique defy expectations - and potentially your hair!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F16.png?alt=media&token=e1f5ca24-b0d1-4338-ab98-b99cf897c8fd",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F16.webp?alt=media&token=d7d76c7a-23c3-4c60-832f-1fe2cdc78470",
       bracket: 2270,
-      id:16
+      id:16,
+      quote:"They say I'm always hungry. Well, in the gym, I'm hungry for gains! Train like you're on your way to an all-you-can-lift buffet!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F17.png?alt=media&token=4a3ea466-d024-4706-9e70-830ab5a7dfa0",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F17.webp?alt=media&token=bbf6f9cd-d9ef-44f0-b476-28d65bd8c0b3",
       bracket: 2388,
-      id:17
+      id:17,
+      quote:"They say a Namekian's power level is measured by his antennas. Well, in the gym, your power level is measured by the weights you lift. Train hard, and watch those antennas—I mean, muscles—grow!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F18.png?alt=media&token=cb31f4a2-d21b-4a8c-9700-ef572a9e3383",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F18.webp?alt=media&token=6b06e4d1-78eb-41cf-9398-1f0667c5e057",
       bracket: 2506,
-      id:18
+      id:18,
+      quote:"Why do I talk to my pet monkey, Bubbles? Because in the gym, you need a training buddy with a good sense of humor. Always seek to train by yourself, but if sometimes you can have a Bubbles with you then even better!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F19.png?alt=media&token=9c5d07a6-cd1f-4daa-a50e-45136c6ad8a9",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F19.webp?alt=media&token=b0c0c7ae-0359-438b-89ee-8530e8bc81f7",
       bracket: 2624,
-      id:19
+      id:19,
+      quote:"Gym time is battle time. Show those weights who's boss, and conquer the gym like a Saiyan warrior. Just don't let Vegeta catch you taking a break!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F20.png?alt=media&token=dc29da3d-9342-4e1a-bea8-4133df39fbd2",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F20.webp?alt=media&token=3341420a-a96b-4d8c-9669-914bad122832",
       bracket: 2742,
-      id:20
+      id:20,
+      quote:"Why do I have a third eye? To keep an eye on my gains, of course! Train with focus, and your third eye will witness the transformation."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F21.png?alt=media&token=a42c4c2f-ac94-4fd4-bb1a-927529bd15b1",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F21.webp?alt=media&token=32ac25ac-02d4-4bcb-bd64-ec4069707907",
       bracket: 2843,
-      id:21
+      id:21,
+      quote:"They say Vegeta's the prince, and I'm just the muscle. Well, in the gym, the prince of gains is YOU! Train like royalty, and claim your throne! P.S: Don't tell Vegeta I said that."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F22.png?alt=media&token=5340100c-933b-4e78-80fc-b3578e3bbff2",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F22.webp?alt=media&token=570c877b-e885-4f22-9550-44cbc32e5c9b",
       bracket: 2944,
-      id:22
+      id:22,
+      quote:"Just as the Namekian Dragon Balls grant wishes, the gym grants gains. Train hard, and your wishes will come true."
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F23.png?alt=media&token=3b0b4729-5a4c-40f8-ac19-184f7cd2382b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F23.webp?alt=media&token=7180ddef-6f27-4a48-a148-c697f3fb35d9",
       bracket: 3045,
-      id:23
+      id:23,
+      quote:"Why do I study so much? Well, lifting books is great for the brain gains. But in the gym, we're here for muscle gains! Train like a scholar, lift like a Saiyan!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F24.png?alt=media&token=7131991a-147b-4e4e-9fe7-e7d314488c4d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F24.webp?alt=media&token=2b70463d-975d-4e59-b523-8b383932cf3c",
       bracket: 3146,
-      id:24
+      id:24,
+      quote:"They say I'm always smiling. Well, in the gym, every set is a chance to flex those grin muscles. Smile your way through the burn, and the gains will follow!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F25.png?alt=media&token=912e17db-aec6-4423-947b-abe6cd9a233e",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F25.webp?alt=media&token=9d1e57fc-b8af-4aa0-bd89-4060a69ac4b2",
       bracket: 3247,
-      id:25
+      id:25,
+      quote:"They say Saiyans love to fight. Well, in the gym, every rep is a battle, and victory tastes like protein shakes. Train like a warrior, and feast on gains!"
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F26.png?alt=media&token=5fd97a49-4888-4d69-a47a-4156c4ad4c84",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F26.webp?alt=media&token=c3b1a14b-3f43-433d-9b68-3547a0705f56",
       bracket: 3348,
       id:26
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F27.png?alt=media&token=3c013e06-8bc9-48bd-b174-426b163e540d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F27.webp?alt=media&token=8cf5b904-55a0-4b7a-a9cc-c82ac3b4010c",
       bracket: 3449,
       id:27
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F28.png?alt=media&token=6f174179-beda-41d8-aa8e-fa7298950917",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F28.webp?alt=media&token=7741f0c3-47e1-4cc8-bcba-fd1adbfbe5c9",
       bracket: 3550,
       id:28
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F29.png?alt=media&token=7e6dabef-e3ab-41fa-b1f8-48a2ed3d8cf4",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F29.webp?alt=media&token=a94d8a29-e9f5-4517-8ae7-dbef8e3a0f32",
       bracket: 3651,
       id:29
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F30.png?alt=media&token=a2db3992-3475-49e5-9cd7-9edef924d0e1",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F30.webp?alt=media&token=8d23b0e2-65ae-4400-bb73-c87f4f64c8c2",
       bracket: 3752,
       id:30
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F31.png?alt=media&token=ba242b10-dd80-4e90-a6ca-9249a4949ffb",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F31.webp?alt=media&token=e6c08457-ce2f-46e4-a07c-535f4e14b4fb",
       bracket: 3853,
       id:31
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F32.png?alt=media&token=23e31275-8798-41ce-854f-a1f6fbf00d7b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F32.webp?alt=media&token=ae15f8b1-3733-4dcc-b6e7-5b8361e0dd7c",
       bracket: 3954,
       id:32
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F33.png?alt=media&token=d4d21c66-16be-49b0-8834-1bab0be81c51",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F33.webp?alt=media&token=09b9c98e-ee84-49ce-8607-fe06cb887afc",
       bracket: 4055,
       id:33
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F34.png?alt=media&token=4b627a0e-50e6-47ad-97cc-04964e7ca1e7",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F34.webp?alt=media&token=ebcd40bc-5f6a-4d52-91d4-b21a08d67cb2",
       bracket: 4156,
       id:34
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F35.png?alt=media&token=c43f324e-8418-4020-b9e9-6ebde71a8e42",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F35.webp?alt=media&token=6adeea7a-6b25-40fe-b18a-d7cb8e2246a3",
       bracket: 4257,
       id:35
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F36.png?alt=media&token=630803f6-4486-4690-963a-6899e534fe3a",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F36.webp?alt=media&token=46f11de9-34bd-4f1d-87df-dae222597dc9",
       bracket: 4358,
       id:36
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F37.png?alt=media&token=d75a63fa-2eae-42b9-a958-2ddb745a9c5d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F37.webp?alt=media&token=4c5d7627-9176-4716-90d6-aa986d6b96fa",
       bracket: 4459,
       id:37
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F38.png?alt=media&token=0b970c98-87a3-41f3-8556-9b18d9f35fe9",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F38.webp?alt=media&token=77d70224-28d6-4237-8844-752e3ac100c6",
       bracket: 4560,
       id:38
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F39.png?alt=media&token=f4db2273-8f60-42cf-8523-5f3711eb5152",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F39.webp?alt=media&token=b4152cfb-3fb9-421b-a96c-d9bc0c20edc5",
       bracket: 4661,
       id:39
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F40.png?alt=media&token=d3d1ba04-ef17-4e4e-b393-97e5b0500bd5",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F40.webp?alt=media&token=9022c61a-e652-4b9c-9e28-099afcb5aea0",
       bracket: 4762,
       id:40
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F41.png?alt=media&token=15f66e07-f00a-4828-a619-edeaa5b88258",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F41.webp?alt=media&token=0f463ce2-a472-42fa-a8f0-c1947d896ff0",
       bracket: 4839,
       id:41
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F42.png?alt=media&token=57c0c7b2-dcec-41b8-9fc8-68602ac70b45",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F42.webp?alt=media&token=1c818b8d-c167-4675-ab7e-b7464caa1e38",
       bracket: 4916,
       id:42
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F43.png?alt=media&token=8f604248-5fa5-4b11-aba2-dd855644d66d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F43.webp?alt=media&token=44ceb494-f0b6-47eb-ad2a-2cb1f2f3ed03",
       bracket: 4993,
       id:43
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F44.png?alt=media&token=49f2b376-424a-41bd-9337-2e6ae4ce4fb0",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F44.webp?alt=media&token=7702595b-89bc-4e50-8a9f-f1cbdf40c811",
       bracket: 5070,
       id:44
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F45.png?alt=media&token=b4cbb369-456c-48c0-b909-acdf225bfc2d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F45.webp?alt=media&token=61b78b40-5efa-47b0-99d6-750e3bf4091f",
       bracket: 5147,
       id:45
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F46.png?alt=media&token=1d6d0dd0-54c5-4181-8a80-adedaa24d0ea",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F46.webp?alt=media&token=c1c3b00e-1780-4c93-a19f-457ea2bffd2a",
       bracket: 5224,
       id:46
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F47.png?alt=media&token=5f3a8829-4c5e-4729-9375-364fb788759c",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F47.webp?alt=media&token=cfc12a57-a6e3-4795-ac7b-9bc44fa9bccd",
       bracket: 5301,
       id:47
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F48.png?alt=media&token=dae244ed-2ac1-4a42-a71f-9147170fed61",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F48.webp?alt=media&token=ed6233a2-77c8-4bcb-a992-7b496402f6b2",
       bracket: 5378,
       id:48
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F49.png?alt=media&token=7b51f1a6-c26a-4f47-aac7-725516ac48f2",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F49.webp?alt=media&token=6df44fc5-bfd6-4997-9a41-70a0476e53dd",
       bracket: 5455,
       id:49
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F50.png?alt=media&token=d3290b4c-827e-4f4e-ad8f-79a0e8dbffe9",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F50.webp?alt=media&token=bed59a04-718f-4a57-8bdb-12e663a53c3e",
       bracket: 5532,
       id:50
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F51.png?alt=media&token=e638251c-71ea-4c77-933b-f1d057659554",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F51.webp?alt=media&token=e9e4fe5a-7c62-4cd9-8b37-89519333a389",
       bracket: 5609,
       id:51
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F52.png?alt=media&token=6edebf1e-57d8-4265-96fc-169b5e9dbedb",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F52.webp?alt=media&token=8d4716bd-5ce6-4543-8388-a38e980329e7",
       bracket: 5686,
       id:52
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F53.png?alt=media&token=04e53438-cdfc-46e5-aeaa-47a15599a122",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F53.webp?alt=media&token=166c4c91-2b65-45c4-b4a8-2dbaa798a3ec",
       bracket: 5763,
       id:53
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F54.png?alt=media&token=f4106ef1-85a5-4f56-b958-392dbed21576",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F54.webp?alt=media&token=f6170f5a-f34b-4690-bf69-d2c4b9e9f7e9",
       bracket: 5840,
       id:54
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F55.png?alt=media&token=4beb5ffc-b45c-466a-a817-4fd6732e3063",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F55.webp?alt=media&token=997b758d-f747-4797-88b4-88aaee829818",
       bracket: 5917,
       id:55
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F56.png?alt=media&token=1d2d3117-b1ef-4461-b6a8-7e33cc417528",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F56.webp?alt=media&token=8a3eb3d9-5ecf-4c02-9f12-dc9c6abde3e2",
       bracket: 5994,
       id:56
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F57.png?alt=media&token=2715ba7b-8d76-479f-a065-de475d43cfce",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F57.webp?alt=media&token=49a0bc45-a9ae-4c0c-959e-c753318dd9d1",
       bracket: 6071,
       id:57
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F58.png?alt=media&token=952b25ee-648a-4069-a720-d34266c5b4b1",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F58.webp?alt=media&token=e188bbd6-a497-4456-90cb-d98122ed0f3a",
       bracket: 6148,
       id:58
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F59.png?alt=media&token=7c2f36fc-ad6c-4d66-8322-9efcbfca7896",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F59.webp?alt=media&token=703308bb-7166-4aa8-a22e-6c5e59975302",
       bracket: 6225,
       id:59
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F60.png?alt=media&token=fbdaea3d-d356-4dac-918e-c62950168a0f",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F60.webp?alt=media&token=6fd82ae0-d07f-4a6d-8e2e-c34e33bd1b25",
       bracket: 6302,
       id:60
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F61.png?alt=media&token=e8167338-fca8-40e9-85a4-18c11e98af9f",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F61.webp?alt=media&token=fe31abe3-cbf2-4ae5-8004-2c8fb76e72f7",
       bracket: 6367,
       id:61
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F62.png?alt=media&token=8e8add02-0133-4907-b908-7ef3231ffd35",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F62.webp?alt=media&token=c4956f41-0b8b-4c6a-af25-a91d521dd172",
       bracket: 6432,
       id:62
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F63.png?alt=media&token=193c8c15-ee03-4fc4-9220-9580c6e2081b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F63.webp?alt=media&token=17d17f88-197b-4251-a8b3-c277fd49a834",
       bracket: 6497,
       id:63
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F64.png?alt=media&token=7a78b97e-ba6e-4bd6-b1b6-90352a5c4e91",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F64.webp?alt=media&token=e7cfcb1e-86a3-4179-aea1-11eafdf98611",
       bracket: 6562,
       id:64
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F65.png?alt=media&token=3af914b7-f03b-4e09-bcaa-99a206db63be",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F65.webp?alt=media&token=33e8d4ed-b5a0-4a4b-9f4a-a0c928eb15ad",
       bracket: 6627,
       id:65
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F66.png?alt=media&token=a5bb6fb6-781b-490d-8a57-3c9366eb60f4",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F66.webp?alt=media&token=50d6abb1-2afb-4b70-a1d1-65ce0f8cefd0",
       bracket: 6692,
       id:66
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F67.png?alt=media&token=bdc4434c-53de-48f0-ba1c-b04b40725e4b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F67.webp?alt=media&token=ebefd92f-06dc-4d1e-adc6-0f62ca7b769c",
       bracket: 6757,
       id:67
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F68.png?alt=media&token=0c623f39-3a40-4ba8-ad0c-77347ad22455",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F68.webp?alt=media&token=f6690955-f412-4776-a350-c7ca999515e6",
       bracket: 6822,
       id:68
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F69.png?alt=media&token=3dff8b6f-f87e-4326-a77f-5f3373fa8a7e",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F69.webp?alt=media&token=6a8bdcf6-a636-4362-ae3a-eca938d78e3e",
       bracket: 6887,
       id:69
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F70.png?alt=media&token=5d426f0d-e1e4-4322-a522-49d1ae811107",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F70.webp?alt=media&token=d2b24e9a-a932-448f-9193-2d434e29b523",
       bracket: 6952,
       id:70
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F71.png?alt=media&token=e72ab352-cd78-4006-930f-17c558c820c7",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F71.webp?alt=media&token=0ec90c29-f975-400b-a005-64ae3d04afbc",
       bracket: 7017,
       id:71
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F72.png?alt=media&token=11d20589-79ae-43e9-af77-2fc49941f857",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F72.webp?alt=media&token=94a00012-8cb0-4fce-85ce-e8c11a3479d2",
       bracket: 7082,
       id:72
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F73.png?alt=media&token=0247f68a-739a-4446-b9ad-5b2678de55d7",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F73.webp?alt=media&token=6bfcb4c9-ed2d-4249-a861-9859decb05ff",
       bracket: 7147,
       id:73
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F74.png?alt=media&token=98f87ab6-28c3-4766-8865-46123ba5607a",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F74.webp?alt=media&token=631444a7-ccde-4295-adc5-988290b02b80",
       bracket: 7212,
       id:74
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F75.png?alt=media&token=4ee53524-756b-4c4e-8257-5fda1ed1da5b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F75.webp?alt=media&token=88e02944-5680-4c57-b22f-ac6cc766e178",
       bracket: 7277,
       id:75
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F76.png?alt=media&token=5e796940-b60c-4a4e-9019-5ffdc67a5bb0",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F76.webp?alt=media&token=bcfb2ff1-2698-4039-b9d5-11b8b3c82388",
       bracket: 7342,
       id:76
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F77.png?alt=media&token=17124e09-501f-4e91-93f3-9b7e4009d67a",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F77.webp?alt=media&token=0982bd64-c0dd-4073-9631-fa029e6c2752",
       bracket: 7407,
       id:77
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F78.png?alt=media&token=31621b9d-53cb-4051-bde8-fd077d668a58",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F78.webp?alt=media&token=8e5127ca-393d-4f18-a23c-b00ab960b54f",
       bracket: 7472,
       id:78
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F79.png?alt=media&token=812d825d-be54-4838-bcf0-dfc5edfb35fb",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F79.webp?alt=media&token=f79f73cc-c55a-44fa-b746-7815a2246165",
       bracket: 7537,
       id:79
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F80.png?alt=media&token=319f906f-0d8d-40c7-9cf7-381ba386308a",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F80.webp?alt=media&token=8dfa678d-0837-4ec2-a866-4ffa91f612e6",
       bracket: 7602,
       id:80
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F81.png?alt=media&token=d18ee3b4-0cb2-450a-8635-340ab00df00e",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F81.webp?alt=media&token=9eaa4022-af62-4729-b3bd-f778c16778ff",
       bracket: 7643,
       id:81
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F82.png?alt=media&token=f4945ea2-33dc-43b5-87d8-24277bff1785",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F82.webp?alt=media&token=c269140d-afa2-48af-b74a-790fb7cdbcc9",
       bracket: 7684,
       id:82
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F83.png?alt=media&token=07d4070d-0757-452b-bb93-78960a57f76e",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F83.webp?alt=media&token=ebacd761-fefe-478a-8aa7-fa4731b7a048",
       bracket: 7725,
       id:83
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F84.png?alt=media&token=864d18bc-f3fc-456b-abec-d1a97af87780",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F84.webp?alt=media&token=510824c7-decb-4064-955e-880307981535",
       bracket: 7766,
       id:84
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F85.png?alt=media&token=de061213-1738-401c-8325-8978ada65d29",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F85.webp?alt=media&token=df55badb-5d73-44a0-baee-b57e00e3fd56",
       bracket: 7807,
       id:85
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F86.png?alt=media&token=06435c2b-de02-415f-b9fd-a631defa34d0",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F86.webp?alt=media&token=29d5438a-4402-4a05-97ba-bf588490574f",
       bracket: 7848,
       id:86
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F87.png?alt=media&token=b7b1edcc-44ec-45d0-9921-cd5c9e021951",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F87.webp?alt=media&token=ce9b5263-702b-4b09-a167-6c0d2228f59f",
       bracket: 7889,
       id:87
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F88.png?alt=media&token=9ef27254-6f4e-4c7f-b789-ad4195aee944",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F88.webp?alt=media&token=422e9f83-361f-421e-8fe5-cf4dc0989fd8",
       bracket: 7930,
       id:88
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F89.png?alt=media&token=883e930d-00c8-4235-9b97-8c3b9fe449c9",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F89.webp?alt=media&token=27f87ab7-d736-4129-976b-d44dcaa6c411",
       bracket: 7971,
       id:89
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F90.png?alt=media&token=e09c905e-ba25-4089-8dc0-911918002a5b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F90.webp?alt=media&token=ffbda6fd-9741-4bae-b186-e400c6ee5fe7",
       bracket: 8012,
       id:90
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F91.png?alt=media&token=ed015280-6834-496a-a66b-1da068562b59",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F91.webp?alt=media&token=ad1c32c1-3f9b-4f8a-997a-b6d9cea8268a",
       bracket: 8053,
       id:91
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F92.png?alt=media&token=9fce5f93-dc3f-4ea4-9130-39a42fd8984d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F92.webp?alt=media&token=c5830a96-cabb-4735-ab79-fb981d2a361d",
       bracket: 8094,
       id:92
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F93.png?alt=media&token=f99fb260-8734-4715-93cd-2d8d9ce7b7d4",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F93.webp?alt=media&token=a90c743c-8a15-44cb-912f-242faed3617b",
       bracket: 8135,
       id:93
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F94.png?alt=media&token=f541e029-2b05-42c4-af47-0bdcf0f6fa92",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F94.webp?alt=media&token=02dde392-b46e-44e8-bdd8-0d82f11d9ed1",
       bracket: 8176,
       id:94
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F95.png?alt=media&token=88365864-22a7-41e9-b67f-467e2313701b",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F95.webp?alt=media&token=5d13647c-2a4c-43c2-99d9-ce1912b0a786",
       bracket: 8217,
       id:95
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F96.png?alt=media&token=8b8e9445-5999-4282-a7a7-5f9a4b48b373",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F96.webp?alt=media&token=3f6fe4b2-26ba-4b31-aead-19d0d7172e40",
       bracket: 8258,
       id:96
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F97.png?alt=media&token=5e971522-969d-4d45-a8c9-dad0b2d57b63",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F97.webp?alt=media&token=da6c03e8-52d8-4c68-bb37-bc901d2a8ef7",
       bracket: 8299,
       id:97
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F98.png?alt=media&token=ce55fdc9-2f7c-4835-bbe6-5d3144c22216",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F98.webp?alt=media&token=52cac8c7-a765-499d-be1b-8580e371034c",
       bracket: 8340,
       id:98
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F99.png?alt=media&token=bc31a7e1-feec-4b26-9efb-dcb11f2de1f6",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F99.webp?alt=media&token=0d693903-8a66-4c6c-8bc7-b8f0fe6bed59",
       bracket: 8381,
       id:99
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F100.png?alt=media&token=a7d9c5e2-1199-4afb-bda3-c48c728257ea",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F100.webp?alt=media&token=8411d840-df95-40ec-99e6-865ab76554a0",
       bracket: 8422,
       id:100
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F101.png?alt=media&token=3a99bcb4-de43-4715-bcdc-391034437118",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F101.webp?alt=media&token=9b270089-5b3a-4e82-a3b1-b6d0a3640efb",
       bracket: 8450,
       id:101
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F102.png?alt=media&token=d3fba6a7-9050-4b2f-9c29-88f44a800fc5",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F102.webp?alt=media&token=147882f0-b3f7-45dc-8ddc-ce48e8a64c9f",
       bracket: 8478,
       id:102
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F103.png?alt=media&token=d2a2738c-0b6a-4c57-bf59-ade22259704d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F103.webp?alt=media&token=ef3f98de-eb72-4006-8c77-00049e72d64c",
       bracket: 8506,
       id:103
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F104.png?alt=media&token=36408cad-eedd-45e8-9e31-47679ddfb983",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F104.webp?alt=media&token=58603769-f61c-4955-b01d-fe54f62ceed2",
       bracket: 8534,
       id:104
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F105.png?alt=media&token=c759b3e0-47d2-4e2e-a28c-8bfdc1235924",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F105.webp?alt=media&token=0d9a8ebc-f801-462a-b746-0ad684f6c02d",
       bracket: 8562,
       id:105
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F106.png?alt=media&token=179320ae-2f9c-41ba-9b47-7ce597231d8f",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F106.webp?alt=media&token=3baf3aef-d738-49cf-b09e-ac3a3e2a3fb6",
       bracket: 8590,
       id:106
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F107.png?alt=media&token=29c25d3f-e9a8-4f6d-a33f-1ef09091c7e1",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F107.webp?alt=media&token=68c01bb2-8e9c-494b-bc40-7b470c432c56",
       bracket: 8618,
       id:107
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F108.png?alt=media&token=e3d7abea-296a-494c-b7a3-12cf5eca07f8",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F108.webp?alt=media&token=3db412ad-c9b2-472f-9cb4-2b31a93e1733",
       bracket: 8646,
       id:108
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F109.png?alt=media&token=e7f2557e-0d77-4081-b547-715c9dce869f",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F109.webp?alt=media&token=414d6789-11d4-4778-b1e2-522ce56322ce",
       bracket: 8674,
       id:109
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F110.png?alt=media&token=ce4a634c-94ef-4b3a-89c3-99f8e64e89b2",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F110.webp?alt=media&token=43aef29f-2302-4c4c-a52b-7e18e71f9660",
       bracket: 8702,
       id:110
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F111.png?alt=media&token=dabbda38-0a42-4833-9d1e-40f54205d1e6",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F111.webp?alt=media&token=29f5a98b-3462-410d-ad07-82462932feec",
       bracket: 8730,
       id:111
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F112.png?alt=media&token=3c7baab4-424c-493f-80b8-c6fd6a5af825",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F112.webp?alt=media&token=7b66a586-f905-4cf8-92a1-3e0a9adf7b5e",
       bracket: 8758,
       id:112
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F113.png?alt=media&token=bfd09b8d-5978-4c2f-9b61-395b95856075",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F113.webp?alt=media&token=ae4649e4-6276-438b-8487-15f8e3ec038d",
       bracket: 8786,
       id:113
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F114.png?alt=media&token=02f7a9a2-e964-49cb-a20d-60cb95b51252",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F114.webp?alt=media&token=a4a56bc9-245d-45f3-88c5-b3fd1242c22a",
       bracket: 8814,
       id:114
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F115.png?alt=media&token=9cff17bb-a9f9-4872-87f9-6d13d77cac61",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F115.webp?alt=media&token=b7b75ebc-cc39-4afa-a855-d97b0fe9491e",
       bracket: 8842,
       id:115
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F116.png?alt=media&token=b829749b-97b5-4328-8cde-623977325b9d",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F116.webp?alt=media&token=0310ae25-db06-4b37-9e94-3dea51c867be",
       bracket: 8870,
       id:116
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F117.png?alt=media&token=b9196ea5-243c-4aaa-9d37-7c2b43bdcabf",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F117.webp?alt=media&token=7384bb1b-5308-45b9-9cb5-28aaa17a7279",
       bracket: 8898,
       id:117
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F118.png?alt=media&token=5731d99d-359e-452f-b74c-242b0689a5d7",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F118.webp?alt=media&token=f50973c5-5612-42d6-a5bf-c8b63b5ece50",
       bracket: 8926,
       id:118
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F119.png?alt=media&token=5168875e-1b61-47a9-a87f-78c6f23c4343",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F119.webp?alt=media&token=84a563f2-0987-4a09-b0c6-1e5f3bc69299",
       bracket: 8954,
       id:119
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F120.png?alt=media&token=7a6fc95e-37e7-4cb3-8d63-e34286ba9e83",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F120.webp?alt=media&token=af172d67-2275-4f62-9acd-828e5391748f",
       bracket: 8982,
       id:120
     },
     {
       img:
-        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F121.png?alt=media&token=0d3dab39-cccd-4c26-9d38-d4fe4607d168",
+        "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2Fcharacter-faces%2F121.webp?alt=media&token=736687a2-83b1-49eb-8d93-e6c2b3426bca",
       bracket: 9010,
       id:121
     },

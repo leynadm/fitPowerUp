@@ -8,9 +8,12 @@ import { useContext } from "react";
 import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import pathPoints from "../../utils/pathPoints";
-import LockIcon from '@mui/icons-material/Lock';
+import LockIcon from "@mui/icons-material/Lock";
+import { useNavigate } from "react-router-dom";
 function ProgressPath() {
   const { currentUserData } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const Row = ({
     index,
@@ -30,26 +33,26 @@ function ProgressPath() {
       paddingTop: "16px",
     };
     const pathPointsEntry = pathPoints[index];
-    const originalPathPointsEntry =
-      index > 0 ? pathPoints[index - 1] : pathPoints[0];
 
-    const subsequentPathPointsEntry = pathPoints[index + 1];
+    const subsequentPathPointsEntry =
+      index < 120 ? pathPoints[index + 1] : pathPoints[120];
 
     const MIN = pathPointsEntry;
     const MAX = subsequentPathPointsEntry;
     const normalise = (value: number) =>
       ((value - MIN.bracket) * 100) / (MAX.bracket - MIN.bracket);
 
-    
-      
-    const isUnlocked = 
-      currentUserData.powerLevel > pathPointsEntry.bracket
-    
+    const isUnlocked = currentUserData.powerLevel >= pathPointsEntry.bracket;
 
     const isWithinRange =
       currentUserData.powerLevel >= MIN.bracket &&
       currentUserData.powerLevel <= MAX.bracket;
-    console.log(isWithinRange);
+
+    function handleNavigateScreen(){
+
+      navigate(`hero/${pathPointsEntry.id}`)
+
+    }    
 
     return (
       <Box style={rowStyle} boxShadow={2} borderRadius="4px">
@@ -63,52 +66,55 @@ function ProgressPath() {
             borderRadius: "4px",
           }}
         >
-
-          {isUnlocked?(
+          {isUnlocked ? (
             <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap={1}
-          >
-            {currentUserData.powerLevel > pathPointsEntry.bracket && (
-              <CheckCircleIcon fontSize="large" sx={{ color: "#FFA500" }} />
-            )}
-
-
-            <Typography variant="button">
-              YOU NEED:{" "}
-              +{subsequentPathPointsEntry.bracket - currentUserData.powerLevel} PL
-            </Typography>
-
-
-              {isWithinRange&&
-              
-              <LinearProgress
-                sx={{ width: "100%" }}
-                variant="determinate"
-                value={normalise(currentUserData.powerLevel)}
-              />
-            }
-
-          </Box>
-          ):(
-            <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            paddingLeft="32px"
-            paddingRight="32px"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap={1}
             >
+              {currentUserData.powerLevel >
+              subsequentPathPointsEntry.bracket ? (
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  minWidth="128px"
+                >
+                  <CheckCircleIcon fontSize="large" sx={{ color: "#FFA500" }} />
+                  <Typography>Unlocked</Typography>
+                </Box>
+              ) : (
+                <Typography variant="button">
+                  YOU NEED: +
+                  {subsequentPathPointsEntry.bracket -
+                    currentUserData.powerLevel}{" "}
+                  PL
+                </Typography>
+              )}
 
-            <LockIcon fontSize="large"/>
-            <Typography variant="button">LOCKED</Typography>
+              {isWithinRange && (
+                <LinearProgress
+                  sx={{ width: "100%" }}
+                  variant="determinate"
+                  value={normalise(currentUserData.powerLevel)}
+                />
+              )}
+            </Box>
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              minWidth="128px"
+            >
+              <LockIcon fontSize="large" />
+              <Typography variant="button">LOCKED</Typography>
             </Box>
           )}
-
-          
 
           <button
             style={{
@@ -125,12 +131,14 @@ function ProgressPath() {
 
               boxShadow: "0 0 0 1px #666",
             }}
+            onClick={isUnlocked?handleNavigateScreen:undefined}
           >
             <img
               src={pathPointsEntry.img}
               alt=""
               width="100%"
               height="100%"
+              loading="lazy"
               style={{
                 height: "128px", // Adjusted height to match the button's height
                 width: "128px", // Adjusted width to match the button's width
@@ -162,9 +170,11 @@ function ProgressPath() {
   };
 
   return (
-    <>
-      {/* <Typography align="center" variant="subtitle2" boxShadow={1} borderRadius="4px">Follow your progress path with the Dragon Ball Z Heroes</Typography>
-       */}
+    <Box paddingLeft="8px" paddingRight="8px">
+      {/* 
+       <Typography align="center" variant="subtitle1" borderRadius="4px">Follow your progress path with the Dragon Ball Z Heroes</Typography>
+        */}
+
       <FixedSizeList
         height={window.innerHeight - 150}
         itemCount={pathPoints.length}
@@ -173,7 +183,7 @@ function ProgressPath() {
       >
         {Row}
       </FixedSizeList>
-    </>
+    </Box>
   );
 }
 

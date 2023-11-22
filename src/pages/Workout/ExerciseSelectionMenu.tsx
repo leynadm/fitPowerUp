@@ -5,7 +5,7 @@ import { IUserSelectedExercises } from "../../context/TrainingData";
 import ExerciseSelectionTile from "../../components/ui/ExerciseSelectionTile";
 import Container from "@mui/material/Container";
 import { useState, useMemo } from "react";
-import { AppBar, Divider, Toolbar } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -48,7 +48,7 @@ function ExerciseSelectionMenu() {
     <>
       <Container maxWidth="md">
         <AppBar
-          elevation={0}
+          elevation={2}
           position="fixed"
           style={{
             top: 0,

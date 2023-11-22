@@ -10,6 +10,7 @@ import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";
 import ProgressGraph from "./ProgressGraph";
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import ProgressHero from "./ProgressHero";
 function Progress() {
   const navigate = useNavigate();
 
@@ -125,9 +126,12 @@ function Progress() {
       </ButtonGroup>
 
       <Routes>
+        
         <Route path="" element={<ProgressLevel />} />
         <Route path="path" element={<ProgressPath />} />
+        <Route path="path/hero/:id" element={<ProgressHero/>}/>
         <Route path="graph" element={<ProgressGraph />} />
+        
       </Routes>
     </Container>
   );
