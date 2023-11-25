@@ -59,6 +59,18 @@ export interface IUserBodyTrackerDataEntry {
   rightCalf: number;
 }
 
+export interface IUserFeatsDataEntry{
+
+  feat: string;
+  name: string;
+  state: boolean;
+  date:string;
+  level: number;
+  type: string;
+  featValue:number;
+  description:string;
+}
+
 export const TrainingDataProvider = ({
   children,
 }: TrainingDataProviderProps) => {
@@ -77,6 +89,10 @@ export const TrainingDataProvider = ({
     IUserBodyTrackerDataEntry[]
   >([]);
 
+  const [userFeatsData, setUserFeatsData] = useState<
+  IUserFeatsDataEntry[]
+>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchUserData(
@@ -85,6 +101,7 @@ export const TrainingDataProvider = ({
         setUserTrainingData
       );
       await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+      await fetchUserFeatsData(currentUser,setUserFeatsData)
     };
 
     fetchData().catch(console.error);
@@ -101,6 +118,8 @@ export const TrainingDataProvider = ({
         setDateForWorkout,
         userBodyTrackerData,
         setUserBodyTrackerData,
+        userFeatsData,
+        setUserFeatsData
       }}
     >
       {children}
@@ -128,6 +147,30 @@ export async function fetchUserBodyTrackerData(
     }
   } catch (error) {}
 }
+
+
+
+export async function fetchUserFeatsData(
+  currentUser: any,
+  setUserFeatsData: Dispatch<SetStateAction<IUserFeatsDataEntry[]>>
+) {
+  try {
+    const usersDocRef = doc(db, "users", currentUser.uid);
+    const userCollectionRef = collection(usersDocRef, "userCollection");
+
+    const userFeatsDataDocRef = doc(userCollectionRef, "userFeats");
+
+    const userFeatsDataDocSnap = await getDoc(userFeatsDataDocRef);
+
+    if (userFeatsDataDocSnap.exists()) {
+      const queriedUserFeatsData =
+        userFeatsDataDocSnap.data() as IUserFeatsDataEntry;
+
+        setUserFeatsData([queriedUserFeatsData]);
+    }
+  } catch (error) {}
+}
+
 
 export async function fetchUserData(
   currentUser: any,

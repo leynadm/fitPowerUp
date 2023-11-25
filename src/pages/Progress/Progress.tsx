@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";
-import ProgressGraph from "./ProgressGraph";
+import ProgressFeats from "./ProgressFeats";
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import ProgressHero from "./ProgressHero";
 function Progress() {
@@ -22,8 +22,8 @@ function Progress() {
     navigate("path");
   };
 
-  const handleNavigateGraph = () => {
-    navigate("graph");
+  const handleNavigateFeats = () => {
+    navigate("feats");
   };
 
   return (
@@ -119,7 +119,7 @@ function Progress() {
             width:
               "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
           }}
-          onClick={handleNavigateGraph}
+          onClick={handleNavigateFeats}
         >
           Feats
         </Button>
@@ -130,7 +130,7 @@ function Progress() {
         <Route path="" element={<ProgressLevel />} />
         <Route path="path" element={<ProgressPath />} />
         <Route path="path/hero/:id" element={<ProgressHero/>}/>
-        <Route path="graph" element={<ProgressGraph />} />
+        <Route path="feats" element={<ProgressFeats />} />
         
       </Routes>
     </Container>

@@ -1,19 +1,21 @@
 import { useParams } from "react-router-dom";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation } from "react-router-dom";
+
 function ProgressHero() {
   const { id } = useParams();
   const location = useLocation();
   const heroQuote = location.state;
-
+  
   const [imageUrl, setImageUrl] = useState("");
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  
   useEffect(() => {
     getHeroImage();
   }, []);

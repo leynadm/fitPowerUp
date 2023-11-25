@@ -4,7 +4,6 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
-  useContext,
 } from "react";
 import CompletedWorkoutsTabs from "./CompletedWorkoutsTabs";
 import Box from "@mui/material/Box";
@@ -19,7 +18,6 @@ import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
 import SendFeedback from "../Settings/SendFeedback";
 import CompletedWorkouts from "./CompletedWorkouts";
-import { AuthContext } from "../../context/Auth";
 import WorkoutCongratulations from "./WorkoutCongratulations";
 import MuscleGroupsSelectionMenu from "./MuscleGroupsSelectionMenu";
 import ExerciseSelectionMenu from "./ExerciseSelectionMenu";

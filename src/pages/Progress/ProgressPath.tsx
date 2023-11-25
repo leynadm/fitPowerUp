@@ -173,10 +173,6 @@ function ProgressPath() {
 
   return (
     <Box paddingLeft="8px" paddingRight="8px">
-      {/* 
-       <Typography align="center" variant="subtitle1" borderRadius="4px">Follow your progress path with the Dragon Ball Z Heroes</Typography>
-        */}
-
       <FixedSizeList
         height={window.innerHeight - 150}
         itemCount={pathPoints.length}

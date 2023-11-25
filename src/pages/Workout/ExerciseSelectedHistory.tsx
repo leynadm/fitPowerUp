@@ -62,159 +62,157 @@ function ExerciseSelectedHistory() {
   }) => {
     const group = exerciseHistoryArr[index];
 
+
     return (
-      
-        <Box key={index} style={style} className="exercise-complete">
-          <Typography
-            variant="h6"
+      <Box key={index} style={style} className="exercise-complete">
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: "left",
+            fontSize: "medium",
+            paddingLeft: "1rem",
+            backgroundColor: "orange",
+            borderRadius: "5px",
+          }}
+        >
+          {group.date.toLocaleString()}
+        </Typography>
+
+        <Divider />
+
+        {group.exercises.map((exercise, exerciseIndex) => (
+          <Box
+            key={exerciseIndex}
             sx={{
-              textAlign: "left",
-              fontSize: "medium",
-              paddingLeft: "1rem",
-              backgroundColor: "orange",
-              borderRadius: "5px",
+              display: "grid",
+              gridTemplateColumns: "1fr 2fr",
+              alignItems: "center",
             }}
           >
-            {group.date.toLocaleString()}
-          </Typography>
-
-          <Divider />
-
-          {group.exercises.map((exercise, exerciseIndex) => (
             <Box
-              key={exerciseIndex}
               sx={{
                 display: "grid",
-                gridTemplateColumns: "1fr 2fr",
-                alignItems: "center",
+                gridTemplateColumns: "1fr 1fr",
               }}
             >
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                }}
-              >
-                {exercise.comment ? ( // Check if 'comment' property exists
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={() =>
-                      handleViewCommentModalVisibility(exercise.comment)
-                    }
-                  >
-                    <CommentIcon sx={{ zIndex: 0 }} />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    disabled // Placeholder element
-                  >
-                    <CommentIcon style={{ opacity: 0 }} />
-                  </IconButton>
-                )}
+              {exercise.comment ? ( // Check if 'comment' property exists
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={() =>
+                    handleViewCommentModalVisibility(exercise.comment)
+                  }
+                >
+                  <CommentIcon sx={{ zIndex: 0 }} />
+                </IconButton>
+              ) : (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <CommentIcon style={{ opacity: 0 }} />
+                </IconButton>
+              )}
 
-                {exercise.is_pr ? (
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    disabled // Placeholder element
-                  >
-                    <EmojiEventsIcon sx={{ zIndex: 0 }} />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    disabled // Placeholder element
-                  >
-                    <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
-                  </IconButton>
-                )}
-              </Box>
-
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  justifyItems: "center",
-                  borderLeft: exercise.dropset
-                    ? "5px solid red"
-                    : "5px solid transparent",
-                }}
-              >
-                {exercise.weight !== 0 && (
-                  <Typography>
-                    {`${exercise.weight.toFixed(2)} ${
-                      currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
-                    }`}
-                  </Typography>
-                )}
-                {exercise.reps !== 0 && (
-                  <Typography>{exercise.reps} reps</Typography>
-                )}
-
-                {exercise.distance !== 0 && (
-                  <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                )}
-
-                {exercise.time !== 0 && (
-                  <Typography>
-                    {exercise.time !== 0 ? formatTime(exercise.time) : ""}
-                  </Typography>
-                )}
-              </Box>
+              {exercise.is_pr ? (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                </IconButton>
+              ) : (
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  disabled // Placeholder element
+                >
+                  <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                </IconButton>
+              )}
             </Box>
-          ))}
 
-          <Box
-            display="flex"
-            justifyContent="space-around"
-            flexDirection="row-reverse"
-          >
-            <Typography variant="subtitle2">
-              {group.stats.totalReps !== 0 && `${group.stats.totalReps} reps`}
-            </Typography>
-
-            {group.stats.totalWeight !== 0 && (
-              <Typography variant="subtitle2">
-                {group.stats.totalWeight !== 0 &&
-                  `${group.stats.totalWeight} ${
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                justifyItems: "center",
+                borderLeft: exercise.dropset
+                  ? "5px solid red"
+                  : "5px solid transparent",
+              }}
+            >
+              {exercise.weight !== 0 && (
+                <Typography>
+                  {`${exercise.weight.toFixed(2)} ${
                     currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
                   }`}
-              </Typography>
-            )}
-            {group.stats.totalDistance !== 0 && (
-              <Typography variant="subtitle2">
-                {group.stats.totalDistance !== 0 &&
-                  `Distance: ${group.stats.totalDistance}`}
-              </Typography>
-            )}
-            {group.stats.totalTime !== 0 && (
-              <Typography variant="subtitle2">
-                {group.stats.totalTime !== 0 &&
-                  `Time: ${formatTime(group.stats.totalTime)}`}
-              </Typography>
-            )}
-            <Typography variant="subtitle2">
-              {group.stats.totalSets !== 0 && group.stats.totalSets} sets
-            </Typography>
-            
+                </Typography>
+              )}
+              {exercise.reps !== 0 && (
+                <Typography>{exercise.reps} reps</Typography>
+              )}
+
+              {exercise.distance !== 0 && (
+                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+              )}
+
+              {exercise.time !== 0 && (
+                <Typography>
+                  {exercise.time !== 0 ? formatTime(exercise.time) : ""}
+                </Typography>
+              )}
+            </Box>
           </Box>
+        ))}
+
+        <Box
+          display="flex"
+          justifyContent="space-around"
+          flexDirection="row-reverse"
+        >
+          <Typography variant="subtitle2">
+            {group.stats.totalReps !== 0 && `${group.stats.totalReps} reps`}
+          </Typography>
+
+          {group.stats.totalWeight !== 0 && (
+            <Typography variant="subtitle2">
+              {group.stats.totalWeight !== 0 &&
+                `${group.stats.totalWeight} ${
+                  currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                }`}
+            </Typography>
+          )}
+          {group.stats.totalDistance !== 0 && (
+            <Typography variant="subtitle2">
+              {group.stats.totalDistance !== 0 &&
+                `Distance: ${group.stats.totalDistance}`}
+            </Typography>
+          )}
+          {group.stats.totalTime !== 0 && (
+            <Typography variant="subtitle2">
+              {group.stats.totalTime !== 0 &&
+                `Time: ${formatTime(group.stats.totalTime)}`}
+            </Typography>
+          )}
+          <Typography variant="subtitle2">
+            {group.stats.totalSets !== 0 && group.stats.totalSets} sets
+          </Typography>
         </Box>
-      
+      </Box>
     );
   };
 
@@ -254,13 +252,10 @@ function ExerciseSelectedHistory() {
           height={window.innerHeight - 190}
           itemCount={exerciseHistoryArr.length}
           itemSize={(index) => {
-            // Calculate the dynamic height for each item based on its content
             const group = exerciseHistoryArr[index];
-            console.log({ group });
             const numExercises = group.exercises.length;
-            console.log({ numExercises });
-            const exerciseHeight = numExercises * 48; // Assuming each exercise takes 120px height
-            return exerciseHeight + 56; // Add some extra height for the group header
+            const exerciseHeight = numExercises * 48; 
+            return exerciseHeight + 56;
           }}
           width="100%"
         >

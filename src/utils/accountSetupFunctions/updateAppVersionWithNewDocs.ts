@@ -1,8 +1,9 @@
 import { doc, collection, writeBatch,getDoc } from "firebase/firestore";
+import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 import preselectedExercises from "../preselectedExercises";
-
+import { storage } from "../../config/firebase";
 async function updateAppVersionWithNewDocs(
   userID: string
 ) {
@@ -10,18 +11,26 @@ async function updateAppVersionWithNewDocs(
 
   try {
 
-    const usersDocRef = doc(db, "users", userID);
-    const userCollectionRef = collection(usersDocRef, "userCollection");
+    const userDocRef = doc(db, "users", userID);
+    const userCollectionRef = collection(userDocRef, "userCollection");
 
-    const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
+    const userDocDataSnap = await getDoc(userDocRef)
+  
+    const featsRef = ref(storage, 'assets/files/featsJSONString.json');
+    const url = await getDownloadURL(featsRef);
+    const response = await fetch(url);
+    const featsParsedJSON = await response.json();
 
-    const userTrainingDataDocSnap = await getDoc(userTrainingDataDocRef);
 
-    if (userTrainingDataDocSnap.exists()) {
-      return
+    if (userDocDataSnap.exists()) {
+      const userData = userDocDataSnap.data();
+
+      if (userData.appVersion === 2) {
+        return;
+      }
     }
 
-    batch.update(usersDocRef,{
+    batch.update(userDocRef,{
       appVersion:2.0
     })
 
@@ -51,19 +60,11 @@ async function updateAppVersionWithNewDocs(
     });
 
     // Create the body tracker document within the "user-training-data" subcollection
-    const userPowerLevelDocRef = doc(userCollectionRef, "userPowerLevel");
+    const userFeatsDocRef = doc(userCollectionRef, "userFeats");
 
-    batch.set(userPowerLevelDocRef, {
-      powerLevelData: [],
+    batch.set(userFeatsDocRef, {
+      userFeatsData: featsParsedJSON,
     });
-
-    // Create the body tracker document within the "user-training-data" subcollection
-    const userRecordsDocRef = doc(userCollectionRef, "userRecords");
-
-    batch.set(userRecordsDocRef, {
-      userRecordsData: [],
-    });
-
 
     // Commit the batch to create all the documents simultaneously
     await batch.commit();

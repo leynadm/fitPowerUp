@@ -216,6 +216,8 @@ function ProgressLevel() {
           marginBottom="0.25rem"
           gap={1}
         >
+          
+          {/* 
           <img
             src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2FPowerLevelIcon_256.png?alt=media&token=a7b39274-159b-41e8-b0db-7dcb59263e95"
             alt=""
@@ -223,7 +225,7 @@ function ProgressLevel() {
             width="3rem"
             height="3rem"
           ></img>
-            
+             */}
           <Typography variant="h3">{currentUserData.powerLevel}</Typography>
           
 
