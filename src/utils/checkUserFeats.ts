@@ -478,7 +478,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Deadlift",
-    featValue: 1,
+    featValue: 1.5,
   },
   {
     feat: "Deadlift 2x Your Bodyweight",
@@ -488,17 +488,17 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Deadlift",
-    featValue: 1,
+    featValue: 2,
   },
   {
-    feat: "Bench Press 0.75x Your Bodyweight",
+    feat: "Bench Press/ 0.75x Your Bodyweight",
     name: "A New Saga Begins",
     description: "Congratulations, you're ready to start your own Saga!",
     state: false,
     date: "",
     level: 2,
     type: "Exercises - Bench Press",
-    featValue: 1,
+    featValue: 0.75,
   },
   {
     feat: "Bench Press Your Bodyweight",
@@ -520,7 +520,7 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Bench Press",
-    featValue: 1,
+    featValue: 1.25,
   },
   {
     feat: "Squat 1x Your Bodyweight",
@@ -541,7 +541,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Squat",
-    featValue: 1,
+    featValue: 1.25,
   },
   {
     feat: "Squat 1.5x Your Bodyweight",
@@ -552,6 +552,39 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Squat",
+    featValue: 1.5,
+  },
+
+  {
+    feat: "Shoulder Press 0.5x Your Bodyweight",
+    name: "",
+    description:
+      "A Saiyan's power is determined by how big his shoulders are. And how spiky his hair is. Keep it up!",
+    state: false,
+    date: "",
+    level: 2,
+    type: "Exercises - Shoulder Press",
+    featValue: 0.5,
+  },
+  {
+    feat: "Shoulder Press 0.75x Your Bodyweight",
+    name: "Size: Namekian Dragon Balls",
+    description: "Wow, three quarters of your bodyweight! You're like Ginyu before the body switch - getting ready for a big transformation there!"!,
+    state: false,
+    date: "",
+    level: 5,
+    type: "Exercises - Shoulder Press",
+    featValue: 0.75,
+  },
+  {
+    feat: "Shoulder Press Your Bodyweight",
+    name: "No Shoulder Pads Needed",
+    description:
+      "You've done it, Super Saiyan! Even if you tried to get a big enough armor, you wouldn't find one to fit those giant shoulders.",
+    state: false,
+    date: "",
+    level: 7,
+    type: "Exercises - Shoulder Press",
     featValue: 1,
   },
 
@@ -575,7 +608,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Pull Up",
-    featValue: 1,
+    featValue: 8,
   },
   {
     feat: "Perform 12 Consecutive Pull Ups",
@@ -586,7 +619,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Pull Up",
-    featValue: 1,
+    featValue: 12,
   },
   {
     feat: "Perform 18 Consecutive Pull Ups",
@@ -597,7 +630,7 @@ export const feats = [
     date: "",
     level: 6,
     type: "Exercises - Pull Up",
-    featValue: 1,
+    featValue: 18,
   },
   {
     feat: "Perform 24 Consecutive Pull Ups",
@@ -608,7 +641,7 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Pull Up",
-    featValue: 1,
+    featValue: 24,
   },
   {
     feat: "Perform 1 Push Up",
@@ -629,7 +662,7 @@ export const feats = [
     date: "",
     level: 2,
     type: "Exercises - Push Up",
-    featValue: 1,
+    featValue: 10,
   },
   {
     feat: "Perform 20 Consecutive Push Ups",
@@ -640,7 +673,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Push Up",
-    featValue: 1,
+    featValue: 20,
   },
   {
     feat: "Perform 30 Consecutive Push Ups",
@@ -650,7 +683,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Push Up",
-    featValue: 1,
+    featValue: 30,
   },
   {
     feat: "Perform 40 Consecutive Push Ups",
@@ -660,7 +693,7 @@ export const feats = [
     date: "",
     level: 6,
     type: "Exercises - Push Up",
-    featValue: 1,
+    featValue: 40,
   },
   {
     feat: "Perform 50 Consecutive Push Ups",
@@ -671,7 +704,7 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Push Up",
-    featValue: 1,
+    featValue: 50,
   },
   {
     feat: "Hold A Plank For 1 Minute",
@@ -681,7 +714,7 @@ export const feats = [
     date: "",
     level: 1,
     type: "Exercises - Plank",
-    featValue: 1,
+    featValue: 60,
   },
   {
     feat: "Hold A Plank For 2 Minutes",
@@ -692,7 +725,7 @@ export const feats = [
     date: "",
     level: 2,
     type: "Exercises - Plank",
-    featValue: 1,
+    featValue: 120,
   },
 
   {
@@ -703,7 +736,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Plank",
-    featValue: 1,
+    featValue: 300,
   },
   {
     feat: "Hold A Plank For 10 Minutes",
@@ -714,7 +747,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Plank",
-    featValue: 1,
+    featValue: 600,
   },
   {
     feat: "Perform 10 Different Exercises",
@@ -771,7 +804,7 @@ export const feats = [
     date: "",
     level: 4,
     type: "Exercises - Sit-Ups/Crunches",
-    featValue: 1,
+    featValue: 50,
   },
   {
     feat: "Perform 100 Consecutive Sit-ups/Crunches",
@@ -781,7 +814,7 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Sit-Ups/Crunches",
-    featValue: 1,
+    featValue: 100,
   },
   {
     feat: "Perform 25 Consecutive Burpees",
@@ -792,7 +825,7 @@ export const feats = [
     date: "",
     level: 1,
     type: "Exercises - Burpees",
-    featValue: 1,
+    featValue: 25,
   },
   {
     feat: "Perform 50 Consecutive Burpees",
@@ -802,7 +835,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Burpees",
-    featValue: 1,
+    featValue: 50,
   },
   {
     feat: "Perform 75 Consecutive Burpees",
@@ -813,7 +846,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Burpees",
-    featValue: 1,
+    featValue: 75,
   },
   {
     feat: "Perform 100 Consecutive Burpees",
@@ -824,7 +857,7 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Burpees",
-    featValue: 1,
+    featValue: 100,
   },
 
   {
@@ -836,7 +869,7 @@ export const feats = [
     date: "",
     level: 1,
     type: "Exercises - Hanging Leg Raises",
-    featValue: 1,
+    featValue: 10,
   },
   {
     feat: "Perform 25 Consecutive Hanging Leg Raises",
@@ -847,7 +880,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Hanging Leg Raises",
-    featValue: 1,
+    featValue: 25,
   },
   {
     feat: "Perform 50 Consecutive Hanging Leg Raises",
@@ -858,7 +891,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Hanging Leg Raises",
-    featValue: 1,
+    featValue: 50,
   },
   {
     feat: "Perform 1 Chin Up",
@@ -880,7 +913,7 @@ export const feats = [
     date: "",
     level: 3,
     type: "Exercises - Chin Up",
-    featValue: 1,
+    featValue: 6,
   },
   {
     feat: "Perform 14 Consecutive Chin Ups",
@@ -891,7 +924,7 @@ export const feats = [
     date: "",
     level: 5,
     type: "Exercises - Chin Up",
-    featValue: 1,
+    featValue: 14,
   },
   {
     feat: "Perform 24 Consecutive Chin Ups",
@@ -902,6 +935,6 @@ export const feats = [
     date: "",
     level: 7,
     type: "Exercises - Chin Up",
-    featValue: 1,
+    featValue: 24,
   },
 ];

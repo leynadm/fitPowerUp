@@ -63,7 +63,8 @@ async function saveBodyTrackerEntry(
         filteredData.push(bodyTrackerData);
 
         await setDoc(userBodyTrackerDocRef, {
-          bodyTrackerData: filteredData
+          bodyTrackerData: filteredData,
+          weight:bodyTrackerData.weight
         });
         toast.success("Your data was added!");
       }

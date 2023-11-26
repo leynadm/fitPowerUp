@@ -1,10 +1,12 @@
 import { IWorkoutData } from "../../firebaseDataFunctions/completeWorkout";
 import Exercise from "../../interfaces/Exercise";
-
+ 
 function getFlattenedExerciseData(userTrainingData:IWorkoutData[],exerciseName:string,timeframe:string) {
-    if (!exerciseName) {
-      return;
+ 
+     if (!exerciseName) {
+      return [];
     }
+    
     const today = new Date();
     console.log('logging userTrainingData:')
     console.log(userTrainingData)

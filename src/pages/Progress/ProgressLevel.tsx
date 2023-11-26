@@ -23,13 +23,17 @@ import Button from "@mui/material/Button";
 import getFlattenedExerciseData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
 import Exercise from "../../utils/interfaces/Exercise";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
+import toast from "react-hot-toast";
 
 function ProgressLevel() {
-  const { userTrainingData, userSelectedExercises } =
+  const { userTrainingData, userSelectedExercises,userBodyTrackerData } =
     useContext(TrainingDataContext);
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
 
+    console.log(userBodyTrackerData)
+    console.log('logging the weight:')
+    console.log(userBodyTrackerData.weight)
   const findDeadlift = findExerciseByName("Deadlift");
   const findBenchPress = findExerciseByName("Bench Press");
   const findSquat = findExerciseByName("Barbell Squat");
@@ -104,7 +108,7 @@ function ProgressLevel() {
   };
 
   async function handleCalculatePowerLevel() {
-    const userWeight = currentUserData.weight;
+    const userWeight = userBodyTrackerData[0].weight;
     const totalLiftedWeight = calculatePowerLevel();
     const isFemale = () => {
       return currentUserData.sex === "female";
@@ -115,7 +119,6 @@ function ProgressLevel() {
       totalLiftedWeight,
       isFemale()
     );
-
 
     const experiencePoints = userTrainingData.length * 10;
 
@@ -132,6 +135,8 @@ function ProgressLevel() {
         experiencePoints
       );
       await fetchCurrentUserData(currentUser, setCurrentUserData);
+    } else {
+      toast.error(`Your power level would be lower - ${maximumPowerLevel}`);
     }
   }
 

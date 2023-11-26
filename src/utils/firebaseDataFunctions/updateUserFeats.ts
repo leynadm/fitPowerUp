@@ -1,21 +1,19 @@
 import { IWorkoutData } from "./completeWorkout";
-import { updateDoc, doc, collection, getDoc,setDoc } from "firebase/firestore";
+import { doc, collection, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { arrayUnion } from "firebase/firestore";
 import { IUserTrainingData } from "../../context/TrainingData";
 import getFlattenedExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
 import getFlattenedAllExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedAllExerciseData";
-import getFlattenedOverallExerciseData from "../completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
 import { IUserFeatsDataEntry } from "../../context/TrainingData";
 import Exercise from "../interfaces/Exercise";
 import getOverallStats from "../completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
 
 async function updateUserFeats(
   userId: string,
-  userFeatsData: IUserFeatsDataEntry[]
+  userFeatsData: IUserFeatsDataEntry[],
+  userBodyWeight: number
 ) {
-    
-    const userFeatsDataArr = userFeatsData;
+  const userFeatsDataArr = userFeatsData;
 
   const userDocRef = doc(db, "users", userId);
 
@@ -25,7 +23,6 @@ async function updateUserFeats(
 
   const userTraingDataDocSnap = await getDoc(userTrainingDataDocRef);
 
-  
   const userTrainingExercisesData =
     userTraingDataDocSnap.data() as IUserTrainingData;
 
@@ -35,39 +32,29 @@ async function updateUserFeats(
 
   const userTrainingDataResult = userTrainingExercisesData.workoutSessions;
 
-  const flattenedExerciseData = getFlattenedExerciseData(
-    userTrainingDataResult,
-    "Bench Press",
-    "all"
-  );
-
   const flattenedAllExerciseData = getFlattenedAllExerciseData(
     userTrainingDataResult,
     "all"
   );
 
-  const flattenedOverallExerciseData = getFlattenedOverallExerciseData(
-    userTrainingDataResult,
-    "all",
-    "",
-    ""
-  );
-
   for (let index = 0; index < userFeatsDataArr.length; index++) {
     const userFeatEntry = userFeatsDataArr[index];
 
-    console.log('logging entry:')
-    console.log(userFeatEntry)
     if (userFeatEntry.type === "Workouts Consistency") {
-        console.log('inside workout consistency')
-        userFeatEntry.state = calculateWorkoutConsistency(
+      userFeatEntry.state = calculateWorkoutConsistency(
+        flattenedAllExerciseData,
+        userFeatEntry
+      );
+    }
+
+    if (userFeatEntry.type === "Workout Streak") {
+      const streakObject = calculateWorkoutsStreak(
         flattenedAllExerciseData,
         userFeatEntry
       );
 
-    }
-
-    if (userFeatEntry.type === "Workout Streak") {
+      const featValueCheck = streakObject[userFeatEntry.featValue];
+      userFeatEntry.state = featValueCheck >= 1;
     }
 
     if (userFeatEntry.type === "Sets") {
@@ -92,21 +79,131 @@ async function updateUserFeats(
     }
 
     if (userFeatEntry.type === "Exercises - Deadlift") {
+      const flattenedExerciseDataDeadlift = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Deadlift",
+        "all"
+      );
+
+      userFeatEntry.state = calculateDeadLift(
+        flattenedExerciseDataDeadlift,
+        userFeatEntry,
+        userBodyWeight
+      );
     }
 
     if (userFeatEntry.type === "Exercises - Bench Press") {
+      const flattenedExerciseDataBenchPress = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Bench Press",
+        "all"
+      );
+
+      const benchPress = calculateBenchPress(
+        flattenedExerciseDataBenchPress,
+        userFeatEntry,
+        userBodyWeight
+      );
+
+      const flattenedExerciseDataBarbellFloorPress = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Barbell Floor Press",
+        "all"
+      );
+
+      const barbellFloorPress = calculateBenchPress(
+        flattenedExerciseDataBarbellFloorPress,
+        userFeatEntry,
+        userBodyWeight
+      );
+
+      if (benchPress || barbellFloorPress) {
+        userFeatEntry.state = true;
+      }
+    }
+
+    if (userFeatEntry.type === "Exercises - Shoulder Press") {
+      const flattenedExerciseDataMilitaryPress = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Military Press",
+        "all"
+      );
+
+      const militaryPress = calculateShoulderPress(
+        flattenedExerciseDataMilitaryPress,
+        userFeatEntry,
+        userBodyWeight
+      );
+
+      const flattenedExerciseDataBarbellSeatedShoulderPress =
+        getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Seated Shoulder Press",
+          "all"
+        );
+
+      const seatedShoulderPress = calculateShoulderPress(
+        flattenedExerciseDataBarbellSeatedShoulderPress,
+        userFeatEntry,
+        userBodyWeight
+      );
+
+      if (militaryPress || seatedShoulderPress) {
+        userFeatEntry.state = true;
+      }
     }
 
     if (userFeatEntry.type === "Exercises - Squat") {
+      const flattenedExerciseDataSquat = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Squat",
+        "all"
+      );
+
+      userFeatEntry.state = calculateSquat(
+        flattenedExerciseDataSquat,
+        userFeatEntry,
+        userBodyWeight
+      );
     }
 
     if (userFeatEntry.type === "Exercises - Pull Up") {
+      const flattenedExerciseDataPullUp = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Pull Ups",
+        "all"
+      );
+
+      userFeatEntry.state = calculatePullUps(
+        flattenedExerciseDataPullUp,
+        userFeatEntry
+      );
     }
 
-    if (userFeatEntry.type === "Push Up") {
+    if (userFeatEntry.type === "Exercises - Push Up") {
+      const flattenedExerciseDataPushUps = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Push Ups",
+        "all"
+      );
+
+      userFeatEntry.state = calculatePushUps(
+        flattenedExerciseDataPushUps,
+        userFeatEntry
+      );
     }
 
     if (userFeatEntry.type === "Exercises - Plank") {
+      const flattenedExerciseDataChinUp = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Plank",
+        "all"
+      );
+
+      userFeatEntry.state = calculatePlank(
+        flattenedExerciseDataChinUp,
+        userFeatEntry
+      );
     }
 
     if (userFeatEntry.type === "Exercises") {
@@ -117,32 +214,96 @@ async function updateUserFeats(
     }
 
     if (userFeatEntry.type === "Exercises - Sit-Ups/Crunches") {
+      const flattenedExerciseDataSitUps = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Sit Ups",
+        "all"
+      );
+
+      const flattenedExerciseDataCrunches = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Crunches",
+        "all"
+      );
+
+      const sitUps = calculateSitUpsOrCrunches(
+        flattenedExerciseDataSitUps,
+        userFeatEntry
+      );
+
+      const crunches = calculateSitUpsOrCrunches(
+        flattenedExerciseDataCrunches,
+        userFeatEntry
+      );
+
+      if (sitUps || crunches) {
+        userFeatEntry.state = true;
+      }
     }
 
     if (userFeatEntry.type === "Exercises - Burpees") {
+      const flattenedExerciseDataBurpees = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Burpees",
+        "all"
+      );
+
+      userFeatEntry.state = calculateBurpees(
+        flattenedExerciseDataBurpees,
+        userFeatEntry
+      );
     }
 
     if (userFeatEntry.type === "Exercises - Hanging Leg Raises") {
+      const flattenedExerciseDataHangingLegRaises = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Hanging Leg Raise",
+        "all"
+      );
+
+      userFeatEntry.state = calculateHangingLegRaise(
+        flattenedExerciseDataHangingLegRaises,
+        userFeatEntry
+      );
     }
 
     if (userFeatEntry.type === "Exercises - Chin Up") {
+      const flattenedExerciseDataChinUp = getFlattenedExerciseData(
+        userTrainingDataResult,
+        "Chin Ups",
+        "all"
+      );
+
+      userFeatEntry.state = calculateChinUps(
+        flattenedExerciseDataChinUp,
+        userFeatEntry
+      );
     }
   }
-  
+
   const userFeatsDocRef = doc(userDocRef, "userCollection/userFeats/");
-/* 
-  const myDoc = {
-    userFeatsData:userFeatsDataArr
-  }
-  await setDoc(doc(db, "data", "one"), myDoc);
-   */
-  console.log('logging my array')
-  console.log(userFeatsDataArr)
-  await setDoc(userFeatsDocRef, {userFeatsData:userFeatsDataArr});
- 
+
+  await setDoc(userFeatsDocRef, { userFeatsData: userFeatsDataArr });
 }
 
 export default updateUserFeats;
+
+function calculateWorkoutsStreak(
+  flattenedAllExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  const entriesPerWeek = calculateEntriesPerWeek(flattenedAllExerciseData);
+  const weekCounts = countWeeksWithCertainEntries(
+    entriesPerWeek,
+    3,
+    4,
+    5,
+    6,
+    7
+  );
+
+  return weekCounts;
+}
 
 function calculateWorkoutConsistency(
   flattenedAllExerciseData: Exercise[],
@@ -168,7 +329,7 @@ function calculateWorkoutConsistency(
   } else if (featEntry.featValue === 25 && uniqueDateCount >= 25) {
     return true;
   } else if (featEntry.featValue === 1 && uniqueDateCount >= 1) {
-    console.log('it should be here.')
+    console.log("it should be here.");
     return true;
   } else {
     return false;
@@ -317,19 +478,327 @@ function calculateVolume(
 }
 
 function calculateUniqueExercises(
-    flattenedAllExerciseData: Exercise[],
-    featEntry: IUserFeatsDataEntry
-  ) {
-    const uniqueExercises = new Set(flattenedAllExerciseData.map((obj) => obj.exercise));
-    const uniqueExercisesCount = uniqueExercises.size;
-  
-    if (featEntry.featValue === 50 && uniqueExercisesCount >= 50) {
-      return true;
-    } else if (featEntry.featValue === 25 && uniqueExercisesCount >= 25) {
-      return true;
-    } else if (featEntry.featValue === 10 && uniqueExercisesCount >= 10) {
-      return true;
-    }  else {
-      return false;
-    }
+  flattenedAllExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  const uniqueExercises = new Set(
+    flattenedAllExerciseData.map((obj) => obj.exercise)
+  );
+  const uniqueExercisesCount = uniqueExercises.size;
+
+  if (featEntry.featValue === 50 && uniqueExercisesCount >= 50) {
+    return true;
+  } else if (featEntry.featValue === 25 && uniqueExercisesCount >= 25) {
+    return true;
+  } else if (featEntry.featValue === 10 && uniqueExercisesCount >= 10) {
+    return true;
+  } else {
+    return false;
   }
+}
+
+function calculateChinUps(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 24 && maxReps >= 24) {
+    return true;
+  } else if (featEntry.featValue === 14 && maxReps >= 14) {
+    return true;
+  } else if (featEntry.featValue === 6 && maxReps >= 6) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxReps >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateDeadLift(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry,
+  userBodyWeight: number
+) {
+  let maxWeight = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
+    flattenedExerciseData[0].weight
+  );
+
+  if (featEntry.featValue === 2 && maxWeight >= userBodyWeight * 2) {
+    return true;
+  } else if (featEntry.featValue === 1.5 && maxWeight >= userBodyWeight * 1.5) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxWeight >= userBodyWeight) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateSquat(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry,
+  userBodyWeight: number
+) {
+  let maxWeight = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
+    flattenedExerciseData[0].weight
+  );
+
+  if (featEntry.featValue === 1.5 && maxWeight >= userBodyWeight * 1.5) {
+    return true;
+  } else if (
+    featEntry.featValue === 1.25 &&
+    maxWeight >= userBodyWeight * 1.25
+  ) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxWeight >= userBodyWeight) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateShoulderPress(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry,
+  userBodyWeight: number
+) {
+  let maxWeight = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
+    flattenedExerciseData[0].weight
+  );
+
+  if (featEntry.featValue === 1 && maxWeight >= userBodyWeight * 1) {
+    return true;
+  } else if (
+    featEntry.featValue === 0.75 &&
+    maxWeight >= userBodyWeight * 0.75
+  ) {
+    return true;
+  } else if (featEntry.featValue === 0.5 && maxWeight >= userBodyWeight * 0.5) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateBenchPress(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry,
+  userBodyWeight: number
+) {
+  let maxWeight = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
+    flattenedExerciseData[0].weight
+  );
+
+  if (featEntry.featValue === 1.25 && maxWeight >= userBodyWeight * 1.25) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxWeight >= userBodyWeight) {
+    return true;
+  } else if (
+    featEntry.featValue === 0.75 &&
+    maxWeight >= userBodyWeight * 0.75
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculatePullUps(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 24 && maxReps >= 24) {
+    return true;
+  } else if (featEntry.featValue === 18 && maxReps >= 18) {
+    return true;
+  } else if (featEntry.featValue === 12 && maxReps >= 12) {
+    return true;
+  } else if (featEntry.featValue === 8 && maxReps >= 8) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxReps >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculatePushUps(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 50 && maxReps >= 50) {
+    return true;
+  } else if (featEntry.featValue === 40 && maxReps >= 40) {
+    return true;
+  } else if (featEntry.featValue === 30 && maxReps >= 30) {
+    return true;
+  } else if (featEntry.featValue === 20 && maxReps >= 20) {
+    return true;
+  } else if (featEntry.featValue === 10 && maxReps >= 10) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxReps >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateHangingLegRaise(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 50 && maxReps >= 50) {
+    return true;
+  } else if (featEntry.featValue === 25 && maxReps >= 25) {
+    return true;
+  } else if (featEntry.featValue === 10 && maxReps >= 10) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateBurpees(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 100 && maxReps >= 100) {
+    return true;
+  } else if (featEntry.featValue === 75 && maxReps >= 75) {
+    return true;
+  } else if (featEntry.featValue === 50 && maxReps >= 50) {
+    return true;
+  } else if (featEntry.featValue === 25 && maxReps >= 25) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculatePlank(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxTime = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.time > max ? obj.time : max),
+    flattenedExerciseData[0].time
+  );
+
+  if (featEntry.featValue === 600 && maxTime >= 600) {
+    return true;
+  } else if (featEntry.featValue === 300 && maxTime >= 300) {
+    return true;
+  } else if (featEntry.featValue === 120 && maxTime >= 120) {
+    return true;
+  } else if (featEntry.featValue === 60 && maxTime >= 60) {
+    return true;
+  } else if (featEntry.featValue === 10 && maxTime >= 10) {
+    return true;
+  } else if (featEntry.featValue === 1 && maxTime >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function calculateSitUpsOrCrunches(
+  flattenedExerciseData: Exercise[],
+  featEntry: IUserFeatsDataEntry
+) {
+  let maxReps = flattenedExerciseData.reduce(
+    (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
+    flattenedExerciseData[0].reps
+  );
+
+  if (featEntry.featValue === 100 && maxReps >= 100) {
+    return true;
+  } else if (featEntry.featValue === 75 && maxReps >= 75) {
+    return true;
+  } else if (featEntry.featValue === 50 && maxReps >= 50) {
+    return true;
+  } else if (featEntry.featValue === 25 && maxReps >= 25) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function getWeekNumber(d: Date): number {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(
+    ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+  );
+  return weekNo;
+}
+
+function calculateEntriesPerWeek(
+  exercises: Exercise[]
+): Record<number, number[]> {
+  const entriesPerWeek: Record<number, number[]> = {};
+
+  exercises.forEach((exercise) => {
+    const date = new Date(exercise.date);
+    const year = date.getFullYear();
+    const week = getWeekNumber(date);
+
+    if (!entriesPerWeek[year]) {
+      entriesPerWeek[year] = [];
+    }
+
+    if (!entriesPerWeek[year][week]) {
+      entriesPerWeek[year][week] = 0;
+    }
+
+    entriesPerWeek[year][week]++;
+  });
+
+  return entriesPerWeek;
+}
+
+function countWeeksWithCertainEntries(
+  entriesPerWeek: Record<number, number[]>,
+  ...entryCounts: number[]
+): Record<number, number> {
+  const counts: Record<number, number> = {};
+
+  for (const year in entriesPerWeek) {
+    entryCounts.forEach((count) => {
+      counts[count] = entriesPerWeek[year].filter(
+        (weekEntries) => weekEntries >= count
+      ).length;
+    });
+  }
+
+  return counts;
+}

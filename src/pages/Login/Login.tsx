@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
 import toast from "react-hot-toast";
-
+import FacebookIcon from '@mui/icons-material/Facebook';
 import {
   getAuth,
   signInWithPopup,
@@ -237,13 +237,25 @@ export default function SignIn() {
             type="button"
             fullWidth
             variant="outlined"
+            sx={{ mb: 2, gap: 1 }}
+            onClick={SignInWithGoogle}
+          >
+            <FacebookIcon />
+            LOG IN WITH FACEBOOK
+          </Button>
+
+{/* 
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
             sx={{ mb: 2, color: "black", gap: 1 }}
             onClick={signInAsGuest}
           >
             <PersonIcon />
             LOG IN AS GUEST ONLY
           </Button>
-
+ */}
           <Grid container>
             <Grid item xs>
               <Link variant="body2" onClick={handleForgotPasswordClick}>

@@ -61,7 +61,6 @@ async function createUserDoc(userID: string, fullname: string | null) {
         firstPowerExercise: "No Exercise Selected Yet",
         secondPowerExercise: "No Exercise Selected Yet",
         thirdPowerExercise: "No Exercise Selected Yet",
-        weight: 75,
         country: { country: "", countryCode: "" },
         unitsSystem:"metric",
         defaultWeightIncrement:2.5
@@ -90,7 +89,8 @@ async function createUserDoc(userID: string, fullname: string | null) {
       const userBodyTrackerDocRef = doc(userCollectionRef, "userBodyTracker");
 
       batch.set(userBodyTrackerDocRef, {
-        bodyTrackerData:[]
+        bodyTrackerData:[],
+        weight:70
       });
 
       // Create the body tracker document within the "user-training-data" subcollection

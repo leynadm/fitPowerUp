@@ -101,6 +101,7 @@ function SocialSearchBar() {
           placeholder="Search for someone…"
           onChange={onChange}
           value={userToSearch}
+          sx={{p:0,m:0}}
           inputProps={{ "aria-label": "search" }}
         />
 

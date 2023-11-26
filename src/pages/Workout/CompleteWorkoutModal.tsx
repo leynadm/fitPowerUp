@@ -9,8 +9,6 @@ import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import IconButton from "@mui/material/IconButton";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
 import uuid from "react-uuid";
 import Exercise from "../../utils/interfaces/Exercise";
@@ -54,7 +52,7 @@ function CompleteWorkoutModal({
   const [workoutDate, setWorkoutDate] = useState<string>(
     formatDateForTextField(new Date())
   );
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const { currentUser, currentUserData,userBodyTrackerData } = useContext(AuthContext);
   const { setUserSelectedExercises, setUserTrainingData,userFeatsData } =
     useContext(TrainingDataContext);
   const navigate = useNavigate();
@@ -204,8 +202,8 @@ function CompleteWorkoutModal({
     try {
 
       await completeWorkout(currentUser.uid, workoutData);
-      console.log('complete workout, going throgh updateUserFeats')
-      await updateUserFeats(currentUser.uid,userFeatsData)
+
+      await updateUserFeats(currentUser.uid,userFeatsData,userBodyTrackerData[0].weight)
 
       console.log('going to delete entries  ')
       deleteAllEntries();
