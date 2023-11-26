@@ -1,6 +1,7 @@
 import { feats } from "../../utils/checkUserFeats";
 import { ref, uploadString } from "firebase/storage";
 import { storage } from "../../config/firebase";
+
 function pushToStorage() {
     const featsString = JSON.stringify(feats);
 

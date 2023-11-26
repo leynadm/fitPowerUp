@@ -30,6 +30,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
+import getOverallStats from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
 import {
   Radar,
   RadarChart,
@@ -124,19 +125,7 @@ function ExerciseBreakdownAnalysis() {
     );
   };
 
-  const overallStatsObj = getOverallStats();
-
-  function getOverallStats() {
-    const flattenedData = getFlattenedOverallExerciseData(
-      userTrainingData,
-      "all",
-      "",
-      ""
-    );
-
-    const groupedData = groupDataOverall(flattenedData);
-    return groupedData;
-  }
+  const overallStatsObj = getOverallStats(userTrainingData);
 
   // MUSCLE GROUPS ONLY - 4 FUNCTIONS
 

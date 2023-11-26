@@ -110,7 +110,7 @@ export const feats = [
     featValue: 750,
   },
   {
-    feat: "Complete 1000 Workouts",
+    feat: "Complete 1,000 Workouts",
     name: "Shenron's Ultimate Wish",
     description:
       "1000 workouts! Look in the mirror and congratulate yourself, you've made it - and your hair is probably blonde.",
@@ -198,10 +198,10 @@ export const feats = [
     featValue: 500,
   },
   {
-    feat: "Perform 1000 Sets",
+    feat: "Perform 1,000 Sets",
     name: "Could Maybe Do A Kamehameha!",
     description:
-      "1000 sets! You're creating energy waves stronger than a Kamehameha!",
+      "1,000 sets! You're creating energy waves stronger than a Kamehameha!",
     state: false,
     date: "",
     level: 3,
@@ -209,10 +209,10 @@ export const feats = [
     featValue: 1000,
   },
   {
-    feat: "Perform 2500 Sets",
+    feat: "Perform 2,500 Sets",
     name: "Could Maybe Give Vegeta A Shot!",
     description:
-      "2500 sets! You must be prepping to spar with Vegeta. Keep building strenght!",
+      "2,500 sets! You must be prepping to spar with Vegeta. Keep building strenght!",
     state: false,
     date: "",
     level: 4,
@@ -220,10 +220,10 @@ export const feats = [
     featValue: 2500,
   },
   {
-    feat: "Perform 5000 Sets",
+    feat: "Perform 5,000 Sets",
     name: "Yep, Could Ask Vegeta To Spar!",
     description:
-      "5000 sets! At this rate, Goku can just stay dead, the Earth has a new protector.",
+      "5,000 sets! At this rate, Goku can just stay dead, the Earth has a new protector.",
     state: false,
     date: "",
     level: 5,
@@ -231,9 +231,9 @@ export const feats = [
     featValue: 5000,
   },
   {
-    feat: "Perform 7500 Sets",
+    feat: "Perform 7,500 Sets",
     name: "Imperfect Cell",
-    description: "7500 sets! You could smack imperfect Cell and he'd call you",
+    description: "7,500 sets! You could smack imperfect Cell and he'd call you",
     state: false,
     date: "",
     level: 6,
@@ -241,10 +241,10 @@ export const feats = [
     featValue: 7500,
   },
   {
-    feat: "Perform 10000 Sets",
-    name: "Goku's New Favorite Partner",
+    feat: "Perform 10,000 Sets",
+    name: "Over 9000!",
     description:
-      "10000 sets! You've achieved a legendary milestone, Goku would be proud - and probably try to fight you.",
+      "10,000 sets - so basically over 9000! You've achieved a legendary milestone, Goku would be proud!",
     state: false,
     date: "",
     level: 7,
@@ -252,10 +252,10 @@ export const feats = [
     featValue: 10000,
   },
   {
-    feat: "Perform 1000 Reps",
+    feat: "Perform 1,000 Reps",
     name: "Gohan's Spirit",
     description:
-      "1000 reps! You're building strength like a Saiyan building its Ki. Keep it up!",
+      "1,000 reps! You're building strength like a Saiyan building its Ki. Keep it up!",
     state: false,
     date: "",
     level: 1,
@@ -263,10 +263,10 @@ export const feats = [
     featValue: 1000,
   },
   {
-    feat: "Perform 10000 Reps",
+    feat: "Perform 10,000 Reps",
     name: "New Buddy For Chiaotzu",
     description:
-      "10000 reps! Chiaotzu would hang out with you for sure, not so sure about Tien!",
+      "10,000 reps! Chiaotzu would hang out with you for sure, not so sure about Tien!",
     state: false,
     date: "",
     level: 2,
@@ -274,10 +274,10 @@ export const feats = [
     featValue: 10000,
   },
   {
-    feat: "Perform 25000 Reps",
+    feat: "Perform 25,000 Reps",
     name: "Maybe A Namekian?",
     description:
-      "25000 reps! What are you, a Namekian with stretchy limbs? (it's a compliment, yes)",
+      "25,000 reps! What are you, a Namekian with stretchy limbs? (it's a compliment, yes)",
     state: false,
     date: "",
     level: 3,
@@ -286,10 +286,10 @@ export const feats = [
   },
 
   {
-    feat: "Perform 50000 Reps",
+    feat: "Perform 50,000 Reps",
     name: "Kaio-Ken Concentration",
     description:
-      "50000 reps! You're not just breaking limits, you're rewriting them.",
+      "50,000 reps! You're not just breaking limits, you're rewriting them.",
     state: false,
     date: "",
     level: 4,
@@ -297,10 +297,10 @@ export const feats = [
     featValue: 50000,
   },
   {
-    feat: "Perform 75000 Reps",
+    feat: "Perform 75,000 Reps",
     name: "Could VS An Army",
     description:
-      "75000 reps! Are the androids attacking again?! If they do, they stand no chance.",
+      "75,000 reps! Are the androids attacking again?! If they do, they stand no chance.",
     state: false,
     date: "",
     level: 5,
@@ -308,9 +308,9 @@ export const feats = [
     featValue: 75000,
   },
   {
-    feat: "Perform 100000 Sets",
+    feat: "Perform 100,000 Reps",
     name: "Vegeta's New Rival",
-    description: "100000 reps! Now Vegeta would be proud.",
+    description: "100,000 reps! Now Vegeta would be proud.",
     state: false,
     date: "",
     level: 7,
@@ -416,7 +416,7 @@ export const feats = [
   },
   {
     feat: "Lift ",
-    name: "Not So Hyperbolic After All",
+    name: "Very Hyperbolic, Much Saiyan",
     description:
       "Goku pushed his limits in the Hyperbolic Time Chamber, you've lifted the Hyperbolic Time Chamber!",
     state: false,
@@ -447,7 +447,7 @@ export const feats = [
     featValue: 2750000,
   },
   {
-    feat: "Lift 3.000.000 Volume",
+    feat: "Lift ",
     name: "Super Saiyan Gains",
     description:
       "Well, well, well, Goku just found his new sparing partner now! Don't tell Vegeta!",
@@ -752,7 +752,7 @@ export const feats = [
     featValue: 50,
   },
   {
-    feat: "Perform 10 Consecutive Sit-ups or Crunches",
+    feat: "Perform 10 Consecutive Sit-ups/Crunches",
     name: "EZ PZ, Goku's Rice Is Nice & Breezy",
     description:
       "Ten sit-ups in a row? You're crunching it like Goku crunches on a bowl of rice - always hungry for more!",
@@ -763,7 +763,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 50 Consecutive Sit-ups or Crunches",
+    feat: "Perform 50 Consecutive Sit-ups/Crunches",
     name: "Joining The Ginyu Force",
     description:
       "Amazing, you're knocking out sit-ups like the Ginyu Force knocks out poses - with style, flair and a lot of strength!",
@@ -774,7 +774,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 100 Consecutive Sit-ups or Crunches",
+    feat: "Perform 100 Consecutive Sit-ups/Crunches",
     name: "Yes, Throw Me A Senzu Bean",
     description: "100?! OK, you surely need a a Senzu Bean after this one!",
     state: false,
@@ -828,7 +828,7 @@ export const feats = [
   },
 
   {
-    feat: "Perform 10 Hanging Leg Raises",
+    feat: "Perform 10 Consecutive Hanging Leg Raises",
     name: "Nimbus Rider",
     description:
       "10 hanging leg raises? You're defying gravity like Goku on his first Nimbus ride - a bit shaky but soaring high!",
@@ -839,7 +839,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 25 Hanging Leg Raises",
+    feat: "Perform 25 Consecutive Hanging Leg Raises",
     name: "Every Part (Abs) Is Important",
     description:
       "If you won't become a Super Saiyan yourself, your abs surely will!",
@@ -850,7 +850,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 50 Hanging Leg Raises",
+    feat: "Perform 50 Consecutive Hanging Leg Raises",
     name: "Ginyu's Graceful Grasp",
     description:
       "You're showing off a core strength that rivals Captain Ginyu's balancing during his dance pose!",
@@ -872,7 +872,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 6 Chin Ups In A Set",
+    feat: "Perform 6 Consecutive Chin Ups",
     name: "Yajirobe Could Never",
     description:
       "Six chin ups? If you reeeally think this is too easy you can always tie Yajirobe to yourself.",
@@ -883,7 +883,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 14 Chin Ups In A Set",
+    feat: "Perform 14 Consecutive Chin Ups",
     name: "Like Vegeta's Tantrum",
     description:
       "You're hitting 14 chin-ups like Vegeta hits a temper tantrum - intense, fierce, and surprisingly effective!",
@@ -894,7 +894,7 @@ export const feats = [
     featValue: 1,
   },
   {
-    feat: "Perform 24 Chin Ups In A Set",
+    feat: "Perform 24 Consecutive Chin Ups",
     name: "Super Saiyan Is Just The Start",
     description:
       "Twenty-four chin-ups? That's like Frieza revealing his final form - unexpected, awe-inspiring, and really a game-changer!",

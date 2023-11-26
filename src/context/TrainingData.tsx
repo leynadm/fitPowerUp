@@ -24,8 +24,8 @@ export const TrainingDataContext = createContext<any>({
   userBodyTrackerData: null,
 });
 
-interface IUserTrainingData {
-  workoutSessions: IWorkoutData;
+export interface IUserTrainingData {
+  workoutSessions: IWorkoutData[];
 }
 
 export interface IUserSelectedExercises {
@@ -76,7 +76,7 @@ export const TrainingDataProvider = ({
 }: TrainingDataProviderProps) => {
   // Set the current user in case the user is already logged in
   const [userTrainingData, setUserTrainingData] = useState<
-    IWorkoutData | undefined
+    IWorkoutData[]
   >();
   const [userSelectedExercises, setUserSelectedExercises] = useState<
     IUserSelectedExercises[]
@@ -164,9 +164,10 @@ export async function fetchUserFeatsData(
 
     if (userFeatsDataDocSnap.exists()) {
       const queriedUserFeatsData =
-        userFeatsDataDocSnap.data() as IUserFeatsDataEntry;
-
-        setUserFeatsData([queriedUserFeatsData]);
+        userFeatsDataDocSnap.data();
+        setUserFeatsData(queriedUserFeatsData.userFeatsData);
+    } else {
+      setUserFeatsData([])
     }
   } catch (error) {}
 }
@@ -175,7 +176,7 @@ export async function fetchUserFeatsData(
 export async function fetchUserData(
   currentUser: any,
   setUserSelectedExercises: Dispatch<SetStateAction<IUserSelectedExercises[]>>,
-  setUserTrainingData: Dispatch<SetStateAction<IWorkoutData | undefined>>
+  setUserTrainingData: Dispatch<SetStateAction<IWorkoutData[]|undefined>>
 ) {
   if (currentUser === null) {
     return;
@@ -206,10 +207,10 @@ export async function fetchUserData(
 
     if (userTrainingDataDocSnap.exists()) {
       const userTrainingExercisesData =
-        userTrainingDataDocSnap.data() as IUserTrainingData;
-
-      //console.log(userTrainingExercisesData.workoutSessions)
+        userTrainingDataDocSnap.data()
       setUserTrainingData(userTrainingExercisesData.workoutSessions);
+    }else{
+      setUserTrainingData([])
     }
   } catch (error) {
     toast.error("We couldn't fetch the data...");

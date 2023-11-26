@@ -102,9 +102,7 @@ function NewWorkout({
       <CommentWorkoutModal
         openCompleteWorkoutModal={openCompleteWorkoutModal}
         setOpenCompleteWorkoutModal={setOpenCompleteWorkoutModal}
-        todayDate={todayDate}
-        setWorkoutCommentRenderTrigger={setWorkoutCommentRenderTrigger}
-        setWorkoutEvaluationCheck={setWorkoutEvaluationCheck}
+
         existingExercises={existingExercises}
       />
 

@@ -6,7 +6,8 @@ function getFlattenedExerciseData(userTrainingData:IWorkoutData[],exerciseName:s
       return;
     }
     const today = new Date();
-
+    console.log('logging userTrainingData:')
+    console.log(userTrainingData)
     const flattenedExerciseData = userTrainingData
       .flatMap((workoutEntry: IWorkoutData) =>
         workoutEntry.workoutExercises

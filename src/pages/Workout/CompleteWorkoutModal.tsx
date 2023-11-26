@@ -22,6 +22,7 @@ import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntrie
 import { useNavigate } from "react-router-dom";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { fetchUserData } from "../../context/TrainingData";
+import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -37,18 +38,12 @@ const style = {
 interface ParentComponentProps {
   openCompleteWorkoutModal: boolean;
   setOpenCompleteWorkoutModal: Dispatch<SetStateAction<boolean>>;
-  todayDate: Date | undefined;
-  setWorkoutCommentRenderTrigger: Dispatch<SetStateAction<number>>;
-  setWorkoutEvaluationCheck: Dispatch<SetStateAction<boolean>>;
   existingExercises: { name: string; exercises: Exercise[] }[];
 }
 
 function CompleteWorkoutModal({
   openCompleteWorkoutModal,
   setOpenCompleteWorkoutModal,
-  todayDate,
-  setWorkoutCommentRenderTrigger,
-  setWorkoutEvaluationCheck,
   existingExercises,
 }: ParentComponentProps) {
   const [workoutValue, setWorkoutValue] = useState<number>(0);
@@ -60,7 +55,7 @@ function CompleteWorkoutModal({
     formatDateForTextField(new Date())
   );
   const { currentUser, currentUserData } = useContext(AuthContext);
-  const { setUserSelectedExercises, setUserTrainingData } =
+  const { setUserSelectedExercises, setUserTrainingData,userFeatsData } =
     useContext(TrainingDataContext);
   const navigate = useNavigate();
   function handleClose() {
@@ -182,6 +177,7 @@ function CompleteWorkoutModal({
 
   async function handleCompleteWorkout() {
     const existingExercisesArr = convertDateEntriesToWorkout(existingExercises);
+    
     const workoutSessionPowerLevel =
       calculateWorkoutPowerLevel(existingExercises);
     const workoutStatsResults = calculateWorkoutSessionStats(existingExercises);
@@ -204,16 +200,33 @@ function CompleteWorkoutModal({
       workoutSessionPowerLevel: workoutSessionPowerLevel,
       workoutExercises: existingExercisesArr,
     };
-    await completeWorkout(currentUser.uid, workoutData);
-    deleteAllEntries();
-    navigate("congratulations", {
-      state: { workoutData },
-    });
-    await fetchUserData(
-      currentUser,
-      setUserSelectedExercises,
-      setUserTrainingData
-    );
+    
+    try {
+
+      await completeWorkout(currentUser.uid, workoutData);
+      console.log('complete workout, going throgh updateUserFeats')
+      await updateUserFeats(currentUser.uid,userFeatsData)
+
+      console.log('going to delete entries  ')
+      deleteAllEntries();
+
+      console.log('fetching all the data again')
+      await fetchUserData(
+        currentUser,
+        setUserSelectedExercises,
+        setUserTrainingData
+      );
+
+      
+      navigate("congratulations", {
+        state: { workoutData },
+      });
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   const handleWorkoutDateChange = (
@@ -244,7 +257,7 @@ function CompleteWorkoutModal({
               alignItems: "center",
             }}
           >
-            <Typography component="legend">
+            <Typography variant="h6" component="legend">
               Rate and save your workout
             </Typography>
             <Rating
@@ -262,16 +275,6 @@ function CompleteWorkoutModal({
               emptyIcon={<StarBorderIcon fontSize="inherit" />}
             />
 
-            <IconButton
-              sx={{ position: "absolute", top: "1rem", right: "1rem" }}
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <DeleteForeverIcon />
-            </IconButton>
           </Box>
 
           <TextField

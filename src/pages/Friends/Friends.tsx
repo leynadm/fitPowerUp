@@ -38,9 +38,7 @@ interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
 }
 
-function Friends({
-  existingExercises
-}: HomeProps) {
+function Friends({ existingExercises }: HomeProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -183,8 +181,13 @@ function Friends({
     <Box sx={{ width: "100%" }}>
       <AppBar
         position="fixed"
-        elevation={0}
-        style={{ top: 0, width: "100%", height: "56px" }}
+        elevation={2}
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
       >
         <Toolbar>
           <Typography

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   IUserFeatsDataEntry,
   TrainingDataContext,
 } from "../../context/TrainingData";
-
+import formatNumber from "../../utils/formatNumber";
 import Rating from "@mui/material/Rating";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -15,16 +16,17 @@ import StarsIcon from "@mui/icons-material/Stars";
 import { VariableSizeList } from "react-window";
 import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
+import { AuthContext } from "../../context/Auth";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 function ProgressGraph() {
-  const { userTrainingData, userFeatsData } = useContext(TrainingDataContext);
-
+  const { userFeatsData } = useContext(TrainingDataContext);
+  const { currentUserData } = useContext(AuthContext);
   const [filterSelection, setFilterSelection] = useState("All");
 
   const userFeatsDataArr = getFilteredUserFeatsArr();
 
   function getFilteredUserFeatsArr() {
-    const userFeatsDataArr = userFeatsData[0].userFeatsData;
+    const userFeatsDataArr = userFeatsData;
     if (filterSelection === "All") {
       return userFeatsDataArr;
     } else if (filterSelection === "Complete") {
@@ -53,14 +55,45 @@ function ProgressGraph() {
       ...style,
     };
 
+    const variableObjective = checkVariableRecord(
+      featEntry.type,
+      featEntry.featValue
+    );
+
+    function checkVariableRecord(type: string, featValue: number) {
+
+      const userWeightMeasurementChoice =
+        currentUserData.unitsSystem === "metric" ? "kg" : "lbs";
+
+      if (type === "Volume") {
+        if (userWeightMeasurementChoice === "kg") {
+          const formattedNumber = formatNumber(featValue)
+          return `${formattedNumber} kg`;
+        } else {
+          const formattedNumber = formatNumber(featValue*2.2)
+          return `${formattedNumber} lbs`;
+        }
+      } 
+
+    }
+
     return (
       <Box sx={{ width: "100%" }} style={customStyle} key={index}>
         <Typography sx={{ fontWeight: "bold", paddingTop: "8px" }}>
           {featEntry.name}
         </Typography>
-        <Typography variant="overline" color="text.secondary">
-          {featEntry.feat}
-        </Typography>
+        <Box display="flex" gap={1} alignItems="center">
+
+          <Typography variant="overline" color="text.secondary">
+            {featEntry.feat} {variableObjective}
+          </Typography>
+          {
+            featEntry.state&&
+            <CheckCircleIcon fontSize="small" sx={{ color: "#520975" }} />
+          }
+
+        </Box>
+
         <Box display="flex" alignItems="center" sx={{ marginBottom: 1 }}>
           <Typography variant="subtitle2">Difficulty: </Typography>
           <Rating
@@ -69,12 +102,14 @@ function ProgressGraph() {
             value={featEntry.level}
             max={7}
             readOnly
+            size="small"
             sx={{ color: "#FFA500" }}
           />
         </Box>
 
         <Box sx={{ position: "relative", width: "100%" }}>
-          <TextField
+          {featEntry.state?(
+            <TextField
             id="filled-basic"
             variant="filled"
             InputProps={{
@@ -90,6 +125,10 @@ function ProgressGraph() {
             }}
             multiline
           />
+          ):(
+            <Box height="64px" width="100%" borderRadius="4px"></Box>
+          )
+          }
           {!featEntry.state && (
             <>
               <Box
@@ -99,10 +138,14 @@ function ProgressGraph() {
                   left: 0,
                   right: 0,
                   bottom: 0,
+                  height:"72px",
+                  width:"100%",
+                  borderRadius:"4px",
                   backgroundColor: "rgba(239, 239, 239, 1)", // Semi-transparent overlay
                   pointerEvents: "none", // To keep the text field interactable
                 }}
               />
+
               <LockIcon
                 sx={{
                   position: "absolute",
@@ -115,6 +158,7 @@ function ProgressGraph() {
               />
             </>
           )}
+
         </Box>
       </Box>
     );
@@ -176,7 +220,7 @@ function ProgressGraph() {
             const charactersNo = featEntry.description.length;
             const numberOfDescriptionRows = Math.ceil(charactersNo / 42);
             const totalDescriptionRowsHeight = numberOfDescriptionRows * 18;
-            return totalDescriptionRowsHeight + 150;
+            return totalDescriptionRowsHeight + 140;
           }}
           width="100%"
         >
