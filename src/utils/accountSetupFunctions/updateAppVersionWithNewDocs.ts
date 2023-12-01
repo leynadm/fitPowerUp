@@ -7,25 +7,31 @@ import { storage } from "../../config/firebase";
 async function updateAppVersionWithNewDocs(
   userID: string
 ) {
+
   const batch = writeBatch(db);
 
   try {
 
     const userDocRef = doc(db, "users", userID);
+    
     const userCollectionRef = collection(userDocRef, "userCollection");
-
+    const userTrainingCollectionRef = collection(userDocRef, "userTrainingCollection");
+    const userBodyTrackerCollectionRef = collection(userDocRef, "userBodyTrackerCollection");
     const userDocDataSnap = await getDoc(userDocRef)
-  
     const featsRef = ref(storage, 'assets/files/featsJSONString.json');
     const url = await getDownloadURL(featsRef);
     const response = await fetch(url);
     const featsParsedJSON = await response.json();
 
-
+    
     if (userDocDataSnap.exists()) {
+      
       const userData = userDocDataSnap.data();
+      
+      console.log(userData)
 
       if (userData.appVersion === 2) {
+       console.log('for some reason app version === 2')
         return;
       }
     }
@@ -34,8 +40,8 @@ async function updateAppVersionWithNewDocs(
       appVersion:2.0
     })
 
-    // Create a document within the "workouts" subcollection
-    const userTrainingDoc = doc(userCollectionRef, "userTrainingData");
+    // Create a document within the "userTrainingCollection" subcollection
+    const userTrainingDoc = doc(userTrainingCollectionRef, "userTrainingData_1");
 
     batch.set(userTrainingDoc, {
       workoutSessions: [],
@@ -52,11 +58,13 @@ async function updateAppVersionWithNewDocs(
       exercises: preselectedExercises,
     });
 
+    
     // Create the body tracker document within the "user-training-data" subcollection
-    const userBodyTrackerDocRef = doc(userCollectionRef, "userBodyTracker");
+    const userBodyTrackerDocRef = doc(userBodyTrackerCollectionRef, "userBodyTrackerData_1");
 
     batch.set(userBodyTrackerDocRef, {
       bodyTrackerData: [],
+      weight:70
     });
 
     // Create the body tracker document within the "user-training-data" subcollection
@@ -72,6 +80,7 @@ async function updateAppVersionWithNewDocs(
     // Handle the error here
     toast.error("Oops, updateAppVersionWithNewDocs has an error!");
     console.error("Error creating documents:", error);
+    console.log(error)
     // You can also throw the error again to propagate it to the caller of this function
     throw error;
   }

@@ -54,6 +54,7 @@ async function updateUserFeats(
       );
 
       const featValueCheck = streakObject[userFeatEntry.featValue];
+      
       userFeatEntry.state = featValueCheck >= 1;
     }
 
@@ -292,6 +293,7 @@ function calculateWorkoutsStreak(
   flattenedAllExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+
   const entriesPerWeek = calculateEntriesPerWeek(flattenedAllExerciseData);
   const weekCounts = countWeeksWithCertainEntries(
     entriesPerWeek,
@@ -309,6 +311,10 @@ function calculateWorkoutConsistency(
   flattenedAllExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedAllExerciseData.length === 0) {
+    return false;
+  }
+
   const uniqueDates = new Set(flattenedAllExerciseData.map((obj) => obj.date));
   const uniqueDateCount = uniqueDates.size;
 
@@ -340,6 +346,10 @@ function calculateSets(
   flattenedAllExerciseData: IWorkoutData[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedAllExerciseData.length === 0) {
+    return false;
+  }
+
   const overallStatsObj = getOverallStats(flattenedAllExerciseData);
 
   if (featEntry.featValue === 10000 && overallStatsObj.count >= 10000) {
@@ -367,6 +377,10 @@ function calculateReps(
   flattenedAllExerciseData: IWorkoutData[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedAllExerciseData.length === 0) {
+    return false;
+  }
+
   const overallStatsObj = getOverallStats(flattenedAllExerciseData);
 
   if (featEntry.featValue === 100000 && overallStatsObj.summedReps >= 100000) {
@@ -405,6 +419,10 @@ function calculateVolume(
   flattenedAllExerciseData: IWorkoutData[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedAllExerciseData.length === 0) {
+    return false;
+  }
+
   const overallStatsObj = getOverallStats(flattenedAllExerciseData);
 
   if (
@@ -481,6 +499,10 @@ function calculateUniqueExercises(
   flattenedAllExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedAllExerciseData.length === 0) {
+    return false;
+  }
+
   const uniqueExercises = new Set(
     flattenedAllExerciseData.map((obj) => obj.exercise)
   );
@@ -501,6 +523,10 @@ function calculateChinUps(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps
@@ -524,6 +550,10 @@ function calculateDeadLift(
   featEntry: IUserFeatsDataEntry,
   userBodyWeight: number
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxWeight = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
     flattenedExerciseData[0].weight
@@ -545,6 +575,10 @@ function calculateSquat(
   featEntry: IUserFeatsDataEntry,
   userBodyWeight: number
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxWeight = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
     flattenedExerciseData[0].weight
@@ -569,6 +603,10 @@ function calculateShoulderPress(
   featEntry: IUserFeatsDataEntry,
   userBodyWeight: number
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxWeight = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
     flattenedExerciseData[0].weight
@@ -593,10 +631,24 @@ function calculateBenchPress(
   featEntry: IUserFeatsDataEntry,
   userBodyWeight: number
 ) {
+  console.log("logging userBodyWeight");
+  console.log(userBodyWeight);
+
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxWeight = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
     flattenedExerciseData[0].weight
   );
+  console.log("logging full flattened exercise data");
+  console.log(flattenedExerciseData);
+  console.log("logging only the first entry:");
+  console.log(flattenedExerciseData[0].weight);
+
+  console.log("logging maxWeight in Bench Press");
+  console.log(maxWeight);
 
   if (featEntry.featValue === 1.25 && maxWeight >= userBodyWeight * 1.25) {
     return true;
@@ -616,6 +668,10 @@ function calculatePullUps(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps
@@ -640,6 +696,10 @@ function calculatePushUps(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps
@@ -666,6 +726,10 @@ function calculateHangingLegRaise(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps
@@ -686,6 +750,10 @@ function calculateBurpees(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps
@@ -708,6 +776,10 @@ function calculatePlank(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxTime = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.time > max ? obj.time : max),
     flattenedExerciseData[0].time
@@ -734,6 +806,10 @@ function calculateSitUpsOrCrunches(
   flattenedExerciseData: Exercise[],
   featEntry: IUserFeatsDataEntry
 ) {
+  if (flattenedExerciseData.length === 0) {
+    return false;
+  }
+
   let maxReps = flattenedExerciseData.reduce(
     (max: number, obj: Exercise) => (obj.reps > max ? obj.reps : max),
     flattenedExerciseData[0].reps

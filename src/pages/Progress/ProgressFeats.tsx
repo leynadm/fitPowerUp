@@ -172,6 +172,7 @@ function ProgressGraph() {
       alignItems="center"
       height="calc(100% - 95px)"
     >
+
       <FormControl>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
@@ -213,7 +214,7 @@ function ProgressGraph() {
         </Box>
       ) : (
         <VariableSizeList
-          height={window.innerHeight - 150}
+          height={window.innerHeight - 170}
           itemCount={userFeatsDataArr.length}
           itemSize={(index) => {
             const featEntry = userFeatsDataArr[index];

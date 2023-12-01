@@ -59,83 +59,66 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
   }, []);
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Routes>
-          <Route
-            path="/completed-details/:exerciseName/*"
-            element={<CompletedWorkoutsTabs />}
+    <Routes>
+      <Route
+        path="/completed-details/:exerciseName/*"
+        element={<CompletedWorkoutsTabs />}
+      />
+
+      <Route
+        path="/*"
+        index
+        element={
+          <CompletedWorkouts
+            todayDate={todayDate}
+            setTodayDate={setTodayDate}
           />
+        }
+      />
 
-          <Route
-            path="/*"
-            index
-            element={
-              <CompletedWorkouts
-                todayDate={todayDate}
-                setTodayDate={setTodayDate}
-              />
-            }
+      <Route
+        path="new/*"
+        index
+        element={
+          <NewWorkout
+            existingExercises={existingExercises}
+            setExistingExercises={setExistingExercises}
           />
+        }
+      />
 
-          <Route
-            path="new/*"
-            index
-            element={
-              <NewWorkout
-                existingExercises={existingExercises}
-                setExistingExercises={setExistingExercises}
-              />
-            }
-          />
+      <Route path="settings/send-feedback" element={<SendFeedback />} />
 
-          <Route path="settings/send-feedback" element={<SendFeedback />} />
+      <Route
+        path="/new/workout_categories/exercises/selected/:exerciseName/*"
+        element={<ExerciseSelected />}
+      />
 
-          <Route
-            path="/new/workout_categories/exercises/selected/:exerciseName/*"
-            element={<ExerciseSelected />}
-          />
+      <Route
+        path="/new/workout_categories/*"
+        element={<MuscleGroupsSelectionMenu />}
+      />
 
-          <Route
-            path="/new/workout_categories/*"
-            element={<MuscleGroupsSelectionMenu />}
-          />
+      <Route
+        path="/new/workout_categories/exercises"
+        element={<ExerciseSelectionMenu />}
+      />
 
-          <Route
-            path="/new/workout_categories/exercises"
-            element={<ExerciseSelectionMenu />}
-          />
+      <Route path="settings" element={<Settings />} />
 
-          <Route path="settings" element={<Settings />} />
+      <Route
+        path="calendar"
+        element={
+          <WorkoutCalendar todayDate={todayDate} setTodayDate={setTodayDate} />
+        }
+      />
 
-          <Route
-            path="calendar"
-            element={
-              <WorkoutCalendar
-                todayDate={todayDate}
-                setTodayDate={setTodayDate}
-              />
-            }
-          />
+      <Route path="analysis/*" element={<Analysis />} />
 
-          <Route path="analysis/*" element={<Analysis />} />
+      <Route path="bodytracker/*" element={<BodyTracker />} />
 
-          <Route path="bodytracker/*" element={<BodyTracker />} />
-
-          <Route
-            path="new/congratulations"
-            element={<WorkoutCongratulations />}
-          />
-        </Routes>
-      </Box>
-    </Box>
+      <Route path="new/congratulations" element={<WorkoutCongratulations />} />
+    </Routes>
   );
 }
 

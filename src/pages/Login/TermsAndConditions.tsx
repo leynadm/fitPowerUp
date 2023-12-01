@@ -7,7 +7,7 @@ function TermsAndConditions() {
       Effective Date: 01/07/2023
       <br></br>
       <br></br>
-      Welcome to fitPowerUp!
+      <span>Welcome to <strong>fitPowerUp</strong>!</span>
       <br></br>
       <br></br>
       These terms and conditions ("Terms") govern your access to and use of the
@@ -20,36 +20,37 @@ function TermsAndConditions() {
       <br></br>
       <strong>Description of the App</strong> fitPowerUp is a fitness
       application that offers various features and services to help you track
-      your workouts, access exercise routines, in-depth data analysis functionalities and connect
-      with a community of fitness enthusiasts. The App is available for download
-      on compatible mobile devices.
+      your workouts, access exercise routines, in-depth data analysis
+      functionalities and connect with a community of fitness enthusiasts. The
+      App is available for download on compatible mobile devices.
       <br></br>
       <br></br>
       <strong>Eligibility</strong> a. You must be at least 13 years of age to
       use the App. If you are under the age of 18, you must have the consent of
-      a parent or legal guardian to use the App. <br></br>b. By using the App, you
-      represent and warrant that you have the legal capacity to enter into these
-      Terms and comply with all applicable laws.
+      a parent or legal guardian to use the App. <br></br>b. By using the App,
+      you represent and warrant that you have the legal capacity to enter into
+      these Terms and comply with all applicable laws.
       <br></br>
       <br></br>
       <strong>User Account</strong> a. In order to use certain features of the
-      App, you may need to create a user account. When creating your account,
-      you must provide accurate and complete information. <br></br>b. You are
-      responsible for maintaining the confidentiality of your account
-      credentials and are solely responsible for all activities that occur under
-      your account. <br></br>c. You agree to notify me immediately of any
-      unauthorized use of your account or any other breach of security.{" "}
-      <br></br>d. I reserve the right to suspend or terminate your account at
-      any time, at my sole discretion, for any reason or no reason, without
-      prior notice.
+      App, you do need to create a user account. When creating your account, you
+      are advised to provide accurate and complete information. Pseudonyms are
+      acceptable, provided they are not offensive, misleading, or violate any
+      intellectual property rights.<br></br>b. You are responsible for
+      maintaining the confidentiality of your account credentials and are solely
+      responsible for all activities that occur under your account. <br></br>c.
+      You agree to notify me immediately of any unauthorized use of your account
+      or any other breach of security. <br></br>d. I reserve the right to
+      suspend or terminate your account at any time, at my sole discretion, for
+      any reason or no reason, without prior notice.
       <br></br>
       <br></br>
-      <strong>Free Use and Limitations on Online Component</strong>
-      a. fitPowerUp is available for free use, allowing users to access
-      and utilize its features and services at no cost.
+      <strong>Free Use and Limitations on Online functionalities</strong>
+      a. fitPowerUp is available for free use, allowing users to access and
+      utilize its features and services at no cost.
       <br></br>
       b. However, please note that certain limitations may be imposed on the
-      online component of the app, including but not limited to:
+      online functionalities of the app, including but not limited to:
       <br></br>
       <br></br>
       <em>i. Availability and Accessibility:</em>
@@ -60,13 +61,13 @@ function TermsAndConditions() {
       and notify users in advance whenever possible.
       <br></br>
       <br></br>
-      <em>ii. Service and Feature Modifications:</em>
-       I reserve the right to modify, suspend, or discontinue any
-      aspect of the online component, including services, features, or
-      functionalities, at any time and without prior notice. This may include
-      the addition or removal of certain features or the introduction of new
-      services. Any modifications or discontinuations will not affect the free
-      use of the app's core features, unless explicitly stated.
+      <em>ii. Service and Feature Modifications:</em>I reserve the right to
+      modify, suspend, or discontinue any aspect of the online functionalities,
+      including services, features, or functionalities, at any time and without
+      prior notice. This may include the addition or removal of certain features
+      or the introduction of new ones. Any modifications or discontinuations
+      will not affect the free use of the app's core features, unless explicitly
+      stated.
       <br></br>
       <br></br>
       c. I will make reasonable efforts to inform users about any limitations or
@@ -94,14 +95,14 @@ function TermsAndConditions() {
       objectionable.
       <br></br>
       <br></br>
-      <strong>Privacy</strong> a. I am committed to protecting your privacy. My
-      collection, use, and disclosure of personal information are governed by my
-      Privacy Policy [provide a link to your Privacy Policy]. b. By using the
+      <strong>Privacy Policy</strong> a. I am committed to protecting your
+      privacy. My collection, use, and disclosure of personal information are
+      governed by my Privacy Policy categories below. <br></br>b. By using the
       App, you consent to the collection, use, and disclosure of your personal
-      information as described in my Privacy Policy below.
+      information as described in the Privacy Policy categories below.
       <br></br>
       <br></br>
-      <strong>Information We Collect</strong>
+      <strong>Privacy Policy on Collected Information</strong>
       <em>a. Account Registration:</em>
       When creating a user account on fitPowerUp, we collect the following
       information: name, surname and email address.
@@ -111,7 +112,7 @@ function TermsAndConditions() {
       optional.
       <br></br>
       <br></br>
-      <strong>Use of Information</strong>
+      <strong>Privacy Policy on Use of Information</strong>
       <em>a. Account Management:</em>
       The information collected during account registration is used for the
       purpose of managing and administering your fitPowerUp user account.
@@ -179,10 +180,10 @@ function TermsAndConditions() {
       review it for any updates or changes.
       <br></br>
       <br></br>
-      <strong>Disclaimers and Limitation of Liability</strong> a. The App is provided on an "as
-      is" and "as available" basis, without warranties of any kind, express or
-      implied, including, but not limited to, warranties of merchantability,
-      fitness for a particular purpose, and non-infringement.
+      <strong>Disclaimers and Limitation of Liability</strong> a. The App is
+      provided on an "as is" and "as available" basis, without warranties of any
+      kind, express or implied, including, but not limited to, warranties of
+      merchantability, fitness for a particular purpose, and non-infringement.
       <br></br>
       b. I do not warrant that the App will be uninterrupted, error-free, or
       secure, or that any defects or errors will be corrected.
@@ -206,6 +207,17 @@ function TermsAndConditions() {
       shall be resolved exclusively through arbitration, in accordance with the
       rules of Spanish Court of Arbitration (Tribunal Arbitral de España or
       Corte Española de Arbitraje).
+      <br></br>
+      <br></br>
+      <strong>Disclaimer of Commercial Exchange and Service Provision</strong>
+      Please be aware that this app is not engaged in any form of commercial
+      exchange and does not offer services for sale or trade. All rights related
+      to the content, characters, and trademarks are owned by Toei Animation,
+      FUNimation, Fuji TV, and Akira Toriyama. This app is created as a
+      non-commercial, fan-made project and does not claim any affiliation with,
+      endorsement by, or rights over the intellectual property owned by the
+      aforementioned entities. Any use of this app is for personal,
+      non-commercial purposes only.
       <br></br>
       <br></br>
       <strong>

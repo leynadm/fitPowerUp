@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext,SetStateAction,Dispatch } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  SetStateAction,
+  Dispatch,
+} from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
@@ -15,9 +21,7 @@ import { TrainingDataProvider } from "../../context/TrainingData";
 
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
-  setSessionVerificationEmailCheck: Dispatch<
-    SetStateAction<boolean>
-  >;
+  setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
 }
 
 function Home({
@@ -27,27 +31,30 @@ function Home({
   const [existingExercises, setExistingExercises] = useState<
     { name: string; exercises: Exercise[] }[]
   >([]);
-  
+
   const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(false);
 
   return (
     <SocialDataProvider>
       <TrainingDataProvider>
         <LogDataProvider>
-          <Box
-            sx={{
-              height: "calc(100vh - 56px)",
-            }}
-          >
+          
+          {/* 
+          <Box className="ThisShouldBeAGoodWrapperBox" 
+          sx={{
+            height:"100%"
+          }}
+          > */}
+          
             <VerifyEmailDialog
               verifyEmailModalOpen={verifyEmailModalOpen}
               setVerifyEmailModalOpen={setVerifyEmailModalOpen}
             />
-
+            
             <RestTimer />
-
+            
             <Navbar />
-
+            
             <Routes>
               <Route
                 path="workout/*"
@@ -62,15 +69,14 @@ function Home({
 
               <Route
                 path="friends/*"
-                element={
-                  <Friends
-                    existingExercises={existingExercises}
-                  />
-                }
+                element={<Friends existingExercises={existingExercises} />}
               />
+              
               <Route path="progress/*" element={<Progress />} />
+            
             </Routes>
-          </Box>
+          {/* 
+          </Box> */}
         </LogDataProvider>
       </TrainingDataProvider>
     </SocialDataProvider>

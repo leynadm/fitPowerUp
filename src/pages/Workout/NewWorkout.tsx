@@ -26,7 +26,7 @@ import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWor
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
-import { Paper } from "@mui/material";
+
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -44,25 +44,19 @@ function NewWorkout({
   const [exerciseComment, setExerciseComment] = useState("");
   const [openCompleteWorkoutModal, setOpenCompleteWorkoutModal] =
     useState(false);
-  const [workoutCommentRenderTrigger, setWorkoutCommentRenderTrigger] =
-    useState(0);
 
-  const [workoutEvaluationCheck, setWorkoutEvaluationCheck] = useState(false);
   const { currentUserData } = useContext(AuthContext);
-
-  const [todayDate, setTodayDate] = useState<Date>();
 
   useEffect(() => {
     // declare the data fetching function
     const fetchData = async () => {
       await getNewWorkoutExercises(setExistingExercises);
     };
-
     // call the function
     fetchData()
       // make sure to catch any error
       .catch(console.error);
-  }, [todayDate, workoutCommentRenderTrigger]);
+  }, []);
 
   const handleNewWorkout = () => {
     navigate("workout_categories");
@@ -92,6 +86,7 @@ function NewWorkout({
         display: "flex",
         flexDirection: "column",
       }}
+      className="WrapperInsideNewWorkout"
     >
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
@@ -102,7 +97,6 @@ function NewWorkout({
       <CommentWorkoutModal
         openCompleteWorkoutModal={openCompleteWorkoutModal}
         setOpenCompleteWorkoutModal={setOpenCompleteWorkoutModal}
-
         existingExercises={existingExercises}
       />
 
@@ -117,7 +111,7 @@ function NewWorkout({
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
-          <Container maxWidth="xl">
+          <Container maxWidth="md">
             <Toolbar disableGutters>
               <PostAddIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -189,246 +183,194 @@ function NewWorkout({
       </Box>
 
       <Container
-        sx={{ padding: 0, height: "calc(100vh - 112px)" }}
+        sx={{ padding: 1, height: "calc(100dvh - 112px)" }}
         maxWidth="md"
+        className="ThisIsTheFirstContainer"
       >
         {existingExercises.length === 0 ? (
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1,
               height: "100%",
+              paddingBottom: "56px",
             }}
           >
-            {workoutEvaluationCheck && (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  borderRadius: "4px",
-                  boxShadow: 1,
-                  margin: "16px",
-                  marginTop: "48px",
-                  backgroundColor: "white",
-                }}
-              >
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  disabled // Placeholder element
-                >
-                  <EditNoteIcon sx={{ zIndex: -1 }} />
-                </IconButton>
-              </Box>
-            )}
-
-            <Box
+            <Typography
+              variant="body2"
               sx={{
+                fontSize: "large",
+                height: "100%",
                 display: "flex",
-                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                flexGrow: 1,
-                height: "100%",
-                paddingBottom:"56px"
               }}
-            >
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: "large",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              ></Typography>
+            ></Typography>
 
-              <IconButton
-                aria-label="add workout"
-                sx={{
-                  mb: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-                onClick={handleNewWorkout}
-              >
-                <AddIcon fontSize="large" />
-                <Typography fontSize="1rem">Add an exercise</Typography>
-              </IconButton>
-            </Box>
+            <IconButton
+              aria-label="add workout"
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={handleNewWorkout}
+            >
+              <AddIcon fontSize="large" />
+              <Typography fontSize="1rem">Add an exercise</Typography>
+            </IconButton>
           </Box>
         ) : (
-          <Box
-            sx={{
-              paddingTop: "8px",
-              paddingBottom: "64px",
-            }}
-          >
-            {workoutEvaluationCheck && (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  borderRadius: "4px",
-                  boxShadow: 1,
-                  margin: "16px",
-                  backgroundColor: "white",
-                }}
-              >
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  disabled // Placeholder element
-                >
-                  <EditNoteIcon sx={{ zIndex: 0 }} />
-                </IconButton>
-              </Box>
-            )}
-
-            {existingExercises.map((group, index) => (
-              <Box
-                key={index}
-                sx={{
-                  borderRadius: "4px",
-                  boxShadow: 2,
-                  margin: "16px",
-                }}
-              >
-                <Typography
-                  variant="h6"
+          /*  */
+            <Box
+              className="wrapperForTheExercisesGrouped"
+              display="flex"
+              flexDirection="column"
+              pb="56px"
+            >
+              {existingExercises.map((group, index) => (
+                <Box
+                  key={index}
                   sx={{
-                    textAlign: "center",
-                    fontSize: "large",
-                    background:
-                      "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
-                    boxShadow: 2,
                     borderRadius: "4px",
-                    color: "white",
+                    boxShadow: 2,
+                    marginBottom: "8px",
                   }}
-                  onClick={() => handleSelectWorkoutExercise(group.name)}
                 >
-                  {group.name.toLocaleUpperCase()}
-                </Typography>
-
-                <Divider sx={{ backgroundColor: "aliceblue" }} />
-                {group.exercises.map((exercise, exerciseIndex) => (
-                  <Box
-                    key={exerciseIndex}
+                  <Typography
+                    variant="h6"
                     sx={{
-                      display: "grid",
-                      gridAutoFlow: "column",
-                      gridTemplateColumns: "1fr 1fr 4fr",
-                      justifyContent: "space-evenly",
-                      justifyItems: "center",
-                      alignItems: "center",
+                      textAlign: "center",
+                      fontSize: "large",
+                      background:
+                        "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
+                      boxShadow: 2,
+                      borderRadius: "4px",
+                      color: "white",
                     }}
+                    onClick={() => handleSelectWorkoutExercise(group.name)}
                   >
-                    {exercise.comment ? ( // Check if 'comment' property exists
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={() =>
-                          handleViewCommentModalVisibility(exercise.comment)
-                        }
-                      >
-                        <CommentIcon
-                          sx={{
-                            zIndex: 0,
-                          }}
-                        />
-                      </IconButton>
-                    ) : (
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                        disabled // Placeholder element
-                      >
-                        <CommentIcon style={{ opacity: 0 }} />
-                      </IconButton>
-                    )}
+                    {group.name.toLocaleUpperCase()}
+                  </Typography>
 
-                    {exercise.is_pr ? (
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                        disabled // Placeholder element
-                      >
-                        <EmojiEventsIcon
-                          sx={{ zIndex: -1, color: "#520975" }}
-                        />
-                      </IconButton>
-                    ) : (
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                        disabled // Placeholder element
-                      >
-                        <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
-                      </IconButton>
-                    )}
-
+                  <Divider sx={{ backgroundColor: "aliceblue" }} />
+                  {group.exercises.map((exercise, exerciseIndex) => (
                     <Box
+                      key={exerciseIndex}
                       sx={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(2, minmax(auto, 1fr))",
-                        alignItems: "center",
-                        justifyItems: "center",
-                        width: "100%",
+                        gridAutoFlow: "column",
+                        gridTemplateColumns: "1fr 1fr 4fr",
                         justifyContent: "space-evenly",
-                        borderLeft: exercise.dropset
-                          ? "5px solid red"
-                          : "5px solid transparent",
+                        justifyItems: "center",
+                        alignItems: "center",
                       }}
                     >
-                      {exercise.weight !== 0 && (
-                        <Typography>
-                          {`${exercise.weight.toFixed(2)} ${
-                            currentUserData.unitsSystem === "metric"
-                              ? "kgs"
-                              : "lbs"
-                          }`}
-                        </Typography>
+                      {exercise.comment ? ( // Check if 'comment' property exists
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          onClick={() =>
+                            handleViewCommentModalVisibility(exercise.comment)
+                          }
+                        >
+                          <CommentIcon
+                            sx={{
+                              zIndex: 0,
+                            }}
+                          />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <CommentIcon style={{ opacity: 0 }} />
+                        </IconButton>
                       )}
 
-                      {exercise.reps !== 0 && (
-                        <Typography>{exercise.reps} reps</Typography>
+                      {exercise.is_pr ? (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <EmojiEventsIcon
+                            sx={{ zIndex: -1, color: "#520975" }}
+                          />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          color="inherit"
+                          disabled // Placeholder element
+                        >
+                          <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                        </IconButton>
                       )}
 
-                      {exercise.distance !== 0 && (
-                        <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                      )}
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, minmax(auto, 1fr))",
+                          alignItems: "center",
+                          justifyItems: "center",
+                          width: "100%",
+                          justifyContent: "space-evenly",
+                          borderLeft: exercise.dropset
+                            ? "5px solid red"
+                            : "5px solid transparent",
+                        }}
+                      >
+                        {exercise.weight !== 0 && (
+                          <Typography>
+                            {`${exercise.weight.toFixed(2)} ${
+                              currentUserData.unitsSystem === "metric"
+                                ? "kgs"
+                                : "lbs"
+                            }`}
+                          </Typography>
+                        )}
 
-                      {exercise.time !== 0 && (
-                        <Typography>
-                          {exercise.time !== 0 ? formatTime(exercise.time) : ""}
-                        </Typography>
-                      )}
+                        {exercise.reps !== 0 && (
+                          <Typography>{exercise.reps} reps</Typography>
+                        )}
+
+                        {exercise.distance !== 0 && (
+                          <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                        )}
+
+                        {exercise.time !== 0 && (
+                          <Typography>
+                            {exercise.time !== 0
+                              ? formatTime(exercise.time)
+                              : ""}
+                          </Typography>
+                        )}
+                      </Box>
+
+                      <Divider />
                     </Box>
+                  ))}
+                </Box>
+              ))}
+            </Box>
 
-                    <Divider />
-                  </Box>
-                ))}
-              </Box>
-            ))}
-          </Box>
         )}
       </Container>
     </Box>

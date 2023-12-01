@@ -14,6 +14,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     dbz: true;
+    dbz_mini: true;
     dbz_save: true;
     dbz_clear: true;
   }
@@ -92,6 +93,38 @@ function App() {
               },
             },
           },
+          
+
+          {
+            props: { variant: "dbz_mini" },
+            style: {
+              backgroundColor: "#FFA500",
+              border: "2px solid #422800",
+              borderRadius: "30px",
+              boxShadow: "4px 4px 0 0 #422800",
+              color: "black",
+              cursor: "pointer",
+              display: "inline-block",
+              fontWeight: 600,
+              fontSize: "1rem",
+              padding: "0 16px 0 16px",
+              textAlign: "center",
+              textDecoration: "none",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              touchAction: "manipulation",
+
+              "&:hover": {
+                backgroundColor: "#520975",
+                color: "#FFFFFF",
+              },
+              "&:active": {
+                boxShadow: "2px 2px 0 0 #422800",
+                transform: "translate(2px, 2px)",
+              },
+            },
+          },
+
           {
             props: { variant: "dbz_clear" },
             style: {

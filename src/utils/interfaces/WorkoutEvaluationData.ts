@@ -1,9 +1,9 @@
 interface IWorkoutEvaluationData{
-    workoutComment: string
-workoutValue: number
-feelPainCheck: boolean
-warmStretchCheck: boolean
-trainHarderCheck: boolean
+comment: string
+value: number
+feelPain: boolean
+warmStretch: boolean
+trainHarder: boolean
 
 }
 

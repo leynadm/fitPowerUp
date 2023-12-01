@@ -156,7 +156,7 @@ export default function SignIn() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <CssBaseline />
       <Box
         sx={{
@@ -244,18 +244,6 @@ export default function SignIn() {
             LOG IN WITH FACEBOOK
           </Button>
 
-{/* 
-          <Button
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mb: 2, color: "black", gap: 1 }}
-            onClick={signInAsGuest}
-          >
-            <PersonIcon />
-            LOG IN AS GUEST ONLY
-          </Button>
- */}
           <Grid container>
             <Grid item xs>
               <Link variant="body2" onClick={handleForgotPasswordClick}>

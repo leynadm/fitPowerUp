@@ -23,6 +23,8 @@ function BodyTrackerTrack() {
 
   const { userBodyTrackerData, setUserBodyTrackerData } =
     useContext(TrainingDataContext);
+
+  const userBodyTrackerDataSize = userBodyTrackerData.length 
   const [saveButtonText, setSaveButtonText] = useState("Save");
   const [bodyKPIDataObj, setBodyKPIDataObj] = useState({
     date: "",
@@ -78,7 +80,8 @@ function BodyTrackerTrack() {
       await saveBodyTrackerEntry(
         currentUser.uid,
         bodyKPIDataObj,
-        saveButtonText
+        saveButtonText,
+        userBodyTrackerDataSize
       );
       await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
     } else {
@@ -90,7 +93,9 @@ function BodyTrackerTrack() {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const newDate = event.target.value;
-    const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
+
+    const userBodyTrackerDataJSON = JSON.stringify(userBodyTrackerData);
+    const userBodyTrackerDataArr = JSON.parse(userBodyTrackerDataJSON);
 
     const isPropertyEqual = userBodyTrackerDataArr.some(
       (item: IUserBodyTrackerDataEntry) => item.date === newDate

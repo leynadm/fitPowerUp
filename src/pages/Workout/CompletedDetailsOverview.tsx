@@ -41,14 +41,14 @@ function CompletedDetailsOverview() {
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
-      workoutEntry.workoutExercises.forEach(
+      workoutEntry.wExercises.forEach(
         (exerciseEntry: { name: string; exercises: Exercise[] }) => {
           const completedExerciseName = exerciseEntry.name.toUpperCase();
           const exercises = exerciseEntry.exercises;
 
           if (
             completedExerciseName === exerciseName.toUpperCase() &&
-            workoutEntry.workoutDate === dateForWorkout
+            workoutEntry.date === dateForWorkout
           ) {
             workoutStats.totalWorkouts += 1;
             workoutStats.totalSets += exercises.length;
@@ -75,10 +75,12 @@ function CompletedDetailsOverview() {
     });
 
     workoutStats.avgRepsPerSet =
-      workoutStats.totalWorkouts > 0
+
+      parseFloat((workoutStats.totalWorkouts > 0
         ? workoutStats.totalReps / workoutStats.totalSets
-        : 0;
-    workoutStats.loadVolume = ((workoutStats.totalWeight * workoutStats.totalReps)/workoutStats.totalSets);
+        : 0).toFixed(1));
+    
+        workoutStats.loadVolume = parseFloat((((workoutStats.totalWeight * workoutStats.totalReps)/workoutStats.totalSets)).toFixed(1));
 
     return workoutStats;
   }
@@ -101,7 +103,7 @@ function CompletedDetailsOverview() {
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
-      workoutEntry.workoutExercises.forEach(
+      workoutEntry.wExercises.forEach(
         (exerciseEntry: { name: string; exercises: Exercise[] }) => {
           const completedExerciseName = exerciseEntry.name.toUpperCase();
           const exercises = exerciseEntry.exercises;
@@ -132,11 +134,13 @@ function CompletedDetailsOverview() {
     });
 
     historicStats.avgRepsPerSet =
-      historicStats.totalWorkouts > 0
+      parseFloat(
+    (historicStats.totalWorkouts > 0
         ? historicStats.totalReps / historicStats.totalSets
-        : 0;
+        : 0).toFixed(1));
+
     historicStats.loadVolume =
-      (historicStats.totalWeight * historicStats.totalReps) / 1000/historicStats.totalSets;
+      parseFloat(((historicStats.totalWeight * historicStats.totalReps) / 1000/historicStats.totalSets).toFixed(1));
 
     return historicStats;
   }

@@ -7,7 +7,7 @@ function getFlattenedAllExerciseData(userTrainingData:IWorkoutData[],timeframe:s
 
     const flattenedExerciseData = userTrainingData
       .flatMap((workoutEntry: IWorkoutData) =>
-        workoutEntry.workoutExercises
+        workoutEntry.wExercises
           .map(
             (exerciseEntry: { name: string; exercises: Exercise[] }) =>
               exerciseEntry.exercises

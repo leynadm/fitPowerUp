@@ -255,30 +255,30 @@ function WorkoutCongratulations() {
         max={7}
         size="large"
         name="simple-controlled"
-        value={workoutData.workoutEvaluation.workoutValue}
+        value={workoutData.wEval.value}
         icon={<StarsIcon fontSize="inherit" />}
-        sx={{ paddingBottom: "8px",color:"#FFA500" }}
+        sx={{ paddingBottom: "8px", color: "#FFA500" }}
       />
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>
         <StatMiniCard
           statTitle="Attained Power Level"
-          statValue={workoutData.workoutSessionPowerLevel}
+          statValue={workoutData.power}
           statDetail="PL"
         />
         <StatMiniCard
           statTitle="Total Workout Reps"
-          statValue={workoutData.workoutStats.totalReps}
+          statValue={workoutData.stats.reps}
           statDetail="reps"
         />
         <StatMiniCard
           statTitle="Total Workout Weight"
-          statValue={workoutData.workoutStats.totalWeight}
+          statValue={workoutData.stats.weight}
           statDetail={weightStatDetail}
         />
         <StatMiniCard
           statTitle="Total Workout Load"
-          statValue={workoutData.workoutStats.totalLoad}
+          statValue={workoutData.stats.vol}
           statDetail="x BW"
         />
       </Box>
@@ -296,24 +296,24 @@ function WorkoutCongratulations() {
         InputProps={{
           readOnly: true,
         }}
-        value={workoutData.workoutEvaluation.workoutComment}
+        value={workoutData.wEval.comment}
       />
 
       <Box>
         <FormControlLabel
           control={<Switch />}
           label="Did you train better than the last time?"
-          checked={workoutData.workoutEvaluation.trainHarderCheck}
+          checked={workoutData.wEval.trainHarder}
         />
         <FormControlLabel
           control={<Switch />}
           label="Did you warm up/stretch properly?"
-          checked={workoutData.workoutEvaluation.warmStretchCheck}
+          checked={workoutData.wEval.warmStretch}
         />
         <FormControlLabel
           control={<Switch />}
           label="Did you exerience any discomfort?"
-          checked={workoutData.workoutEvaluation.feelPainCheck}
+          checked={workoutData.wEval.feelPain}
         />
       </Box>
     </Container>

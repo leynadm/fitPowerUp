@@ -12,7 +12,7 @@ function getFlattenedExerciseData(userTrainingData:IWorkoutData[],exerciseName:s
     console.log(userTrainingData)
     const flattenedExerciseData = userTrainingData
       .flatMap((workoutEntry: IWorkoutData) =>
-        workoutEntry.workoutExercises
+        workoutEntry.wExercises
           .filter(
             (exerciseEntry: { name: string; exercises: Exercise[] }) =>
               exerciseEntry.name.toUpperCase() === exerciseName.toUpperCase()

@@ -178,7 +178,8 @@ function Friends({ existingExercises }: HomeProps) {
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Container sx={{ width: "100%" }}>
+
       <AppBar
         position="fixed"
         elevation={2}
@@ -189,12 +190,12 @@ function Friends({ existingExercises }: HomeProps) {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
+        <Container maxWidth="md">
         <Toolbar>
           <Typography
             variant="h4"
             sx={{
               color: "#FF8C00",
-              fontFamily: "Voltaire",
               display: { xs: "none", sm: "block" },
             }}
           >
@@ -255,7 +256,9 @@ function Friends({ existingExercises }: HomeProps) {
             </IconButton>
           </Box>
         </Toolbar>
+        </Container>
       </AppBar>
+
       {renderMobileMenu}
       {renderMenu}
 
@@ -269,7 +272,7 @@ function Friends({ existingExercises }: HomeProps) {
       )}
 
       {/* This is the container that I might have to check if it reached to bottom */}
-      <Container sx={{ height: "100%" }}>
+      <Box sx={{ height: "100%" }}>
         <Routes>
           <Route path="" element={<Newsfeed />} />
           <Route path="results/*" element={<SocialSearchResults />} />
@@ -280,8 +283,8 @@ function Friends({ existingExercises }: HomeProps) {
           <Route path="account/blocked-users" element={<BlockedUsers />} />
           <Route path="notifications" element={<Notifications />} />
         </Routes>
-      </Container>
-    </Box>
+      </Box>
+    </Container>
   );
 }
 

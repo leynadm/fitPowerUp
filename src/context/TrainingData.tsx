@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 import { db } from "../config/firebase";
 import toast from "react-hot-toast";
 import { IWorkoutData } from "../utils/firebaseDataFunctions/completeWorkout";
-import { doc, getDoc, collection } from "firebase/firestore";
+import { doc, getDoc, getDocs, collection } from "firebase/firestore";
 import { AuthContext } from "./Auth";
 import formatDateForTextField from "../utils/formatDateForTextfield";
 
@@ -26,6 +26,12 @@ export const TrainingDataContext = createContext<any>({
 
 export interface IUserTrainingData {
   workoutSessions: IWorkoutData[];
+}
+
+export interface IUserBodyTrackerData {
+  [index: number]: {
+    bodyTrackerData: IUserBodyTrackerDataEntry[];
+  };
 }
 
 export interface IUserSelectedExercises {
@@ -59,25 +65,22 @@ export interface IUserBodyTrackerDataEntry {
   rightCalf: number;
 }
 
-export interface IUserFeatsDataEntry{
-
+export interface IUserFeatsDataEntry {
   feat: string;
   name: string;
   state: boolean;
-  date:string;
+  date: string;
   level: number;
   type: string;
-  featValue:number;
-  description:string;
+  featValue: number;
+  description: string;
 }
 
 export const TrainingDataProvider = ({
   children,
 }: TrainingDataProviderProps) => {
   // Set the current user in case the user is already logged in
-  const [userTrainingData, setUserTrainingData] = useState<
-    IWorkoutData[]
-  >();
+  const [userTrainingData, setUserTrainingData] = useState<IWorkoutData[]>();
   const [userSelectedExercises, setUserSelectedExercises] = useState<
     IUserSelectedExercises[]
   >([]);
@@ -89,19 +92,14 @@ export const TrainingDataProvider = ({
     IUserBodyTrackerDataEntry[]
   >([]);
 
-  const [userFeatsData, setUserFeatsData] = useState<
-  IUserFeatsDataEntry[]
->([]);
+  const [userFeatsData, setUserFeatsData] = useState<IUserFeatsDataEntry[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchUserData(
-        currentUser,
-        setUserSelectedExercises,
-        setUserTrainingData
-      );
       await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
-      await fetchUserFeatsData(currentUser,setUserFeatsData)
+      await fetchUserFeatsData(currentUser, setUserFeatsData);
+      await fetchUserTrainingData(currentUser, setUserTrainingData);
+      await fetchUserSelectedExercises(currentUser, setUserSelectedExercises);
     };
 
     fetchData().catch(console.error);
@@ -119,7 +117,7 @@ export const TrainingDataProvider = ({
         userBodyTrackerData,
         setUserBodyTrackerData,
         userFeatsData,
-        setUserFeatsData
+        setUserFeatsData,
       }}
     >
       {children}
@@ -131,23 +129,33 @@ export async function fetchUserBodyTrackerData(
   currentUser: any,
   setUserBodyTrackerData: Dispatch<SetStateAction<IUserBodyTrackerDataEntry[]>>
 ) {
+  const usersDocRef = doc(db, "users", currentUser.uid);
+  const userBodyTrackerCollectionRef = collection(
+    usersDocRef,
+    "userBodyTrackerCollection"
+  );
+
   try {
-    const usersDocRef = doc(db, "users", currentUser.uid);
-    const userCollectionRef = collection(usersDocRef, "userCollection");
+    const querySnapshot = await getDocs(userBodyTrackerCollectionRef);
 
-    const userBodyTrackerDataDocRef = doc(userCollectionRef, "userBodyTracker");
+    let onlyData: IUserBodyTrackerDataEntry[] = [];
 
-    const userBodyTrackerDataDocSnap = await getDoc(userBodyTrackerDataDocRef);
-
-    if (userBodyTrackerDataDocSnap.exists()) {
-      const queriedUserBodyTrackerData =
-        userBodyTrackerDataDocSnap.data() as IUserBodyTrackerDataEntry;
-
-      setUserBodyTrackerData([queriedUserBodyTrackerData]);
-    }
-  } catch (error) {}
+    querySnapshot.forEach((doc) => {
+      const data = doc.data() as IUserBodyTrackerData;
+      // Assuming each document has a bodyTrackerData array
+      onlyData = onlyData.concat(data.bodyTrackerData);
+    });
+    console.log(onlyData)
+    setUserBodyTrackerData(onlyData);
+  } catch (error) {
+    toast.error("fetchUserBodyTrackerData had an error!");
+  }
 }
 
+export interface IUserBodyTrackerData {
+  bodyTrackerData: IUserBodyTrackerDataEntry[];
+  weight: number;
+}
 
 
 export async function fetchUserFeatsData(
@@ -163,20 +171,59 @@ export async function fetchUserFeatsData(
     const userFeatsDataDocSnap = await getDoc(userFeatsDataDocRef);
 
     if (userFeatsDataDocSnap.exists()) {
-      const queriedUserFeatsData =
-        userFeatsDataDocSnap.data();
-        setUserFeatsData(queriedUserFeatsData.userFeatsData);
+      const queriedUserFeatsData = userFeatsDataDocSnap.data();
+      setUserFeatsData(queriedUserFeatsData.userFeatsData);
     } else {
-      setUserFeatsData([])
+      setUserFeatsData([]);
     }
   } catch (error) {}
 }
 
-
-export async function fetchUserData(
+export async function fetchUserTrainingData(
   currentUser: any,
-  setUserSelectedExercises: Dispatch<SetStateAction<IUserSelectedExercises[]>>,
-  setUserTrainingData: Dispatch<SetStateAction<IWorkoutData[]|undefined>>
+  setUserTrainingData: Dispatch<SetStateAction<IWorkoutData[] | undefined>>
+) {
+  if (currentUser === null) {
+    return;
+  }
+
+  const usersDocRef = doc(db, "users", currentUser.uid);
+  const userTrainingCollectionRef = collection(
+    usersDocRef,
+    "userTrainingCollection"
+  );
+
+  try {
+    const querySnapshot = await getDocs(userTrainingCollectionRef);
+
+    const sessions: IUserTrainingData[] = [];
+    querySnapshot.forEach((doc) => {
+      // Assuming each document in the collection represents a training session
+      // You might want to adjust this line depending on your data structure
+      sessions.push(doc.data() as IUserTrainingData);
+    });
+
+    let onlyData: IWorkoutData[][] = [];
+
+    for (const element of sessions) {
+      if (Array.isArray(element.workoutSessions)) {
+        onlyData.push(element.workoutSessions);
+      }
+    }
+
+    // Flatten the array of arrays into a single array
+    const combinedSessions = onlyData.flat();
+
+    setUserTrainingData(combinedSessions);
+  } catch (error) {
+    //toast.error("We couldn't fetch the training sessions...");
+    console.error("Error while fetching user training sessions:", error);
+  }
+}
+
+export async function fetchUserSelectedExercises(
+  currentUser: any,
+  setUserSelectedExercises: Dispatch<SetStateAction<IUserSelectedExercises[]>>
 ) {
   if (currentUser === null) {
     return;
@@ -191,8 +238,6 @@ export async function fetchUserData(
       "userSelectedExercises"
     );
 
-    const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
-
     const preselectedExercisesDocSnap = await getDoc(
       preselectedExercisesDocRef
     );
@@ -201,16 +246,6 @@ export async function fetchUserData(
       const userSelectedExercisesData =
         preselectedExercisesDocSnap.data() as IUserSelectedExercises;
       setUserSelectedExercises([userSelectedExercisesData]);
-    }
-
-    const userTrainingDataDocSnap = await getDoc(userTrainingDataDocRef);
-
-    if (userTrainingDataDocSnap.exists()) {
-      const userTrainingExercisesData =
-        userTrainingDataDocSnap.data()
-      setUserTrainingData(userTrainingExercisesData.workoutSessions);
-    }else{
-      setUserTrainingData([])
     }
   } catch (error) {
     toast.error("We couldn't fetch the data...");

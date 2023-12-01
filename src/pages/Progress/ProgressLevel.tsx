@@ -24,16 +24,13 @@ import getFlattenedExerciseData from "../../utils/completedWorkoutsChartFunction
 import Exercise from "../../utils/interfaces/Exercise";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 import toast from "react-hot-toast";
-
+import getUserWeight from "../../utils/getUserWeight";
 function ProgressLevel() {
   const { userTrainingData, userSelectedExercises,userBodyTrackerData } =
     useContext(TrainingDataContext);
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
-
-    console.log(userBodyTrackerData)
-    console.log('logging the weight:')
-    console.log(userBodyTrackerData.weight)
+    
   const findDeadlift = findExerciseByName("Deadlift");
   const findBenchPress = findExerciseByName("Bench Press");
   const findSquat = findExerciseByName("Barbell Squat");
@@ -67,6 +64,7 @@ function ProgressLevel() {
         )
       : findDeadlift
   );
+
 
   const data = [
     {
@@ -108,7 +106,8 @@ function ProgressLevel() {
   };
 
   async function handleCalculatePowerLevel() {
-    const userWeight = userBodyTrackerData[0].weight;
+    
+    const userWeight = getUserWeight(userBodyTrackerData)
     const totalLiftedWeight = calculatePowerLevel();
     const isFemale = () => {
       return currentUserData.sex === "female";

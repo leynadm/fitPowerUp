@@ -40,7 +40,7 @@ function Analysis() {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="md">
           <Toolbar disableGutters>
             <InsertChartIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}

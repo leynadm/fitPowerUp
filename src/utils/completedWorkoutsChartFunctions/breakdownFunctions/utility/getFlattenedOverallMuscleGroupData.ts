@@ -9,7 +9,7 @@ function getFlattenedOverallMuscleGroupData(userTrainingData: IWorkoutData[], ti
 
     let filteredAndFlattenedExerciseData: Exercise[] = userTrainingData
         .flatMap((workoutEntry: IWorkoutData) =>
-            workoutEntry.workoutExercises
+            workoutEntry.wExercises
                 .flatMap((exerciseEntry: { name: string; exercises: Exercise[] }) =>
                     exerciseEntry.exercises
                 )

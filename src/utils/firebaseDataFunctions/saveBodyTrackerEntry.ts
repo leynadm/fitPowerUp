@@ -1,4 +1,4 @@
-import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
+import { updateDoc, doc, setDoc, getDoc,collection } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { arrayUnion } from "firebase/firestore";
 import toast from "react-hot-toast";
@@ -26,26 +26,29 @@ export interface IBodyTrackerObj {
 
 async function saveBodyTrackerEntry(
   userId: string,
-  bodyTrackerData: IBodyTrackerObj,
-  saveButtonText: string
+  bodyKPIDataObj: IBodyTrackerObj,
+  saveButtonText: string,
+  userBodyTrackerDataSize:number
+  
 ) {
   const userDocRef = doc(db, "users", userId);
 
-  const userBodyTrackerDocRef = doc(
-    userDocRef,
-    "userCollection/userBodyTracker/"
-  );
+  const userBodyTrackerCollectionRef = collection(userDocRef, "userBodyTrackerCollection");
+   
 
-  // CONVERT THE "" entries to a 0
-  for (const [key, value] of Object.entries(bodyTrackerData)) {
+  let docSuffix = Math.ceil(userBodyTrackerDataSize / 650);
+  let userBodyTrackerDocRef = doc(userBodyTrackerCollectionRef, `userBodyTrackerData_${docSuffix+1}`);
+  console.log(docSuffix)
+  
+  for (const [key, value] of Object.entries(bodyKPIDataObj)) {
     if((typeof value==='string' && key!=="date")){
-      bodyTrackerData[key]=0
+      bodyKPIDataObj[key]=0
     }
   }
 
   if (saveButtonText === "save") {
     await updateDoc(userBodyTrackerDocRef, {
-      bodyTrackerData: arrayUnion(bodyTrackerData),
+      bodyTrackerData: arrayUnion(bodyKPIDataObj),
     });
     toast.success("Your data was added!");
   } else {
@@ -56,15 +59,13 @@ async function saveBodyTrackerEntry(
 
       if (queriedUserBodyTrackerData) {
         const filteredData = queriedUserBodyTrackerData.bodyTrackerData.filter(
-          (entry: IBodyTrackerObj) => entry.date !== bodyTrackerData.date
+          (entry: IBodyTrackerObj) => entry.date !== bodyKPIDataObj.date
         );
 
-        // Add the new data to the filtered array
-        filteredData.push(bodyTrackerData);
+        filteredData.push(bodyKPIDataObj);
 
         await setDoc(userBodyTrackerDocRef, {
-          bodyTrackerData: filteredData,
-          weight:bodyTrackerData.weight
+          bodyTrackerData: filteredData
         });
         toast.success("Your data was added!");
       }
@@ -73,3 +74,4 @@ async function saveBodyTrackerEntry(
 }
 
 export default saveBodyTrackerEntry;
+

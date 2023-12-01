@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
-import { FixedSizeList } from "react-window";
+import { FixedSizeList, VariableSizeList } from "react-window";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -14,12 +14,13 @@ import PercentIcon from "@mui/icons-material/Percent";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { AuthContext } from "../../context/Auth";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
+import { useRef } from "react";
 function BodyTrackerHistory() {
   const { userBodyTrackerData } = useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
 
   const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
-
+  
   if (userBodyTrackerDataArr.length > 0) {
     userBodyTrackerDataArr.sort(
       (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
@@ -47,11 +48,13 @@ function BodyTrackerHistory() {
             {userBodyTrackerEntry.date}
           </Typography>
 
-          <Accordion sx={{ margin: "8px" }}>
+          <Accordion sx={{ margin: "8px" }}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              aria-controls={`panel-${index}-content`}
+              id={`panel-${index}-header`}
+
             >
               <Box display="flex" width="100%" justifyContent="space-between">
                 <div
@@ -165,7 +168,7 @@ function BodyTrackerHistory() {
       <FixedSizeList
         height={window.innerHeight - 190}
         itemCount={userBodyTrackerDataArr.length}
-        itemSize={100}
+        itemSize={150}
         width="100%"
       >
         {Row}

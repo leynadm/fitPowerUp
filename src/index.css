@@ -21,3 +21,26 @@ code {
   font-family: 'Voltaire', Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } 
+
+@media screen and (min-width: 768px) {
+/* This styles the background of the scrollbar */
+::-webkit-scrollbar {
+  width: 0.5rem; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: black; /* color of the tracking area */
+}
+
+/* This styles the draggable scrolling handle */
+::-webkit-scrollbar-thumb {
+  background: #FFA500; /* scrollbar handle color */
+  border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #CC7722; /* scrollbar handle color on hover */
+}
+
+}

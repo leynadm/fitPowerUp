@@ -19,8 +19,10 @@ import calculateOneRepMax from "../../utils/progressFunctions/calculateOneRepMax
 import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntries";
 import { useNavigate } from "react-router-dom";
 import { TrainingDataContext } from "../../context/TrainingData";
-import { fetchUserData } from "../../context/TrainingData";
+import { fetchUserTrainingData } from "../../context/TrainingData";
 import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
+import { fetchUserFeatsData } from "../../context/TrainingData";
+import getUserWeight from "../../utils/getUserWeight";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -52,14 +54,20 @@ function CompleteWorkoutModal({
   const [workoutDate, setWorkoutDate] = useState<string>(
     formatDateForTextField(new Date())
   );
-  const { currentUser, currentUserData,userBodyTrackerData } = useContext(AuthContext);
-  const { setUserSelectedExercises, setUserTrainingData,userFeatsData } =
+  const { currentUser } = useContext(AuthContext);
+  const { setUserTrainingData,userTrainingData,userFeatsData,setUserFeatsData,userBodyTrackerData } =
     useContext(TrainingDataContext);
   const navigate = useNavigate();
+ 
+  const userTrainingDataSize = userTrainingData.length
+
   function handleClose() {
     setOpenCompleteWorkoutModal(false);
   }
-
+  console.log('loggigng user body tracker data')
+  console.log(userBodyTrackerData)
+  
+  const userBodyWeight = getUserWeight(userBodyTrackerData)
   function markTrainHarderCheck() {
     setTrainHarderCheck((prevState) => !prevState);
   }
@@ -146,7 +154,7 @@ function CompleteWorkoutModal({
 
     let totalWeight = 0;
     let totalReps = 0;
-    let totalSessionLoad = 0;
+    let totalSessionVolume = 0;
 
     for (let index = 0; index < existingExercisesArr.length; index++) {
       const exerciseSet = existingExercisesArr[index];
@@ -162,15 +170,15 @@ function CompleteWorkoutModal({
     }
 
     // Access the user's body weight.
-    if (currentUserData.weight !== 0) {
-      let totalSessionLoadResult = (
-        totalWeight / currentUserData.weight
+    if (userBodyWeight !== 0) {
+      let totalSessionVolumeResult = (
+        totalWeight / userBodyWeight
       ).toFixed(1);
-      totalSessionLoad = parseFloat(totalSessionLoadResult);
+      totalSessionVolume = parseFloat(totalSessionVolumeResult);
       // Round the result to 1 decimal place
     }
 
-    return { totalWeight, totalReps, totalSessionLoad };
+    return { totalWeight, totalReps, totalSessionVolume };
   }
 
   async function handleCompleteWorkout() {
@@ -181,41 +189,38 @@ function CompleteWorkoutModal({
     const workoutStatsResults = calculateWorkoutSessionStats(existingExercises);
 
     const workoutData = {
-      workoutId: uuid(),
-      workoutDate: workoutDate,
-      workoutEvaluation: {
-        workoutComment: workoutCommentValue,
-        workoutValue: workoutValue,
-        feelPainCheck: feelPainCheck,
-        warmStretchCheck: warmStretchCheck,
-        trainHarderCheck: trainHarderCheck,
+      id: uuid(),
+      date: workoutDate,
+      wEval: {
+        comment: workoutCommentValue,
+        value: workoutValue,
+        feelPain: feelPainCheck,
+        warmStretch: warmStretchCheck,
+        trainHarder: trainHarderCheck,
       },
-      workoutStats: {
-        totalWeight: workoutStatsResults.totalWeight,
-        totalReps: workoutStatsResults.totalReps,
-        totalLoad: workoutStatsResults.totalSessionLoad,
+      stats: {
+        weight: workoutStatsResults.totalWeight,
+        reps: workoutStatsResults.totalReps,
+        vol: workoutStatsResults.totalSessionVolume,
       },
-      workoutSessionPowerLevel: workoutSessionPowerLevel,
-      workoutExercises: existingExercisesArr,
+      power: workoutSessionPowerLevel,
+      wExercises: existingExercisesArr,
     };
     
     try {
 
-      await completeWorkout(currentUser.uid, workoutData);
+      await completeWorkout(currentUser.uid, workoutData,userTrainingDataSize);
+      await updateUserFeats(currentUser.uid,userFeatsData,userBodyWeight)
 
-      await updateUserFeats(currentUser.uid,userFeatsData,userBodyTrackerData[0].weight)
-
-      console.log('going to delete entries  ')
       deleteAllEntries();
 
-      console.log('fetching all the data again')
-      await fetchUserData(
+      await fetchUserTrainingData(
         currentUser,
-        setUserSelectedExercises,
         setUserTrainingData
       );
-
       
+      await fetchUserFeatsData(currentUser,setUserFeatsData)
+
       navigate("congratulations", {
         state: { workoutData },
       });

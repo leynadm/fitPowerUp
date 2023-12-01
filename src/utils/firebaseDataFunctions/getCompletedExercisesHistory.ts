@@ -22,7 +22,7 @@ function getCompletedExercisesHistory(
   }[] = [];
 
   userTrainingData.forEach((workoutEntry: IWorkoutData) => {
-    workoutEntry.workoutExercises.forEach(
+    workoutEntry.wExercises.forEach(
       (exerciseEntry: { name: string; exercises: Exercise[] }) => {
         const completedExerciseName = exerciseEntry.name.toUpperCase();
         const exercises = exerciseEntry.exercises;
@@ -45,7 +45,7 @@ function getCompletedExercisesHistory(
             0
           );
 
-          const date = workoutEntry.workoutDate; // Convert the date to a string for grouping
+          const date = workoutEntry.date; // Convert the date to a string for grouping
           groupedCompletedExercises.push({
             date,
             exercises: exercises,

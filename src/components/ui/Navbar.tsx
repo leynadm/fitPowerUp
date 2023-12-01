@@ -40,7 +40,8 @@ function Navbar() {
         elevation={3}
       >
         <BottomNavigation
-          sx={{ backgroundColor: "white", zIndex: 9999 }}
+          className="bottomNavigation"
+         sx={{ backgroundColor: "white", zIndex: 9999 }}
           showLabels
           onChange={(event, newValue) => {}}
         >

@@ -172,7 +172,9 @@ function ProgressPath() {
   };
 
   return (
-    <Box paddingLeft="8px" paddingRight="8px">
+    <Box paddingLeft="8px" paddingRight="8px"
+    
+    >
       <FixedSizeList
         height={window.innerHeight - 150}
         itemCount={pathPoints.length}

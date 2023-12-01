@@ -480,6 +480,7 @@ export const feats = [
     type: "Exercises - Deadlift",
     featValue: 1.5,
   },
+
   {
     feat: "Deadlift 2x Your Bodyweight",
     name: "Vegeta Approves.",
@@ -491,7 +492,7 @@ export const feats = [
     featValue: 2,
   },
   {
-    feat: "Bench Press/ 0.75x Your Bodyweight",
+    feat: "Bench Press 0.75x Your Bodyweight",
     name: "A New Saga Begins",
     description: "Congratulations, you're ready to start your own Saga!",
     state: false,
@@ -557,7 +558,7 @@ export const feats = [
 
   {
     feat: "Shoulder Press 0.5x Your Bodyweight",
-    name: "",
+    name: "Chasing Saiyan Power",
     description:
       "A Saiyan's power is determined by how big his shoulders are. And how spiky his hair is. Keep it up!",
     state: false,
@@ -593,7 +594,7 @@ export const feats = [
     name: "Earthling Girl's Challenge",
     state: false,
     description:
-      "Well done, Every journey starts with one and even Goku had to do his first!",
+      "Amazing job, be proud! Every journey starts with the first one, and even Goku knows it!",
     date: "",
     level: 2,
     type: "Exercises - Pull Up",
@@ -895,7 +896,7 @@ export const feats = [
   },
   {
     feat: "Perform 1 Chin Up",
-    name: "Saiyan Arms In Progress",
+    name: "Saiyan In Progress",
     description:
       "If there's a way to start your journey to becoming a Super Saiyan, this is the one!",
     state: false,

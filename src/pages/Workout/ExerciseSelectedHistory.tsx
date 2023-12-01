@@ -62,7 +62,7 @@ function ExerciseSelectedHistory() {
   }) => {
     const group = exerciseHistoryArr[index];
 
-
+    
     return (
       <Box key={index} style={style} className="exercise-complete">
         <Typography
@@ -217,7 +217,12 @@ function ExerciseSelectedHistory() {
   };
 
   return (
-    <Box>
+    <Container
+      sx={{
+
+      }}
+      maxWidth="md"
+    >
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
@@ -238,31 +243,24 @@ function ExerciseSelectedHistory() {
       >
         {exerciseName && exerciseName.toLocaleUpperCase()}
       </Typography>
-      <Divider sx={{ width: "100vw" }} />
+      <Divider />
 
-      <Container
-        sx={{
-          width: "100vw",
-          paddingBottom: "56px",
-          height: "calc(100vh - 185px)",
-          maxWidth: "md",
+      <VariableSizeList 
+        height={window.innerHeight - 190}
+        itemCount={exerciseHistoryArr.length}
+        itemSize={(index) => {
+          const group = exerciseHistoryArr[index];
+          const numExercises = group.exercises.length;
+          const exerciseHeight = numExercises * 48;
+          return exerciseHeight + 56;
         }}
+        width="100%"
+
       >
-        <VariableSizeList
-          height={window.innerHeight - 190}
-          itemCount={exerciseHistoryArr.length}
-          itemSize={(index) => {
-            const group = exerciseHistoryArr[index];
-            const numExercises = group.exercises.length;
-            const exerciseHeight = numExercises * 48; 
-            return exerciseHeight + 56;
-          }}
-          width="100%"
-        >
-          {Row}
-        </VariableSizeList>
-      </Container>
-    </Box>
+        {Row}
+      </VariableSizeList>
+
+    </Container>
   );
 }
 

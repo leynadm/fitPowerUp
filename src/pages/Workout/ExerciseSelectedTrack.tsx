@@ -29,7 +29,6 @@ function ExerciseSelectedTrack() {
   const { userSelectedExercises, userTrainingData } =
     useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
-  console.log({ exerciseName });
   const exerciseSelected = userSelectedExercises[0].exercises.find(
     (exercise: IUserSelectedExercises) => exercise.name === exerciseName
   );
@@ -46,12 +45,12 @@ function ExerciseSelectedTrack() {
       }[] = [];
 
       userTrainingDataArr.forEach((workoutEntry: IWorkoutData) => {
-        workoutEntry.workoutExercises.forEach(
+        workoutEntry.wExercises.forEach(
           (exerciseEntry: { name: string; exercises: Exercise[] }) => {
             const completedExerciseName = exerciseEntry.name.toUpperCase();
             const exercises = exerciseEntry.exercises;
             if (completedExerciseName === exerciseName?.toUpperCase()) {
-              const date = workoutEntry.workoutDate; // Convert the date to a string for grouping
+              const date = workoutEntry.date; // Convert the date to a string for grouping
               groupedCompletedExercises.push({
                 date,
                 exercises: exercises,

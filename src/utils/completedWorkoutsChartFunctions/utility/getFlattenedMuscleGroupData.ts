@@ -8,7 +8,7 @@ function getFlattenedMuscleGroupData(userTrainingData: IWorkoutData[], muscleGro
     const today = new Date();
     const filteredAndFlattenedExerciseData: Exercise[] = userTrainingData
         .flatMap((workoutEntry: IWorkoutData) =>
-            workoutEntry.workoutExercises
+            workoutEntry.wExercises
                 .flatMap((exerciseEntry: { name: string; exercises: Exercise[] }) =>
                     exerciseEntry.exercises
                         .filter((exercise: Exercise) =>
