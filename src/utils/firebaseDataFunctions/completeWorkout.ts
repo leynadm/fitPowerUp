@@ -6,7 +6,7 @@ import IWorkoutEvaluationData from "../interfaces/WorkoutEvaluationData";
 import toast from "react-hot-toast";
 
 interface IWorkoutDataWorkoutStats{
-  weight: number;
+  sets: number;
   reps: number;
   vol: number;
 }
@@ -25,13 +25,19 @@ async function completeWorkout(userId: string, workoutData: IWorkoutData, userTr
     const userDocRef = doc(db, "users", userId);
 
     // Calculate the document suffix based on userTrainingDataSize
-    const docSuffix = Math.ceil(userTrainingDataSize+1 / 500);
-    const userTrainingDataDocRef = doc(userDocRef, `userTrainingCollection/userTrainingData_${docSuffix}/`);
+    const docSuffix =
+      Math.ceil(userTrainingDataSize / 650) === 0
+        ? 1
+        : Math.ceil(userTrainingDataSize / 650);
+
+    const userTrainingDataDocRef = doc(
+      userDocRef,
+      `userTrainingCollection/userTrainingData_${docSuffix}/`
+    );
 
     await updateDoc(userTrainingDataDocRef, {
       workoutSessions: arrayUnion(workoutData),
     });
-
   } catch (error) {
     toast.error("completeWorkout had an error!")
   }

@@ -1,5 +1,5 @@
 import { IWorkoutData } from "./completeWorkout";
-import { doc, collection, getDoc, setDoc } from "firebase/firestore";
+import { doc, collection, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { IUserTrainingData } from "../../context/TrainingData";
 import getFlattenedExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
@@ -7,293 +7,305 @@ import getFlattenedAllExerciseData from "../completedWorkoutsChartFunctions/util
 import { IUserFeatsDataEntry } from "../../context/TrainingData";
 import Exercise from "../interfaces/Exercise";
 import getOverallStats from "../completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
+import toast from "react-hot-toast";
 
 async function updateUserFeats(
   userId: string,
   userFeatsData: IUserFeatsDataEntry[],
   userBodyWeight: number
 ) {
-  const userFeatsDataArr = userFeatsData;
+  try {
+    const userFeatsDataArr = userFeatsData;
 
-  const userDocRef = doc(db, "users", userId);
+    const userDocRef = doc(db, "users", userId);
 
-  const userCollectionRef = collection(userDocRef, "userCollection");
+    const userCollectionRef = collection(userDocRef, "userCollection");
+    const userTrainingCollectionRef = collection(
+      userDocRef,
+      "userTrainingCollection"
+    );
 
-  const userTrainingDataDocRef = doc(userCollectionRef, "userTrainingData");
+    const querySnapshot = await getDocs(userTrainingCollectionRef);
 
-  const userTraingDataDocSnap = await getDoc(userTrainingDataDocRef);
+    const sessions: IUserTrainingData[] = [];
+    querySnapshot.forEach((doc) => {
+      // Assuming each document in the collection represents a training session
+      // You might want to adjust this line depending on your data structure
+      sessions.push(doc.data() as IUserTrainingData);
+    });
 
-  const userTrainingExercisesData =
-    userTraingDataDocSnap.data() as IUserTrainingData;
+    let onlyData: IWorkoutData[][] = [];
 
-  if (!userTraingDataDocSnap.exists()) {
-    return;
-  }
-
-  const userTrainingDataResult = userTrainingExercisesData.workoutSessions;
-
-  const flattenedAllExerciseData = getFlattenedAllExerciseData(
-    userTrainingDataResult,
-    "all"
-  );
-
-  for (let index = 0; index < userFeatsDataArr.length; index++) {
-    const userFeatEntry = userFeatsDataArr[index];
-
-    if (userFeatEntry.type === "Workouts Consistency") {
-      userFeatEntry.state = calculateWorkoutConsistency(
-        flattenedAllExerciseData,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Workout Streak") {
-      const streakObject = calculateWorkoutsStreak(
-        flattenedAllExerciseData,
-        userFeatEntry
-      );
-
-      const featValueCheck = streakObject[userFeatEntry.featValue];
-      
-      userFeatEntry.state = featValueCheck >= 1;
-    }
-
-    if (userFeatEntry.type === "Sets") {
-      userFeatEntry.state = calculateSets(
-        userTrainingDataResult,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Reps") {
-      userFeatEntry.state = calculateReps(
-        userTrainingDataResult,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Volume") {
-      userFeatEntry.state = calculateVolume(
-        userTrainingDataResult,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Deadlift") {
-      const flattenedExerciseDataDeadlift = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Deadlift",
-        "all"
-      );
-
-      userFeatEntry.state = calculateDeadLift(
-        flattenedExerciseDataDeadlift,
-        userFeatEntry,
-        userBodyWeight
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Bench Press") {
-      const flattenedExerciseDataBenchPress = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Bench Press",
-        "all"
-      );
-
-      const benchPress = calculateBenchPress(
-        flattenedExerciseDataBenchPress,
-        userFeatEntry,
-        userBodyWeight
-      );
-
-      const flattenedExerciseDataBarbellFloorPress = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Barbell Floor Press",
-        "all"
-      );
-
-      const barbellFloorPress = calculateBenchPress(
-        flattenedExerciseDataBarbellFloorPress,
-        userFeatEntry,
-        userBodyWeight
-      );
-
-      if (benchPress || barbellFloorPress) {
-        userFeatEntry.state = true;
+    for (const element of sessions) {
+      if (Array.isArray(element.workoutSessions)) {
+        onlyData.push(element.workoutSessions);
       }
     }
 
-    if (userFeatEntry.type === "Exercises - Shoulder Press") {
-      const flattenedExerciseDataMilitaryPress = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Military Press",
-        "all"
-      );
+    const combinedSessions = onlyData.flat();
 
-      const militaryPress = calculateShoulderPress(
-        flattenedExerciseDataMilitaryPress,
-        userFeatEntry,
-        userBodyWeight
-      );
+    const userTrainingDataResult = combinedSessions;
 
-      const flattenedExerciseDataBarbellSeatedShoulderPress =
-        getFlattenedExerciseData(
+    const flattenedAllExerciseData = getFlattenedAllExerciseData(
+      userTrainingDataResult,
+      "all"
+    );
+
+    for (let index = 0; index < userFeatsDataArr.length; index++) {
+      const userFeatEntry = userFeatsDataArr[index];
+
+      if (userFeatEntry.type === "Workouts Consistency") {
+        userFeatEntry.state = calculateWorkoutConsistency(
+          flattenedAllExerciseData,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Workout Streak") {
+        const streakObject = calculateWorkoutsStreak(flattenedAllExerciseData);
+
+        const featValueCheck = streakObject[userFeatEntry.featValue];
+
+        userFeatEntry.state = featValueCheck >= 1;
+      }
+
+      if (userFeatEntry.type === "Sets") {
+        userFeatEntry.state = calculateSets(
           userTrainingDataResult,
-          "Seated Shoulder Press",
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Reps") {
+        userFeatEntry.state = calculateReps(
+          userTrainingDataResult,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Volume") {
+        userFeatEntry.state = calculateVolume(
+          userTrainingDataResult,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Deadlift") {
+        const flattenedExerciseDataDeadlift = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Deadlift",
           "all"
         );
 
-      const seatedShoulderPress = calculateShoulderPress(
-        flattenedExerciseDataBarbellSeatedShoulderPress,
-        userFeatEntry,
-        userBodyWeight
-      );
+        userFeatEntry.state = calculateDeadLift(
+          flattenedExerciseDataDeadlift,
+          userFeatEntry,
+          userBodyWeight
+        );
+      }
 
-      if (militaryPress || seatedShoulderPress) {
-        userFeatEntry.state = true;
+      if (userFeatEntry.type === "Exercises - Bench Press") {
+        const flattenedExerciseDataBenchPress = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Bench Press",
+          "all"
+        );
+
+        const benchPress = calculateBenchPress(
+          flattenedExerciseDataBenchPress,
+          userFeatEntry,
+          userBodyWeight
+        );
+
+        const flattenedExerciseDataBarbellFloorPress = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Barbell Floor Press",
+          "all"
+        );
+
+        const barbellFloorPress = calculateBenchPress(
+          flattenedExerciseDataBarbellFloorPress,
+          userFeatEntry,
+          userBodyWeight
+        );
+
+        if (benchPress || barbellFloorPress) {
+          userFeatEntry.state = true;
+        }
+      }
+
+      if (userFeatEntry.type === "Exercises - Shoulder Press") {
+        const flattenedExerciseDataMilitaryPress = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Military Press",
+          "all"
+        );
+
+        const militaryPress = calculateShoulderPress(
+          flattenedExerciseDataMilitaryPress,
+          userFeatEntry,
+          userBodyWeight
+        );
+
+        const flattenedExerciseDataBarbellSeatedShoulderPress =
+          getFlattenedExerciseData(
+            userTrainingDataResult,
+            "Seated Shoulder Press",
+            "all"
+          );
+
+        const seatedShoulderPress = calculateShoulderPress(
+          flattenedExerciseDataBarbellSeatedShoulderPress,
+          userFeatEntry,
+          userBodyWeight
+        );
+
+        if (militaryPress || seatedShoulderPress) {
+          userFeatEntry.state = true;
+        }
+      }
+
+      if (userFeatEntry.type === "Exercises - Squat") {
+        const flattenedExerciseDataSquat = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Squat",
+          "all"
+        );
+
+        userFeatEntry.state = calculateSquat(
+          flattenedExerciseDataSquat,
+          userFeatEntry,
+          userBodyWeight
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Pull Up") {
+        const flattenedExerciseDataPullUp = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Pull Ups",
+          "all"
+        );
+
+        userFeatEntry.state = calculatePullUps(
+          flattenedExerciseDataPullUp,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Push Up") {
+        const flattenedExerciseDataPushUps = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Push Ups",
+          "all"
+        );
+
+        userFeatEntry.state = calculatePushUps(
+          flattenedExerciseDataPushUps,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Plank") {
+        const flattenedExerciseDataChinUp = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Plank",
+          "all"
+        );
+
+        userFeatEntry.state = calculatePlank(
+          flattenedExerciseDataChinUp,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises") {
+        userFeatEntry.state = calculateUniqueExercises(
+          flattenedAllExerciseData,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Sit-Ups/Crunches") {
+        const flattenedExerciseDataSitUps = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Sit Ups",
+          "all"
+        );
+
+        const flattenedExerciseDataCrunches = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Crunches",
+          "all"
+        );
+
+        const sitUps = calculateSitUpsOrCrunches(
+          flattenedExerciseDataSitUps,
+          userFeatEntry
+        );
+
+        const crunches = calculateSitUpsOrCrunches(
+          flattenedExerciseDataCrunches,
+          userFeatEntry
+        );
+
+        if (sitUps || crunches) {
+          userFeatEntry.state = true;
+        }
+      }
+
+      if (userFeatEntry.type === "Exercises - Burpees") {
+        const flattenedExerciseDataBurpees = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Burpees",
+          "all"
+        );
+
+        userFeatEntry.state = calculateBurpees(
+          flattenedExerciseDataBurpees,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Hanging Leg Raises") {
+        const flattenedExerciseDataHangingLegRaises = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Hanging Leg Raise",
+          "all"
+        );
+
+        userFeatEntry.state = calculateHangingLegRaise(
+          flattenedExerciseDataHangingLegRaises,
+          userFeatEntry
+        );
+      }
+
+      if (userFeatEntry.type === "Exercises - Chin Up") {
+        const flattenedExerciseDataChinUp = getFlattenedExerciseData(
+          userTrainingDataResult,
+          "Chin Ups",
+          "all"
+        );
+
+        userFeatEntry.state = calculateChinUps(
+          flattenedExerciseDataChinUp,
+          userFeatEntry
+        );
       }
     }
 
-    if (userFeatEntry.type === "Exercises - Squat") {
-      const flattenedExerciseDataSquat = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Squat",
-        "all"
-      );
+    const userFeatsDocRef = doc(userDocRef, "userCollection/userFeats/");
 
-      userFeatEntry.state = calculateSquat(
-        flattenedExerciseDataSquat,
-        userFeatEntry,
-        userBodyWeight
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Pull Up") {
-      const flattenedExerciseDataPullUp = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Pull Ups",
-        "all"
-      );
-
-      userFeatEntry.state = calculatePullUps(
-        flattenedExerciseDataPullUp,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Push Up") {
-      const flattenedExerciseDataPushUps = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Push Ups",
-        "all"
-      );
-
-      userFeatEntry.state = calculatePushUps(
-        flattenedExerciseDataPushUps,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Plank") {
-      const flattenedExerciseDataChinUp = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Plank",
-        "all"
-      );
-
-      userFeatEntry.state = calculatePlank(
-        flattenedExerciseDataChinUp,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises") {
-      userFeatEntry.state = calculateUniqueExercises(
-        flattenedAllExerciseData,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Sit-Ups/Crunches") {
-      const flattenedExerciseDataSitUps = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Sit Ups",
-        "all"
-      );
-
-      const flattenedExerciseDataCrunches = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Crunches",
-        "all"
-      );
-
-      const sitUps = calculateSitUpsOrCrunches(
-        flattenedExerciseDataSitUps,
-        userFeatEntry
-      );
-
-      const crunches = calculateSitUpsOrCrunches(
-        flattenedExerciseDataCrunches,
-        userFeatEntry
-      );
-
-      if (sitUps || crunches) {
-        userFeatEntry.state = true;
-      }
-    }
-
-    if (userFeatEntry.type === "Exercises - Burpees") {
-      const flattenedExerciseDataBurpees = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Burpees",
-        "all"
-      );
-
-      userFeatEntry.state = calculateBurpees(
-        flattenedExerciseDataBurpees,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Hanging Leg Raises") {
-      const flattenedExerciseDataHangingLegRaises = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Hanging Leg Raise",
-        "all"
-      );
-
-      userFeatEntry.state = calculateHangingLegRaise(
-        flattenedExerciseDataHangingLegRaises,
-        userFeatEntry
-      );
-    }
-
-    if (userFeatEntry.type === "Exercises - Chin Up") {
-      const flattenedExerciseDataChinUp = getFlattenedExerciseData(
-        userTrainingDataResult,
-        "Chin Ups",
-        "all"
-      );
-
-      userFeatEntry.state = calculateChinUps(
-        flattenedExerciseDataChinUp,
-        userFeatEntry
-      );
-    }
+    await setDoc(userFeatsDocRef, { userFeatsData: userFeatsDataArr });
+  } catch (error) {
+    toast.error("There was an error with updateUserFeats!");
+    console.error(error);
+    throw error;
   }
-
-  const userFeatsDocRef = doc(userDocRef, "userCollection/userFeats/");
-
-  await setDoc(userFeatsDocRef, { userFeatsData: userFeatsDataArr });
 }
 
 export default updateUserFeats;
 
-function calculateWorkoutsStreak(
-  flattenedAllExerciseData: Exercise[],
-  featEntry: IUserFeatsDataEntry
-) {
-
+function calculateWorkoutsStreak(flattenedAllExerciseData: Exercise[]) {
   const entriesPerWeek = calculateEntriesPerWeek(flattenedAllExerciseData);
   const weekCounts = countWeeksWithCertainEntries(
     entriesPerWeek,

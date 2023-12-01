@@ -23,11 +23,12 @@ async function updateUnitSystemPreference(
     userBodyTrackerData,
     updatedUnitsSystem,
     currentUnitsSystem
-  );
+  ); 
 
   const batch = writeBatch(db);
 
   try {
+
     const userDocRef = doc(db, "users", userId);
     const userTrainingCollectionRef = collection(
       userDocRef,
@@ -36,11 +37,15 @@ async function updateUnitSystemPreference(
 
     // Splitting userTrainingData into different documents
     const dataSize = 650; // Define the size limit for each document
-    for (let i = 0; i < convertedUserTrainingData.length; i += dataSize) {
-      const docSuffix = Math.ceil((i + 1) / dataSize);
+    const convertedUserTrainingDataLength = convertedUserTrainingData.length;
+    let trainingDataDocCount = 0; // To keep track of the number of documents created
+
+    for (let i = 0; i < convertedUserTrainingDataLength; i += dataSize) {
+      trainingDataDocCount++; // Increment trainingDataDocCount for each new document
+
       const userTrainingDoc = doc(
         userTrainingCollectionRef,
-        `userTrainingData_${docSuffix}`
+        `userTrainingData_${trainingDataDocCount}`
       );
 
       // Get a slice of the training data array for this document
@@ -56,11 +61,16 @@ async function updateUnitSystemPreference(
       "userBodyTrackerCollection"
     );
 
-    for (let i = 0; i < convertedUserBodyTrackerData.length; i += dataSize) {
-      const docSuffix = Math.ceil((i + 1) / dataSize);
+    const convertedUserBodyTrackerDataLength =
+      convertedUserBodyTrackerData.length;
+      let bodyTrackerDataDocCount = 0; // To keep track of the number of documents created
+    
+      for (let i = 0; i < convertedUserBodyTrackerDataLength; i += dataSize) {
+        bodyTrackerDataDocCount++; // Increment trainingDataDocCount for each new document
+
       const userBodyTrackerDoc = doc(
         userBodyTrackerCollectionRef,
-        `userBodyTrackerData_${docSuffix}`
+        `userBodyTrackerData_${bodyTrackerDataDocCount}`
       );
 
       // Get a slice of the training data array for this document
@@ -76,7 +86,7 @@ async function updateUnitSystemPreference(
     });
 
     batch.commit();
-
+ 
     toast.success(`Unit System updated to ${updatedUnitsSystem}!`);
   } catch (error) {
     toast.error("Oops, updateUnitSystemPreference has an error!");
@@ -106,11 +116,11 @@ function convertUserTrainingData(
 
     for (
       let index = 0;
-      index < convertedUserTrainingDataEntry.workoutExercises.length;
+      index < convertedUserTrainingDataEntry.wExercises.length;
       index++
     ) {
       const workoutExerciseGroup =
-        convertedUserTrainingDataEntry.workoutExercises[index].exercises;
+        convertedUserTrainingDataEntry.wExercises[index].exercises;
 
       for (let index = 0; index < workoutExerciseGroup.length; index++) {
         const workoutExerciseGroupEntry = workoutExerciseGroup[index];
@@ -121,7 +131,7 @@ function convertUserTrainingData(
           currentUnitsSystem === "metric"
         ) {
           const newConvertedValue = parseFloat(
-            (workoutExerciseGroupEntry.weight * 2.2).toFixed(1)
+            (workoutExerciseGroupEntry.weight * 2.20462).toFixed(1)
           );
 
           workoutExerciseGroupEntry.weight = newConvertedValue;
@@ -131,7 +141,7 @@ function convertUserTrainingData(
           currentUnitsSystem === "imperial"
         ) {
           const newConvertedValue = parseFloat(
-            (workoutExerciseGroupEntry.weight * 0.453).toFixed(1)
+            (workoutExerciseGroupEntry.weight * 0.453592).toFixed(1)
           );
 
           workoutExerciseGroupEntry.weight = newConvertedValue;
@@ -165,7 +175,7 @@ function convertUserBodyTrackerData(
         currentUnitsSystem === "metric"
       ) {
         convertedUserBodyTrackerEntry[kpiEntry] = parseFloat(
-          (objValue * 2.2).toFixed(1)
+          (objValue * 2.20462).toFixed(1)
         );
       } else if (
         objValue !== 0 &&
@@ -174,7 +184,7 @@ function convertUserBodyTrackerData(
         currentUnitsSystem === "imperial"
       ) {
         convertedUserBodyTrackerEntry[kpiEntry] = parseFloat(
-          (objValue * 0.453).toFixed(1)
+          (objValue * 0.453592).toFixed(1)
         );
       }
     }

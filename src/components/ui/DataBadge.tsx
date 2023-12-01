@@ -14,7 +14,7 @@ function DataBadge({dataValue,dataLabel}:DataBadgeProps){
             backgroundColor:"#520975",
             color:"white",
             borderRadius:"4px",
-            padding:"2px 8px 2px 8px"
+            padding:"1px 4px 1px 4px"
         }}>
             <div style={{fontWeight:"bold"}}>{dataValue}</div>
             <div>{dataLabel}</div>

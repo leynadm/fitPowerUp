@@ -150,7 +150,7 @@ function CompletedWorkouts({
     return newDate;
   }
 
-  const pages = ["Settings", "Body Tracker", "Analysis", "Sign Out"];
+  const pages = ["Analysis","Preset Workouts", "Body Tracker", "Settings", "Sign Out"];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -164,16 +164,14 @@ function CompletedWorkouts({
     handleCloseNavMenu();
 
     // Handle logic based on the clicked page
-    if (page === "Settings") {
-      // Handle Settings page click
-      navigate("settings");
-    } else if (page === "Evaluate Workout") {
-    } else if (page === "Body Tracker") {
-      navigate("bodytracker");
-    } else if (page === "Analysis") {
+    if (page === "Analysis") {
       navigate("analysis");
     } else if (page === "Preset Workouts") {
       navigate("preset-workouts");
+    } else if (page === "Body Tracker") {
+      navigate("bodytracker");
+    } else if (page === "Settings") {
+      navigate("settings");
     } else if (page === "Sign Out") {
       auth.signOut();
       // ...
@@ -182,18 +180,16 @@ function CompletedWorkouts({
 
   const handlePageClick = (page: string) => {
     handleCloseNavMenu();
-
-    // Handle logic based on the clicked page
-    if (page === "Settings") {
-      // Handle Settings page click
-      navigate("settings");
+    if (page === "Analysis") {
+      navigate("analysis");
+    } else if (page === "Preset Workouts") {
+      navigate("preset-workouts");
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
-    } else if (page === "Analysis") {
-      navigate("analysis");
+    } else if (page === "Settings") {
+      navigate("settings");
     } else if (page === "Sign Out") {
       auth.signOut();
-      // ...
     }
   };
 
@@ -306,7 +302,7 @@ function CompletedWorkouts({
               ))}
             </Box>
 
-            <Paper>
+
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
@@ -325,7 +321,7 @@ function CompletedWorkouts({
                   display: { xs: "block", md: "none" },
                 }}
               >
-                <MenuList sx={{ padding: 0 }}>
+
                   <MenuItem onClick={() => handlePageClick("Analysis")}>
                     <ListItemIcon>
                       <InsertChartIcon fontSize="small" />
@@ -356,9 +352,9 @@ function CompletedWorkouts({
                     </ListItemIcon>
                     <ListItemText>Log Out</ListItemText>
                   </MenuItem>
-                </MenuList>
+
               </Menu>
-            </Paper>
+
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
@@ -532,14 +528,14 @@ function CompletedWorkouts({
                           dataLabel="reps"
                         />
                         <DataBadge
-                          dataValue={entry.stats.weight}
-                          dataLabel={
-                            currentUserData.unitsSystem === "metric"
-                              ? "kgs"
-                              : "lbs"
-                          }
+                          dataValue={entry.stats.sets}
+                          dataLabel="sets"
                         />
-                        <DataBadge dataValue={entry.stats.vol} dataLabel="BW" />
+                        <DataBadge dataValue={entry.stats.vol} dataLabel={
+                            currentUserData.unitsSystem === "metric"
+                              ? "kg"
+                              : "lbs"
+                          } />
                       </Box>
                     </AccordionDetails>
                   </Accordion>
@@ -666,7 +662,7 @@ function CompletedWorkouts({
                                   <Typography>
                                     {`${exercise.weight.toFixed(2)} ${
                                       currentUserData.unitsSystem === "metric"
-                                        ? "kgs"
+                                        ? "kg"
                                         : "lbs"
                                     }`}
                                   </Typography>

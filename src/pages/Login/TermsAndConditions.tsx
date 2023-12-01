@@ -2,7 +2,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 function TermsAndConditions() {
   return (
-    <Box sx={{ display: "flex", padding: "1rem", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", padding: "1rem", flexDirection: "column", left:0,top:0 }}>
+
       <br></br>
       Effective Date: 01/07/2023
       <br></br>

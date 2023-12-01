@@ -55,19 +55,24 @@ function CompleteWorkoutModal({
     formatDateForTextField(new Date())
   );
   const { currentUser } = useContext(AuthContext);
-  const { setUserTrainingData,userTrainingData,userFeatsData,setUserFeatsData,userBodyTrackerData } =
-    useContext(TrainingDataContext);
+  const {
+    setUserTrainingData,
+    userTrainingData,
+    userFeatsData,
+    setUserFeatsData,
+    userBodyTrackerData,
+  } = useContext(TrainingDataContext);
   const navigate = useNavigate();
- 
-  const userTrainingDataSize = userTrainingData.length
+
+  const userTrainingDataSize = userTrainingData.length;
 
   function handleClose() {
     setOpenCompleteWorkoutModal(false);
   }
-  console.log('loggigng user body tracker data')
-  console.log(userBodyTrackerData)
-  
-  const userBodyWeight = getUserWeight(userBodyTrackerData)
+  console.log("loggigng user body tracker data");
+  console.log(userBodyTrackerData);
+
+  const userBodyWeight = getUserWeight(userBodyTrackerData);
   function markTrainHarderCheck() {
     setTrainHarderCheck((prevState) => !prevState);
   }
@@ -152,38 +157,31 @@ function CompleteWorkoutModal({
   ) {
     const existingExercisesArr = existingExercises;
 
-    let totalWeight = 0;
+    let totalVolWeight = 0;
     let totalReps = 0;
-    let totalSessionVolume = 0;
-
+    let totalSets = 0;
+    let totalWeight = 0;
     for (let index = 0; index < existingExercisesArr.length; index++) {
-      const exerciseSet = existingExercisesArr[index];
-
       const exerciseEntry = existingExercisesArr[index];
       const exerciseEntryExercises = exerciseEntry.exercises;
+
+      totalSets += exerciseEntryExercises.length;
 
       for (let index = 0; index < exerciseEntryExercises.length; index++) {
         const exercise = exerciseEntryExercises[index];
         totalWeight = totalWeight + exercise.weight;
         totalReps = totalReps + exercise.reps;
+        const currentSetVolume = exercise.reps * exercise.weight;
+        totalVolWeight = totalVolWeight + currentSetVolume;
       }
     }
 
-    // Access the user's body weight.
-    if (userBodyWeight !== 0) {
-      let totalSessionVolumeResult = (
-        totalWeight / userBodyWeight
-      ).toFixed(1);
-      totalSessionVolume = parseFloat(totalSessionVolumeResult);
-      // Round the result to 1 decimal place
-    }
-
-    return { totalWeight, totalReps, totalSessionVolume };
+    return { totalReps, totalSets, totalVolWeight };
   }
 
   async function handleCompleteWorkout() {
     const existingExercisesArr = convertDateEntriesToWorkout(existingExercises);
-    
+
     const workoutSessionPowerLevel =
       calculateWorkoutPowerLevel(existingExercises);
     const workoutStatsResults = calculateWorkoutSessionStats(existingExercises);
@@ -199,37 +197,30 @@ function CompleteWorkoutModal({
         trainHarder: trainHarderCheck,
       },
       stats: {
-        weight: workoutStatsResults.totalWeight,
+        sets: workoutStatsResults.totalSets,
         reps: workoutStatsResults.totalReps,
-        vol: workoutStatsResults.totalSessionVolume,
+        vol: workoutStatsResults.totalVolWeight,
       },
       power: workoutSessionPowerLevel,
       wExercises: existingExercisesArr,
     };
-    
-    try {
 
-      await completeWorkout(currentUser.uid, workoutData,userTrainingDataSize);
-      await updateUserFeats(currentUser.uid,userFeatsData,userBodyWeight)
+    try {
+      await completeWorkout(currentUser.uid, workoutData, userTrainingDataSize);
+      await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
 
       deleteAllEntries();
 
-      await fetchUserTrainingData(
-        currentUser,
-        setUserTrainingData
-      );
-      
-      await fetchUserFeatsData(currentUser,setUserFeatsData)
+      await fetchUserTrainingData(currentUser, setUserTrainingData);
+
+      await fetchUserFeatsData(currentUser, setUserFeatsData);
 
       navigate("congratulations", {
         state: { workoutData },
       });
-
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   }
 
   const handleWorkoutDateChange = (
@@ -277,7 +268,6 @@ function CompleteWorkoutModal({
               icon={<StarsIcon fontSize="inherit" />}
               emptyIcon={<StarBorderIcon fontSize="inherit" />}
             />
-
           </Box>
 
           <TextField

@@ -13,12 +13,12 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
 import Exercise from "../../utils/interfaces/Exercise";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
-
+import { AuthContext } from "../../context/Auth";
 function CompletedDetailsOverview() {
   const { exerciseName } = useParams();
   const { userTrainingData, userSelectedExercises, dateForWorkout } =
     useContext(TrainingDataContext);
-
+  const {currentUserData} = useContext(AuthContext)
   const historicStats = getHistoricWorkoutStatsForExercise();
   const workoutStatus = getWorkoutStatsForExercise();
   console.log(historicStats)
@@ -232,7 +232,7 @@ function CompletedDetailsOverview() {
             <ExerciseCompletedStatTile
               statName="TOTAL VOLUME"
               statIcon={<ScaleIcon fontSize="small" />}
-              statDetail="kg"
+              statDetail={currentUserData.unitsSystem==="metric"?"kg":"lbs"}
               statValue={workoutStatus?.loadVolume || 0}
               statColor="#FFA500"
               statTextColor="black"
@@ -250,15 +250,7 @@ function CompletedDetailsOverview() {
             width="100%"
             height="100%"
             gap={3}
-          >{/* 
-            <ExerciseCompletedStatTile
-              statName="TOTAL VOLUME"
-              statIcon={<ScaleIcon fontSize="small" />}
-              statValue={(historicStats?.totalWeight? || 0}
-              statDetail="kgs"
-              statColor="#520975"
-              statTextColor="white"
-            /> */}
+          >
             <ExerciseCompletedStatTile
               statName="TOTAL REPS"
               statIcon={<Replay10Icon fontSize="medium" />}

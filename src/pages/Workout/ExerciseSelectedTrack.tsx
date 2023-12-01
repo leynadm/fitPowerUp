@@ -530,17 +530,23 @@ function ExerciseSelectedTrack() {
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
         if (weightValue === "" || weightValue === null) {
+          // Handle the case where weightValue is empty or null
         } else {
-          setWeightValue((prevWeight) =>
-            typeof prevWeight === "string"
-              ? parseFloat(prevWeight) > 0
-                ? parseFloat(prevWeight) -
-                  currentUserData.defaultWeightIncrement
-                : 0
-              : prevWeight > 0
-              ? prevWeight - currentUserData.defaultWeightIncrement
-              : 0
-          );
+          setWeightValue((prevWeight) => {
+            // Ensure prevWeight is a number
+            let numericPrevWeight = typeof prevWeight === "string" ? parseFloat(prevWeight) : prevWeight;
+            
+            // Calculate the new weight
+            let updatedWeight = numericPrevWeight - currentUserData.defaultWeightIncrement;
+  
+            // Check if the new weight is less than 0, if so, set it to 0
+            if (updatedWeight < 0) {
+              return 0;
+            } else {
+              // Otherwise, fix to two decimal places and return
+              return parseFloat(updatedWeight.toFixed(2));
+            }
+          });
         }
         break;
 

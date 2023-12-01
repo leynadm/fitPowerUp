@@ -40,7 +40,7 @@ function BodyTrackerGraph() {
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m");
 
-  const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
+  const userBodyTrackerDataArr = userBodyTrackerData;
 
   const [
     selectedStatisticsOptionsBodyTracker,

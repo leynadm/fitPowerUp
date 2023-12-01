@@ -19,7 +19,7 @@ function BodyTrackerHistory() {
   const { userBodyTrackerData } = useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
 
-  const userBodyTrackerDataArr = userBodyTrackerData[0].bodyTrackerData;
+  const userBodyTrackerDataArr = userBodyTrackerData;
   
   if (userBodyTrackerDataArr.length > 0) {
     userBodyTrackerDataArr.sort(

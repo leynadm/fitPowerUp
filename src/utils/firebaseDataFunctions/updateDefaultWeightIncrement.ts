@@ -11,7 +11,7 @@ async function updateDefaultWeightIncrement(
     updateDoc(userDocRef, {
       defaultWeightIncrement: updatedDefaultWeightIncrement,
     });
-    toast.success(`Defauly Weight Increment updated to ${updatedDefaultWeightIncrement}.`)
+    toast.success(`Default Weight Increment updated to ${updatedDefaultWeightIncrement}.`)
 } catch (error) {
     toast.error("Oops, updateUnitSystemPreference has an error!");
     console.error("Error creating documents:", error);

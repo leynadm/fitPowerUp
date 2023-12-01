@@ -26,6 +26,9 @@ import { fetchUserBodyTrackerData } from "../../context/TrainingData";
 import { useNavigate } from "react-router-dom";
 import updateDefaultWeightIncrement from "../../utils/firebaseDataFunctions/updateDefaultWeightIncrement";
 import { fetchUserTrainingData } from "../../context/TrainingData";
+import { CSVLink, CSVDownload } from "react-csv";
+import getFlattenedExercisesForExport from "../../utils/progressFunctions/getFlattenedExercisesForExport";
+import getFlattenedWorkoutsForExport from "../../utils/progressFunctions/getFlattenedWorkoutsForExport";
 function Settings() {
   const {
     userTrainingData,
@@ -43,6 +46,13 @@ function Settings() {
   );
 
   const navigate = useNavigate();
+  
+  const [shouldDownload, setShouldDownload] = useState(false);
+
+    // Function to handle button click
+    const handleDownloadClick = () => {
+      setShouldDownload(true);
+    };
 
   const handleDefaultWeightIncrementChange = (event: SelectChangeEvent) => {
     setUpdatedDefaultWeightIncrement(event.target.value);
@@ -60,10 +70,8 @@ function Settings() {
       updatedDefaultWeightIncrement
     );
     await fetchCurrentUserData(currentUser, setCurrentUserData);
-    await fetchUserTrainingData(currentUser, setUserTrainingData);
   }
-
-  console.log(userBodyTrackerData)
+ 
   async function handleUpdateUnitsSystemChange() {
     await updateUnitSystemPreference(
       userTrainingData,
@@ -72,9 +80,29 @@ function Settings() {
       currentUserData.unitsSystem,
       currentUser.uid
     );
-
     await fetchCurrentUserData(currentUser, setCurrentUserData);
     await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+    await fetchUserTrainingData(currentUser, setUserTrainingData);
+  }
+
+
+  const flattenedExerciseData = getFlattenedExercisesForExport(userTrainingData)
+  const flattenedWorkoutData = getFlattenedWorkoutsForExport(userTrainingData)
+  flattenExerciseDataForExport()
+
+  function flattenExerciseDataForExport(){
+
+  
+    console.log(flattenedExerciseData)
+
+  }
+
+
+  function exportFitPowerUpData(){
+
+
+
+
   }
 
   return (
@@ -255,13 +283,47 @@ function Settings() {
             <Typography color="text.secondary" gutterBottom>
               Export Your Data
             </Typography>
-
             <Typography variant="body2">
               Export your training logs as a .csv file so you can view them in
               your preferred spreadsheet application.
+              <br></br>
             </Typography>
-            <Box pt="8px">
-              <Button variant="dbz_mini">Go To Export</Button>
+            <Box pt="8px" display="flex" flexDirection="column" gap={2}>
+              <Typography variant="body2">
+                The Export Exercises performs a minimalist export containing
+                only exercise data, including specific KPI values (weight, reps,
+                etc.) together with exercise comments and metadata.
+                {/* 
+                 When uploading previously exported data to fitPowerUp, you can choose to import only the exercise value, although workout metadata values like workout comments, workout rating, etc. will NOT be included.
+               */}
+                 </Typography>
+              <Button variant="dbz_mini" style={{ width: "15rem" }}>
+                <CSVLink
+                  data={flattenedExerciseData}
+                  filename="fitPowerUp_Export.csv"
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  Export Exercises
+                </CSVLink>
+              </Button>
+
+              <Typography variant="body2">
+                The Export Workouts function performs an export of workout level data, specifically workout comments, workout rating, as well as KPIs.                
+                {/* 
+                 When uploading previously exported data to fitPowerUp, you can choose to import only the exercise value, although workout metadata values like workout comments, workout rating, etc. will NOT be included.
+               */}
+                 </Typography>
+              <Button variant="dbz_mini" style={{ width: "15rem" }}>
+                <CSVLink
+                  data={flattenedWorkoutData}
+                  filename="fitPowerUp_Workouts_Export.csv"
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  Export Workouts
+                </CSVLink>
+              </Button>
             </Box>
           </CardContent>
         </Card>
@@ -276,7 +338,9 @@ function Settings() {
               Import a compatible dataset to fitPowerUp.
             </Typography>
             <Box pt="8px">
-              <Button variant="dbz_mini">Go To Import</Button>
+              <Button variant="dbz_mini"
+              onClick={()=>navigate("import-data")}
+              >Go To Import</Button>
             </Box>
           </CardContent>
         </Card>
@@ -361,7 +425,7 @@ function Settings() {
             <Box pt="8px">
               <Button
                 variant="dbz_mini"
-                onClick={() => navigate("/terms-and-conditions")}
+                onClick={() => navigate("terms-and-conditions")}
               >
                 Check Terms & Conditions
               </Button>
@@ -380,8 +444,12 @@ function Settings() {
               app.
             </Typography>
 
-            <Box pt="8px">
-              <Button variant="dbz_mini">SEE DEVELOPMENT LOG</Button>
+            <Box pt="8px"
+            
+            >
+              <Button variant="dbz_mini"
+              onClick={()=>navigate("development-log")}
+              >SEE DEVELOPMENT LOG</Button>
             </Box>
           </CardContent>
         </Card>
@@ -412,7 +480,9 @@ function Settings() {
             </Typography>
 
             <Box pt="8px">
-              <Button variant="dbz_mini">Buy Me A Coffee</Button>
+              <Button variant="dbz_mini"
+              href="https://www.buymeacoffee.com/danielmatei" target="_blank"
+              >Buy Me A Coffee</Button>
             </Box>
           </CardContent>
         </Card>

@@ -262,24 +262,24 @@ function WorkoutCongratulations() {
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>
         <StatMiniCard
-          statTitle="Attained Power Level"
+          statTitle="Session Power"
           statValue={workoutData.power}
           statDetail="PL"
         />
         <StatMiniCard
-          statTitle="Total Workout Reps"
+          statTitle="Workout Reps"
           statValue={workoutData.stats.reps}
           statDetail="reps"
         />
         <StatMiniCard
-          statTitle="Total Workout Weight"
-          statValue={workoutData.stats.weight}
-          statDetail={weightStatDetail}
+          statTitle="Workout Sets"
+          statValue={workoutData.stats.sets}
+          statDetail="sets"
         />
         <StatMiniCard
-          statTitle="Total Workout Load"
+          statTitle="Workout Volume"
           statValue={workoutData.stats.vol}
-          statDetail="x BW"
+          statDetail={currentUserData.unitsSystem==="metric"?"kg":"lbs"}
         />
       </Box>
 

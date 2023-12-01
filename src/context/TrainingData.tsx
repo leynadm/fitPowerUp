@@ -142,10 +142,8 @@ export async function fetchUserBodyTrackerData(
 
     querySnapshot.forEach((doc) => {
       const data = doc.data() as IUserBodyTrackerData;
-      // Assuming each document has a bodyTrackerData array
       onlyData = onlyData.concat(data.bodyTrackerData);
     });
-    console.log(onlyData)
     setUserBodyTrackerData(onlyData);
   } catch (error) {
     toast.error("fetchUserBodyTrackerData had an error!");
@@ -156,7 +154,6 @@ export interface IUserBodyTrackerData {
   bodyTrackerData: IUserBodyTrackerDataEntry[];
   weight: number;
 }
-
 
 export async function fetchUserFeatsData(
   currentUser: any,

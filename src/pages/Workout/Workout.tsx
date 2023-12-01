@@ -21,7 +21,9 @@ import CompletedWorkouts from "./CompletedWorkouts";
 import WorkoutCongratulations from "./WorkoutCongratulations";
 import MuscleGroupsSelectionMenu from "./MuscleGroupsSelectionMenu";
 import ExerciseSelectionMenu from "./ExerciseSelectionMenu";
-
+import TermsAndConditions from "../Login/TermsAndConditions";
+import ImportData from "../Settings/ImportData";
+import DevelopmentLog from "../Settings/DevelopmentLog";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -105,6 +107,9 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       />
 
       <Route path="settings" element={<Settings />} />
+      <Route path="settings/terms-and-conditions" element={<TermsAndConditions />} />
+      <Route path="settings/import-data" element={<ImportData />} />
+      <Route path="settings/development-log" element={<DevelopmentLog />} />
 
       <Route
         path="calendar"
