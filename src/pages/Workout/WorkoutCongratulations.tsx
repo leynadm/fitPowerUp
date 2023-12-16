@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
 import { Box } from "@mui/system";
 import StatMiniCard from "../../components/ui/StatMiniCard";
-import { Rating } from "@mui/material";
+import { Button, Rating } from "@mui/material";
 import StarsIcon from "@mui/icons-material/Stars";
 import { AuthContext } from "../../context/Auth";
 import { useContext } from "react";
@@ -211,7 +211,7 @@ function WorkoutCongratulations() {
       sx={{
         display: "grid",
         placeItems: "center",
-        paddingBottom: "64px",
+        paddingBottom: "72px",
         top: 0,
         left: 0,
 
@@ -316,6 +316,8 @@ function WorkoutCongratulations() {
           checked={workoutData.wEval.feelPain}
         />
       </Box>
+
+        <Button variant="dbz_mini">Share workout on your profile</Button>
     </Container>
   );
 }

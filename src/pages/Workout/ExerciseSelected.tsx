@@ -14,13 +14,15 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
-
+import HelpIcon from '@mui/icons-material/Help';
+import ExerciseInfoModal from "../../components/ui/ExerciseInfoModal";
 function ExerciseSelected() {
   const [countdownValue, setCountdownValue] = useState(120);
   const { showRestTimer, setShowRestTimer } = useContext(LogDataContext);
+  const [openExerciseInfoModal,setOpenExerciseInfoModal]= useState(false)
   const { exerciseName } = useParams();
 
-  console.log(exerciseName);
+
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
     navigate("");
@@ -37,6 +39,11 @@ function ExerciseSelected() {
   function handleShowRestTimer() {
     setShowRestTimer(!showRestTimer);
   }
+
+  function handleExerciseInfoModal(){
+    setOpenExerciseInfoModal(true)
+  }
+
   const handleNewWorkout = () => {
     navigate("/home/workout/new");
   };
@@ -93,6 +100,19 @@ function ExerciseSelected() {
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
+
+              <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={handleExerciseInfoModal}
+                >
+                <HelpIcon />
+                </IconButton>
+
+
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -119,6 +139,12 @@ function ExerciseSelected() {
           </Toolbar>
         </Container>
       </AppBar>
+
+      <ExerciseInfoModal
+        openExerciseInfoModal={openExerciseInfoModal}
+        setOpenExerciseInfoModal={setOpenExerciseInfoModal}
+        exerciseName={exerciseName}
+      />
 
       <ButtonGroup
         variant="text"

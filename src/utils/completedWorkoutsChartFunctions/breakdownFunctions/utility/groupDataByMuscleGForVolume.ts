@@ -1,6 +1,6 @@
 import Exercise from "../../../interfaces/Exercise";
 
-function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
+function groupDataByMuscleGForVolume(flattenedData: Exercise[]) {
   const groupedData: {
     summedWeight: number;
     summedReps: number;
@@ -8,27 +8,9 @@ function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
     summedTime: number;
     count: number;
     muscleGroup: string;
-    workouts: number;
+    summedVolume:0;
   }[] = [];
 
-  flattenedData.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-
-    // First, sort by date
-    const dateComparison = dateA.getTime() - dateB.getTime();
-    if (dateComparison !== 0) {
-      return dateComparison;
-    }
-
-    // If dates are equal, sort by category
-    const categoryA = a.group;
-    const categoryB = b.group;
-    return categoryA.localeCompare(categoryB);
-  });
-
-  let trackDate = "";
-  let currentMuscleGroup = ""
   flattenedData.forEach((exercise: Exercise, index: number) => {
     let groupedExercise = groupedData.find(
       (group) => group.muscleGroup === exercise.group
@@ -41,14 +23,10 @@ function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
         summedDistance: 0,
         summedTime: 0,
         count: 0,
-        workouts: 0,
+        summedVolume:0,
         muscleGroup: exercise.group,
       };
       groupedData.push(groupedExercise);
-    }
-
-    if (trackDate !== exercise.date || currentMuscleGroup!==exercise.group) {
-      groupedExercise.workouts++;
     }
 
     // Increment counts and summed the exercise properties
@@ -57,12 +35,10 @@ function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
     groupedExercise.summedReps += exercise.reps;
     groupedExercise.summedDistance += exercise.distance;
     groupedExercise.summedTime += exercise.time;
-    console.log(groupedExercise)
-    trackDate = exercise.date;
-    currentMuscleGroup=exercise.group
+    groupedExercise.summedVolume += exercise.reps * exercise.weight;
   });
 
   return groupedData;
 }
 
-export default groupDataByWorkoutsMuscleGroup;
+export default groupDataByMuscleGForVolume;

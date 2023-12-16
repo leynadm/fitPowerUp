@@ -8,10 +8,11 @@ function getTrainingVolumeByExercise(
         summedDistance: number;
         summedTime: number;
         count: number;
+        summedVolume:number
       }[]
     ) {
       const exerciseData: { exerciseName: string; value: number }[] = [];
-  
+      
       groupedData.forEach(
         (exercise: {
           exerciseName: string;
@@ -20,20 +21,19 @@ function getTrainingVolumeByExercise(
           summedDistance: number;
           summedTime: number;
           count: number;
+          summedVolume:number;
         }) => {
-          const exerciseNameReps = exercise.summedReps;
-          const exerciseNameWeight = exercise.summedWeight
           const exerciseName = exercise.exerciseName;
-          const exerciseCount = exercise.count
-          if (exerciseNameReps > 0) {
-            const value = parseFloat(((exerciseNameReps * exerciseNameWeight)/exerciseCount).toFixed(1));
-            exerciseData.push({ exerciseName , value });
+          const summedVolume = exercise.summedVolume; // Use the correct summed volume
+      
+          // Only add to exerciseData if summedVolume is greater than 0
+          if (summedVolume > 0) {
+            exerciseData.push({ exerciseName, value: summedVolume });
           }
         }
       );
   
       return exerciseData;
-
 
 }
 

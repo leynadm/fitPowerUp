@@ -8,6 +8,7 @@ function getTrainingVolumeByMuscleGroup(
         summedDistance: number;
         summedTime: number;
         count: number;
+        summedVolume:number
       }[]
     ) {
       const exerciseData: { exerciseMuscleGroup: string; value: number }[] = [];
@@ -20,13 +21,12 @@ function getTrainingVolumeByMuscleGroup(
           summedDistance: number;
           summedTime: number;
           count: number;
+          summedVolume:number;
         }) => {
-          const muscleGroupReps = exercise.summedReps;
-          const muscleGroupWeight = exercise.summedWeight
+          const muscleGroupVolume = exercise.summedVolume;
           const exerciseMuscleGroup = exercise.muscleGroup;
-          const muscleGroupCount = exercise.count
-          if (muscleGroupReps > 0) {
-            const value = parseFloat(((muscleGroupReps * muscleGroupWeight)/muscleGroupCount).toFixed(1));
+          if (muscleGroupVolume > 0) {
+            const value = muscleGroupVolume;
             exerciseData.push({ exerciseMuscleGroup , value });
           }
         }

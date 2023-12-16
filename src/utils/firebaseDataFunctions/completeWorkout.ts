@@ -32,13 +32,17 @@ async function completeWorkout(userId: string, workoutData: IWorkoutData, userTr
 
     const userTrainingDataDocRef = doc(
       userDocRef,
-      `userTrainingCollection/userTrainingData_${docSuffix}/`
+      `userTrainingCollection/userTrainingData_${docSuffix}`
     );
 
+    console.log(userTrainingDataDocRef)
     await updateDoc(userTrainingDataDocRef, {
       workoutSessions: arrayUnion(workoutData),
     });
+
   } catch (error) {
+    console.log(error)
+    console.error(error)
     toast.error("completeWorkout had an error!")
   }
 }

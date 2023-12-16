@@ -23,6 +23,7 @@ import { fetchUserTrainingData } from "../../context/TrainingData";
 import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
 import { fetchUserFeatsData } from "../../context/TrainingData";
 import getUserWeight from "../../utils/getUserWeight";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -55,6 +56,9 @@ function CompleteWorkoutModal({
     formatDateForTextField(new Date())
   );
   const { currentUser } = useContext(AuthContext);
+  
+  const isOnline = useOnlineStatus()
+  
   const {
     setUserTrainingData,
     userTrainingData,
@@ -69,10 +73,11 @@ function CompleteWorkoutModal({
   function handleClose() {
     setOpenCompleteWorkoutModal(false);
   }
-  console.log("loggigng user body tracker data");
+
   console.log(userBodyTrackerData);
 
   const userBodyWeight = getUserWeight(userBodyTrackerData);
+  
   function markTrainHarderCheck() {
     setTrainHarderCheck((prevState) => !prevState);
   }
@@ -85,102 +90,8 @@ function CompleteWorkoutModal({
     setWarmStretchCheck((prevState) => !prevState);
   }
 
-  function convertDateEntriesToWorkout(
-    existingExercises: { name: string; exercises: Exercise[] }[]
-  ) {
-    const existingExercisesArr = existingExercises;
-
-    for (let index = 0; index < existingExercisesArr.length; index++) {
-      const exerciseEntry = existingExercisesArr[index];
-
-      const exerciseEntryExercises = exerciseEntry.exercises;
-
-      for (let index = 0; index < exerciseEntryExercises.length; index++) {
-        const element = exerciseEntryExercises[index];
-
-        element.date = workoutDate;
-      }
-    }
-
-    return existingExercisesArr;
-  }
-
-  function calculateWorkoutPowerLevel(
-    existingExercises: { name: string; exercises: Exercise[] }[]
-  ) {
-    const bestExercises = [];
-
-    const existingExercisesArr = existingExercises;
-
-    for (let index = 0; index < existingExercisesArr.length; index++) {
-      const exerciseEntry = existingExercisesArr[index];
-      const exerciseEntryExercises = exerciseEntry.exercises;
-      let highestObject = null;
-      let highestRepsXWeight = 0;
-      for (let index = 0; index < exerciseEntryExercises.length; index++) {
-        const element = exerciseEntryExercises[index];
-        const repsXWeight = element.reps * element.weight;
-        if (repsXWeight > highestRepsXWeight) {
-          highestRepsXWeight = repsXWeight;
-          highestObject = element;
-        }
-      }
-      bestExercises.push(highestObject);
-    }
-
-    let totalWeight = 0;
-
-    for (let index = 0; index < bestExercises.length; index++) {
-      const exercise = bestExercises[index];
-
-      if (
-        exercise?.weight &&
-        exercise.reps &&
-        exercise.weight > 0 &&
-        exercise.reps > 0
-      ) {
-        const exerciseWeight = calculateOneRepMax(
-          exercise.weight,
-          exercise.reps
-        );
-        totalWeight = totalWeight + exerciseWeight;
-      }
-    }
-
-    const dotsValue = calculateDOTS(86, totalWeight, false);
-
-    return dotsValue;
-  }
-
-  function calculateWorkoutSessionStats(
-    existingExercises: { name: string; exercises: Exercise[] }[]
-  ) {
-    const existingExercisesArr = existingExercises;
-
-    let totalVolWeight = 0;
-    let totalReps = 0;
-    let totalSets = 0;
-    let totalWeight = 0;
-    for (let index = 0; index < existingExercisesArr.length; index++) {
-      const exerciseEntry = existingExercisesArr[index];
-      const exerciseEntryExercises = exerciseEntry.exercises;
-
-      totalSets += exerciseEntryExercises.length;
-
-      for (let index = 0; index < exerciseEntryExercises.length; index++) {
-        const exercise = exerciseEntryExercises[index];
-        totalWeight = totalWeight + exercise.weight;
-        totalReps = totalReps + exercise.reps;
-        const currentSetVolume = exercise.reps * exercise.weight;
-        totalVolWeight = totalVolWeight + currentSetVolume;
-      }
-    }
-
-    return { totalReps, totalSets, totalVolWeight };
-  }
-
   async function handleCompleteWorkout() {
-    const existingExercisesArr = convertDateEntriesToWorkout(existingExercises);
+    const existingExercisesArr = convertDateEntriesToWorkout(existingExercises,workoutDate);
 
     const workoutSessionPowerLevel =
       calculateWorkoutPowerLevel(existingExercises);
@@ -204,7 +115,8 @@ function CompleteWorkoutModal({
       power: workoutSessionPowerLevel,
       wExercises: existingExercisesArr,
     };
-
+    console.log('logging workout data:')
+    console.log(workoutData)
     try {
       await completeWorkout(currentUser.uid, workoutData, userTrainingDataSize);
       await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
@@ -327,8 +239,9 @@ function CompleteWorkoutModal({
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={handleCompleteWorkout}
+              disabled={!isOnline}
             >
-              Complete
+              {isOnline?'Complete':'Reconecting...'}
             </Button>
             <Button
               variant="dbz_clear"
@@ -345,3 +258,99 @@ function CompleteWorkoutModal({
 }
 
 export default CompleteWorkoutModal;
+
+
+export function convertDateEntriesToWorkout(
+  existingExercises: { name: string; exercises: Exercise[] }[],
+  workoutDate:string
+) {
+  const existingExercisesArr = existingExercises;
+
+  for (let index = 0; index < existingExercisesArr.length; index++) {
+    const exerciseEntry = existingExercisesArr[index];
+
+    const exerciseEntryExercises = exerciseEntry.exercises;
+
+    for (let index = 0; index < exerciseEntryExercises.length; index++) {
+      const element = exerciseEntryExercises[index];
+
+      element.date = workoutDate;
+    }
+  }
+
+  return existingExercisesArr;
+}
+
+export function calculateWorkoutSessionStats(
+  existingExercises: { name: string; exercises: Exercise[] }[]
+) {
+  const existingExercisesArr = existingExercises;
+
+  let totalVolWeight = 0;
+  let totalReps = 0;
+  let totalSets = 0;
+  let totalWeight = 0;
+  for (let index = 0; index < existingExercisesArr.length; index++) {
+    const exerciseEntry = existingExercisesArr[index];
+    const exerciseEntryExercises = exerciseEntry.exercises;
+
+    totalSets += exerciseEntryExercises.length;
+
+    for (let index = 0; index < exerciseEntryExercises.length; index++) {
+      const exercise = exerciseEntryExercises[index];
+      totalWeight = totalWeight + exercise.weight;
+      totalReps = totalReps + exercise.reps;
+      const currentSetVolume = exercise.reps * exercise.weight;
+      totalVolWeight = totalVolWeight + currentSetVolume;
+    }
+  }
+
+  return { totalReps, totalSets, totalVolWeight };
+}
+
+export function calculateWorkoutPowerLevel(
+  existingExercises: { name: string; exercises: Exercise[] }[]
+) {
+  const bestExercises = [];
+
+  const existingExercisesArr = existingExercises;
+
+  for (let index = 0; index < existingExercisesArr.length; index++) {
+    const exerciseEntry = existingExercisesArr[index];
+    const exerciseEntryExercises = exerciseEntry.exercises;
+    let highestObject = null;
+    let highestRepsXWeight = 0;
+    for (let index = 0; index < exerciseEntryExercises.length; index++) {
+      const element = exerciseEntryExercises[index];
+      const repsXWeight = element.reps * element.weight;
+      if (repsXWeight > highestRepsXWeight) {
+        highestRepsXWeight = repsXWeight;
+        highestObject = element;
+      }
+    }
+    bestExercises.push(highestObject);
+  }
+
+  let totalWeight = 0;
+
+  for (let index = 0; index < bestExercises.length; index++) {
+    const exercise = bestExercises[index];
+
+    if (
+      exercise?.weight &&
+      exercise.reps &&
+      exercise.weight > 0 &&
+      exercise.reps > 0
+    ) {
+      const exerciseWeight = calculateOneRepMax(
+        exercise.weight,
+        exercise.reps
+      );
+      totalWeight = totalWeight + exerciseWeight;
+    }
+  }
+
+  const dotsValue = calculateDOTS(86, totalWeight, false);
+
+  return dotsValue;
+}

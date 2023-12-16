@@ -15,8 +15,8 @@ function getExercisesMuscleGroups(
   for (let index = 0; index < userSelectedExercisesArr.length; index++) {
     const element = userSelectedExercisesArr[index];
 
-    if (!uniqueMuscleGroupsArr.includes(element.category)) {
-      uniqueMuscleGroupsArr.push(element.category);
+    if (!uniqueMuscleGroupsArr.includes(element.group)) {
+      uniqueMuscleGroupsArr.push(element.group);
     }
   }
 

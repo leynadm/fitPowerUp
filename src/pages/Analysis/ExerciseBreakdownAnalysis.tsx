@@ -31,6 +31,7 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
 import getOverallStats from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
+import groupDataByMuscleGForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleGForVolume";
 import {
   Radar,
   RadarChart,
@@ -65,6 +66,7 @@ import {
   TableBody,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import groupDataByExerciseForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExerciseForVolume";
 import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExercise";
 import getFlattenedOverallExerciseData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
 
@@ -209,7 +211,9 @@ function ExerciseBreakdownAnalysis() {
       endDate
     );
 
-    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
+    const groupedData = flattenedData
+      ? groupDataByMuscleGForVolume(flattenedData)
+      : [];
 
     const modeledData = groupedData
       ? getTrainingVolumeByMuscleGroup(groupedData)
@@ -286,7 +290,9 @@ function ExerciseBreakdownAnalysis() {
       endDate
     );
 
-    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
+    const groupedData = flattenedData
+      ? groupDataByExerciseForVolume(flattenedData)
+      : [];
 
     const modeledData = groupedData
       ? getTrainingVolumeByExercise(groupedData)
@@ -295,7 +301,6 @@ function ExerciseBreakdownAnalysis() {
     if (modeledData) {
       modeledData.sort((a, b) => b.value - a.value);
     }
-
     return modeledData;
   }
 
@@ -473,17 +478,14 @@ function ExerciseBreakdownAnalysis() {
     >
       <Box display="flex" flexDirection="column" gap={1}>
         <Select
-          sx={{ marginTop: "8px"
-        
-        }}
-        MenuProps={{
-          PaperProps: {
-            style: {
-            
-              maxHeight:getMenuMaxHeight(),
+          sx={{ marginTop: "8px" }}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: getMenuMaxHeight(),
+              },
             },
-          },
-        }}
+          }}
           defaultValue="Number of Reps by Muscle Group"
           id="grouped-select"
           label="Grouping"
@@ -607,8 +609,7 @@ function ExerciseBreakdownAnalysis() {
               dataKey="value"
               fill="#520975"
               activeBar={<Rectangle fill="pink" stroke="blue" />}
-            >
-            </Bar>
+            ></Bar>
           </BarChart>
         </ResponsiveContainer>
       )}
@@ -642,10 +643,10 @@ function ExerciseBreakdownAnalysis() {
                       key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" align="left">
                         {entry.exerciseMuscleGroup
-                          ? entry.exerciseMuscleGroup
-                          : entry.exerciseName}
+                          ? entry.exerciseMuscleGroup.toLocaleUpperCase()
+                          : entry.exerciseName.toLocaleUpperCase()}
                       </TableCell>
 
                       <TableCell align="right">
@@ -655,7 +656,7 @@ function ExerciseBreakdownAnalysis() {
                       <TableCell align="center">
                         {selectedKPI === "Training Volume by Muscle Group"
                           ? currentUserData.unitsSystem === "metric"
-                            ? "kgs"
+                            ? "kg"
                             : "lbs"
                           : selectedKPI === "Number of Reps by Muscle Group"
                           ? "reps"
@@ -670,7 +671,7 @@ function ExerciseBreakdownAnalysis() {
                           : selectedKPI === "Number of Sets by Exercise"
                           ? "sets"
                           : selectedKPI === "Training Volume by Exercise"
-                          ? "kgs"
+                          ? "kg"
                           : "value"}
                       </TableCell>
 
@@ -698,7 +699,7 @@ function ExerciseBreakdownAnalysis() {
           statName="TOTAL VOLUME"
           statIcon={<ScaleIcon fontSize="small" />}
           statValue={formatNumberWithComma(overallStatsObj.summedVolume || 0)}
-          statDetail="kgs"
+          statDetail="kg"
           statColor="#520975"
           statTextColor="white"
         />

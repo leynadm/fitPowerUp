@@ -6,7 +6,7 @@ import getIndexedDbExercises from "./getIndexedDbExercises";
 export interface IIndexedDbUpdatedEntry {
   date: Date;
   exercise: string;
-  category: string;
+  group: string;
   weight: number;
   reps: number;
   distance: number;

@@ -111,7 +111,7 @@ function ExerciseSelectedTrack() {
   const entryToSave = {
     date: new Date(),
     exercise: exerciseSelected.name,
-    category: exerciseSelected.category,
+    group: exerciseSelected.group,
     weight: weightValue,
     reps: repsValue,
     distance: distanceValue,
@@ -316,6 +316,7 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("reps") &&
       exerciseSelected.measurement.length === 1
     ) {
+
       if (repsValue === 0 || repsValue === null) {
         return "invalid";
       }
@@ -359,7 +360,6 @@ function ExerciseSelectedTrack() {
 
     if (checkEntriesValidity) {
       setShowAlert(true);
-
       // Clear previous timeout if it exists
       if (alertTimeoutId) {
         clearTimeout(alertTimeoutId);
@@ -375,17 +375,17 @@ function ExerciseSelectedTrack() {
     }
 
     let weightValueFloat: number | null;
-
     weightValueFloat = safelyParseFloat(entryToSave.weight);
 
+    // TO FIGURE OUT HOW TO SAVE THINGS ACCURATELY
     if (weightValueFloat === null) {
-      return;
+      return
     }
 
     const updatedEntryToSave = {
       date: entryToSave.date,
       exercise: entryToSave.exercise,
-      category: entryToSave.category,
+      group: entryToSave.group,
       reps: entryToSave.reps,
       distance: entryToSave.distance,
       distance_unit: entryToSave.distance_unit,
@@ -395,6 +395,7 @@ function ExerciseSelectedTrack() {
       weight: 0,
     };
     updatedEntryToSave.weight = weightValueFloat;
+
 
     try {
       const request = indexedDB.open("fitScouterDb", 2);
@@ -534,11 +535,15 @@ function ExerciseSelectedTrack() {
         } else {
           setWeightValue((prevWeight) => {
             // Ensure prevWeight is a number
-            let numericPrevWeight = typeof prevWeight === "string" ? parseFloat(prevWeight) : prevWeight;
-            
+            let numericPrevWeight =
+              typeof prevWeight === "string"
+                ? parseFloat(prevWeight)
+                : prevWeight;
+
             // Calculate the new weight
-            let updatedWeight = numericPrevWeight - currentUserData.defaultWeightIncrement;
-  
+            let updatedWeight =
+              numericPrevWeight - currentUserData.defaultWeightIncrement;
+
             // Check if the new weight is less than 0, if so, set it to 0
             if (updatedWeight < 0) {
               return 0;

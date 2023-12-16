@@ -1,47 +1,65 @@
-import { doc, collection, writeBatch,getDoc } from "firebase/firestore";
+import { doc, collection, writeBatch, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 import preselectedExercises from "../preselectedExercises";
 import { storage } from "../../config/firebase";
-async function updateAppVersionWithNewDocs(
-  userID: string
-) {
-
+import { getFormattedDate } from "../getFormattedDate";
+async function updateAppVersionWithNewDocs(userID: string) {
   const batch = writeBatch(db);
 
-  try {
+  const currentDate = getFormattedDate();
 
+  try {
     const userDocRef = doc(db, "users", userID);
-    
+
     const userCollectionRef = collection(userDocRef, "userCollection");
-    const userTrainingCollectionRef = collection(userDocRef, "userTrainingCollection");
-    const userBodyTrackerCollectionRef = collection(userDocRef, "userBodyTrackerCollection");
-    const userDocDataSnap = await getDoc(userDocRef)
-    const featsRef = ref(storage, 'assets/files/featsJSONString.json');
+    const userTrainingCollectionRef = collection(
+      userDocRef,
+      "userTrainingCollection"
+    );
+    const userBodyTrackerCollectionRef = collection(
+      userDocRef,
+      "userBodyTrackerCollection"
+    );
+    const userDocDataSnap = await getDoc(userDocRef);
+
+    const featsRef = ref(storage, "assets/files/featsJSONString.json");
     const url = await getDownloadURL(featsRef);
     const response = await fetch(url);
     const featsParsedJSON = await response.json();
 
-    
+    const preselectedExercisesRef = ref(
+      storage,
+      "assets/files/preselectedExercisesJSON.json"
+    );
+    const preselectedExercisesURL = await getDownloadURL(
+      preselectedExercisesRef
+    );
+    const preselectedExercisesResponse = await fetch(preselectedExercisesURL);
+    const preselectedExercisesParsedJSON =
+      await preselectedExercisesResponse.json();
+
     if (userDocDataSnap.exists()) {
-      
       const userData = userDocDataSnap.data();
-      
-      console.log(userData)
+
+      console.log(userData);
 
       if (userData.appVersion === 2) {
-       console.log('for some reason app version === 2')
+        console.log("for some reason app version === 2");
         return;
       }
     }
 
-    batch.update(userDocRef,{
-      appVersion:2.0
-    })
+    batch.update(userDocRef, {
+      appVersion: 2.0,
+    });
 
     // Create a document within the "userTrainingCollection" subcollection
-    const userTrainingDoc = doc(userTrainingCollectionRef, "userTrainingData_1");
+    const userTrainingDoc = doc(
+      userTrainingCollectionRef,
+      "userTrainingData_1"
+    );
 
     batch.set(userTrainingDoc, {
       workoutSessions: [],
@@ -55,16 +73,38 @@ async function updateAppVersionWithNewDocs(
     );
 
     batch.set(preselectedExercisesDocRef, {
-      exercises: preselectedExercises,
+      exercises: preselectedExercisesParsedJSON,
     });
 
-    
     // Create the body tracker document within the "user-training-data" subcollection
-    const userBodyTrackerDocRef = doc(userBodyTrackerCollectionRef, "userBodyTrackerData_1");
+    const userBodyTrackerDocRef = doc(
+      userBodyTrackerCollectionRef,
+      "userBodyTrackerData_1"
+    );
 
     batch.set(userBodyTrackerDocRef, {
-      bodyTrackerData: [],
-      weight:70
+      bodyTrackerData: [
+        {
+          date: currentDate,
+          weight: 70,
+          bodyFat: 0,
+          caloricIntake: 0,
+          neck: 0,
+          shoulders: 0,
+          chest: 0,
+          leftBicep: 0,
+          rightBicep: 0,
+          leftForearm: 0,
+          rightForearm: 0,
+          waist: 0,
+          hips: 0,
+          leftThigh: 0,
+          rightThigh: 0,
+          leftCalf: 0,
+          rightCalf: 0,
+        },
+      ],
+      weight: 70,
     });
 
     // Create the body tracker document within the "user-training-data" subcollection
@@ -80,7 +120,7 @@ async function updateAppVersionWithNewDocs(
     // Handle the error here
     toast.error("Oops, updateAppVersionWithNewDocs has an error!");
     console.error("Error creating documents:", error);
-    console.log(error)
+    console.log(error);
     // You can also throw the error again to propagate it to the caller of this function
     throw error;
   }

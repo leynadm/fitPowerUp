@@ -42,6 +42,29 @@ function ProgressGraph() {
     }
   }
 
+/* 
+function loopThroughData(){
+
+
+  for (let index = 0; index < preselectedExercisesOrigin.length; index++) {
+    const element = preselectedExercisesOrigin[index];
+    
+    //let exerciseMuscles = element.name+": "
+
+    console.log(element.type)
+    
+    for (let index = 0; index < element.mInvolved.length; index++) {
+      const elementMuscles = element.mInvolved[index];
+      
+      console.log(elementMuscles)
+      //exerciseMuscles = exerciseMuscles + " " + elementMuscles
+    }  
+
+    //console.log(exerciseMuscles)
+  }
+
+} */
+
   const Row = ({
     index,
     style,
@@ -172,7 +195,9 @@ function ProgressGraph() {
       alignItems="center"
       height="calc(100% - 95px)"
     >
-
+      {/* 
+      <Button onClick={loopThroughData}>Check Data</Button>
+       */}
       <FormControl>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"

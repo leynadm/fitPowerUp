@@ -25,15 +25,70 @@ import Exercise from "../../utils/interfaces/Exercise";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 import toast from "react-hot-toast";
 import getUserWeight from "../../utils/getUserWeight";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { useCallback,useEffect,useRef } from "react";
+
 function ProgressLevel() {
   const { userTrainingData, userSelectedExercises,userBodyTrackerData } =
     useContext(TrainingDataContext);
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
+  
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const updateImageDimensions = useCallback(() => {
+    const width = window.innerWidth; // Assuming full window for simplicity
+    const height = window.innerHeight;
+    // Here you would put the logic to calculate the image's actual dimensions
+    // For this example, we'll just set it directly
+    setImageDimensions({ width, height });
+  }, []);
+
+  console.log(imageDimensions)
+  
+  useEffect(() => {
+
+
+   // Capture the current value of the ref in a variable
+   const imgElement = imgRef.current;
+
+   // Check if imgElement is not null
+   if (imgElement) {
     
-  const findDeadlift = findExerciseByName("Deadlift");
-  const findBenchPress = findExerciseByName("Bench Press");
-  const findSquat = findExerciseByName("Barbell Squat");
+     const handleLoad = () => {
+      const width = imgElement.offsetWidth
+      const height = imgElement.offsetHeight
+      setImageDimensions({width,height})
+     };
+
+     // Add event listener
+     imgElement.addEventListener('load', handleLoad);
+
+     // Cleanup function to remove the event listener
+     return () => {
+       imgElement.removeEventListener('load', handleLoad);
+     };
+   }
+
+  }, []);
+  
+  const labelsData = [
+    { id: "shoulders", top: (27/100)*imageDimensions.width, left: (35/100)*imageDimensions.width },
+    { id: "biceps", top: "35%", left: "20%" },
+    { id: "chest", top: "35%", left: "20%" },
+    { id: "core", top: "35%", left: "20%" },
+    { id: "forearms", top: "35%", left: "20%" },
+    { id: "full body", top: "35%", left: "20%" },
+    { id: "legs", top: "35%", left: "20%" },
+    { id: "back", top: "35%", left: "20%" },
+    { id: "triceps", top: "35%", left: "20%" },
+  ];
+  const shouldersData = labelsData.find(label => label.id === 'shoulders');
+  console.log(shouldersData)
+  const findDeadlift = findExerciseByName("barbell deadlift");
+  const findBenchPress = findExerciseByName("flat barbell bench press");
+  const findSquat = findExerciseByName("barbell squat");
 
   const [firstExerciseSelected, setFirstExerciseSelected] = useState(
     currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
@@ -83,7 +138,7 @@ function ProgressLevel() {
 
   function findExerciseByName(name: string) {
     return userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) => exercise.name === name
+      (exercise: IUserSelectedExercises) => exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
     );
   }
 
@@ -194,6 +249,27 @@ function ProgressLevel() {
     return maxRM;
   }
   
+
+
+  function calculateScaledImageSize(containerWidth:number, containerHeight:number, imageOriginalWidth:number, imageOriginalHeight:number) {
+    const imageAspectRatio = imageOriginalWidth / imageOriginalHeight;
+    const containerAspectRatio = containerWidth / containerHeight;
+    let scaledWidth, scaledHeight;
+  
+    if (containerAspectRatio > imageAspectRatio) {
+      // Container is wider in proportion to the image
+      scaledHeight = containerHeight;
+      scaledWidth = containerHeight * imageAspectRatio;
+    } else {
+      // Container is taller in proportion to the image
+      scaledWidth = containerWidth;
+      scaledHeight = containerWidth / imageAspectRatio;
+    }
+  
+    return { scaledWidth, scaledHeight };
+  }
+  
+
   return (
     <Box
       sx={{
@@ -220,7 +296,6 @@ function ProgressLevel() {
           marginBottom="0.25rem"
           gap={1}
         >
-          
           {/* 
           <img
             src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2FPowerLevelIcon_256.png?alt=media&token=a7b39274-159b-41e8-b0db-7dcb59263e95"
@@ -231,8 +306,6 @@ function ProgressLevel() {
           ></img>
              */}
           <Typography variant="h3">{currentUserData.powerLevel}</Typography>
-          
-
         </Box>
 
         <ResponsiveContainer width="100%" height={200}>
@@ -266,17 +339,7 @@ function ProgressLevel() {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </Box>
-      <Box
-        width="100%"
-        marginTop="16px"
-        gap={1}
-        display="flex"
-        flexDirection="column"
-        boxShadow={2}
-        borderRadius="4px"
-        padding="8px"
-      >
+
         <Typography variant="subtitle1" textAlign="center">
           Select your strongest lifts to calculate your maximum Power Level
         </Typography>
@@ -336,6 +399,69 @@ function ProgressLevel() {
             CALCULATE
           </Button>
         </Box>
+      </Box>
+      <Box
+        width="100%"
+        marginTop="16px"
+        gap={1}
+        display="flex"
+        flexDirection="column"
+        boxShadow={2}
+        borderRadius="4px"
+        padding="8px"
+      >
+        <Typography align="center" variant="h6">
+          WORKOUT MUSCLE CHART
+        </Typography>
+        {/* 
+        <ButtonGroup
+          variant="contained"
+          aria-label="outlined primary button group"
+          fullWidth
+        >
+          <Button>Sets</Button>
+          <Button>Reps</Button>
+          <Button>Volume</Button>
+          <Button>1RM</Button>
+        </ButtonGroup>
+
+        <Box display="flex" justifyContent="space-evenly" gap={1} width="100%">
+          <TextField type="date" fullWidth></TextField>
+          <TextField type="date" fullWidth></TextField>
+        </Box>
+ */}
+        <div
+
+          style={{
+            position:"relative",
+            display:"block",
+          }}
+
+        >
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Fchart-images%2Ffemale-saiyan-chart.jpg?alt=media&token=33f84156-70c8-4e60-9f1c-6ba80f49f578"
+            alt=""
+            height="100%"
+            width="100%"
+            ref={imgRef}
+            style={{
+              objectFit:"contain",
+              objectPosition:"center"
+
+            }}
+          ></img>
+         {/* 
+          <p
+          style={{
+            position:"absolute",
+            left:'32%',top:'25%'
+          }}
+            
+          >
+            23
+          </p>
+           */}
+        </div>
       </Box>
     </Box>
   );

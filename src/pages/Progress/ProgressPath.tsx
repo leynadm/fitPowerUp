@@ -37,6 +37,7 @@ function ProgressPath() {
     const subsequentPathPointsEntry =
       index < 120 ? pathPoints[index + 1] : pathPoints[120];
 
+
     const MIN = pathPointsEntry;
     const MAX = subsequentPathPointsEntry;
     const normalise = (value: number) =>
@@ -118,6 +119,7 @@ function ProgressPath() {
             </Box>
           )}
 
+
           <button
             style={{
               width: "142px",
@@ -127,11 +129,11 @@ function ProgressPath() {
               border: "none",
               borderRadius: "50%",
               position: "relative",
-              zIndex: 0,
+              zIndex: -1,
               transition: ".3s",
               cursor: "pointer",
-
               boxShadow: "0 0 0 1px #666",
+              
             }}
             onClick={isUnlocked?handleNavigateScreen:undefined}
           >
@@ -149,6 +151,7 @@ function ProgressPath() {
                 filter: isUnlocked ? "none" : "blur(6px)", // Apply blur effect if not within range
               }}
             />
+            {/* 
             <span
               style={{
                 position: "absolute",
@@ -163,8 +166,11 @@ function ProgressPath() {
                 maskComposite: "intersect",
                 transition: ".5s, 99999s 99999s transform",
                 transform: "rotate(36000deg)",
+                zIndex:-1
               }}
+
             ></span>
+             */}
           </button>
         </Box>
       </Box>

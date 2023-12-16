@@ -29,6 +29,7 @@ import { fetchUserTrainingData } from "../../context/TrainingData";
 import { CSVLink, CSVDownload } from "react-csv";
 import getFlattenedExercisesForExport from "../../utils/progressFunctions/getFlattenedExercisesForExport";
 import getFlattenedWorkoutsForExport from "../../utils/progressFunctions/getFlattenedWorkoutsForExport";
+import CoffeeIcon from '@mui/icons-material/Coffee';
 function Settings() {
   const {
     userTrainingData,
@@ -88,22 +89,7 @@ function Settings() {
 
   const flattenedExerciseData = getFlattenedExercisesForExport(userTrainingData)
   const flattenedWorkoutData = getFlattenedWorkoutsForExport(userTrainingData)
-  flattenExerciseDataForExport()
-
-  function flattenExerciseDataForExport(){
-
   
-    console.log(flattenedExerciseData)
-
-  }
-
-
-  function exportFitPowerUpData(){
-
-
-
-
-  }
 
   return (
     <Container
@@ -481,8 +467,9 @@ function Settings() {
 
             <Box pt="8px">
               <Button variant="dbz_mini"
+
               href="https://www.buymeacoffee.com/danielmatei" target="_blank"
-              >Buy Me A Coffee</Button>
+              >Buy Me A Coffee <CoffeeIcon/></Button>
             </Box>
           </CardContent>
         </Card>

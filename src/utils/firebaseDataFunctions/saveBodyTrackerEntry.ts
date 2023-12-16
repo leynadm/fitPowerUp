@@ -34,11 +34,15 @@ async function saveBodyTrackerEntry(
   const userDocRef = doc(db, "users", userId);
 
   const userBodyTrackerCollectionRef = collection(userDocRef, "userBodyTrackerCollection");
-   
+  console.log('logging the bodyKPIObject')
+  console.log(bodyKPIDataObj)
 
-  let docSuffix = Math.ceil(userBodyTrackerDataSize / 650);
-  let userBodyTrackerDocRef = doc(userBodyTrackerCollectionRef, `userBodyTrackerData_${docSuffix+1}`);
-  console.log(docSuffix)
+  const docSuffix =
+  Math.ceil(userBodyTrackerDataSize / 650) === 0
+    ? 1
+    : Math.ceil(userBodyTrackerDataSize / 650);
+
+  let userBodyTrackerDocRef = doc(userBodyTrackerCollectionRef, `userBodyTrackerData_${docSuffix}`);
   
   for (const [key, value] of Object.entries(bodyKPIDataObj)) {
     if((typeof value==='string' && key!=="date")){
@@ -56,7 +60,7 @@ async function saveBodyTrackerEntry(
 
     if (userBodyTrackerDocSnap.exists()) {
       const queriedUserBodyTrackerData = userBodyTrackerDocSnap.data();
-
+      console.log('checking if data exists.')
       if (queriedUserBodyTrackerData) {
         const filteredData = queriedUserBodyTrackerData.bodyTrackerData.filter(
           (entry: IBodyTrackerObj) => entry.date !== bodyKPIDataObj.date

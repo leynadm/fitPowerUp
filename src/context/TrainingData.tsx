@@ -35,14 +35,16 @@ export interface IUserBodyTrackerData {
 }
 
 export interface IUserSelectedExercises {
-  category: string;
+  group: string;
   favorite: boolean;
   measurement: [];
-  name: string;
-  imageURL: string;
-  iconURL: string;
-  imageURLName: string;
-  iconURLName: string;
+  id:string;
+  type:string;
+  mInvolved:[string]
+  erase:boolean;
+  equipment:[string]
+  multi:boolean
+  name:string
 }
 
 export interface IUserBodyTrackerDataEntry {

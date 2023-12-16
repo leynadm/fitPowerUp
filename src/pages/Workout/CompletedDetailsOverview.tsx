@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
 import { IUserSelectedExercises } from "../../context/TrainingData";
 import Container from "@mui/material/Container";
@@ -14,15 +14,45 @@ import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout"
 import Exercise from "../../utils/interfaces/Exercise";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 import { AuthContext } from "../../context/Auth";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../config/firebase";
+import CircularProgress from "@mui/material/CircularProgress";
+import toast from "react-hot-toast";
+
 function CompletedDetailsOverview() {
   const { exerciseName } = useParams();
-  const { userTrainingData, userSelectedExercises, dateForWorkout } =
+  const { userTrainingData, dateForWorkout } =
     useContext(TrainingDataContext);
-  const {currentUserData} = useContext(AuthContext)
+  const { currentUserData } = useContext(AuthContext);
   const historicStats = getHistoricWorkoutStatsForExercise();
   const workoutStatus = getWorkoutStatsForExercise();
-  console.log(historicStats)
-  console.log(historicStats)
+  const [exerciseImgURL, setExerciseImageURL] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // New state for loading status
+
+  console.log(exerciseName?.replaceAll(" ", "-"));
+
+  useEffect(() => {
+    const fetchImageURL = async () => {
+      const exerciseImageRef = ref(
+        storage,
+        `assets/exercises-assets/${exerciseName
+          ?.replaceAll(" ", "-")
+          .toLocaleLowerCase()}.jpg`
+      );
+      try {
+        const url = await getDownloadURL(exerciseImageRef);
+        setExerciseImageURL(url);
+      } catch (error) {
+        toast.error("Oops, there was an error fetching the image!");
+        console.error("Error fetching image:", error);
+      } finally {
+        setIsLoading(false); // Stop loading whether there was an error or not
+      }
+    };
+
+    fetchImageURL();
+  }, []); // Dependency array includes index and userExercise
+
   function getWorkoutStatsForExercise() {
     if (!userTrainingData || !exerciseName) {
       return;
@@ -37,7 +67,7 @@ function CompletedDetailsOverview() {
       totalWorkouts: 0,
       avgRepsPerSet: 0,
       loadVolume: 0,
-      count:0
+      count: 0,
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
@@ -68,19 +98,25 @@ function CompletedDetailsOverview() {
               (acc, exercise) => acc + (exercise.time || 0),
               0
             );
-            workoutStats.count +=1
+            workoutStats.count += 1;
           }
         }
       );
     });
 
-    workoutStats.avgRepsPerSet =
-
-      parseFloat((workoutStats.totalWorkouts > 0
+    workoutStats.avgRepsPerSet = parseFloat(
+      (workoutStats.totalWorkouts > 0
         ? workoutStats.totalReps / workoutStats.totalSets
-        : 0).toFixed(1));
-    
-        workoutStats.loadVolume = parseFloat((((workoutStats.totalWeight * workoutStats.totalReps)/workoutStats.totalSets)).toFixed(1));
+        : 0
+      ).toFixed(1)
+    );
+
+    workoutStats.loadVolume = parseFloat(
+      (
+        (workoutStats.totalWeight * workoutStats.totalReps) /
+        workoutStats.totalSets
+      ).toFixed(1)
+    );
 
     return workoutStats;
   }
@@ -99,7 +135,7 @@ function CompletedDetailsOverview() {
       totalWorkouts: 0,
       avgRepsPerSet: 0,
       loadVolume: 0,
-      count:0
+      count: 0,
     };
 
     userTrainingData.forEach((workoutEntry: IWorkoutData) => {
@@ -109,7 +145,7 @@ function CompletedDetailsOverview() {
           const exercises = exerciseEntry.exercises;
 
           if (completedExerciseName === exerciseName.toUpperCase()) {
-            historicStats.totalWorkouts += 1; 
+            historicStats.totalWorkouts += 1;
             historicStats.totalSets += exercises.length;
             historicStats.totalDistance += exercises.reduce(
               (acc, exercise) => acc + (exercise.distance || 0),
@@ -127,29 +163,37 @@ function CompletedDetailsOverview() {
               (acc, exercise) => acc + (exercise.time || 0),
               0
             );
-            historicStats.count+=1
+            historicStats.count += 1;
           }
         }
       );
     });
 
-    historicStats.avgRepsPerSet =
-      parseFloat(
-    (historicStats.totalWorkouts > 0
+    historicStats.avgRepsPerSet = parseFloat(
+      (historicStats.totalWorkouts > 0
         ? historicStats.totalReps / historicStats.totalSets
-        : 0).toFixed(1));
+        : 0
+      ).toFixed(1)
+    );
 
-    historicStats.loadVolume =
-      parseFloat(((historicStats.totalWeight * historicStats.totalReps) / 1000/historicStats.totalSets).toFixed(1));
+    historicStats.loadVolume = parseFloat(
+      (
+        (historicStats.totalWeight * historicStats.totalReps) /
+        1000 /
+        historicStats.totalSets
+      ).toFixed(1)
+    );
 
     return historicStats;
   }
 
+
+  /* 
   const exerciseSelected: IUserSelectedExercises =
     userSelectedExercises[0].exercises.find(
       (exercise: IUserSelectedExercises) =>
         exercise.name.toUpperCase() === exerciseName?.toUpperCase()
-    );
+    ); */
 
   return (
     <Container maxWidth="md" sx={{ paddingBottom: "80px" }}>
@@ -167,6 +211,7 @@ function CompletedDetailsOverview() {
       >
         {exerciseName && exerciseName.toLocaleUpperCase()}
       </Typography>
+
       <Box
         display="flex"
         justifyContent="center"
@@ -174,21 +219,34 @@ function CompletedDetailsOverview() {
         alignItems="center"
         gap={2}
       >
-        <div
-          style={{
-            minHeight: "300px",
+        <Box
+          sx={{
             display: "flex",
             justifyContent: "center",
+            maxHeight: "540px",
+            minHeight: "270px", // Default minHeight for mobile
           }}
         >
-          <img
-            src={exerciseSelected.imageURL}
-            width="75%"
-            height="75%"
-            style={{ maxWidth: "512px" }}
-            alt=""
-          ></img>
-        </div>
+          {isLoading ? (
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box
+            
+            >
+              <img
+                src={exerciseImgURL}
+                style={{ minHeight: "100%", objectFit: "cover",
+              
+              }}
+                width="100%"
+                height="100%"
+                alt=""
+              ></img>
+            </Box>
+          )}
+        </Box>
 
         <Box display="flex" flexDirection="column" gap={1} width="100%">
           <Typography variant="subtitle1" textAlign="center">
@@ -232,7 +290,9 @@ function CompletedDetailsOverview() {
             <ExerciseCompletedStatTile
               statName="TOTAL VOLUME"
               statIcon={<ScaleIcon fontSize="small" />}
-              statDetail={currentUserData.unitsSystem==="metric"?"kg":"lbs"}
+              statDetail={
+                currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
+              }
               statValue={workoutStatus?.loadVolume || 0}
               statColor="#FFA500"
               statTextColor="black"

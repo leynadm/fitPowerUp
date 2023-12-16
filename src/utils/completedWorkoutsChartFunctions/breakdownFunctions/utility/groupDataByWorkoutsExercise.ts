@@ -23,8 +23,8 @@ function groupDataByWorkoutsExercise(flattenedData: Exercise[]) {
     }
 
     // If dates are equal, sort by category
-    const categoryA = a.category;
-    const categoryB = b.category;
+    const categoryA = a.group;
+    const categoryB = b.group;
     return categoryA.localeCompare(categoryB);
   });
 

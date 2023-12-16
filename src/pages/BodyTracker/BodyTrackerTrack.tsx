@@ -25,7 +25,7 @@ function BodyTrackerTrack() {
     useContext(TrainingDataContext);
 
   const userBodyTrackerDataSize = userBodyTrackerData.length 
-  const [saveButtonText, setSaveButtonText] = useState("Save");
+  const [saveButtonText, setSaveButtonText] = useState("save");
   const [bodyKPIDataObj, setBodyKPIDataObj] = useState({
     date: "",
     weight: "",
@@ -212,7 +212,7 @@ function BodyTrackerTrack() {
           value={bodyKPIDataObj.weight}
         />
       </Box>
-      <Box
+      <Box 
         display="flex"
         paddingTop="0.5rem"
         justifyContent="center"

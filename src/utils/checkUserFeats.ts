@@ -3,7 +3,7 @@ export const feats = [
     feat: "Complete Your First Workout",
     name: "Master Roshi's Apprentice ",
     description:
-      "Just like Goku's first Kamehameha, you've unleashed your fitness journey. Keep going!",
+      "Just like Goku's first Kamehameha and Krillin's first death, you've just unleashed your fitness journey. Keep going!",
     state: false,
     date: "",
     level: 1,
@@ -55,7 +55,7 @@ export const feats = [
     featValue: 50,
   },
   {
-    feat: "Complete 75 Workout",
+    feat: "Complete 75 Workouts",
     name: "There Surely Is Hidden Power!",
     description:
       "75 workouts! There you go, you're showing more resilience than Gohan in the Hyperbolic Time Chamber.",

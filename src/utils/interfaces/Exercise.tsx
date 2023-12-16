@@ -4,9 +4,9 @@ interface Exercise {
     weight: number;
     reps: number;
     distance: number;
-    distance_unit: number | object;
+    distance_unit: string;
     time: number;
-    category: string;
+    group: string;
     comment?:string
     weekday?:string
     id:number

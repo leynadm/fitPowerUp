@@ -68,9 +68,30 @@ function CompletedWorkouts({
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const { userTrainingData, dateForWorkout, setDateForWorkout } =
+  const { userTrainingData, dateForWorkout, setDateForWorkout,userSelectedExercises } =
     useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
+
+/*   
+  let exercises= userSelectedExercises[0].exercises
+
+  for (let index = 0; index < exercises.length; index++) {
+    const element = exercises[index];
+   
+
+    //console.log(element.measurement)
+     
+
+    for (let index = 0; index < element.measurement.length; index++) {
+      const elementMeasurement = element.measurement[index];
+      
+      elementCheck=element+elementMeasurement
+
+    } 
+
+
+  } */
+  
 
   const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
     IWorkoutData[]
@@ -84,7 +105,7 @@ function CompletedWorkouts({
     touchStart: 0,
   });
 
-  console.log(userTrainingData)
+  //console.log(userTrainingData)
   const { moved, touchEnd, touchStart } = swipe;
 
   const SENSITIVITY = 125;
