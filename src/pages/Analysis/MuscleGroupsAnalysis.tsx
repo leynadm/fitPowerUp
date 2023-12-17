@@ -256,8 +256,8 @@ function MuscleGroupsAnalysis() {
           {exercisesMuscleGroupsArr &&
             exercisesMuscleGroupsArr.map((option: string) => (
               <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
+              {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
+            </MenuItem>
             ))}
         </Select>
 

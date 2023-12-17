@@ -1,8 +1,6 @@
 import React, {
   useState,
   useEffect,
-  Dispatch,
-  SetStateAction,
   useContext,
 } from "react";
 import Box from "@mui/material/Box";
@@ -12,7 +10,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Paper, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -20,7 +18,7 @@ import CalendarWorkoutModal from "../../components/ui/CalendarWorkoutModal";
 import { TrainingDataContext } from "../../context/TrainingData";
 import getWorkoutDates from "../../utils/firebaseUtilityFunctions/getWorkoutDates";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-
+import toast from "react-hot-toast";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -31,6 +29,8 @@ import { useNavigate } from "react-router-dom";
 import Exercise from "../../utils/interfaces/Exercise";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/uploadImportedData";
 import { AuthContext } from "../../context/Auth";
+import Fade from "@mui/material/Fade";
+import Grow from "@mui/material/Grow";
 function WorkoutCalendar() {
   const { dateForWorkout, userTrainingData, setDateForWorkout } =
     useContext(TrainingDataContext);
@@ -38,18 +38,17 @@ function WorkoutCalendar() {
   const [calendarDateValue, setCalendarDateValue] = useState(
     dayjs(dateForWorkout)
   );
-  const [calendarWorkoutModalVisibility, setCalendarWorkoutModalVisibility] =
-    useState(false);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
-    const {currentUserData} = useContext(AuthContext)
+  const { currentUserData } = useContext(AuthContext);
 
-    const [workoutDateExercises, setWorkoutDateExercises] = useState<
+  const [workoutDateExercises, setWorkoutDateExercises] = useState<
     { name: string; exercises: Exercise[] }[]
   >([]);
 
+  const [key, setKey] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     if (userTrainingData && dateForWorkout) {
       const uniqueDatesArr = getWorkoutDates(userTrainingData);
       setUniqueDates(uniqueDatesArr);
@@ -59,11 +58,13 @@ function WorkoutCalendar() {
     const foundElement = userTrainingDataArr.find(
       (element) => element.date === dateForWorkout
     );
+
     if (foundElement) {
       setWorkoutDateExercises(foundElement?.wExercises);
+    } else {
+      setWorkoutDateExercises([]);
     }
-
-  }, [dateForWorkout]);
+  }, []);
 
   if (!userTrainingData || !dateForWorkout) {
     return <>No Data</>;
@@ -94,22 +95,90 @@ function WorkoutCalendar() {
   }
 
   const handleDayClick = (clickedDate: Dayjs) => {
-
     const formattedDate = clickedDate.format("YYYY-MM-DD");
 
-    setDateForWorkout(formattedDate);
-/* 
-    setCalendarWorkoutModalVisibility(true);
- */
+    setCalendarDateValue(clickedDate);
+
+    const userTrainingDataArr: IWorkoutData[] = userTrainingData;
+    const foundElement = userTrainingDataArr.find(
+      (element) => element.date === formattedDate
+    );
+
+    if (foundElement) {
+      setWorkoutDateExercises(foundElement?.wExercises);
+    } else {
+      setWorkoutDateExercises([]);
+    }
+
+    setKey((prevKey) => prevKey + 1); // Change key to re-trigger animation
   };
 
-  return (
-    <Container>
-      <CalendarWorkoutModal
-        calendarWorkoutModalVisibility={calendarWorkoutModalVisibility}
-        setCalendarWorkoutModalVisibility={setCalendarWorkoutModalVisibility}
-      />
+  async function handleCopyWorkout() {
+    try {
+      const request = indexedDB.open("fitScouterDb", 2);
 
+      request.onsuccess = function () {
+        const db = request.result;
+
+        const userEntryTransaction = db.transaction(
+          "user-exercises-entries",
+          "readwrite"
+        );
+
+        const userEntryTransactionStore = userEntryTransaction.objectStore(
+          "user-exercises-entries"
+        );
+
+        for (let index = 0; index < workoutDateExercises.length; index++) {
+          const exercisesGroup = workoutDateExercises[index];
+
+          for (
+            let index = 0;
+            index < exercisesGroup.exercises.length;
+            index++
+          ) {
+            const exerciseEntry = exercisesGroup.exercises[index];
+
+            const newEntryToSave = {
+              date: new Date(),
+              distance: exerciseEntry.distance,
+              distance_unit: exerciseEntry.distance_unit,
+              dropset: exerciseEntry.dropset,
+              exercise: exerciseEntry.exercise,
+              group: exerciseEntry.group,
+              is_pr: false,
+              reps: exerciseEntry.reps,
+              time: exerciseEntry.time,
+              weight: exerciseEntry.weight,
+            };
+            userEntryTransactionStore.add(newEntryToSave);
+          }
+        }
+        userEntryTransaction.oncomplete = async function () {
+          db.close();
+          navigate("/home/workout/new")
+          /* 
+          await updateExercisesPRAfterAction(
+            userTrainingData,
+            exerciseSelected.name,
+            newEntryToSave
+          );
+          await getExistingExercises();
+         */
+        };
+
+        request.onerror = function () {
+          toast.error("Oops, saveExerciseEntry has an error!");
+          console.log("found error:");
+        };
+      };
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  return (
+    <Container sx={{ pb: "72px" }}>
       <AppBar
         elevation={3}
         position="fixed"
@@ -177,8 +246,14 @@ function WorkoutCalendar() {
         />
       </LocalizationProvider>
 
-      <Box >
-          {workoutDateExercises.length > 0 ? (
+      <Grow
+        in={true}
+        key={key}
+        style={{ transformOrigin: "0 1 0" }}
+        {...(true ? { timeout: 750 } : {})}
+      >
+        <Box>
+          {workoutDateExercises.length > 0 &&
             workoutDateExercises.map((group, index) => (
               <Box
                 key={index}
@@ -305,37 +380,41 @@ function WorkoutCalendar() {
                   </Box>
                 ))}
               </Box>
-            ))
-          ) : (
-            <Typography sx={{ textAlign: "center", margin: "16px" }}>
-              There are no exercises for this date.
-            </Typography>
+            ))}
+
+          {workoutDateExercises.length > 0 && (
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                variant="dbz_mini"
+                color="success"
+                sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                onClick={() => navigate("/home/workout")}
+              >
+                Go To
+              </Button>
+              <Button
+                variant="dbz_mini"
+                sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+                onClick={handleCopyWorkout}
+              >
+                COPY
+              </Button>
+            </Box>
           )}
-
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={() => navigate("/home/workout")}
-            >
-              Go To
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-            >
-              Cancel
-            </Button>
-          </Box>
         </Box>
+      </Grow>
 
+      {workoutDateExercises.length === 0 && (
+        <Typography sx={{ textAlign: "center", margin: "16px" }}>
+          There are no exercises for this date.
+        </Typography>
+      )}
     </Container>
   );
 }

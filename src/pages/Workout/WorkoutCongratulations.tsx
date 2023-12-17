@@ -10,6 +10,7 @@ import { useContext } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 interface IEndOfWorkoutQuotes {
   quote: string;
   imageURL: string;
@@ -20,10 +21,6 @@ function WorkoutCongratulations() {
   const workoutData: IWorkoutData = useLocation().state.workoutData;
   const { currentUserData } = useContext(AuthContext);
 
-  let weightStatDetail = "kg";
-  if (currentUserData.unitsSystem !== "metric") {
-    weightStatDetail = "lbs";
-  }
   const endOfWorkoutQuotes: IEndOfWorkoutQuotes[] = [
     {
       quote: "Don't stop until you're proud, like Vegeta!",
@@ -47,7 +44,7 @@ function WorkoutCongratulations() {
     },
     {
       quote:
-        "You can't be Mr. Satan, so just keep being you as you're amazing already!",
+        "You can't be Mr. Satan, so just keep being you - and secretly wish you were Mr. Satan!",
       character: "- Mr. Satan",
       imageURL:
         "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Fquotes-images%2FSATAN_14.jpg?alt=media&token=42008990-72ea-4d39-b73f-e1e468514c70&_gl=1*237hy8*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODYyNDAxNy4xMTAuMS4xNjk4NjI0ODExLjIzLjAuMA..",
@@ -61,7 +58,7 @@ function WorkoutCongratulations() {
     },
     {
       quote:
-        "You shouldn't be tired now, you should be done. Now go take a good shower!",
+        "You shouldn't be tired now, you should be done. Now go take a good shower, I can feel the stink from here!",
       character: "- Piccolo",
       imageURL:
         "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Fquotes-images%2FPICCOLO_12.jpg?alt=media&token=313927f1-cd6b-4654-a122-a0eda945be18&_gl=1*1f4beso*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODYyNDAxNy4xMTAuMS4xNjk4NjI0Nzg3LjQ3LjAuMA..",
@@ -169,7 +166,7 @@ function WorkoutCongratulations() {
     },
     {
       quote:
-        "Don't be afraid to fail. Failure is just a stepping stone to success.",
+        "Don't be afraid to fail. Failure is just a stepping stone to success. At least when it comes to muscle building...",
       character: "- Son Goku",
       imageURL:
         "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Fquotes-images%2FGOKU_08.jpg?alt=media&token=eecc3e60-6adf-4c33-aa87-74dc1fe7aef8&_gl=1*fgbsol*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODYyNDAxNy4xMTAuMS4xNjk4NjI1MzM3LjYwLjAuMA..",
@@ -260,26 +257,39 @@ function WorkoutCongratulations() {
         sx={{ paddingBottom: "8px", color: "#FFA500" }}
       />
 
-      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>
-        <StatMiniCard
-          statTitle="Session Power"
+      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1,
+    width:"100%" }}>
+        <ExerciseCompletedStatTile
+          statName="Session Power Level"
           statValue={workoutData.power}
           statDetail="PL"
+          statColor="#520975"
+          statTextColor="white"
+          statIcon={null}
         />
-        <StatMiniCard
-          statTitle="Workout Reps"
+        <ExerciseCompletedStatTile
+          statName="Workout Reps"
           statValue={workoutData.stats.reps}
           statDetail="reps"
+          statColor="#520975"
+          statTextColor="white"
+          statIcon={null}
         />
-        <StatMiniCard
-          statTitle="Workout Sets"
+        <ExerciseCompletedStatTile
+          statName="Workout Sets"
           statValue={workoutData.stats.sets}
           statDetail="sets"
+          statColor="#520975"
+          statTextColor="white"
+          statIcon={null}
         />
-        <StatMiniCard
-          statTitle="Workout Volume"
+        <ExerciseCompletedStatTile
+          statName="Workout Volume"
           statValue={workoutData.stats.vol}
           statDetail={currentUserData.unitsSystem==="metric"?"kg":"lbs"}
+          statColor="#520975"
+          statTextColor="white"
+          statIcon={null}
         />
       </Box>
 

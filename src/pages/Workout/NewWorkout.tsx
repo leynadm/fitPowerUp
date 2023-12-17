@@ -25,7 +25,7 @@ import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWor
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CopyWorkoutModal from "../../components/ui/CopyWorkoutModal";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
@@ -80,8 +80,6 @@ function NewWorkout({
     }
   }
 
-
-
   return (
     <Box
       sx={{
@@ -91,7 +89,6 @@ function NewWorkout({
       }}
       className="WrapperInsideNewWorkout"
     >
-
       <CopyWorkoutModal
         openCopyWorkoutModal={openCopyWorkoutModal}
         setOpenCopyWorkoutModal={setOpenCopyWorkoutModal}
@@ -201,8 +198,8 @@ function NewWorkout({
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent:"flex-end",
-              alignItems:"center",
+              justifyContent: "flex-end",
+              alignItems: "center",
               flexGrow: 1,
               height: "100%",
               paddingBottom: "56px",
@@ -217,7 +214,7 @@ function NewWorkout({
               }}
               onClick={handleNewWorkout}
             >
-              <AddIcon fontSize="large" />
+              <AddIcon fontSize="medium" />
               <Typography fontSize="1rem">Add exercise</Typography>
             </IconButton>
 
@@ -228,9 +225,9 @@ function NewWorkout({
                 display: "flex",
                 flexDirection: "column",
               }}
-              onClick={()=>setOpenCopyWorkoutModal(!openCopyWorkoutModal)}
+              onClick={() => navigate("/home/workout/calendar")}
             >
-              <ContentCopyIcon fontSize="large" />
+              <ContentCopyIcon fontSize="medium" />
               <Typography fontSize="1rem">Copy workout</Typography>
             </IconButton>
           </Box>

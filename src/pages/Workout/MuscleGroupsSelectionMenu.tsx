@@ -87,7 +87,7 @@ function MuscleGroupsSelectionMenu() {
           const url = await getDownloadURL(exerciseImageRef);
           setImageURL(url);
         } catch (error) {
-          toast.error("Oops, there was an error fetching the image!");
+          //toast.error("Oops, there was an error fetching the image!");
           console.error("Error fetching image:", error);
         } finally {
           setIsLoading(false); // Stop loading whether there was an error or not

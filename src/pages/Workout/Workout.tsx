@@ -66,14 +66,7 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
         element={<CompletedWorkoutsTabs />}
       />
 
-      <Route
-        path="/*"
-        index
-        element={
-          <CompletedWorkouts
-          />
-        }
-      />
+      <Route path="/*" index element={<CompletedWorkouts />} />
 
       <Route
         path="new/*"
@@ -104,16 +97,14 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       />
 
       <Route path="settings" element={<Settings />} />
-      <Route path="settings/terms-and-conditions" element={<TermsAndConditions />} />
+      <Route
+        path="settings/terms-and-conditions"
+        element={<TermsAndConditions />}
+      />
       <Route path="settings/import-data" element={<ImportData />} />
       <Route path="settings/development-log" element={<DevelopmentLog />} />
 
-      <Route
-        path="calendar"
-        element={
-          <WorkoutCalendar />
-        }
-      />
+      <Route path="calendar" element={<WorkoutCalendar />} />
 
       <Route path="analysis/*" element={<Analysis />} />
 

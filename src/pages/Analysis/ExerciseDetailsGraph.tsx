@@ -65,19 +65,33 @@ function ExerciseDetailsGraph() {
     useContext(TrainingDataContext);
 
   const userSelectedExercisesStrArr = userSelectedExercises[0].exercises
-    .map((userExercise: IUserSelectedExercises) => userExercise.name)
+    .map((userExercise: IUserSelectedExercises) => capitalizeWords(userExercise.name))
     .sort((a: string, b: string) =>
       a.localeCompare(b, undefined, { sensitivity: "base" })
     );
 
-  const [exerciseSelected, setExerciseSelected] = useState(
-    exerciseName
-      ? userSelectedExercises[0].exercises.find(
-          (exercise: IUserSelectedExercises) =>
-            exercise.name.toUpperCase() === exerciseName.toUpperCase()
-        )
-      : userSelectedExercises[0].exercises[0] // Assign the first entry when exerciseName is empty
-      );
+
+    console.log(userSelectedExercisesStrArr)
+    
+    function capitalizeWords(str:string) {
+
+        return str.replace(/\b(\w)/g, s => s.toUpperCase());
+
+    }
+
+
+      const [exerciseSelected, setExerciseSelected] = useState(() => {
+        if (exerciseName) {
+          const formattedExerciseName = capitalizeWords(exerciseName);
+          return userSelectedExercises[0].exercises.find(
+            (exercise: IUserSelectedExercises) =>
+              capitalizeWords(exercise.name) === formattedExerciseName
+          );
+        } else {
+          return userSelectedExercises[0].exercises[0]; // Assign the first entry when exerciseName is empty
+        }
+      });
+      
 
   const [statisticsOptions, setStatisticsOptions] = useState(() => {
     return getStatisticOptions(exerciseSelected) || [];
@@ -114,7 +128,7 @@ function ExerciseDetailsGraph() {
       const exercise = findExerciseByName(newValue);
       const newStatisticOptions = getStatisticOptions(exercise);
       setStatisticsOptions(newStatisticOptions);
-      const newStatisticKPI = newStatisticOptions[0].label;
+      const newStatisticKPI =  newStatisticOptions[0].label;
       setSelectedKPI(newStatisticKPI);
 
       setExerciseSelected(exercise);
@@ -614,7 +628,7 @@ function ExerciseDetailsGraph() {
 
   const findExerciseByName = (name: string) => {
     return userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) => exercise.name === name
+      (exercise: IUserSelectedExercises) => exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
     );
   };
 
@@ -629,7 +643,8 @@ function ExerciseDetailsGraph() {
             sx={{ paddingTop: "8px" }}
             disableClearable
             options={userSelectedExercisesStrArr}
-            value={exerciseSelected ? exerciseSelected.name : null}
+            value={exerciseSelected ? capitalizeWords(exerciseSelected.name) : undefined}
+
             renderInput={(params) => (
               <TextField
                 {...params}

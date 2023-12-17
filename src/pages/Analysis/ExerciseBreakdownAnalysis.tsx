@@ -69,6 +69,7 @@ import Paper from "@mui/material/Paper";
 import groupDataByExerciseForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExerciseForVolume";
 import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExercise";
 import getFlattenedOverallExerciseData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
+import toast from "react-hot-toast";
 
 function ExerciseBreakdownAnalysis() {
   const { userTrainingData } = useContext(TrainingDataContext);
@@ -428,8 +429,8 @@ function ExerciseBreakdownAnalysis() {
   const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newStartDate = event.target.value;
 
-    if (startDate > endDate) {
-      alert("you cannot");
+    if ((startDate > endDate) && (startDate!== '' && endDate!=='')) {
+      //toast.error('The end date has to be later than the starting date!')
     } else {
       setStartDate(newStartDate);
 
@@ -448,7 +449,7 @@ function ExerciseBreakdownAnalysis() {
   const handleEndDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newEndDate = event.target.value;
     if (newEndDate <= startDate || startDate === "") {
-      alert("you cannot set it");
+      //toast.error('The end date has to be later than the starting date!')
     } else {
       setEndDate(newEndDate);
       setModeledData(
