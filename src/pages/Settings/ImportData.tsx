@@ -237,6 +237,7 @@ function ImportData() {
         display: "flex",
         flexDirection: "column",
         paddingTop: 2,
+        paddingBottom:"72px"
       }}
     >
       <AppBar

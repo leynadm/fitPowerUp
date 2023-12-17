@@ -1,9 +1,8 @@
 import { doc, collection, writeBatch, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
-import toast from "react-hot-toast";
-import preselectedExercises from "../preselectedExercises";
 import { storage } from "../../config/firebase";
+import toast from "react-hot-toast";
 import { getFormattedDate } from "../getFormattedDate";
 async function updateAppVersionWithNewDocs(userID: string) {
   const batch = writeBatch(db);
@@ -43,8 +42,6 @@ async function updateAppVersionWithNewDocs(userID: string) {
     if (userDocDataSnap.exists()) {
       const userData = userDocDataSnap.data();
 
-      console.log(userData);
-
       if (userData.appVersion === 2) {
         console.log("for some reason app version === 2");
         return;
@@ -53,6 +50,8 @@ async function updateAppVersionWithNewDocs(userID: string) {
 
     batch.update(userDocRef, {
       appVersion: 2.0,
+      unitsSystem:"metric",
+      defaultWeightIncrement:1.25
     });
 
     // Create a document within the "userTrainingCollection" subcollection

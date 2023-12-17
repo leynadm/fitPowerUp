@@ -1,7 +1,9 @@
 import { setDoc, doc, getDoc, collection, writeBatch } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
-import preselectedExercises from "../preselectedExercises";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../config/firebase";
+
 
 async function createUserDoc(userID: string, fullname: string | null) {
 
@@ -78,11 +80,22 @@ async function createUserDoc(userID: string, fullname: string | null) {
       });
 
 
+      const preselectedExercisesRef = ref(
+        storage,
+        "assets/files/preselectedExercisesJSON.json"
+      );
+      const preselectedExercisesURL = await getDownloadURL(
+        preselectedExercisesRef
+      );
+      const preselectedExercisesResponse = await fetch(preselectedExercisesURL);
+      const preselectedExercisesParsedJSON =
+        await preselectedExercisesResponse.json();
+
       // Create the userSelectedExercises document within the "user-training-data" subcollection
       const preselectedExercisesDocRef = doc(userCollectionRef, "userSelectedExercises");
 
       batch.set(preselectedExercisesDocRef, {
-        exercises:preselectedExercises
+        exercises:preselectedExercisesParsedJSON
       });
 
       // Create the body tracker document within the "user-training-data" subcollection

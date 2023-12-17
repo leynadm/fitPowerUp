@@ -177,6 +177,15 @@ function WorkoutCalendar() {
     }
   }
 
+
+  function handleGoToDate(){
+
+    const formattedDate = calendarDateValue.format("YYYY-MM-DD");
+
+    setDateForWorkout(formattedDate)
+    navigate("/home/workout")
+
+  }
   return (
     <Container sx={{ pb: "72px" }}>
       <AppBar
@@ -394,7 +403,7 @@ function WorkoutCalendar() {
                 variant="dbz_mini"
                 color="success"
                 sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                onClick={() => navigate("/home/workout")}
+                onClick={handleGoToDate}
               >
                 Go To
               </Button>
