@@ -1,4 +1,4 @@
-import { useContext,useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
 import Container from "@mui/material/Container";
 import { Select, MenuItem } from "@mui/material";
@@ -31,14 +31,13 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
-
+import { AuthContext } from "../../context/Auth";
 function MuscleGroupsAnalysis() {
   const { userTrainingData, userSelectedExercises } =
     useContext(TrainingDataContext);
-
+  const {currentUserData} = useContext(AuthContext)
   const exercisesMuscleGroupsArr = getExercisesMuscleGroups(
     userSelectedExercises
   );
@@ -58,40 +57,86 @@ function MuscleGroupsAnalysis() {
   const handleMuscleGroupSelectChange = (event: SelectChangeEvent<string>) => {
     const selectedMuscleGroup = event.target.value;
     setSelectedMuscleGroup(selectedMuscleGroup);
-    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, selectedDataGroup));
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        selectedMuscleGroup,
+        selectedKPI,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
   };
 
   const handleKPISelectChange = (event: SelectChangeEvent<string>) => {
     const selectedKPI = event.target.value;
     setSelectedKPI(selectedKPI);
-    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, selectedDataGroup));
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        selectedMuscleGroup,
+        selectedKPI,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
   };
 
-  const handleStandardTimeframeChange = (option:any) => {
-    const clickedTimeframe = option; 
+  const handleStandardTimeframeChange = (option: any) => {
+    const clickedTimeframe = option;
     setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
-    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, clickedTimeframe, selectedDataGroup));
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        selectedMuscleGroup,
+        selectedKPI,
+        clickedTimeframe,
+        selectedDataGroup
+      )
+    );
   };
 
-  const handleDataGroupChange = (option:any) => {
+  const handleDataGroupChange = (option: any) => {
     const clickedDataGroup = option;
     setSelectedDataGroup(clickedDataGroup); // Update the selected timeframe
-    setModeledData(fetchModeledData(userTrainingData, selectedMuscleGroup, selectedKPI, selectedTimeframe, clickedDataGroup));
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        selectedMuscleGroup,
+        selectedKPI,
+        selectedTimeframe,
+        clickedDataGroup
+      )
+    );
   };
 
-  
   useEffect(() => {
     setModeledData(
-     fetchModeledData(
-       userTrainingData,
-       exercisesMuscleGroupsArr[0],
-       selectedKPI,
-       selectedTimeframe,
-       selectedDataGroup
-     )
-   );
-}, []);
+      fetchModeledData(
+        userTrainingData,
+        exercisesMuscleGroupsArr[0],
+        selectedKPI,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
+  }, []);
 
+  const valueToDisplay = (clickedKPI: string) => {
+    const unitBasedKPIs = ['Total Volume'];
+    const repBasedKPIs = ['Total Reps'];
+    const workoutsKPIs = ['Total Workouts']
+    const setsKPIs = ['Total Sets']
+    if (unitBasedKPIs.includes(clickedKPI)) {
+      return currentUserData.unitsSystem === "metric" ? "kg" : "lbs";
+    } else if (repBasedKPIs.includes(clickedKPI)) {
+      return "reps";
+    }else if (workoutsKPIs.includes(clickedKPI)) {
+      return "workouts";
+    }else if (setsKPIs.includes(clickedKPI)) {
+      return "sets";
+    }
+  }
 
   function handleGetTotalRepsForMuscleGroup(
     userTrainingData: IWorkoutData[],
@@ -112,10 +157,8 @@ function MuscleGroupsAnalysis() {
       ? getTotalRepsForMuscleGroup(groupedData)
       : [];
 
-    
     return modeledData;
   }
-
 
   function handleGetTotalVolumeForMuscleGroup(
     userTrainingData: IWorkoutData[],
@@ -124,10 +167,10 @@ function MuscleGroupsAnalysis() {
     dataGroup: string
   ) {
     const flattenedData = getFlattenedMuscleGroupData(
-        userTrainingData,
-        muscleGroup,
-        timeframe
-      );
+      userTrainingData,
+      muscleGroup,
+      timeframe
+    );
     const groupedData = flattenedData
       ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
       : [];
@@ -136,7 +179,6 @@ function MuscleGroupsAnalysis() {
       : [];
 
     return modeledData;
-
   }
 
   function handleGetTotalSetsForMuscleGroup(
@@ -146,10 +188,10 @@ function MuscleGroupsAnalysis() {
     dataGroup: string
   ) {
     const flattenedData = getFlattenedMuscleGroupData(
-        userTrainingData,
-        muscleGroup,
-        timeframe
-      );
+      userTrainingData,
+      muscleGroup,
+      timeframe
+    );
     const groupedData = flattenedData
       ? groupDataByTimePeriodSummed(flattenedData, dataGroup)
       : [];
@@ -158,7 +200,6 @@ function MuscleGroupsAnalysis() {
       : [];
 
     return modeledData;
-
   }
 
   function handleGetTotalWorkoutsForMuscleGroup(
@@ -168,10 +209,10 @@ function MuscleGroupsAnalysis() {
     dataGroup: string
   ) {
     const flattenedData = getFlattenedMuscleGroupData(
-        userTrainingData,
-        muscleGroup,
-        timeframe
-      );
+      userTrainingData,
+      muscleGroup,
+      timeframe
+    );
     const groupedData = flattenedData
       ? groupDataByTimePeriodSets(flattenedData, dataGroup)
       : [];
@@ -180,7 +221,6 @@ function MuscleGroupsAnalysis() {
       : [];
 
     return modeledData;
-
   }
 
   const fetchModeledData = (
@@ -195,7 +235,7 @@ function MuscleGroupsAnalysis() {
     }
 
     let data;
-    
+
     switch (kpi) {
       case "Total Reps":
         data = handleGetTotalRepsForMuscleGroup(
@@ -205,8 +245,8 @@ function MuscleGroupsAnalysis() {
           dataGroup
         );
         break;
-      
-        case "Total Sets":
+
+      case "Total Sets":
         data = handleGetTotalSetsForMuscleGroup(
           userTrainingData,
           muscleGroup,
@@ -214,15 +254,15 @@ function MuscleGroupsAnalysis() {
           dataGroup
         );
         break;
-        case "Total Workouts":
+      case "Total Workouts":
         data = handleGetTotalWorkoutsForMuscleGroup(
-            userTrainingData,
-            muscleGroup,
-            timeframe,
-            dataGroup
+          userTrainingData,
+          muscleGroup,
+          timeframe,
+          dataGroup
         );
         break;
-        case "Total Volume":
+      case "Total Volume":
         data = handleGetTotalVolumeForMuscleGroup(
           userTrainingData,
           muscleGroup,
@@ -230,19 +270,18 @@ function MuscleGroupsAnalysis() {
           dataGroup
         );
         break;
-         
+
       default:
         break;
     }
 
     return data;
-
   };
 
   return (
     <Container
-    maxWidth="md"
-    sx={{ height: "100%", width: "100%", paddingBottom: "64px" }}
+      maxWidth="md"
+      sx={{ height: "100%", width: "100%", paddingBottom: "64px" }}
     >
       <Box paddingBottom="16px" display="flex" flexDirection="column">
         <Select
@@ -256,8 +295,8 @@ function MuscleGroupsAnalysis() {
           {exercisesMuscleGroupsArr &&
             exercisesMuscleGroupsArr.map((option: string) => (
               <MenuItem key={option} value={option}>
-              {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
-            </MenuItem>
+                {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
+              </MenuItem>
             ))}
         </Select>
 
@@ -287,7 +326,7 @@ function MuscleGroupsAnalysis() {
             <Button
               key={option.label}
               style={{ flexGrow: 1 }}
-              onClick={()=>handleStandardTimeframeChange(option.value)}
+              onClick={() => handleStandardTimeframeChange(option.value)}
               sx={{ backgroundColor: "#520975" }}
             >
               {option.label}
@@ -315,55 +354,61 @@ function MuscleGroupsAnalysis() {
       </Box>
 
       <ResponsiveContainer minHeight="500px">
-        { modeledData && modeledData?.length>0?(
+        {modeledData && modeledData?.length > 0 ? (
           <LineChart
-          width={500}
-          height={500}
-          data={modeledData}
-          margin={{
-            top: 10,
-            right: 10,
-            left: 5,
-            bottom: 1,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="exerciseDate" fontSize={12} />
-          <YAxis width={30} fontSize={12} 
-           tickFormatter={(value) =>
-            new Intl.NumberFormat("en-US", {
-              notation: "compact",
-              compactDisplay: "short",
-            }).format(value)
-          }
-          />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#520975"
-            strokeWidth="4"
-            dot={{ fill: "#2e4355", stroke: "#520975", strokeWidth: 2, r: 5 }}
-            activeDot={{
-              fill: "#2e4355",
-              stroke: "#8884d8",
-              strokeWidth: 5,
-              r: 10,
+            width={500}
+            height={500}
+            data={modeledData}
+            margin={{
+              top: 10,
+              right: 10,
+              left: 10,
+              bottom: 1,
             }}
-          />
-        </LineChart>
-        ):(
-          <Box       display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center">
-          <NoAvailableDataBox/>
-          </Box>
-        )
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="exerciseDate" fontSize={12} />
+            <YAxis
+              width={25}
+              fontSize={12}
+              tickFormatter={(value) =>
+                new Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  compactDisplay: "short",
+                }).format(value)
+              }
+              label={{
+                value: valueToDisplay(selectedKPI),
+                angle:-90,
+                position: "insideBottomLeft",
+              }}
+            />
+            <Tooltip />
 
-        }
-        
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#520975"
+              strokeWidth="4"
+              dot={{ fill: "#2e4355", stroke: "#520975", strokeWidth: 2, r: 4 }}
+              activeDot={{
+                fill: "#2e4355",
+                stroke: "#8884d8",
+                strokeWidth: 5,
+                r: 10,
+              }}
+            />
+          </LineChart>
+        ) : (
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <NoAvailableDataBox />
+          </Box>
+        )}
       </ResponsiveContainer>
     </Container>
   );

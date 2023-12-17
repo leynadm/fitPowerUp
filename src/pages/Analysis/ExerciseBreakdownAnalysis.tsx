@@ -22,7 +22,6 @@ import getNumberOfRepsByExercise from "../../utils/completedWorkoutsChartFunctio
 import getNumberOfSetsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfSetsByExercise";
 import getNumberOfWorkoutsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfWorkoutsByExercise";
 import getTrainingVolumeByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getTrainingVolumeByExercise";
-import groupDataOverall from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataOverall";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 import Replay10Icon from "@mui/icons-material/Replay10";
 import ScaleIcon from "@mui/icons-material/Scale";
@@ -32,6 +31,7 @@ import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
 import getOverallStats from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
 import groupDataByMuscleGForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleGForVolume";
+import capitalizeWords from "../../utils/capitalizeWords";
 import {
   Radar,
   RadarChart,
@@ -557,7 +557,7 @@ function ExerciseBreakdownAnalysis() {
       {modeledData.length === 0 ? (
         <Box
           display="flex"
-          minHeight="500px"
+          minHeight="250px"
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
@@ -565,9 +565,10 @@ function ExerciseBreakdownAnalysis() {
           <NoAvailableDataBox />
         </Box>
       ) : muscleGroupChart ? (
-        <ResponsiveContainer minHeight="500px">
+        <ResponsiveContainer minHeight="250px">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
-            <PolarGrid />
+            <PolarGrid 
+            />
             <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={15} />
             <PolarRadiusAxis
               fontSize={20}
@@ -579,7 +580,6 @@ function ExerciseBreakdownAnalysis() {
               }
             />
             <Radar
-              name="Mike"
               dataKey="value"
               stroke="#8884d8"
               fill="#520975"
@@ -588,10 +588,9 @@ function ExerciseBreakdownAnalysis() {
           </RadarChart>
         </ResponsiveContainer>
       ) : (
-        <ResponsiveContainer minHeight="500px">
+        <ResponsiveContainer height="100%" aspect={0.5}>
           <BarChart
             width={500}
-            height={300}
             data={modeledData}
             margin={{
               top: 15,
@@ -603,7 +602,14 @@ function ExerciseBreakdownAnalysis() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis fontSize={12} dataKey="exerciseName" type="category" />
+            <YAxis fontSize={12} width={75} dataKey='exerciseName'  type="category"
+               tick={{ 
+                fill: '#000', // Text color
+                width: 100,
+                transform: 'translate(-60, 0)', // Adjust this to align to the left
+                textAnchor: 'start' // Aligns the text to the start, which is the left side for Y-axis labels
+              }}
+            />
             <Tooltip />
             <Legend />
             <Bar
@@ -646,8 +652,8 @@ function ExerciseBreakdownAnalysis() {
                     >
                       <TableCell component="th" scope="row" align="left">
                         {entry.exerciseMuscleGroup
-                          ? entry.exerciseMuscleGroup.toLocaleUpperCase()
-                          : entry.exerciseName.toLocaleUpperCase()}
+                          ? capitalizeWords(entry.exerciseMuscleGroup)
+                          : capitalizeWords(entry.exerciseName)}
                       </TableCell>
 
                       <TableCell align="right">

@@ -184,7 +184,7 @@ function WorkoutCalendar() {
 
     setDateForWorkout(formattedDate)
     navigate("/home/workout")
-
+ 
   }
   return (
     <Container sx={{ pb: "72px" }}>
@@ -275,7 +275,12 @@ function WorkoutCalendar() {
               >
                 <Typography
                   variant="h6"
-                  sx={{ textAlign: "center", fontSize: "medium" }}
+                  sx={{ textAlign: "center", fontSize: "medium",
+                background:"radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
+                boxShadow: 2,
+                borderRadius: "4px",
+                }}
+                  
                 >
                   {group.name.toLocaleUpperCase()}
                 </Typography>

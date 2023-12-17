@@ -97,23 +97,20 @@ function MuscleGroupsSelectionMenu() {
       fetchImageURL();
     }, [index, userExercise]); // Dependency array includes index and userExercise
 
+
     const rowStyle = {
       ...style,
       display: "grid",
       gridTemplateRows: "1fr 8fr 1fr",
-      width: "100%",
-      paddingLeft: "16px",
-      paddingRight: "16px",
-      paddingTop: "16px",
       justifyContent: "center",
       alignItems: "center",
     };
-
     return (
       <Box
         boxShadow={2}
         borderRadius="4px"
         style={rowStyle}
+        pt={2}
         onClick={() => handleTileClick(userExercise.name)}
       >
         <Typography align="center">
@@ -136,6 +133,7 @@ function MuscleGroupsSelectionMenu() {
             width="100%"
             justifyContent="center"
             display="flex"
+            alignItems="center"
           >
             <img
               src={imageURL}
@@ -143,7 +141,7 @@ function MuscleGroupsSelectionMenu() {
               height="100%"
               width="100%"
               style={{
-                maxHeight: "200px",
+                maxHeight: "128px",
                 width: "auto",
               }}
             />
@@ -297,11 +295,11 @@ function MuscleGroupsSelectionMenu() {
           ))}
 
         {query !== "" && (
-          <Box paddingLeft="8px" paddingRight="8px">
+          <Box>
             <FixedSizeList
               height={window.innerHeight - 170}
               itemCount={filteredExercises.length}
-              itemSize={300}
+              itemSize={275}
               width="100%"
             >
               {Row}

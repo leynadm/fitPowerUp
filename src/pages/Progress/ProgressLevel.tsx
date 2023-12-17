@@ -400,6 +400,8 @@ function ProgressLevel() {
           </Button>
         </Box>
       </Box>
+
+  {/*
       <Box
         width="100%"
         marginTop="16px"
@@ -413,7 +415,7 @@ function ProgressLevel() {
         <Typography align="center" variant="h6">
           WORKOUT MUSCLE CHART
         </Typography>
-        {/* 
+       
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -429,7 +431,7 @@ function ProgressLevel() {
           <TextField type="date" fullWidth></TextField>
           <TextField type="date" fullWidth></TextField>
         </Box>
- */}
+ 
         <div
 
           style={{
@@ -460,9 +462,10 @@ function ProgressLevel() {
           >
             23
           </p>
-           */}
+       
         </div>
       </Box>
+    */}
     </Box>
   );
 }

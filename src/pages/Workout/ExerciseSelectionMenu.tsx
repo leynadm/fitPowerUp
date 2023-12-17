@@ -83,10 +83,6 @@ function ExerciseSelectionMenu() {
       ...style,
       display: "grid",
       gridTemplateRows: "1fr 8fr 1fr",
-      width: "100%",
-      paddingLeft: "16px",
-      paddingRight: "16px",
-      paddingTop: "16px",
       justifyContent: "center",
       alignItems: "center",
     };
@@ -97,8 +93,9 @@ function ExerciseSelectionMenu() {
         borderRadius="4px"
         style={rowStyle}
         onClick={() => handleTileClick(userExercise.name)}
+        pt={2}
       >
-        <Typography align="center">
+        <Typography align="center" overflow="hidden">
           {userExercise.name.toLocaleUpperCase()}
         </Typography>
 
@@ -118,14 +115,15 @@ function ExerciseSelectionMenu() {
             width="100%"
             justifyContent="center"
             display="flex"
+            alignItems="center"
           >
             <img
               src={imageURL}
               alt={userExercise.name}
-              height="100%"
+
               width="100%"
               style={{
-                maxHeight: "200px",
+                maxHeight: "128px",
                 width: "auto",
               }}
             />
@@ -144,6 +142,7 @@ function ExerciseSelectionMenu() {
   return (
     <>
       <Container maxWidth="md">
+        
         <AppBar
           elevation={2}
           position="fixed"
@@ -153,7 +152,7 @@ function ExerciseSelectionMenu() {
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
-          <Container maxWidth="md">
+        <Container maxWidth="md">
             <Toolbar disableGutters>
               <FitnessCenterIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -226,16 +225,16 @@ function ExerciseSelectionMenu() {
                 </Box>
               </Box>
             </Toolbar>
-          </Container>
+            </Container>
         </AppBar>
 
         <ExerciseSearchingBar query={query} setQuery={setQuery} />
 
-        <Box paddingLeft="8px" paddingRight="8px">
+        <Box >
           <FixedSizeList
             height={window.innerHeight - 165}
             itemCount={filteredExercises.length}
-            itemSize={300}
+            itemSize={200}
             width="100%"
           >
             {Row}

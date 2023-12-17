@@ -50,7 +50,7 @@ function ProgressPath() {
       currentUserData.powerLevel <= MAX.bracket;
 
     function handleNavigateScreen(){
-
+console.log('yes')
       navigate(`hero/${pathPointsEntry.id}`,{
         state:pathPointsEntry.quote
       })
@@ -129,7 +129,7 @@ function ProgressPath() {
               border: "none",
               borderRadius: "50%",
               position: "relative",
-              zIndex: -1,
+              zIndex: 0,
               transition: ".3s",
               cursor: "pointer",
               boxShadow: "0 0 0 1px #666",
@@ -151,12 +151,12 @@ function ProgressPath() {
                 filter: isUnlocked ? "none" : "blur(6px)", // Apply blur effect if not within range
               }}
             />
-            {/* 
+            
             <span
               style={{
                 position: "absolute",
-                inset: "-6px",
-                padding: "10px",
+                inset: "-1px",
+                padding: "4px",
                 borderRadius: "50%",
                 background:
                   "conic-gradient(#520975, #FFA500 30deg 120deg, #FFA500 150deg 180deg, #520975 210deg 300deg, #520975 330deg)",
@@ -170,7 +170,7 @@ function ProgressPath() {
               }}
 
             ></span>
-             */}
+            
           </button>
         </Box>
       </Box>

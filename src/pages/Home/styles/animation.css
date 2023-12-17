@@ -1,0 +1,19 @@
+@keyframes my-animation {
+    from {
+      transform: translateX(25%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @media (max-width: 600px) {
+    @keyframes my-animation {
+      from {
+        transform: translateX(6%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+  }

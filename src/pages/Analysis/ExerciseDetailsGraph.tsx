@@ -29,7 +29,9 @@ import getMaxSpeedForExercise from "../../utils/completedWorkoutsChartFunctions/
 import getMaxPaceForExercise from "../../utils/completedWorkoutsChartFunctions/exercisesFunctions/getMaxPaceForExercise";
 import Autocomplete from "@mui/material/Autocomplete";
 import { TextField } from "@mui/material";
+import capitalizeWords from "../../utils/capitalizeWords";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
+import { AuthContext } from "../../context/Auth";
 import {
   statisticsOptionsWeightAndReps,
   statisticsOptionsReps,
@@ -60,38 +62,30 @@ import groupDataByTimePeriodSummed from "../../utils/completedWorkoutsChartFunct
 
 function ExerciseDetailsGraph() {
   const { exerciseName } = useParams();
-
+  const {currentUserData} = useContext(AuthContext)
   const { userTrainingData, userSelectedExercises } =
     useContext(TrainingDataContext);
 
   const userSelectedExercisesStrArr = userSelectedExercises[0].exercises
-    .map((userExercise: IUserSelectedExercises) => capitalizeWords(userExercise.name))
+    .map((userExercise: IUserSelectedExercises) =>
+      capitalizeWords(userExercise.name)
+    )
     .sort((a: string, b: string) =>
       a.localeCompare(b, undefined, { sensitivity: "base" })
     );
 
+  console.log(userSelectedExercisesStrArr);
 
-    console.log(userSelectedExercisesStrArr)
-    
-    function capitalizeWords(str:string) {
-
-        return str.replace(/\b(\w)/g, s => s.toUpperCase());
-
+  const [exerciseSelected, setExerciseSelected] = useState(() => {
+    if (exerciseName) {
+      return userSelectedExercises[0].exercises.find(
+        (exercise: IUserSelectedExercises) =>
+          exercise.name.toLocaleUpperCase() === exerciseName.toLocaleUpperCase()
+      );
+    } else {
+      return userSelectedExercises[0].exercises[0];
     }
-
-
-      const [exerciseSelected, setExerciseSelected] = useState(() => {
-        if (exerciseName) {
-          const formattedExerciseName = capitalizeWords(exerciseName);
-          return userSelectedExercises[0].exercises.find(
-            (exercise: IUserSelectedExercises) =>
-              capitalizeWords(exercise.name) === formattedExerciseName
-          );
-        } else {
-          return userSelectedExercises[0].exercises[0]; // Assign the first entry when exerciseName is empty
-        }
-      });
-      
+  });
 
   const [statisticsOptions, setStatisticsOptions] = useState(() => {
     return getStatisticOptions(exerciseSelected) || [];
@@ -103,18 +97,18 @@ function ExerciseDetailsGraph() {
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m");
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
-  
-    useEffect(() => {
-         setModeledData(
-          fetchModeledData(
-            userTrainingData,
-            exerciseSelected.name,
-            selectedKPI,
-            selectedTimeframe,
-            selectedDataGroup
-          )
-        );
-    }, []);
+
+  useEffect(() => {
+    setModeledData(
+      fetchModeledData(
+        userTrainingData,
+        exerciseSelected.name,
+        selectedKPI,
+        selectedTimeframe,
+        selectedDataGroup
+      )
+    );
+  }, []);
 
   const [modeledData, setModeledData] = useState<
     { exerciseDate: string; value: number }[] | undefined
@@ -128,7 +122,7 @@ function ExerciseDetailsGraph() {
       const exercise = findExerciseByName(newValue);
       const newStatisticOptions = getStatisticOptions(exercise);
       setStatisticsOptions(newStatisticOptions);
-      const newStatisticKPI =  newStatisticOptions[0].label;
+      const newStatisticKPI = newStatisticOptions[0].label;
       setSelectedKPI(newStatisticKPI);
 
       setExerciseSelected(exercise);
@@ -159,6 +153,18 @@ function ExerciseDetailsGraph() {
     );
   };
 
+  const valueToDisplay = (clickedKPI: string) => {
+    const unitBasedKPIs = ['Estimated 1RM', 'Max Weight', 'Max Volume', 'Max Weight For Reps', 'Workout Volume','Max Weight for Reps'];
+    const repBasedKPIs = ['Max Reps', 'Workout Reps'];
+  
+    if (unitBasedKPIs.includes(clickedKPI)) {
+      return currentUserData.unitsSystem === "metric" ? "kg" : "lbs";
+    } else if (repBasedKPIs.includes(clickedKPI)) {
+      return "reps";
+    }
+  }
+  
+  
   const handleStandardTimeframeChange = (option: any) => {
     const clickedTimeframe = option;
     setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
@@ -244,7 +250,6 @@ function ExerciseDetailsGraph() {
     timeframe: string,
     dataGroup: string
   ) => {
-
     if (!exerciseSelected) {
       return;
     }
@@ -406,9 +411,7 @@ function ExerciseDetailsGraph() {
     const groupedData = flattenedData
       ? groupDataByTimePeriodMax(flattenedData, dataGroup)
       : [];
-    const modeledData = groupedData
-      ? getMaxWeightForExercise(groupedData)
-      : [];
+    const modeledData = groupedData ? getMaxWeightForExercise(groupedData) : [];
     return modeledData;
   }
 
@@ -466,9 +469,7 @@ function ExerciseDetailsGraph() {
     const groupedData = flattenedData
       ? groupDataByTimePeriodMax(flattenedData, dataGroup)
       : [];
-    const modeledData = groupedData
-      ? getMaxVolumeForExercise(groupedData)
-      : [];
+    const modeledData = groupedData ? getMaxVolumeForExercise(groupedData) : [];
     return modeledData;
   }
 
@@ -504,9 +505,7 @@ function ExerciseDetailsGraph() {
     const groupedData = flattenedData
       ? groupDataByTimePeriodMax(flattenedData, dataGroup)
       : [];
-    const modeledData = groupedData
-      ? getMaxSpeedForExercise(groupedData)
-      : [];
+    const modeledData = groupedData ? getMaxSpeedForExercise(groupedData) : [];
     return modeledData;
   }
 
@@ -628,7 +627,8 @@ function ExerciseDetailsGraph() {
 
   const findExerciseByName = (name: string) => {
     return userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) => exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
+      (exercise: IUserSelectedExercises) =>
+        exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
     );
   };
 
@@ -643,8 +643,11 @@ function ExerciseDetailsGraph() {
             sx={{ paddingTop: "8px" }}
             disableClearable
             options={userSelectedExercisesStrArr}
-            value={exerciseSelected ? capitalizeWords(exerciseSelected.name) : undefined}
-
+            value={
+              exerciseSelected
+                ? capitalizeWords(exerciseSelected.name)
+                : undefined
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -709,19 +712,17 @@ function ExerciseDetailsGraph() {
         </ButtonGroup>
       </Box>
 
-      {modeledData?.length===0?(
+      {modeledData?.length === 0 ? (
         <Box
-        display="flex"
-        minHeight="500px"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <NoAvailableDataBox/>
-      </Box>
-      ):selectedKPI !== "Max Weight for Reps" ? (
-
-        
+          display="flex"
+          minHeight="500px"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <NoAvailableDataBox />
+        </Box>
+      ) : selectedKPI !== "Max Weight for Reps" ? (
         <ResponsiveContainer minHeight="500px">
           <LineChart
             width={500}
@@ -730,21 +731,37 @@ function ExerciseDetailsGraph() {
             margin={{
               top: 10,
               right: 10,
-              left: 1,
+              left: 10,
               bottom: 1,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="exerciseDate" />
-            <YAxis width={30} fontSize={12} />
-            <Tooltip />
-            <Legend />
+            <XAxis dataKey="exerciseDate" 
+            />
+            <YAxis
+              width={25}
+              fontSize={12}
+              label={{
+                value: valueToDisplay(selectedKPI),
+                angle:-90,
+                position: "insideBottomLeft",
+              }}
+              tickFormatter={(value) =>
+                new Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  compactDisplay: "short",
+                }).format(value)
+              }
+            />
+            <Tooltip
+            />
+            
             <Line
               type="monotone"
               dataKey="value"
               stroke="#520975"
               strokeWidth="4"
-              dot={{ fill: "#2e4355", stroke: "#520975", strokeWidth: 2, r: 5 }}
+              dot={{ fill: "#2e4355", stroke: "#520975", strokeWidth: 2, r: 4 }}
               activeDot={{
                 fill: "#2e4355",
                 stroke: "#8884d8",
@@ -763,7 +780,7 @@ function ExerciseDetailsGraph() {
             margin={{
               top: 10,
               right: 10,
-              left: 5,
+              left:10,
               bottom: 1,
             }}
           >
@@ -778,6 +795,11 @@ function ExerciseDetailsGraph() {
                   compactDisplay: "short",
                 }).format(value)
               }
+              label={{
+                value: valueToDisplay(selectedKPI),
+                angle:-90,
+                position: "insideBottomLeft"
+              }}
             />
             <Tooltip />
             <Legend />
