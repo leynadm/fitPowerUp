@@ -21,12 +21,12 @@ import Exercise from "../../utils/interfaces/Exercise";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import CommentWorkoutModal from "./CompleteWorkoutModal";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CopyWorkoutModal from "../../components/ui/CopyWorkoutModal";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -41,6 +41,7 @@ function NewWorkout({
   const navigate = useNavigate();
 
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
+  const [openCopyWorkoutModal, setOpenCopyWorkoutModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
   const [openCompleteWorkoutModal, setOpenCompleteWorkoutModal] =
     useState(false);
@@ -79,6 +80,8 @@ function NewWorkout({
     }
   }
 
+
+
   return (
     <Box
       sx={{
@@ -88,6 +91,12 @@ function NewWorkout({
       }}
       className="WrapperInsideNewWorkout"
     >
+
+      <CopyWorkoutModal
+        openCopyWorkoutModal={openCopyWorkoutModal}
+        setOpenCopyWorkoutModal={setOpenCopyWorkoutModal}
+      />
+
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
@@ -199,10 +208,6 @@ function NewWorkout({
               paddingBottom: "56px",
             }}
           >
-
-
-
-
             <IconButton
               aria-label="add workout"
               sx={{
@@ -213,7 +218,7 @@ function NewWorkout({
               onClick={handleNewWorkout}
             >
               <AddIcon fontSize="large" />
-              <Typography fontSize="1rem">Add an exercise</Typography>
+              <Typography fontSize="1rem">Add exercise</Typography>
             </IconButton>
 
             <IconButton
@@ -223,10 +228,10 @@ function NewWorkout({
                 display: "flex",
                 flexDirection: "column",
               }}
-
+              onClick={()=>setOpenCopyWorkoutModal(!openCopyWorkoutModal)}
             >
               <ContentCopyIcon fontSize="large" />
-              <Typography fontSize="1rem">Copy previous workout</Typography>
+              <Typography fontSize="1rem">Copy workout</Typography>
             </IconButton>
           </Box>
         ) : (

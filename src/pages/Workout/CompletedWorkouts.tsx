@@ -55,24 +55,20 @@ import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
-interface CompletedWorkoutsProps {
-  todayDate: Date | undefined;
-  setTodayDate: Dispatch<SetStateAction<Date | undefined>>;
-}
-
-function CompletedWorkouts({
-  todayDate,
-  setTodayDate,
-}: CompletedWorkoutsProps) {
+function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const { userTrainingData, dateForWorkout, setDateForWorkout,userSelectedExercises } =
-    useContext(TrainingDataContext);
+  const {
+    userTrainingData,
+    dateForWorkout,
+    setDateForWorkout,
+    userSelectedExercises,
+  } = useContext(TrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
 
-/*   
+  /*   
   let exercises= userSelectedExercises[0].exercises
 
   for (let index = 0; index < exercises.length; index++) {
@@ -91,7 +87,6 @@ function CompletedWorkouts({
 
 
   } */
-  
 
   const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
     IWorkoutData[]
@@ -171,7 +166,13 @@ function CompletedWorkouts({
     return newDate;
   }
 
-  const pages = ["Analysis","Preset Workouts", "Body Tracker", "Settings", "Sign Out"];
+  const pages = [
+    "Analysis",
+    "Preset Workouts",
+    "Body Tracker",
+    "Settings",
+    "Sign Out",
+  ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -323,59 +324,55 @@ function CompletedWorkouts({
               ))}
             </Box>
 
-
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-              >
-
-                  <MenuItem onClick={() => handlePageClick("Analysis")}>
-                    <ListItemIcon>
-                      <InsertChartIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Analysis</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
-                    <ListItemIcon>
-                      <FormatListNumberedRtlIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Preset Workouts</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={() => handlePageClick("Body Tracker")}>
-                    <ListItemIcon>
-                      <AccessibilityIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Body Tracker</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={() => handlePageClick("Settings")}>
-                    <ListItemIcon>
-                      <SettingsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Settings</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={() => handlePageClick("Sign Out")}>
-                    <ListItemIcon>
-                      <LogoutIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Log Out</ListItemText>
-                  </MenuItem>
-
-              </Menu>
-
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
+            >
+              <MenuItem onClick={() => handlePageClick("Analysis")}>
+                <ListItemIcon>
+                  <InsertChartIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Analysis</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
+                <ListItemIcon>
+                  <FormatListNumberedRtlIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Preset Workouts</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handlePageClick("Body Tracker")}>
+                <ListItemIcon>
+                  <AccessibilityIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Body Tracker</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handlePageClick("Settings")}>
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Settings</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => handlePageClick("Sign Out")}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Log Out</ListItemText>
+              </MenuItem>
+            </Menu>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
@@ -552,11 +549,14 @@ function CompletedWorkouts({
                           dataValue={entry.stats.sets}
                           dataLabel="sets"
                         />
-                        <DataBadge dataValue={entry.stats.vol} dataLabel={
+                        <DataBadge
+                          dataValue={entry.stats.vol}
+                          dataLabel={
                             currentUserData.unitsSystem === "metric"
                               ? "kg"
                               : "lbs"
-                          } />
+                          }
+                        />
                       </Box>
                     </AccordionDetails>
                   </Accordion>

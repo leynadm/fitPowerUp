@@ -32,9 +32,9 @@ function ExerciseSelectedTrack() {
   const exerciseSelected = userSelectedExercises[0].exercises.find(
     (exercise: IUserSelectedExercises) => exercise.name === exerciseName
   );
-
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const lastExercise = getLastCompletedExerciseEntry();
+  const [editingExercise, setEditingExercise] = useState(false);
 
   function getLastCompletedExerciseEntry() {
     const userTrainingDataArr = userTrainingData;
@@ -99,7 +99,7 @@ function ExerciseSelectedTrack() {
 
   const [openCommentModal, setOpenCommentModal] = useState(false);
   const [commentValue, setCommentValue] = useState("");
-  const [exerciseCommentId, setExerciseCommentId] = useState(0);
+  const [idExerciseUpdate, setIdExerciseUpdate] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [isDropset, setIsDropset] = useState<boolean>(false);
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
@@ -180,14 +180,14 @@ function ExerciseSelectedTrack() {
     };
   }
 
-  function getExistingComment(exerciseCommentId: number) {
+  function getExistingComment(idExerciseUpdate: number) {
     const request = window.indexedDB.open("fitScouterDb");
     request.onsuccess = function (event: any) {
       const db = event.target.result;
       const transaction = db.transaction("user-exercises-entries", "readwrite");
       const objectStore = transaction.objectStore("user-exercises-entries");
 
-      const getRequest = objectStore.get(exerciseCommentId);
+      const getRequest = objectStore.get(idExerciseUpdate);
 
       getRequest.onsuccess = function (event: any) {
         const data = event.target.result;
@@ -215,8 +215,13 @@ function ExerciseSelectedTrack() {
     };
   }
 
+  function handleUpdateExerciseSelection(exerciseId: number) {
+    setEditingExercise(true);
+    setIdExerciseUpdate(exerciseId);
+  }
+
   function handleModalVisibility(exerciseId: number) {
-    setExerciseCommentId(exerciseId);
+    setIdExerciseUpdate(exerciseId);
     getExistingComment(exerciseId);
     setOpenCommentModal(!openCommentModal);
   }
@@ -316,7 +321,6 @@ function ExerciseSelectedTrack() {
       exerciseSelected.measurement.includes("reps") &&
       exerciseSelected.measurement.length === 1
     ) {
-
       if (repsValue === 0 || repsValue === null) {
         return "invalid";
       }
@@ -355,6 +359,15 @@ function ExerciseSelectedTrack() {
     }
   }
 
+  async function handleSaveExerciseEntry() {
+    if (editingExercise) {
+      await updateExerciseEntry();
+      setEditingExercise(false);
+    } else {
+      await saveExerciseEntry();
+    }
+  }
+
   async function saveExerciseEntry() {
     const checkEntriesValidity = exerciseFieldValidation();
 
@@ -379,7 +392,7 @@ function ExerciseSelectedTrack() {
 
     // TO FIGURE OUT HOW TO SAVE THINGS ACCURATELY
     if (weightValueFloat === null) {
-      return
+      return;
     }
 
     const updatedEntryToSave = {
@@ -394,8 +407,8 @@ function ExerciseSelectedTrack() {
       dropset: entryToSave.dropset,
       weight: 0,
     };
-    updatedEntryToSave.weight = weightValueFloat;
 
+    updatedEntryToSave.weight = weightValueFloat;
 
     try {
       const request = indexedDB.open("fitScouterDb", 2);
@@ -430,6 +443,95 @@ function ExerciseSelectedTrack() {
         };
       };
     } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  async function updateExerciseEntry() {
+    const checkEntriesValidity = exerciseFieldValidation();
+
+    if (checkEntriesValidity) {
+      setShowAlert(true);
+      // Clear previous timeout if it exists
+      if (alertTimeoutId) {
+        clearTimeout(alertTimeoutId);
+      }
+
+      // Set new timeout to hide the alert after 2 seconds
+      const timeoutId = setTimeout(() => {
+        setShowAlert(false);
+      }, 2000);
+
+      setAlertTimeoutId(timeoutId);
+      return;
+    }
+
+    let weightValueFloat = safelyParseFloat(entryToSave.weight);
+    if (weightValueFloat === null) {
+      return;
+    }
+
+    try {
+      const request = indexedDB.open("fitScouterDb", 2);
+
+      request.onerror = function (event) {
+        toast.error("Oops, there was an error opening the database.");
+      };
+
+      request.onsuccess = function () {
+        const db = request.result;
+
+        const userEntryTransaction = db.transaction(
+          "user-exercises-entries",
+          "readwrite"
+        );
+
+        userEntryTransaction.onerror = function (event) {
+          toast.error("Oops, there was an error with the transaction.");
+        };
+
+        const userEntryTransactionStore = userEntryTransaction.objectStore(
+          "user-exercises-entries"
+        );
+
+        const getRequest = userEntryTransactionStore.get(idExerciseUpdate);
+
+        getRequest.onsuccess = function (event) {
+          const data = (event.target as IDBRequest).result;
+          if (data) {
+            data.weight = weightValueFloat;
+            data.reps = repsValue;
+            data.distance = distanceValue;
+            data.time = timeValue;
+
+            const updateRequest = userEntryTransactionStore.put(data);
+
+            updateRequest.onsuccess = async function () {
+              await updateExercisesPRAfterAction(
+                userTrainingData,
+                exerciseSelected.name,
+                data
+              );
+              await getExistingExercises();
+
+              console.log("Record updated successfully");
+            };
+
+            updateRequest.onerror = function () {
+              toast.error("Oops, there was an error updating the record.");
+              console.error("Error updating record");
+            };
+          } else {
+            console.log("Record not found");
+          }
+        };
+
+        userEntryTransaction.oncomplete = function () {
+          db.close();
+        };
+      };
+    } catch (error) {
+      toast.error("Oops, an unexpected error occurred!");
       console.error("Error:", error);
     }
   }
@@ -573,10 +675,14 @@ function ExerciseSelectedTrack() {
   };
 
   function handleClearButtonClick() {
-    setWeightValue("");
-    setRepsValue(0);
-    setDistanceValue(0);
-    setTimeValue(0);
+    if (editingExercise) {
+      setEditingExercise(false);
+    } else {
+      setWeightValue("");
+      setRepsValue(0);
+      setDistanceValue(0);
+      setTimeValue(0);
+    }
   }
 
   const handleTimeFieldsChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -627,7 +733,7 @@ function ExerciseSelectedTrack() {
         setCommentValue={setCommentValue}
         setIsDropset={setIsDropset}
         isDropset={isDropset}
-        exerciseCommentId={exerciseCommentId}
+        idExerciseUpdate={idExerciseUpdate}
         setDropsetRenderTrigger={setDropsetRenderTrigger}
       />
 
@@ -698,6 +804,7 @@ function ExerciseSelectedTrack() {
                         fontSize: "1.5rem",
                         textAlign: "center",
                         padding: "10px",
+                        fontStyle: editingExercise ? "italic" : "normal",
                       },
                     }}
                     sx={{ textAlign: "center", width: "100%" }}
@@ -761,6 +868,7 @@ function ExerciseSelectedTrack() {
                         fontSize: "1.5rem",
                         textAlign: "center",
                         padding: "8px",
+                        fontStyle: editingExercise ? "italic" : "normal",
                       },
                     }}
                     sx={{ textAlign: "center" }}
@@ -780,6 +888,7 @@ function ExerciseSelectedTrack() {
                         fontSize: "1.5rem",
                         textAlign: "center",
                         padding: "8px",
+                        fontStyle: editingExercise ? "italic" : "normal",
                       },
                     }}
                     sx={{ textAlign: "center" }}
@@ -799,6 +908,7 @@ function ExerciseSelectedTrack() {
                         fontSize: "1.5rem",
                         textAlign: "center",
                         padding: "8px",
+                        fontStyle: editingExercise ? "italic" : "normal",
                       },
                     }}
                     sx={{ textAlign: "center" }}
@@ -810,7 +920,7 @@ function ExerciseSelectedTrack() {
             );
           }
 
-          // Render for "weight" or "reps" measurement types
+          // Render for "weight" and/or "reps" measurement types
           return (
             <Box
               key={index}
@@ -831,6 +941,7 @@ function ExerciseSelectedTrack() {
                   margin: "0.15rem",
                   cursor: "pointer",
                   textAlign: "center",
+                  fontStyle: editingExercise ? "italic" : "normal",
                 }}
               >
                 {measurement.toLocaleUpperCase()}
@@ -859,6 +970,7 @@ function ExerciseSelectedTrack() {
                       textAlign: "center",
                       height: "100%",
                       padding: "8px",
+                      fontStyle: editingExercise ? "italic" : "normal",
                     },
                     inputMode: "decimal",
                   }}
@@ -888,19 +1000,19 @@ function ExerciseSelectedTrack() {
         }}
       >
         <Button
-          variant="dbz_save"
+          variant={editingExercise ? "dbz_mini" : "dbz_save"}
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
-          onClick={saveExerciseEntry}
+          onClick={handleSaveExerciseEntry}
         >
-          SAVE
+          {editingExercise ? "UPDATE" : "SAVE"}
         </Button>
 
         <Button
-          variant="dbz_clear"
+          variant={editingExercise ? "dbz_mini" : "dbz_save"}
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
           onClick={handleClearButtonClick}
         >
-          CLEAR
+          {editingExercise ? "CANCEL" : "CLEAR"}
         </Button>
       </Box>
 
@@ -971,6 +1083,7 @@ function ExerciseSelectedTrack() {
                   ? "5px solid red"
                   : "5px solid transparent",
               }}
+              onClick={() => handleUpdateExerciseSelection(exercise.id)}
             >
               {exercise.weight !== 0 && (
                 <Typography>

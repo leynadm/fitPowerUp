@@ -211,7 +211,7 @@ function ImportData() {
             }
           });
     
-          const uniqueExercises = getUniqueArray(allMissingExercises);
+          const uniqueExercises = getUniqueDates(allMissingExercises);
     
           setImportedFileRows(rows);
           if(uniqueExercises.length>0){
@@ -519,7 +519,7 @@ function mapFitNotesExercise(
   return null;
 }
 
-function getUniqueArray(arrayOfArrays: string[][]) {
+export function getUniqueDates(arrayOfArrays: string[][]) {
   const flattenedArray = arrayOfArrays.flat();
   const uniqueValuesSet = new Set(flattenedArray);
   const uniqueValues = Array.from(uniqueValuesSet);

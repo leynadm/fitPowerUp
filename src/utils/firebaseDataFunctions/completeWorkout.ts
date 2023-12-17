@@ -5,7 +5,7 @@ import { arrayUnion } from "firebase/firestore";
 import IWorkoutEvaluationData from "../interfaces/WorkoutEvaluationData";
 import toast from "react-hot-toast";
 
-interface IWorkoutDataWorkoutStats{
+interface IWorkoutDataWorkoutStats {
   sets: number;
   reps: number;
   vol: number;
@@ -16,11 +16,15 @@ export interface IWorkoutData {
   wEval: IWorkoutEvaluationData;
   wExercises: { name: string; exercises: Exercise[] }[];
   id: string;
-  power:number;
-  stats:IWorkoutDataWorkoutStats;
+  power: number;
+  stats: IWorkoutDataWorkoutStats;
 }
- 
-async function completeWorkout(userId: string, workoutData: IWorkoutData, userTrainingDataSize:number) {
+
+async function completeWorkout(
+  userId: string,
+  workoutData: IWorkoutData,
+  userTrainingDataSize: number
+) {
   try {
     const userDocRef = doc(db, "users", userId);
 
@@ -35,15 +39,13 @@ async function completeWorkout(userId: string, workoutData: IWorkoutData, userTr
       `userTrainingCollection/userTrainingData_${docSuffix}`
     );
 
-    console.log(userTrainingDataDocRef)
     await updateDoc(userTrainingDataDocRef, {
       workoutSessions: arrayUnion(workoutData),
     });
-
   } catch (error) {
-    console.log(error)
-    console.error(error)
-    toast.error("completeWorkout had an error!")
+    console.log(error);
+    console.error(error);
+    toast.error("completeWorkout had an error!");
   }
 }
 

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import getExercisesByDate from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import Exercise from "../../utils/interfaces/Exercise";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -12,42 +12,53 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Dialog from "@mui/material/Dialog";
 import { useNavigate } from "react-router-dom";
 import ViewCommentModal from "./ViewCommentModal";
-
+import { TrainingDataContext } from "../../context/TrainingData";
+import { AuthContext } from "../../context/Auth";
+import { IWorkoutData } from "../../utils/firebaseDataFunctions/uploadImportedData";
 const style = {
   bgcolor: "aliceblue",
   boxShadow: 24,
   p: 1,
   borderRadius: 1,
-  width:"100%"
+  width: "100%",
 };
 
 interface CalendarProps {
   calendarWorkoutModalVisibility: boolean;
-  setCalendarWorkoutModalVisibility: React.Dispatch<React.SetStateAction<boolean>>;
-  todayDate: Date | undefined;
-  unitsSystem: string;
+  setCalendarWorkoutModalVisibility: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 function CalendarWorkoutModal({
   calendarWorkoutModalVisibility,
   setCalendarWorkoutModalVisibility,
-  todayDate,
-  unitsSystem,
 }: CalendarProps) {
+  const { userTrainingData } = useContext(TrainingDataContext);
   const [workoutDateExercises, setWorkoutDateExercises] = useState<
     { name: string; exercises: Exercise[] }[]
   >([]);
+
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseCommentId, setExerciseCommentId] = useState(0);
-
+  const { dateForWorkout, setDateForWorkout } = useContext(TrainingDataContext);
   const navigate = useNavigate();
   const handleClose = () => setCalendarWorkoutModalVisibility(false);
+  const { currentUserData } = useContext(AuthContext);
 
   useEffect(() => {
-    if (todayDate) {
-      //getExercisesByDate(todayDate, setWorkoutDateExercises);
+    const userTrainingDataArr: IWorkoutData[] = userTrainingData;
+    const foundElement = userTrainingDataArr.find(
+      (element) => element.date === dateForWorkout
+    );
+    if (foundElement) {
+      setWorkoutDateExercises(foundElement?.wExercises);
     }
-  }, [todayDate]);
+  }, [dateForWorkout]);
+
+  if (!userTrainingData || !currentUserData) {
+    return <>No Data</>;
+  }
 
   function handleViewCommentModalVisibility(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -58,27 +69,18 @@ function CalendarWorkoutModal({
     setOpenViewCommentModal(!openViewCommentModal);
   }
 
-
   return (
-    <Box sx={{ display: "flex", flexDirection: "column",width:"100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <Dialog
         open={calendarWorkoutModalVisibility}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        sx={{ marginBottom: "56px",width:"100%" }}
-
+        sx={{ marginBottom: "56px", width: "100%" }}
       >
-        {/* 
-      <ViewCommentModal
-        openViewCommentModal={openViewCommentModal}
-        setOpenViewCommentModal={setOpenViewCommentModal}
-        exerciseCommentId={exerciseCommentId}
-      /> */}
-
         <Box sx={style}>
           <Typography sx={{ width: "100%", textAlign: "center" }}>
-            {todayDate?.toLocaleDateString()}
+            {dateForWorkout}
           </Typography>
 
           {workoutDateExercises.length > 0 ? (
@@ -181,7 +183,9 @@ function CalendarWorkoutModal({
                       {exercise.weight !== 0 && (
                         <Typography>
                           {`${exercise.weight.toFixed(2)} ${
-                            unitsSystem === "metric" ? "kgs" : "lbs"
+                            currentUserData.unitsSystem === "metric"
+                              ? "kg"
+                              : "lbs"
                           }`}
                         </Typography>
                       )}
@@ -208,7 +212,7 @@ function CalendarWorkoutModal({
             ))
           ) : (
             <Typography sx={{ textAlign: "center", margin: "16px" }}>
-              There are no exercises for this  date.
+              There are no exercises for this date.
             </Typography>
           )}
 

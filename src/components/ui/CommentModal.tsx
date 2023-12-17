@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -25,7 +24,7 @@ interface ParentComponentProps {
   setIsDropset: React.Dispatch<React.SetStateAction<boolean>>;
   commentValue: string;
   setCommentValue: React.Dispatch<React.SetStateAction<string>>;
-  exerciseCommentId: number;
+  idExerciseUpdate: number;
   setDropsetRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
 }
  
@@ -34,7 +33,7 @@ function CommentModal({
   setOpenCommentModal,
   commentValue,
   setCommentValue,
-  exerciseCommentId,
+  idExerciseUpdate,
   isDropset,
   setIsDropset,
   setDropsetRenderTrigger,
@@ -53,7 +52,7 @@ function CommentModal({
       const transaction = db.transaction("user-exercises-entries", "readwrite");
       const objectStore = transaction.objectStore("user-exercises-entries");
 
-      const getRequest = objectStore.get(exerciseCommentId);
+      const getRequest = objectStore.get(idExerciseUpdate);
 
       getRequest.onsuccess = function (event: any) {
         const data = event.target.result;

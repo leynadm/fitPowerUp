@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from "react";
 import CompletedWorkoutsTabs from "./CompletedWorkoutsTabs";
-import Box from "@mui/material/Box";
 import { Routes, Route } from "react-router-dom";
 import NewWorkout from "./NewWorkout";
 import ExerciseSelected from "./ExerciseSelected";
@@ -72,8 +71,6 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
         index
         element={
           <CompletedWorkouts
-            todayDate={todayDate}
-            setTodayDate={setTodayDate}
           />
         }
       />
@@ -114,7 +111,7 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       <Route
         path="calendar"
         element={
-          <WorkoutCalendar todayDate={todayDate} setTodayDate={setTodayDate} />
+          <WorkoutCalendar />
         }
       />
 
