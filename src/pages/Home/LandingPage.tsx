@@ -216,7 +216,7 @@ function LandingPage() {
             alignItems="center"
           >
             <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.png?alt=media&token=72301215-e8b0-422c-8edd-bc80bda1bb05"
+              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
               alt=""
               style={{
                 maxWidth: "280px",
@@ -243,7 +243,7 @@ function LandingPage() {
           <Box
             sx={{
               backgroundImage:
-                'URL("https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.jpeg?alt=media&token=ee5cc75f-96e2-4698-9c60-32cbe3d12f21")',
+                'URL("https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431")',
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -294,7 +294,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.png?alt=media&token=4f6cc1bc-60c2-47ae-8b5c-ace8d37fa13d"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.webp?alt=media&token=49e609b6-56e6-4268-8b59-d74fbb087b13"
                   alt=""
                   style={{
                     maxWidth: "256px",
@@ -352,7 +352,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.png?alt=media&token=3af39a02-122f-4658-ae5b-337d3cdd5828"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.webp?alt=media&token=3e8b16c8-39a7-4865-9535-4b4743404c45"
                   alt=""
                   style={{
                     maxWidth: "280px",
@@ -394,7 +394,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-v2.png?alt=media&token=2e2ae69e-7be6-4d72-87df-484ffc97e83f"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.webp?alt=media&token=2a79984a-6f4c-403e-88c1-ded808d5556f"
                   alt=""
                   style={{
                     maxWidth: "256px",
@@ -427,7 +427,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fmockup-main-menu-exercise-2.png?alt=media&token=8d090d77-2a95-4d04-8d64-ad34053da8fd"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-1.webp?alt=media&token=81fc5f04-417c-40a6-beb9-5f19c6074ac4"
                   alt=""
                   style={{
                     maxWidth: "280px",
@@ -469,7 +469,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-2.png?alt=media&token=d7dbb813-75e9-4750-860e-6c5a3c136fee"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.webp?alt=media&token=511d72a1-1723-4304-9126-56574a142b69"
                   alt=""
                   style={{
                     maxWidth: "256px",
@@ -507,7 +507,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.png?alt=media&token=40352d57-2353-420c-9250-6ab9cb2b2371"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-1.webp?alt=media&token=88107327-146b-43b6-902f-38290795d1e0"
                   alt=""
                   style={{
                     maxWidth: "280px",
@@ -547,7 +547,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-2.png?alt=media&token=70665570-be9f-4cb5-98d6-040084e5fc67"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.webp?alt=media&token=179a5b29-a2ee-47b7-b0e5-2e5a0abd599a"
                   alt=""
                   style={{
                     maxWidth: "256px",
@@ -585,7 +585,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.png?alt=media&token=96ed48d1-cde2-41ca-813c-05cdef797a3a"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-1.webp?alt=media&token=9bf050f9-a151-4dc7-b816-c096b2411b80"
                   alt=""
                   style={{
                     maxWidth: "280px",
@@ -626,7 +626,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-2.png?alt=media&token=090edc47-6ee0-414d-8060-89e4579f499d"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6.webp?alt=media&token=f3aa35d0-c797-44b8-bc74-899187f6411f"
                   alt=""
                   style={{
                     maxWidth: "256px",
@@ -663,7 +663,7 @@ function LandingPage() {
                 height="100%"
               >
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.png?alt=media&token=6018329b-1847-49b9-9845-3a18975929d7"
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.webp?alt=media&token=67df5913-9ee9-4f22-94f4-ffaefee9a973"
                   alt=""
                   style={{
                     maxWidth: "280px",
@@ -705,7 +705,7 @@ function LandingPage() {
               height="100%"
             >
               <img
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-v1.png?alt=media&token=b2682818-3f42-40a6-9a0b-5d604f99cc5e"
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7.webp?alt=media&token=83c35143-14c2-4683-ad01-504c3316d264"
                 alt=""
                 style={{
                   maxWidth: "256px",
@@ -739,7 +739,7 @@ function LandingPage() {
               height="100%"
             >
               <img
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-2-v1.png?alt=media&token=169f0478-2fc7-4968-9507-8e2f9702d0e4"
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
                 alt=""
                 style={{
                   maxWidth: "280px",
