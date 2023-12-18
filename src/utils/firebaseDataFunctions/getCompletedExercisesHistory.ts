@@ -18,6 +18,7 @@ function getCompletedExercisesHistory(
       totalWeight: number;
       totalDistance: number;
       totalTime: number;
+      totalVolume:number
     };
   }[] = [];
 
@@ -40,6 +41,11 @@ function getCompletedExercisesHistory(
             (acc, exercise) => acc + (exercise.weight || 0),
             0
           );
+          const totalVolume = exercises.reduce(
+            (acc, exercise) => acc + (exercise.weight*exercise.reps || 0),
+            0
+          );
+
           const totalTime = exercises.reduce(
             (acc, exercise) => acc + (exercise.time || 0),
             0
@@ -55,6 +61,7 @@ function getCompletedExercisesHistory(
               totalWeight: totalWeight,
               totalDistance: totalDistance,
               totalTime: totalTime,
+              totalVolume:totalVolume
             },
           });
         }

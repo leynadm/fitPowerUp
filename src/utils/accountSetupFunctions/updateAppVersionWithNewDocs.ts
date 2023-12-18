@@ -1,9 +1,10 @@
-import { doc, collection, writeBatch, getDoc } from "firebase/firestore";
+import { doc, collection, writeBatch, getDoc, serverTimestamp } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
 import toast from "react-hot-toast";
 import { getFormattedDate } from "../getFormattedDate";
+
 async function updateAppVersionWithNewDocs(userID: string) {
   const batch = writeBatch(db);
 
@@ -51,7 +52,11 @@ async function updateAppVersionWithNewDocs(userID: string) {
     batch.update(userDocRef, {
       appVersion: 2.0,
       unitsSystem:"metric",
-      defaultWeightIncrement:1.25
+      defaultWeightIncrement:1.25,
+      lastUpdateTimestamp:serverTimestamp(),
+      firstPowerExercise:"barbell deadlift",
+      secondPowerExercise:"flat barbell bench press",
+      thirdPowerExercise:"barbell squat"      
     });
 
     // Create a document within the "userTrainingCollection" subcollection

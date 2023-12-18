@@ -25,7 +25,7 @@ export const feats = [
     feat: "Complete 10 Workouts",
     name: "Becoming A Threat",
     description:
-      "Ten workouts? Your power level is definitely over... 10 now. 15? Fine, 20. Frieza's watching!",
+      "Ten workouts? Your power level now is definitely over... 10. 15? Fine, 20. Frieza's watching!",
     state: false,
     date: "",
     level: 1,

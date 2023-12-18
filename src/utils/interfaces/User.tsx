@@ -18,7 +18,11 @@ export interface User {
     firstPowerExercise:string,
     secondPowerExercise:string,
     thirdPowerExercise:string,
-    weight:number
+    weight:number;
+    lastUpdateTimestamp:Date
+    appVersion:number;
+    unitsSystem:string;
+    defaultWeightIncrement:number
   }
 
   export default User

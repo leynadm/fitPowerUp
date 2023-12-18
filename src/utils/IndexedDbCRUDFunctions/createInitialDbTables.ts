@@ -104,6 +104,12 @@ function createInitialDbTables(USERID: string): Promise<void> {
           }
         );
       }
+    };
+
+    
+
+    request.onsuccess = async function () {
+      const db = request.result;
 
       try {
         await updateAppVersionWithNewDocs(USERID);
@@ -112,15 +118,12 @@ function createInitialDbTables(USERID: string): Promise<void> {
       } catch (error) {
         reject(error);
       }
-    };
-
-    request.onsuccess = function () {
-      const db = request.result;
 
       db.close();
 
       resolve();
     };
+
   });
 }
 

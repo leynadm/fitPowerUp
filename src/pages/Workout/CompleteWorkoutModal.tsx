@@ -290,6 +290,7 @@ export function calculateWorkoutSessionStats(
   let totalReps = 0;
   let totalSets = 0;
   let totalWeight = 0;
+  
   for (let index = 0; index < existingExercisesArr.length; index++) {
     const exerciseEntry = existingExercisesArr[index];
     const exerciseEntryExercises = exerciseEntry.exercises;

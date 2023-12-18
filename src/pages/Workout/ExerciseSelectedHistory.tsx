@@ -25,7 +25,7 @@ function ExerciseSelectedHistory() {
     userTrainingData,
     exerciseName
   );
-  console.log(exerciseHistoryArr);
+
   function handleViewCommentModalVisibility(
     exerciseComment: string | undefined
   ) {
@@ -62,6 +62,7 @@ function ExerciseSelectedHistory() {
   }) => {
     const group = exerciseHistoryArr[index];
 
+    console.log(group)
     
     return (
       <Box key={index} style={style} className="exercise-complete">
@@ -158,7 +159,7 @@ function ExerciseSelectedHistory() {
               {exercise.weight !== 0 && (
                 <Typography>
                   {`${exercise.weight.toFixed(2)} ${
-                    currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                    currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                   }`}
                 </Typography>
               )}
@@ -188,11 +189,11 @@ function ExerciseSelectedHistory() {
             {group.stats.totalReps !== 0 && `${group.stats.totalReps} reps`}
           </Typography>
 
-          {group.stats.totalWeight !== 0 && (
+          {group.stats.totalVolume !== 0 && (
             <Typography variant="subtitle2">
-              {group.stats.totalWeight !== 0 &&
-                `${group.stats.totalWeight} ${
-                  currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+              {group.stats.totalVolume !== 0 &&
+                `${group.stats.totalVolume} ${
+                  currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                 }`}
             </Typography>
           )}

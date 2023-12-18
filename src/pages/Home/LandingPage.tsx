@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -11,9 +11,33 @@ import InstallInstructionsModal from "../../components/ui/InstallInstructionsMod
 import Zoom from "@mui/material/Zoom";
 import Fade from "@mui/material/Fade";
 import { Translate } from "@mui/icons-material";
-import "../Home/styles/animation.css"
+import StarsIcon from "@mui/icons-material/Stars";
+import InfoIcon from "@mui/icons-material/Info";
+import "../Home/styles/animation.css";
+import RedditIcon from '@mui/icons-material/Reddit';
+import EmailIcon from '@mui/icons-material/Email';
+import Link from "@mui/material/Link";
+
 function LandingPage() {
   const navigate = useNavigate();
+  function useContainerRefs() {
+    return [
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+      useRef<HTMLDivElement | null>(null),
+    ];
+  }
+
+  const containerRefs = useContainerRefs();
+
+  const [isVisible, setIsVisible] = useState<boolean[]>(
+    containerRefs.map(() => false)
+  );
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -21,12 +45,54 @@ function LandingPage() {
     useState(false);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(callbackFunction, options);
+
+    containerRefs.forEach((ref, index) => {
+      if (ref.current) {
+        ref.current.setAttribute("data-index", String(index)); // Set the index as a data attribute
+        observer.observe(ref.current);
+      }
+    });
+
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt
       );
+      containerRefs.forEach((ref) => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      });
+    };
+  }, []);
+
+  const callbackFunction: IntersectionObserverCallback = (entries) => {
+    entries.forEach((entry) => {
+      const index = Number(entry.target.getAttribute("data-index"));
+      if (entry.isIntersecting) {
+        setIsVisible((prev) => {
+          const newState = [...prev];
+          newState[index] = true;
+          return newState;
+        });
+
+        entry.target.classList.add("visible");
+        entry.target.classList.remove("initial-position"); // Remove initial position class
+      } else {
+        entry.target.classList.remove("visible");
+        entry.target.classList.add("initial-position"); // Add back initial position class
+      }
+    });
+  };
+
+  const options: IntersectionObserverInit = useMemo(() => {
+    return {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0,
     };
   }, []);
 
@@ -35,6 +101,7 @@ function LandingPage() {
     setDeferredPrompt(event);
   }
 
+  /* 
   useEffect(() => {
     const mediaQueryList = window.matchMedia("(display-mode: standalone)");
     const handleMediaQueryChange = (event: any) => {
@@ -47,7 +114,7 @@ function LandingPage() {
     return () => {
       mediaQueryList.removeEventListener("change", handleMediaQueryChange);
     };
-  }, []);
+  }, []); */
 
   function handleInstallClick() {
     if (deferredPrompt === null) {
@@ -67,43 +134,16 @@ function LandingPage() {
     }
   }
 
-
-
   function getStartedClick() {
     navigate("/login");
   }
 
-  const outlineStyleBlueBlack = {
-    color: "blue", // Interior color
-    WebkitTextStrokeWidth: "3px",
-    WebkitTextStrokeColor: "black",
-  };
+  const style: React.CSSProperties = {
+    "--n": 56,
+    width: "100%",
+    textAlign: "center",
+  } as React.CSSProperties;
 
-  const outlineStyleOrangeBlack = {
-    color: "orange", // Interior color
-    WebkitTextStrokeWidth: "2px",
-    WebkitTextStrokeColor: "black",
-  };
-
-  const orangeColorSpan = {
-    color:"#FFA500"
-  }
-
-  const blueColorSpan = {
-    color:"#520975"
-  }
-/* 
-  const textToDisplayArr = [
-    "WELCOME TO THE #1 DBZ-INSPIRED FAN-MADE",
-    "FITNESS APP. AND MOST PROBABBLY THE ONLY ONE.",
-  ];
-
-  const myFunction = () => {
-    console.log(`Hello world!`);
-};
-
-setInterval(myFunction, 10000);
- */
   return (
     <Box>
       <AppBar
@@ -164,7 +204,7 @@ setInterval(myFunction, 10000);
           height="calc(100svh - 56px)"
           display="grid"
           alignItems="center"
-          gridTemplateRows="4.5fr 1fr 4.5fr 1fr"
+          gridTemplateRows="4fr 1.5fr 4.5fr 1fr"
           width="100%"
           position="relative"
         >
@@ -177,9 +217,9 @@ setInterval(myFunction, 10000);
           >
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.png?alt=media&token=72301215-e8b0-422c-8edd-bc80bda1bb05"
-              alt="fit person"
+              alt=""
               style={{
-                maxWidth: "300px",
+                maxWidth: "280px",
                 width: "100%",
                 height: "100%",
               }}
@@ -191,30 +231,13 @@ setInterval(myFunction, 10000);
             sx={{
               maxWidth: "100%", // Limit the width of the box
               overflow: "hidden",
+              textAlign: "center", // Centers text horizontally in the box
+              height: "100%",
             }}
           >
-            <Typography
-              sx={{
-                transform: "translateX(100%)",
-                animation: "my-animation 72s linear infinite",
-                fontWeight: "bold",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                display: "inline-block",
-                fontSize: "2rem",
-              }}
-            >
-              WELCOME TO THE{" "}
-              <span style={orangeColorSpan}>#1 DBZ-INSPIRED</span>{" "}
-              <span style={blueColorSpan}>FAN-MADE</span> FITNESS APP. ACTUALLY,
-              IT'S MOST PROBABLY THE ONLY ONE OUT THERE... THIS APP IS PACKED
-              WITH FEATURES, BUT BEFORE I TELL YOU MORE, YOU SHOULD KNOW IT'S
-              100% FREE. EXACTLY!!!
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...NO,
-              I'M NOT KIDDING! ANYWAY, I CAN'T BELIEVE YOU'RE STILL HERE READING
-              THIS. SCROLL BELOW SO YOU CAN FIND OUT MORE ABOUT THE APP! IF YOU
-              LIKE WHAT YOU SEE THEN FEEL FREE TO JOIN!
-            </Typography>
+            <span className="type" style={style}>
+              The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
+            </span>
           </Box>
 
           <Box
@@ -231,18 +254,6 @@ setInterval(myFunction, 10000);
             position="relative"
             height="100%"
           ></Box>
-
-          {/* 
-          <Box             sx={{
-              position: "absolute",
-              top: '50%', // Center vertically
-              left: '50%', // Center horizontally
-              transform: 'translate(-50%, -50%)', // Adjust for precise centering
-              fontWeight: "bold",
-              fontSize:"1.25rem"
-            }}>
-            THE #1
-          </Box>*/}
           <Box width="100%" display="flex" justifyContent="center">
             <Button onClick={getStartedClick} variant="dbz_mini">
               Get Started
@@ -257,38 +268,175 @@ setInterval(myFunction, 10000);
           alignItems="center"
           justifyContent="space-around"
           flexDirection="column"
-          sx={{ backgroundColor: "#18c2e6" }}
+          sx={{
+            backgroundColor: "#18c2e6",
+            background:
+              "radial-gradient(circle, rgba(24,194,230,1) 0%, rgba(59,162,184,1) 100%)",
+          }}
         >
           <Box
-            width="100%"
-            display="flex"
-
-            justifyContent="center"
-            alignItems="center"
+            ref={containerRefs[0]}
+            className={`${
+              isVisible[0] ? "visible slide-in-left" : "initial-position"
+            }`}
           >
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.png?alt=media&token=4f6cc1bc-60c2-47ae-8b5c-ace8d37fa13d"
-              alt="fit person"
-              style={{
-                maxWidth: "300px",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Box display="flex" flexDirection="column" >
-            <Typography align="center" fontWeight="bold" color="white" fontSize="1.75rem">
-              1000+
-            </Typography>
-            <Typography align="center" fontWeight="bold" color="white">
-              EXERCISES
-            </Typography>
-            
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.png?alt=media&token=4f6cc1bc-60c2-47ae-8b5c-ace8d37fa13d"
+                  alt=""
+                  style={{
+                    maxWidth: "256px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography
+                    align="center"
+                    fontWeight="bold"
+                    height="100%"
+                    ref={containerRefs[1]}
+                    className={`${
+                      isVisible[1] ? "visible counter-library-exercises" : ""
+                    }`}
+                    minHeight="40px"
+                  ></Typography>
+                  <Typography
+                    align="center"
+                    fontWeight="bold"
+                    fontSize="1.25rem"
+                  >
+                    EXERCISES
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box display="flex" justifyContent="center" width="100%">
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+                fitPowerUp offers you a library of more than one thousand
+                exercises! And guess what? You can add your own too!
+              </Typography>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              padding={2}
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.png?alt=media&token=3af39a02-122f-4658-ae5b-337d3cdd5828"
+                  alt=""
+                  style={{
+                    maxWidth: "280px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
-          <Box>
-            <Typography>
-              Let's start with the basics.
-            </Typography>
+        </Box>
+
+        <Box
+          height="100svh"
+          width="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-around"
+          flexDirection="column"
+          sx={{
+            backgroundColor: "#f3b932",
+            background:
+              "radial-gradient(circle, rgba(243,185,50,1) 0%, rgba(149,109,17,1) 100%)",
+          }}
+        >
+          <Box
+            ref={containerRefs[2]}
+            className={`${
+              isVisible[2] ? "visible fade-in" : "initial-position"
+            }`}
+          >
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-v2.png?alt=media&token=2e2ae69e-7be6-4d72-87df-484ffc97e83f"
+                  alt=""
+                  style={{
+                    maxWidth: "256px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box display="flex" justifyContent="center" width="100%">
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+                You can instantly access an in-depth breakdown analysis for
+                every exercise!
+              </Typography>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              padding={2}
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fmockup-main-menu-exercise-2.png?alt=media&token=8d090d77-2a95-4d04-8d64-ad34053da8fd"
+                  alt=""
+                  style={{
+                    maxWidth: "280px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
           </Box>
         </Box>
 
@@ -298,96 +446,403 @@ setInterval(myFunction, 10000);
           display="flex"
           alignItems="center"
           flexDirection="column"
-          sx={{ backgroundColor: "#f3b932" }}
+          sx={{
+            backgroundColor: "#520975",
+            background:
+              "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(40,5,56,1) 100%)",
+          }}
           justifyContent="space-around"
         >
+          <Box
+            ref={containerRefs[3]}
+            className={`${
+              isVisible[3] ? "visible slide-in-left" : "initial-position"
+            }`}
+          >
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-2.png?alt=media&token=d7dbb813-75e9-4750-860e-6c5a3c136fee"
+                  alt=""
+                  style={{
+                    maxWidth: "256px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="center"
+              color="white"
+              width="100%"
+            >
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+                The analysis goes beyond exercises! You can get breakdowns on
+                your muscle groups, aggregated data and more!
+              </Typography>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              padding={2}
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.png?alt=media&token=40352d57-2353-420c-9250-6ab9cb2b2371"
+                  alt=""
+                  style={{
+                    maxWidth: "280px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box
+          height="100svh"
+          width="100%"
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          sx={{
+            backgroundColor: "#000000",
+            background:
+              "radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(66,62,62,1) 100%)",
+          }}
+          justifyContent="space-around"
+        >
+          <Box
+            ref={containerRefs[4]}
+            className={`${isVisible[4] ? "visible grow" : "initial-position"}`}
+          >
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-2.png?alt=media&token=70665570-be9f-4cb5-98d6-040084e5fc67"
+                  alt=""
+                  style={{
+                    maxWidth: "256px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="center"
+              color="white"
+              width="100%"
+            >
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+                Every workout you complete gives you a chance to increase your
+                power level. Why not getting stronger while having fun?!
+              </Typography>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              padding={2}
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.png?alt=media&token=96ed48d1-cde2-41ca-813c-05cdef797a3a"
+                  alt=""
+                  style={{
+                    maxWidth: "280px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box
+          height="100svh"
+          width="100%"
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          sx={{
+            backgroundColor: "red",
+            background:
+              "radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(173,12,12,1) 100%)",
+          }}
+        >
+          <Box
+            ref={containerRefs[5]}
+            className={`${
+              isVisible[5] ? "visible fade-in" : "initial-position"
+            }`}
+          >
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-2.png?alt=media&token=090edc47-6ee0-414d-8060-89e4579f499d"
+                  alt=""
+                  style={{
+                    maxWidth: "256px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="center"
+              color="white"
+              width="100%"
+            >
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+                Unlock DBZ heroes with the Path feature and reach new gym
+                milestones in the Feats menu!
+              </Typography>
+            </Box>
+
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+            >
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100%"
+                height="100%"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.png?alt=media&token=6018329b-1847-49b9-9845-3a18975929d7"
+                  alt=""
+                  style={{
+                    maxWidth: "280px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+
       <Box
-            width="100%"
-            display="flex"
-
-            justifyContent="center"
-            alignItems="center"
-          >
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.png?alt=media&token=57c21713-ebab-4893-ac0a-d2e43dc6e8d3"
-              alt="fit person"
-              style={{
-                maxWidth: "300px",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Box display="flex" flexDirection="column" >
-            <Typography align="center" fontWeight="bold" color="white" fontSize="1.75rem">
-              1000+
-            </Typography>
-            <Typography align="center" fontWeight="bold" color="white">
-              EXERCISES
-            </Typography>
-            
-            </Box>
-          </Box>
-          <Box>
-            <Typography>
-              Let's start with the basics.
-            </Typography>
-          </Box>
-
-        </Box>
-
+        height="100svh"
+        width="100%"
+        display="flex"
+        alignItems="center"
+        flexDirection="column"
+        sx={{
+          backgroundColor: "red",
+          background:
+            "radial-gradient(circle, rgba(27,20,20,1) 0%, rgba(105,105,105,1) 100%)",
+        }}
+      >
         <Box
-          height="100svh"
-          width="100%"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          sx={{ backgroundColor: "#520975" }}
-          justifyContent="space-around"
+          ref={containerRefs[6]}
+          className={`${
+            isVisible[6] ? "visible slide-in-left" : "initial-position"
+          }`}
         >
-
-<Box
-            width="100%"
-            display="flex"
-
-            justifyContent="center"
-            alignItems="center"
-          >
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.png?alt=media&token=57c21713-ebab-4893-ac0a-d2e43dc6e8d3"
-              alt="fit person"
-              style={{
-                maxWidth: "300px",
-                width: "100%",
-                height: "100%",
-              }}
-            />
-            <Box display="flex" flexDirection="column" >
-            <Typography align="center" fontWeight="bold" color="white" fontSize="1.75rem">
-              1000+
-            </Typography>
-            <Typography align="center" fontWeight="bold" color="white">
-              EXERCISES
-            </Typography>
-            
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="100%"
+              height="100%"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-v1.png?alt=media&token=b2682818-3f42-40a6-9a0b-5d604f99cc5e"
+                alt=""
+                style={{
+                  maxWidth: "256px",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </Box>
           </Box>
-          <Box>
-            <Typography>
-              Let's start with the basics.
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            color="white"
+            width="100%"
+          >
+            <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+              Easy install & runs everywhere! fitPowerUp uses the PWA
+              technology, meaning it works seamlessly across all devices just
+              like a native app!
             </Typography>
           </Box>
 
-
+          <Box display="flex" justifyContent="space-around" alignItems="center">
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="100%"
+              height="100%"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-2-v1.png?alt=media&token=169f0478-2fc7-4968-9507-8e2f9702d0e4"
+                alt=""
+                style={{
+                  maxWidth: "280px",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Box>
+          </Box>
         </Box>
+      </Box>
 
-        <Box
-          height="100svh"
-          width="100%"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          sx={{ backgroundColor: "#000000" }}
-        ></Box>
+      <Box
+        height="calc(100svh - 56px)"
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        sx={{
+          backgroundColor: "black",
+        }}
+        gap={1}
+      >
+        <Container
+          maxWidth="md"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+        >
+          <Typography
+            color="white"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={1}
+          >
+            Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
+          </Typography>
+
+          <Typography color="white" variant="caption" align="center">
+            This app is a fan-made creation, inspired by the Dragon Ball Z
+            series, which is a property of FUNimation, Toei Animation, Fuji TV,
+            and Akira Toriyama. All intellectual property rights for Dragon Ball
+            Z are owned by their respective holders, and I, as an independent
+            developer, claim no affiliation with or endorsement by them.
+            <br />
+            Some content within this app is generated using AI technology and is
+            inspired by the themes, characters, and universe of Dragon Ball Z.
+            This app is purely a passion project, created by a fan for fans,
+            with the dual purpose of celebrating the series and promoting
+            physical fitness and a healthy lifestyle. I encourage users to get
+            active and visit the gym through engaging, DBZ-themed challenges and
+            content.
+            <br />
+            There is no commercial intent or gain behind this project; it is
+            entirely a labor of love dedicated to the Dragon Ball Z community.
+            My aim is not only to celebrate the iconic Dragon Ball Z series but
+            also to inspire fans to explore a healthier lifestyle and share
+            their fitness journeys within this interactive and supportive
+            community.
+          </Typography>
+        </Container>
+
+        <Typography color="white" display="flex" alignItems="center" gap={1} variant="overline">
+          <RedditIcon style={{ color: "white" }} />
+          Join the 
+          <a
+            href="https://reddit.com/r/fitpowerup"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            r/fitPowerUp
+          </a>
+          community!
+        </Typography>
+
+        <Typography color="white" display="flex" alignItems="center" gap={1} variant="overline">
+          <EmailIcon style={{ color: "white" }} />
+          Click 
+          <a
+            href="https://reddit.com/r/fitpowerup"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
+          to contact me via email.
+        </Typography>
+
+        <Typography
+        variant="body2"
+        color="white"
+        align="center"
+       
+      >
+        <Link color="inherit" href="https://mateidaniel.com" target="_blank">
+          Developed by Daniel Matei {new Date().getFullYear()}
+        </Link>
+      </Typography>
+
       </Box>
     </Box>
   );

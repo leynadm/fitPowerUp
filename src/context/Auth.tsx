@@ -6,6 +6,7 @@ import User from "../utils/interfaces/User";
 import toast from "react-hot-toast";
 import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
 import enablePersistentData from "../utils/enablePersistentData";
+import { serverTimestamp } from "firebase/firestore";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -49,29 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             const userData = docSnap.data() as User;
             setCurrentUserData(userData);
           }
-        } else {
-          setCurrentUserData({
-            fullname: ["guest", "user", "guest user"],
-            name: "guest",
-            sex: "male",
-            surname: "user",
-            profileImage: "",
-            verified: false,
-            privateAccount: false,
-            blocked: [],
-            hideProfile: false,
-            hidePowerLevel: true,
-            hideFollowers: false,
-            hideFollowing: false,
-            powerLevel: 0,
-            strengthLevel: 0,
-            experienceLevel: 0,
-            firstPowerExercise: "No Exercise Selected Yet",
-            secondPowerExercise: "No Exercise Selected Yet",
-            thirdPowerExercise: "No Exercise Selected Yet",
-            weight: 0,
-          });
-        }
+        } 
       }
       setLoginFetchTrigger(true);
     });

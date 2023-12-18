@@ -1,19 +1,176 @@
 @keyframes my-animation {
+  from {
+    transform: translateX(25%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 600px) {
+  @keyframes my-animation {
     from {
-      transform: translateX(25%);
+      transform: translateX(6%);
     }
+
     to {
       transform: translateX(-100%);
     }
   }
+}
 
-  @media (max-width: 600px) {
-    @keyframes my-animation {
-      from {
-        transform: translateX(6%);
-      }
-      to {
-        transform: translateX(-100%);
-      }
-    }
+
+.initial-position{
+  opacity: 0;
+}
+
+
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50%);
+    opacity: 0;
   }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.visible.slide-in-left {
+  animation: slideInLeft 1s ease forwards;
+}
+
+
+@keyframes growAnimation {
+  from {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.visible.grow {
+  animation: growAnimation 0.5s ease forwards;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.visible.fade-in {
+  animation: fadeIn 2s ease forwards;
+}
+
+
+
+
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.visible.slide-in-right {
+  animation: slideInRight 0.5s ease forwards;
+}
+
+.visible.counter-library-exercises::after {
+  font: 800 35px system-ui;
+  content: counter(count) "+";
+  animation: counter 3s linear 1;
+  counter-reset: count 100;
+  animation-fill-mode: forwards;
+}
+
+@keyframes counter {
+  
+  10% {
+    counter-increment: count 100;
+  }
+
+  20% {
+    counter-increment: count 200;
+  }
+
+  30% {
+    counter-increment: count 300;
+  }
+
+  40% {
+    counter-increment: count 400;
+  }
+
+  50% {
+    counter-increment: count 500;
+  }
+
+  60% {
+    counter-increment: count 600;
+  }
+
+  70% {
+    counter-increment: count 700;
+  }
+
+  80% {
+    counter-increment: count 800;
+  }
+
+  90% {
+    counter-increment: count 900;
+  }
+
+  100% {
+    counter-increment: count 1000;
+  }
+}
+
+
+.type {
+  font-family: 'Outfit';
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
+  color: #0000;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background:
+    linear-gradient(-90deg, black 5px, #0000 0) 10px 0,
+    linear-gradient(black 0 0) 0 0;
+  background-size: calc(var(--n) * 1ch) 200%;
+  -webkit-background-clip: padding-box, text;
+  background-clip: padding-box, text;
+  background-repeat: no-repeat;
+  animation: 
+    b 2s infinite steps(1),   
+    t calc(var(--n) * .1s) steps(var(--n)) forwards;
+}
+
+@keyframes t {
+  from {background-size: 0 200%;}
+}
+
+@keyframes b {
+  50% {background-position: 0 -100%, 0 0;}
+}

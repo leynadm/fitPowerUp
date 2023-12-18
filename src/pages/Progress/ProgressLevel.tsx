@@ -25,16 +25,35 @@ import Exercise from "../../utils/interfaces/Exercise";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 import toast from "react-hot-toast";
 import getUserWeight from "../../utils/getUserWeight";
-import ButtonGroup from '@mui/material/ButtonGroup';
-import { useCallback,useEffect,useRef } from "react";
-
+import ButtonGroup from "@mui/material/ButtonGroup";
+import capitalizeWords from "../../utils/capitalizeWords";
+import { useCallback, useEffect, useRef } from "react";
+import PublishIcon from "@mui/icons-material/Publish";
+import { Paper } from "@mui/material";
 function ProgressLevel() {
-  const { userTrainingData, userSelectedExercises,userBodyTrackerData } =
+  const { userTrainingData, userSelectedExercises, userBodyTrackerData } =
     useContext(TrainingDataContext);
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
-  
-  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const firebaseTimestamp = new Date(
+    currentUserData.lastUpdateTimestamp.toMillis()
+  );
+  const currentDate = new Date();
+
+  const [calculatedMaximumPowerLevel, setCalculatedMaximumPowerLevel] =
+    useState(0);
+  const [calculatedMaximumStrengthLevel, setCalculatedMaximumStrengthLevel] =
+    useState(0);
+  const [
+    calculatedMaximumExperienceLevel,
+    setCalculatedMaximumExperienceLevel,
+  ] = useState(0);
+  const isToday = isSameDay(firebaseTimestamp, currentDate);
+  console.log(isToday);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
   const imgRef = useRef<HTMLImageElement>(null);
 
   const updateImageDimensions = useCallback(() => {
@@ -45,36 +64,42 @@ function ProgressLevel() {
     setImageDimensions({ width, height });
   }, []);
 
-  console.log(imageDimensions)
-  
+  function isSameDay(d1: Date, d2: Date) {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  }
+
   useEffect(() => {
+    // Capture the current value of the ref in a variable
+    const imgElement = imgRef.current;
 
+    // Check if imgElement is not null
+    if (imgElement) {
+      const handleLoad = () => {
+        const width = imgElement.offsetWidth;
+        const height = imgElement.offsetHeight;
+        setImageDimensions({ width, height });
+      };
 
-   // Capture the current value of the ref in a variable
-   const imgElement = imgRef.current;
+      // Add event listener
+      imgElement.addEventListener("load", handleLoad);
 
-   // Check if imgElement is not null
-   if (imgElement) {
-    
-     const handleLoad = () => {
-      const width = imgElement.offsetWidth
-      const height = imgElement.offsetHeight
-      setImageDimensions({width,height})
-     };
-
-     // Add event listener
-     imgElement.addEventListener('load', handleLoad);
-
-     // Cleanup function to remove the event listener
-     return () => {
-       imgElement.removeEventListener('load', handleLoad);
-     };
-   }
-
+      // Cleanup function to remove the event listener
+      return () => {
+        imgElement.removeEventListener("load", handleLoad);
+      };
+    }
   }, []);
-  
+
   const labelsData = [
-    { id: "shoulders", top: (27/100)*imageDimensions.width, left: (35/100)*imageDimensions.width },
+    {
+      id: "shoulders",
+      top: (27 / 100) * imageDimensions.width,
+      left: (35 / 100) * imageDimensions.width,
+    },
     { id: "biceps", top: "35%", left: "20%" },
     { id: "chest", top: "35%", left: "20%" },
     { id: "core", top: "35%", left: "20%" },
@@ -84,8 +109,9 @@ function ProgressLevel() {
     { id: "back", top: "35%", left: "20%" },
     { id: "triceps", top: "35%", left: "20%" },
   ];
-  const shouldersData = labelsData.find(label => label.id === 'shoulders');
-  console.log(shouldersData)
+
+  const shouldersData = labelsData.find((label) => label.id === "shoulders");
+
   const findDeadlift = findExerciseByName("barbell deadlift");
   const findBenchPress = findExerciseByName("flat barbell bench press");
   const findSquat = findExerciseByName("barbell squat");
@@ -120,25 +146,26 @@ function ProgressLevel() {
       : findDeadlift
   );
 
-
   const data = [
     {
       name: "PL",
       Strength: currentUserData.strengthLevel,
-      Experience: currentUserData.experiencePoints,
+      Experience: currentUserData.experienceLevel,
     },
   ];
 
   const userSelectedExercisesStrArr = userSelectedExercises[0].exercises
-    .map((userExercise: IUserSelectedExercises) => userExercise.name)
+    .map((userExercise: IUserSelectedExercises) =>
+      capitalizeWords(userExercise.name)
+    )
     .sort((a: string, b: string) =>
       a.localeCompare(b, undefined, { sensitivity: "base" })
     );
 
-
   function findExerciseByName(name: string) {
     return userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) => exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
+      (exercise: IUserSelectedExercises) =>
+        exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
     );
   }
 
@@ -149,7 +176,7 @@ function ProgressLevel() {
   const handleAutocompleteChange = (newValue: string | null, order: string) => {
     if (newValue) {
       const exercise = findExerciseByName(newValue);
-      
+
       if (order === "first") {
         setFirstExerciseSelected(exercise);
       } else if (order === "second") {
@@ -161,8 +188,7 @@ function ProgressLevel() {
   };
 
   async function handleCalculatePowerLevel() {
-    
-    const userWeight = getUserWeight(userBodyTrackerData)
+    const userWeight = getUserWeight(userBodyTrackerData);
     const totalLiftedWeight = calculatePowerLevel();
     const isFemale = () => {
       return currentUserData.sex === "female";
@@ -174,23 +200,70 @@ function ProgressLevel() {
       isFemale()
     );
 
-    const experiencePoints = userTrainingData.length * 10;
+    const userWorkouts = userTrainingData.length;
+    const userWorkoutGrade = Math.floor(userWorkouts / 100) * 100;
+    const pendingWorkouts = userWorkouts % 100;
+    const userWorkoutIncrease = Math.ceil(userWorkoutGrade / 100);
+    let experiencePoints = 0;
+
+    if (userWorkouts < 100) {
+      experiencePoints = userWorkouts * 10;
+    } else {
+      for (let index = 1; index <= userWorkoutIncrease; index++) {
+        if (index === 1) {
+          experiencePoints = experiencePoints + 10 * 100;
+        } else if (index === 2) {
+          experiencePoints = experiencePoints + 9 * 100;
+        } else if (index === 3) {
+          experiencePoints = experiencePoints + 8 * 100;
+        } else if (index === 4) {
+          experiencePoints = experiencePoints + 7 * 100;
+        } else if (index === 5) {
+          experiencePoints = experiencePoints + 6 * 100;
+        } else if (index > 5) {
+          experiencePoints = experiencePoints + 5 * 100;
+        }
+      }
+    }
+
+    // Calculate the multiplier for the pending workouts
+    let pendingMultiplier = 0;
+    if (userWorkoutIncrease >= 1 && userWorkoutIncrease <= 5) {
+      pendingMultiplier = 10 - userWorkoutIncrease;
+    } else {
+      pendingMultiplier = 5; // For userWorkoutIncrease > 5
+    }
+
+    // Multiply the pending workouts by the appropriate multiplier
+    experiencePoints += pendingWorkouts * pendingMultiplier;
 
     const maximumPowerLevel = strengthLevel + experiencePoints;
 
-    if (maximumPowerLevel > currentUserData.powerLevel) {
+    toast.success(`These exercises give you a PL of ${maximumPowerLevel}`, {
+      duration: 5000,
+    });
+
+    setCalculatedMaximumPowerLevel(maximumPowerLevel);
+    setCalculatedMaximumStrengthLevel(strengthLevel);
+    setCalculatedMaximumExperienceLevel(experiencePoints);
+  }
+
+  async function handlePublishPowerLevel() {
+    try {
       await updatePowerLevelInFirestore(
         currentUser.uid,
         firstExerciseSelected.name,
         secondExerciseSelected.name,
         thirdExerciseSelected.name,
-        maximumPowerLevel,
-        strengthLevel,
-        experiencePoints
+        calculatedMaximumPowerLevel,
+        calculatedMaximumStrengthLevel,
+        calculatedMaximumExperienceLevel
       );
       await fetchCurrentUserData(currentUser, setCurrentUserData);
-    } else {
-      toast.error(`Your power level would be lower - ${maximumPowerLevel}`);
+    } catch (error) {
+      console.log(error);
+      console.error(error);
+      toast.error("Oops, we could save your new power level!");
     }
   }
 
@@ -248,14 +321,17 @@ function ProgressLevel() {
 
     return maxRM;
   }
-  
 
-
-  function calculateScaledImageSize(containerWidth:number, containerHeight:number, imageOriginalWidth:number, imageOriginalHeight:number) {
+  function calculateScaledImageSize(
+    containerWidth: number,
+    containerHeight: number,
+    imageOriginalWidth: number,
+    imageOriginalHeight: number
+  ) {
     const imageAspectRatio = imageOriginalWidth / imageOriginalHeight;
     const containerAspectRatio = containerWidth / containerHeight;
     let scaledWidth, scaledHeight;
-  
+
     if (containerAspectRatio > imageAspectRatio) {
       // Container is wider in proportion to the image
       scaledHeight = containerHeight;
@@ -265,10 +341,9 @@ function ProgressLevel() {
       scaledWidth = containerWidth;
       scaledHeight = containerWidth / imageAspectRatio;
     }
-  
+
     return { scaledWidth, scaledHeight };
   }
-  
 
   return (
     <Box
@@ -278,6 +353,7 @@ function ProgressLevel() {
         justifyContent: "center",
         alignItems: "center",
         paddingBottom: "64px",
+        gap: 2,
       }}
       maxWidth="md"
     >
@@ -292,26 +368,22 @@ function ProgressLevel() {
           display="flex"
           justifyContent="center"
           alignItems="center"
+          flexDirection="column"
           marginTop="0.25rem"
           marginBottom="0.25rem"
-          gap={1}
         >
-          {/* 
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Ficons%2FPowerLevelIcon_256.png?alt=media&token=a7b39274-159b-41e8-b0db-7dcb59263e95"
-            alt=""
-            style={{ minWidth: "3rem", minHeight: "3rem" }}
-            width="3rem"
-            height="3rem"
-          ></img>
-             */}
-          <Typography variant="h3">{currentUserData.powerLevel}</Typography>
+          <Typography variant="h3" fontWeight="500">
+            {currentUserData.powerLevel}
+          </Typography>
+          <Typography variant="subtitle1" fontWeight="500" p={0} m={0}>
+            Your Saved Power Level
+          </Typography>
         </Box>
 
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={175}>
           <BarChart
             width={500}
-            height={300}
+            height={200}
             data={data}
             margin={{
               top: 20,
@@ -322,7 +394,12 @@ function ProgressLevel() {
             layout="vertical"
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis fontSize={15} type="number" tick={false} />
+            <XAxis
+              fontSize={15}
+              type="number"
+              tick={false}
+              domain={[0, "dataMax + 50"]}
+            />
             <YAxis dataKey="name" type="category" fontSize={15} />
             <Tooltip />
             <Legend
@@ -340,54 +417,87 @@ function ProgressLevel() {
           </BarChart>
         </ResponsiveContainer>
 
-        <Typography variant="subtitle1" textAlign="center">
-          Select your strongest lifts to calculate your maximum Power Level
-        </Typography>
-        <Autocomplete
-          sx={{ paddingTop: "8px" }}
-          disableClearable
-          fullWidth
-          options={userSelectedExercisesStrArr}
-          value={firstExerciseSelected ? firstExerciseSelected.name : null}
-          renderInput={(params) => (
-            <TextField {...params} label="First Exercise" variant="outlined" />
-          )}
-          onChange={(event, value) => handleAutocompleteChange(value, "first")}
-        />
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Typography variant="subtitle1" textAlign="center">
+            Select your strongest lifts to calculate your maximum Power Level
+          </Typography>
+          <Autocomplete
+            disableClearable
+            fullWidth
+            options={userSelectedExercisesStrArr}
+            value={
+              firstExerciseSelected
+                ? capitalizeWords(firstExerciseSelected.name)
+                : undefined
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="First Exercise"
+                variant="outlined"
+              />
+            )}
+            onChange={(event, value) =>
+              handleAutocompleteChange(value, "first")
+            }
+          />
 
-        <Autocomplete
-          sx={{ paddingTop: "8px" }}
-          disableClearable
-          fullWidth
-          options={userSelectedExercisesStrArr}
-          value={secondExerciseSelected ? secondExerciseSelected.name : null}
-          renderInput={(params) => (
-            <TextField {...params} label="Second Exercise" variant="outlined" />
-          )}
-          onChange={(event, value) => handleAutocompleteChange(value, "second")}
-        />
+          <Autocomplete
+            disableClearable
+            fullWidth
+            options={userSelectedExercisesStrArr}
+            value={
+              secondExerciseSelected
+                ? capitalizeWords(secondExerciseSelected.name)
+                : undefined
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Second Exercise"
+                variant="outlined"
+              />
+            )}
+            onChange={(event, value) =>
+              handleAutocompleteChange(value, "second")
+            }
+          />
 
-        <Autocomplete
-          sx={{ paddingTop: "8px" }}
-          disableClearable
-          fullWidth
-          options={userSelectedExercisesStrArr}
-          value={thirdExerciseSelected ? thirdExerciseSelected.name : null}
-          renderInput={(params) => (
-            <TextField {...params} label="Third Exercise" variant="outlined" />
-          )}
-          onChange={(event, value) => handleAutocompleteChange(value, "third")}
-        />
+          <Autocomplete
+            disableClearable
+            fullWidth
+            options={userSelectedExercisesStrArr}
+            value={
+              thirdExerciseSelected
+                ? capitalizeWords(thirdExerciseSelected.name)
+                : undefined
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Third Exercise"
+                variant="outlined"
+              />
+            )}
+            onChange={(event, value) =>
+              handleAutocompleteChange(value, "third")
+            }
+          />
+        </Box>
 
         <Box
           sx={{
             width: "100%",
             display: "flex",
-            justifyContent: "space-evenly",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: "16px",
+            flexDirection: "column",
+            gap: 1,
           }}
         >
           <Button
-            variant="dbz"
+            variant="dbz_mini"
             sx={{
               width: "75%",
               margin: "0.25rem",
@@ -401,7 +511,37 @@ function ProgressLevel() {
         </Box>
       </Box>
 
-  {/*
+      {calculatedMaximumPowerLevel !== 0 && (
+        <Paper sx={{ width: "100%", height: "100%", padding: "8px" }}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+            gap={1}
+          >
+            <Box display="flex" justifyContent="space-evenly" width="100%">
+              <Typography>PL: {calculatedMaximumPowerLevel}</Typography>
+              <Typography>STR: {calculatedMaximumStrengthLevel}</Typography>
+              <Typography>EXP: {calculatedMaximumExperienceLevel}</Typography>
+            </Box>
+
+            {isToday ? (
+              <Typography>You can only save your PL once a day.</Typography>
+            ) : (
+              <Button
+                variant="dbz_mini"
+                sx={{ borderRadius: "25px" }}
+                onClick={handlePublishPowerLevel}
+              >
+                Save New Power Level
+              </Button>
+            )}
+          </Box>
+        </Paper>
+      )}
+
+      {/*
       <Box
         width="100%"
         marginTop="16px"
@@ -471,5 +611,3 @@ function ProgressLevel() {
 }
 
 export default ProgressLevel;
-
-

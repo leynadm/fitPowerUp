@@ -74,8 +74,6 @@ function ExerciseDetailsGraph() {
       a.localeCompare(b, undefined, { sensitivity: "base" })
     );
 
-  console.log(userSelectedExercisesStrArr);
-
   const [exerciseSelected, setExerciseSelected] = useState(() => {
     if (exerciseName) {
       return userSelectedExercises[0].exercises.find(
