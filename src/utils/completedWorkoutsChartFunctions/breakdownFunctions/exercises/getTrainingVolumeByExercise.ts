@@ -1,4 +1,4 @@
-
+import capitalizeWords from "../../../capitalizeWords";
 
 function getTrainingVolumeByExercise(
     groupedData: {
@@ -11,7 +11,7 @@ function getTrainingVolumeByExercise(
         summedVolume:number
       }[]
     ) {
-      const exerciseData: { exerciseName: string; value: number }[] = [];
+      const exerciseData: { name: string; value: number }[] = [];
       
       groupedData.forEach(
         (exercise: {
@@ -23,12 +23,12 @@ function getTrainingVolumeByExercise(
           count: number;
           summedVolume:number;
         }) => {
-          const exerciseName = exercise.exerciseName;
+          const name = capitalizeWords(exercise.exerciseName);
           const summedVolume = exercise.summedVolume; // Use the correct summed volume
       
           // Only add to exerciseData if summedVolume is greater than 0
           if (summedVolume > 0) {
-            exerciseData.push({ exerciseName, value: summedVolume });
+            exerciseData.push({ name, value: summedVolume });
           }
         }
       );

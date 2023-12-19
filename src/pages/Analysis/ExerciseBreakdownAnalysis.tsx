@@ -32,6 +32,8 @@ import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
 import getOverallStats from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
 import groupDataByMuscleGForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleGForVolume";
 import capitalizeWords from "../../utils/capitalizeWords";
+import Paper from "@mui/material/Paper";
+
 import {
   Radar,
   RadarChart,
@@ -39,18 +41,11 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   ResponsiveContainer,
+  Treemap,
+  Tooltip,
+  TooltipProps,
 } from "recharts";
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
 
 import { useContext } from "react";
 import { TrainingDataContext } from "../../context/TrainingData";
@@ -65,11 +60,15 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import Paper from "@mui/material/Paper";
 import groupDataByExerciseForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExerciseForVolume";
 import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExercise";
 import getFlattenedOverallExerciseData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
 import toast from "react-hot-toast";
+
+interface TreemapNode {
+  name: string;
+  value: number;
+}
 
 function ExerciseBreakdownAnalysis() {
   const { userTrainingData } = useContext(TrainingDataContext);
@@ -83,11 +82,12 @@ function ExerciseBreakdownAnalysis() {
   const [muscleGroupChart, setMuscleGroupChart] = useState(true);
 
   const [modeledData, setModeledData] = useState<
-    | { exerciseName?: string; exerciseMuscleGroup?: string; value: number }[]
+    | { name?: string; exerciseMuscleGroup?: string; value: number }[]
     | null
     | undefined
   >([]);
 
+  console.log(modeledData);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -429,7 +429,7 @@ function ExerciseBreakdownAnalysis() {
   const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newStartDate = event.target.value;
 
-    if ((startDate > endDate) && (startDate!== '' && endDate!=='')) {
+    if (startDate > endDate && startDate !== "" && endDate !== "") {
       //toast.error('The end date has to be later than the starting date!')
     } else {
       setStartDate(newStartDate);
@@ -557,7 +557,7 @@ function ExerciseBreakdownAnalysis() {
       {modeledData.length === 0 ? (
         <Box
           display="flex"
-          minHeight="250px"
+          minHeight="500px"
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
@@ -565,10 +565,9 @@ function ExerciseBreakdownAnalysis() {
           <NoAvailableDataBox />
         </Box>
       ) : muscleGroupChart ? (
-        <ResponsiveContainer minHeight="250px">
+        <ResponsiveContainer minHeight="500px">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
-            <PolarGrid 
-            />
+            <PolarGrid />
             <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={15} />
             <PolarRadiusAxis
               fontSize={20}
@@ -588,36 +587,18 @@ function ExerciseBreakdownAnalysis() {
           </RadarChart>
         </ResponsiveContainer>
       ) : (
-        <ResponsiveContainer height="100%" aspect={0.5}>
-          <BarChart
-            width={500}
+        <ResponsiveContainer width="100%" height="100%" minHeight="500px">
+          <Treemap
+            width={300}
+            height={200}
             data={modeledData}
-            margin={{
-              top: 15,
-              right: 0,
-              left: 0,
-              bottom: 5,
-            }}
-            layout="vertical"
+            aspectRatio={4 / 3}
+            stroke="#fff"
+            fill="#8884d8"
+            dataKey="value"
           >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis fontSize={12} width={75} dataKey='exerciseName'  type="category"
-               tick={{ 
-                fill: '#000', // Text color
-                width: 100,
-                transform: 'translate(-60, 0)', // Adjust this to align to the left
-                textAnchor: 'start' // Aligns the text to the start, which is the left side for Y-axis labels
-              }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar
-              dataKey="value"
-              fill="#520975"
-              activeBar={<Rectangle fill="pink" stroke="blue" />}
-            ></Bar>
-          </BarChart>
+            <Tooltip content={<CustomTooltip />} />
+          </Treemap>
         </ResponsiveContainer>
       )}
 
@@ -653,7 +634,7 @@ function ExerciseBreakdownAnalysis() {
                       <TableCell component="th" scope="row" align="left">
                         {entry.exerciseMuscleGroup
                           ? capitalizeWords(entry.exerciseMuscleGroup)
-                          : capitalizeWords(entry.exerciseName)}
+                          : capitalizeWords(entry.name)}
                       </TableCell>
 
                       <TableCell align="right">
@@ -740,3 +721,25 @@ function ExerciseBreakdownAnalysis() {
 }
 
 export default ExerciseBreakdownAnalysis;
+
+const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload as TreemapNode; // Cast to your data type
+    return (
+      <Paper
+        className="custom-tooltip"
+        style={{
+          fontSize: "1rem",
+          padding: "4px",
+          background: "white",
+          borderRadius: "4px",
+          textAlign: "center",
+        }}
+      >
+        <p>{`${data.name}: ${data.value}`}</p>
+      </Paper>
+    );
+  }
+
+  return null;
+};

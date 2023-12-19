@@ -46,6 +46,9 @@ function Settings() {
     currentUserData.unitsSystem
   );
 
+  const myEmailName= 'fitpowerupapp'
+  const emailClient = 'gmail.com'
+
   const navigate = useNavigate();
   
   const [shouldDownload, setShouldDownload] = useState(false);
@@ -369,7 +372,11 @@ function Settings() {
               about the app by pressing the button below.
             </Typography>
             <Box pt="8px">
-              <Button variant="dbz_mini" href="mailto: fitpowerupapp@gmail.com">
+              <Button variant="dbz_mini" 
+              href={`mailto:${myEmailName}@${emailClient}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              >
                 Send Feedback
               </Button>
             </Box>

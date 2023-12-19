@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -12,6 +12,7 @@ import CompletedDetailsOverview from "./CompletedDetailsOverview";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
+
 function CompletedWorkoutsTabs() {
   const { userTrainingData } = useContext(TrainingDataContext);
 

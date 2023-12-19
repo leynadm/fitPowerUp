@@ -45,15 +45,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DataBadge from "../../components/ui/DataBadge";
 import { Paper } from "@mui/material";
-import pushToStorage from "../../utils/miscelaneous/pushToStorage";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import LogoutIcon from "@mui/icons-material/Logout";
 import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl";
-import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import RetrievingYourData from "../../components/ui/RetrievingYourData";
 
 function CompletedWorkouts() {
   const navigate = useNavigate();
@@ -64,29 +63,9 @@ function CompletedWorkouts() {
     userTrainingData,
     dateForWorkout,
     setDateForWorkout,
-    userSelectedExercises,
   } = useContext(TrainingDataContext);
+  
   const { currentUserData } = useContext(AuthContext);
-
-  /*   
-  let exercises= userSelectedExercises[0].exercises
-
-  for (let index = 0; index < exercises.length; index++) {
-    const element = exercises[index];
-   
-
-    //console.log(element.measurement)
-     
-
-    for (let index = 0; index < element.measurement.length; index++) {
-      const elementMeasurement = element.measurement[index];
-      
-      elementCheck=element+elementMeasurement
-
-    } 
-
-
-  } */
 
   const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
     IWorkoutData[]
@@ -224,11 +203,7 @@ function CompletedWorkouts() {
   };
 
   if (userTrainingData === undefined) {
-    return <>Getting the data...</>;
-  }
-
-  if (filteredUserTrainingData === undefined) {
-    return <>Getting the filtered data...</>;
+    return <RetrievingYourData/>;
   }
 
   const handleSelectCompletedExercise = (exerciseName: string) => {

@@ -1,4 +1,4 @@
-
+import capitalizeWords from "../../../capitalizeWords";
 
 function getNumberOfWorkoutsByExercise(
     groupedData: {
@@ -11,7 +11,7 @@ function getNumberOfWorkoutsByExercise(
         workouts:number
       }[]
     ) {
-      const exerciseData: { exerciseName: string; value: number }[] = [];
+      const exerciseData: { name: string; value: number }[] = [];
   
       groupedData.forEach(
         (exercise: {
@@ -24,11 +24,11 @@ function getNumberOfWorkoutsByExercise(
           workouts:number
         }) => {
           const exerciseNameWorkouts = exercise.workouts;
-          const exerciseName = exercise.exerciseName;
+          const name = capitalizeWords(exercise.exerciseName);
   
           if (exerciseNameWorkouts > 0) {
             const value = parseFloat(exerciseNameWorkouts.toFixed(1));
-            exerciseData.push({ exerciseName , value });
+            exerciseData.push({ name , value });
           }
         }
       );

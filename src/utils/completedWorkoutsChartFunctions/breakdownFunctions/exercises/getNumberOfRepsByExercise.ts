@@ -1,3 +1,4 @@
+import capitalizeWords from "../../../capitalizeWords";
 function getNumberOfRepsByExercise(
   groupedData: {
     exerciseName: string;
@@ -8,7 +9,7 @@ function getNumberOfRepsByExercise(
     count: number;
   }[]
 ) {
-  const exerciseData: { exerciseName: string; value: number }[] = [];
+  const exerciseData: { name: string; value: number }[] = [];
 
   groupedData.forEach(
     (exercise: {
@@ -20,11 +21,11 @@ function getNumberOfRepsByExercise(
       count: number;
     }) => {
       const exerciseReps = exercise.summedReps;
-      const exerciseName = exercise.exerciseName;
+      const name = capitalizeWords(exercise.exerciseName);
 
       if (exerciseReps > 0) {
         const value = parseFloat(exerciseReps.toFixed(1));
-        exerciseData.push({ exerciseName, value });
+        exerciseData.push({ name, value });
       }
     }
   );

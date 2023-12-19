@@ -1,3 +1,5 @@
+import capitalizeWords from "../../../capitalizeWords";
+
 function getNumberOfSetsByExercise(
   groupedData: {
     exerciseName: string;
@@ -8,7 +10,7 @@ function getNumberOfSetsByExercise(
     count: number;
   }[]
 ) {
-  const exerciseData: { exerciseName: string; value: number }[] = [];
+  const exerciseData: { name: string; value: number }[] = [];
 
   groupedData.forEach(
     (exercise: {
@@ -20,11 +22,11 @@ function getNumberOfSetsByExercise(
       count: number;
     }) => {
       const exerciseNameSets = exercise.count;
-      const exerciseName = exercise.exerciseName;
+      const name = capitalizeWords(exercise.exerciseName);
 
       if (exerciseNameSets > 0) {
         const value = parseFloat(exerciseNameSets.toFixed(1));
-        exerciseData.push({ exerciseName, value });
+        exerciseData.push({ name, value });
       }
     }
   );

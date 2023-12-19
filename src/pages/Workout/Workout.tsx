@@ -31,34 +31,6 @@ interface HomeProps {
 }
 
 function Workout({ existingExercises, setExistingExercises }: HomeProps) {
-  const [todayDate, setTodayDate] = useState<Date>();
-
-  useEffect(() => {
-    if (!todayDate) {
-      const currentDate = new Date();
-      setTodayDate(currentDate);
-    }
-  }, []);
-
-  /* Use this useEffect to force requerying of data and update state when user navigates with back button */
-  useEffect(() => {
-    const handlePopstate = () => {
-      handleEffectLogic();
-    };
-
-    window.addEventListener("popstate", handlePopstate);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopstate);
-    };
-  }, [todayDate]);
-
-  const handleEffectLogic = useCallback(() => {
-    if (todayDate) {
-      getExercisesByDate(setExistingExercises);
-    }
-  }, []);
-
   return (
     <Routes>
       <Route

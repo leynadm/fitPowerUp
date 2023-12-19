@@ -14,8 +14,8 @@ import { Translate } from "@mui/icons-material";
 import StarsIcon from "@mui/icons-material/Stars";
 import InfoIcon from "@mui/icons-material/Info";
 import "../Home/styles/animation.css";
-import RedditIcon from '@mui/icons-material/Reddit';
-import EmailIcon from '@mui/icons-material/Email';
+import RedditIcon from "@mui/icons-material/Reddit";
+import EmailIcon from "@mui/icons-material/Email";
 import Link from "@mui/material/Link";
 
 function LandingPage() {
@@ -43,6 +43,10 @@ function LandingPage() {
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [openInstallInstructionsModal, setOpenInstallInstructionsModal] =
     useState(false);
+
+  const myEmailName = "fitpowerupapp";
+  const emailClient = "gmail.com";
+  const myWebsite = "https://mateidaniel.com";
 
   useEffect(() => {
     const observer = new IntersectionObserver(callbackFunction, options);
@@ -806,9 +810,15 @@ function LandingPage() {
           </Typography>
         </Container>
 
-        <Typography color="white" display="flex" alignItems="center" gap={1} variant="overline">
-          <RedditIcon style={{ color: "white" }} />
-          Join the 
+        <Typography
+          color="white"
+          display="flex"
+          alignItems="center"
+          gap={1}
+          variant="overline"
+        >
+          <RedditIcon />
+          Join the
           <a
             href="https://reddit.com/r/fitpowerup"
             target="_blank"
@@ -819,11 +829,17 @@ function LandingPage() {
           community!
         </Typography>
 
-        <Typography color="white" display="flex" alignItems="center" gap={1} variant="overline">
-          <EmailIcon style={{ color: "white" }} />
-          Click 
+        <Typography
+          color="white"
+          display="flex"
+          alignItems="center"
+          gap={1}
+          variant="overline"
+        >
+          <EmailIcon />
+          Click
           <a
-            href="https://reddit.com/r/fitpowerup"
+            href={`mailto:${myEmailName}@${emailClient}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -832,17 +848,11 @@ function LandingPage() {
           to contact me via email.
         </Typography>
 
-        <Typography
-        variant="body2"
-        color="white"
-        align="center"
-       
-      >
-        <Link color="inherit" href="https://mateidaniel.com" target="_blank">
-          Developed by Daniel Matei {new Date().getFullYear()}
-        </Link>
-      </Typography>
-
+        <Typography variant="body2" color="white" align="center">
+          <Link color="inherit" href={myWebsite} target="_blank">
+            Developed by Daniel Matei {new Date().getFullYear()}
+          </Link>
+        </Typography>
       </Box>
     </Box>
   );
