@@ -9,7 +9,6 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Exercise from "../../utils/interfaces/Exercise";
 import CommentModal from "../../components/ui/CommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import ValidationAlert from "../../components/ui/ValidationAlert";
@@ -18,60 +17,35 @@ import formatTime from "../../utils/formatTime";
 import Container from "@mui/material/Container";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserSelectedExercises } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import { AuthContext } from "../../context/Auth";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import updateExercisesPRAfterAction from "../../utils/IndexedDbCRUDFunctions/updateExercisesPRAfterAction";
-
+import getExistingComment from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingComment";
+import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingExercises";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
-  const { userSelectedExercises, userTrainingData } =
-    useContext(TrainingDataContext);
-  const { currentUserData } = useContext(AuthContext);
-  const exerciseSelected = userSelectedExercises[0].exercises.find(
-    (exercise: IUserSelectedExercises) => exercise.name === exerciseName
+  const { userTrainingData, refetchUserTrainingData } = useContext(
+    UserTrainingDataContext
   );
+  const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
+    UserExercisesLibraryContext
+  );
+
+  const { currentUserData } = useContext(AuthContext);
+
+  /* 
+  const exerciseSelected = userExercisesLibrary[0].exercises.find(
+    (exercise: IUserExercisesLibrary) => exercise.name === exerciseName
+  ); */
+
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const lastExercise = getLastCompletedExerciseEntry();
   const [editingExercise, setEditingExercise] = useState(false);
-
-  function getLastCompletedExerciseEntry() {
-    const userTrainingDataArr = userTrainingData;
-    if (userTrainingDataArr) {
-      const groupedCompletedExercises: {
-        date: string;
-        exercises: Exercise[];
-      }[] = [];
-
-      userTrainingDataArr.forEach((workoutEntry: IWorkoutData) => {
-        workoutEntry.wExercises.forEach(
-          (exerciseEntry: { name: string; exercises: Exercise[] }) => {
-            const completedExerciseName = exerciseEntry.name.toUpperCase();
-            const exercises = exerciseEntry.exercises;
-            if (completedExerciseName === exerciseName?.toUpperCase()) {
-              const date = workoutEntry.date; // Convert the date to a string for grouping
-              groupedCompletedExercises.push({
-                date,
-                exercises: exercises,
-              });
-            }
-          }
-        );
-      });
-
-      groupedCompletedExercises.sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
-
-      if (groupedCompletedExercises.length > 0) {
-        let exercisesLength = groupedCompletedExercises[0].exercises.length - 1;
-        const lastExercise =
-          groupedCompletedExercises[0].exercises[exercisesLength];
-        return lastExercise;
-      }
-    }
-  }
 
   const [weightValue, setWeightValue] = useState(
     lastExercise?.weight !== undefined && lastExercise.weight !== 0
@@ -108,10 +82,36 @@ function ExerciseSelectedTrack() {
   const [dropsetRenderTrigger, setDropsetRenderTrigger] = useState(0);
   //const [lastExercise, setLastExercise] = useState<Exercise | null>(null);
 
+  const exerciseSelected =
+    userExercisesLibrary.length > 0
+      ? userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) => exercise.name === exerciseName
+        )
+      : null;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userExercisesLibrary.length === 0) {
+        await refetchUserTrainingData();
+        await refetchUserExercisesLibrary();
+      }
+    };
+
+    const fetchLocalExerciseData = async () => {
+      if(exerciseSelected){
+        await getExistingExercises(exerciseSelected.name, setExistingExercises);
+      }
+    
+    };
+
+    fetchLocalExerciseData();
+    fetchData();
+  }, [userExercisesLibrary, userTrainingData, exerciseSelected]);
+
   const entryToSave = {
     date: new Date(),
-    exercise: exerciseSelected.name,
-    group: exerciseSelected.group,
+    exercise: exerciseSelected!==null?exerciseSelected.name: null,
+    group: exerciseSelected!==null ?exerciseSelected.group: null,
     weight: weightValue,
     reps: repsValue,
     distance: distanceValue,
@@ -121,98 +121,46 @@ function ExerciseSelectedTrack() {
     dropset: false,
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await getExistingExercises();
-    };
-    fetchData();
-  }, []);
+  function getLastCompletedExerciseEntry() {
+    if (userExercisesLibrary.length===0) {
+      return;
+    }
 
-  async function getExistingExercises() {
-    const request = indexedDB.open("fitScouterDb", 2);
+    const userTrainingDataArr = userTrainingData;
 
-    request.onsuccess = function () {
-      const db = request.result;
+    if (userTrainingDataArr) {
+      const groupedCompletedExercises: {
+        date: string;
+        exercises: Exercise[];
+      }[] = [];
 
-      const userEntryTransaction = db.transaction(
-        "user-exercises-entries",
-        "readonly"
-      );
-
-      const userEntryTransactionStore = userEntryTransaction.objectStore(
-        "user-exercises-entries"
-      );
-
-      const exerciseNameIndex =
-        userEntryTransactionStore.index("exercise_name");
-
-      const range = IDBKeyRange.only(exerciseSelected.name);
-
-      const exercisesRequest = exerciseNameIndex.openCursor(range);
-
-      const tempExistingExercises:
-        | any[]
-        | ((prevState: Exercise[]) => Exercise[]) = [];
-      exercisesRequest.onsuccess = function (event) {
-        const cursor = (event.target as IDBRequest).result;
-
-        if (cursor) {
-          tempExistingExercises.push(cursor.value);
-          cursor.continue();
-        } else {
-          setExistingExercises(tempExistingExercises);
-        }
-      };
-
-      exercisesRequest.onerror = function () {
-        toast.error("Oops, getExistingExercises has an error!");
-        console.error("Error retrieving existing exercises");
-      };
-
-      userEntryTransaction.oncomplete = function () {
-        db.close();
-      };
-    };
-
-    request.onerror = function () {
-      toast.error("Oops, couldn't open the database!");
-      console.log("Error opening database");
-    };
-  }
-
-  function getExistingComment(idExerciseUpdate: number) {
-    const request = window.indexedDB.open("fitScouterDb");
-    request.onsuccess = function (event: any) {
-      const db = event.target.result;
-      const transaction = db.transaction("user-exercises-entries", "readwrite");
-      const objectStore = transaction.objectStore("user-exercises-entries");
-
-      const getRequest = objectStore.get(idExerciseUpdate);
-
-      getRequest.onsuccess = function (event: any) {
-        const data = event.target.result;
-        if (data) {
-          if (data.comment === undefined) {
-            setCommentValue("");
-          } else {
-            setCommentValue(data.comment);
+      userTrainingDataArr.forEach((workoutEntry: IWorkoutData) => {
+        workoutEntry.wExercises.forEach(
+          (exerciseEntry: { name: string; exercises: Exercise[] }) => {
+            const completedExerciseName = exerciseEntry.name.toUpperCase();
+            const exercises = exerciseEntry.exercises;
+            if (completedExerciseName === exerciseName?.toUpperCase()) {
+              const date = workoutEntry.date; // Convert the date to a string for grouping
+              groupedCompletedExercises.push({
+                date,
+                exercises: exercises,
+              });
+            }
           }
-          setIsDropset(data.dropset);
-        } else {
-        }
-      };
+        );
+      });
 
-      transaction.oncomplete = function () {};
-      transaction.onerror = function () {
-        toast.error("Oops, getExistingComment has an error!");
-        console.log("Transaction error");
-      };
-    };
+      groupedCompletedExercises.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
 
-    request.onerror = function () {
-      toast.error("Oops, couldn't open the database!");
-      console.log("Error opening the database in getExistingComment!");
-    };
+      if (groupedCompletedExercises.length > 0) {
+        let exercisesLength = groupedCompletedExercises[0].exercises.length - 1;
+        const lastExercise =
+          groupedCompletedExercises[0].exercises[exercisesLength];
+        return lastExercise;
+      }
+    }
   }
 
   function handleUpdateExerciseSelection(exerciseId: number) {
@@ -222,7 +170,7 @@ function ExerciseSelectedTrack() {
 
   function handleModalVisibility(exerciseId: number) {
     setIdExerciseUpdate(exerciseId);
-    getExistingComment(exerciseId);
+    getExistingComment(exerciseId, setCommentValue, setIsDropset);
     setOpenCommentModal(!openCommentModal);
   }
 
@@ -434,7 +382,10 @@ function ExerciseSelectedTrack() {
             exerciseSelected.name,
             updatedEntryToSave
           );
-          await getExistingExercises();
+          await getExistingExercises(
+            exerciseSelected.name,
+            setExistingExercises
+          );
         };
 
         request.onerror = function () {
@@ -512,7 +463,10 @@ function ExerciseSelectedTrack() {
                 exerciseSelected.name,
                 data
               );
-              await getExistingExercises();
+              await getExistingExercises(
+                exerciseSelected.name,
+                setExistingExercises
+              );
 
               console.log("Record updated successfully");
             };
@@ -565,7 +519,10 @@ function ExerciseSelectedTrack() {
               exerciseSelected.name,
               record
             );
-            await getExistingExercises();
+            await getExistingExercises(
+              exerciseSelected.name,
+              setExistingExercises
+            );
           };
 
           deleteRecordRequest.onerror = function (event: Event) {
@@ -713,6 +670,12 @@ function ExerciseSelectedTrack() {
       });
     }
   };
+
+  if (userExercisesLibrary.length === 0 || exerciseSelected === null) {
+    return (
+      <LoadingScreenCircle text="Waiting for Frieza to finish his monologue about ruling the universe..." />
+    );
+  }
 
   return (
     <Container

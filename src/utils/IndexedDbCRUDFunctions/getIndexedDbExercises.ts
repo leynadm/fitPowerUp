@@ -1,4 +1,4 @@
-import Exercise from "../interfaces/Exercise";
+import { Exercise } from "../interfaces/IUserTrainingData";
 async function getIndexedDbExercises(
   exerciseName: string
 ): Promise<Exercise[]> {

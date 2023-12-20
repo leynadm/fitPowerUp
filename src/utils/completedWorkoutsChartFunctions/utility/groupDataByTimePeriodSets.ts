@@ -1,21 +1,5 @@
 import { format, getISOWeek} from "date-fns";
-import Exercise from "../../interfaces/Exercise";
-
-interface IExerciseStringKey{
-    exercise: string;
-    date: string;
-    weight: number;
-    reps: number;
-    distance: number;
-    distance_unit: string;
-    time: number;
-    group: string;
-    comment?:string
-    id:number
-    is_pr?:boolean
-    dropset:boolean
-    stringKey:string
-} 
+import { Exercise } from "../../interfaces/IUserTrainingData";
 function groupDataByTimePeriodSets(flattenedData: Exercise[], timePeriod: string) {
   const groupedData = new Map<string, {
     date: string;

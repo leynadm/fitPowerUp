@@ -1,8 +1,7 @@
-import Exercise from "../interfaces/Exercise";
+import { Exercise,IWorkoutEvaluationData } from "../interfaces/IUserTrainingData";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { arrayUnion } from "firebase/firestore";
-import IWorkoutEvaluationData from "../interfaces/WorkoutEvaluationData";
 import toast from "react-hot-toast";
 
 interface IWorkoutDataWorkoutStats {

@@ -1,24 +1,18 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  SetStateAction,
-  Dispatch,
-} from "react";
+import React, { useState, SetStateAction, Dispatch } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
 import Friends from "../Friends/Friends";
 import Workout from "../Workout/Workout";
-import Box from "@mui/material/Box";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
-import { AuthContext } from "../../context/Auth";
 import RestTimer from "../../components/ui/RestTimer";
 import { SocialDataProvider } from "../../context/SocialData";
 import { LogDataProvider } from "../../context/LogData";
-import { TrainingDataProvider } from "../../context/TrainingData";
-
+import { UserTrainingDataProvider } from "../../context/UserTrainingData";
+import { UserExercisesLibraryDataProvider } from "../../context/UserExercisesLibrary";
+import { BodyTrackerDataProvider } from "../../context/BodyTrackerData";
+import { UserFeatsDataProvider } from "../../context/UserFeatsData";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
@@ -36,49 +30,44 @@ function Home({
 
   return (
     <SocialDataProvider>
-      <TrainingDataProvider>
-        <LogDataProvider>
-          
-          {/* 
-          <Box className="ThisShouldBeAGoodWrapperBox" 
-          sx={{
-            height:"100%"
-          }}
-          > */}
-          
-            <VerifyEmailDialog
-              verifyEmailModalOpen={verifyEmailModalOpen}
-              setVerifyEmailModalOpen={setVerifyEmailModalOpen}
-            />
-            
-            <RestTimer />
-            
-            <Navbar />
-            
-            <Routes>
-              <Route
-                path="workout/*"
-                index
-                element={
-                  <Workout
-                    existingExercises={existingExercises}
-                    setExistingExercises={setExistingExercises}
-                  />
-                }
+      <UserTrainingDataProvider>
+        <UserExercisesLibraryDataProvider>
+          <BodyTrackerDataProvider>
+          <UserFeatsDataProvider>
+            <LogDataProvider>
+              <VerifyEmailDialog
+                verifyEmailModalOpen={verifyEmailModalOpen}
+                setVerifyEmailModalOpen={setVerifyEmailModalOpen}
               />
 
-              <Route
-                path="friends/*"
-                element={<Friends existingExercises={existingExercises} />}
-              />
-              
-              <Route path="progress/*" element={<Progress />} />
-            
-            </Routes>
-          {/* 
-          </Box> */}
-        </LogDataProvider>
-      </TrainingDataProvider>
+              <RestTimer />
+
+              <Navbar />
+
+              <Routes>
+                <Route
+                  path="workout/*"
+                  index
+                  element={
+                    <Workout
+                      existingExercises={existingExercises}
+                      setExistingExercises={setExistingExercises}
+                    />
+                  }
+                />
+
+                <Route
+                  path="friends/*"
+                  element={<Friends existingExercises={existingExercises} />}
+                />
+
+                <Route path="progress/*" element={<Progress />} />
+              </Routes>
+            </LogDataProvider>
+            </UserFeatsDataProvider>
+          </BodyTrackerDataProvider>
+        </UserExercisesLibraryDataProvider>
+      </UserTrainingDataProvider>
     </SocialDataProvider>
   );
 }

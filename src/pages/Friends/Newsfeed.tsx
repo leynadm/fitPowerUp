@@ -17,10 +17,11 @@ import {
 import { db } from "../../config/firebase";
 import { PostData } from "../../utils/interfaces/PostData";
 import { Button, Typography } from "@mui/material";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import NoConnection from "../../components/ui/NoConnection";
 import { toast } from "react-hot-toast";
 import { SocialDataContext } from "../../context/SocialData";
+
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
   /* 
@@ -354,7 +355,7 @@ function Newsfeed() {
           height: "100%",
         }}
       >
-        <LoadingCircle />
+        <LoadingScreenCircle text="Please wait while we get your data..." />
       </Box>
     );
   }

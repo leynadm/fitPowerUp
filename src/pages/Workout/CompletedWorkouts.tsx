@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
@@ -25,18 +19,17 @@ import { auth } from "../../config/firebase";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "../../components/ui/ViewCommentModal";
-import Exercise from "../../utils/interfaces/Exercise";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
-import Zoom from "@mui/material/Zoom";
 import Fab from "@mui/material/Fab";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
 import { Rating } from "@mui/material";
@@ -49,22 +42,18 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import LogoutIcon from "@mui/icons-material/Logout";
-import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import RetrievingYourData from "../../components/ui/RetrievingYourData";
-
+import LoadingScreen from "../../components/ui/LoadingScreen";
 function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const {
-    userTrainingData,
-    dateForWorkout,
-    setDateForWorkout,
-  } = useContext(TrainingDataContext);
-  
+  const { userTrainingData, dateForWorkout, setDateForWorkout } = useContext(
+    UserTrainingDataContext
+  );
+
   const { currentUserData } = useContext(AuthContext);
 
   const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
@@ -83,6 +72,8 @@ function CompletedWorkouts() {
   const { moved, touchEnd, touchStart } = swipe;
 
   const SENSITIVITY = 125;
+
+  console.log(dateForWorkout);
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     let touchStartX = e.targetTouches[0].clientX;
@@ -114,11 +105,14 @@ function CompletedWorkouts() {
     filterUserTrainingsPerDay(dateForWorkout);
   }, [userTrainingData, dateForWorkout]);
 
+  const containerRef = useRef<HTMLElement>(null);
+
   const handleLeftArrowClick = () => {
     const newDate = convertStringToDate(dateForWorkout);
     newDate.setDate(newDate.getDate() - 1);
     const convertedDate = formatDateForTextField(newDate);
     setDateForWorkout(convertedDate);
+
     filterUserTrainingsPerDay(convertedDate);
   };
 
@@ -126,6 +120,7 @@ function CompletedWorkouts() {
     const newDate = convertStringToDate(dateForWorkout);
     newDate.setDate(newDate.getDate() + 1);
     const convertedDate = formatDateForTextField(newDate);
+    console.log(convertedDate);
     setDateForWorkout(convertedDate);
     filterUserTrainingsPerDay(convertedDate);
   };
@@ -147,7 +142,8 @@ function CompletedWorkouts() {
 
   const pages = [
     "Analysis",
-    "Preset Workouts",
+    /* 
+    "Preset Workouts", */
     "Body Tracker",
     "Settings",
     "Sign Out",
@@ -203,7 +199,7 @@ function CompletedWorkouts() {
   };
 
   if (userTrainingData === undefined) {
-    return <RetrievingYourData/>;
+    return <LoadingScreen text="Retrieving your data..." />;
   }
 
   const handleSelectCompletedExercise = (exerciseName: string) => {
@@ -323,12 +319,14 @@ function CompletedWorkouts() {
                 </ListItemIcon>
                 <ListItemText>Analysis</ListItemText>
               </MenuItem>
+              {/* 
               <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
                 <ListItemIcon>
                   <FormatListNumberedRtlIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Preset Workouts</ListItemText>
               </MenuItem>
+               */}
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
@@ -447,270 +445,258 @@ function CompletedWorkouts() {
       >
         <PostAddIcon />
       </Fab>
-      <Zoom in={true}>
-        <Box
-          className="AAAAThisIsPossiblyTheOtherThingThatWorks"
-          sx={{
-            paddingBottom: "64px",
-            gap: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {filteredUserTrainingData.length > 0 &&
-            filteredUserTrainingData.map(
-              (entry: IWorkoutData, index: number) => (
-                <Box
-                  className="exercises"
-                  display="flex"
-                  flexDirection="column"
-                  gap={0.75}
-                  key={index}
-                >
-                  {filteredUserTrainingData.length > 1 && (
-                    <Typography textAlign="center" variant="subtitle1">
-                      Workout Session {index + 1}
-                    </Typography>
-                  )}
 
-                  <Accordion sx={{ borderRadius: "4px" }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "100%",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Rating
-                        readOnly
-                        max={7}
-                        size="large"
-                        name="simple-controlled"
-                        sx={{ color: "#FFA500" }}
-                        value={entry.wEval.value}
-                        icon={<StarsIcon fontSize="inherit" />}
-                      />
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>"{entry.wEval.comment}"</Typography>
-                      <Box>
-                        <FormControlLabel
-                          control={<Switch />}
-                          label="Trained better than the last time?"
-                          checked={entry.wEval.trainHarder}
-                        />
-                        <FormControlLabel
-                          control={<Switch />}
-                          label="Warmed up & stretched properly?"
-                          checked={entry.wEval.warmStretch}
-                        />
-                        <FormControlLabel
-                          control={<Switch />}
-                          label="Any discomfort/pain?"
-                          checked={entry.wEval.feelPain}
-                        />
-                      </Box>
-                      <Box display="flex" justifyContent="space-around">
-                        <DataBadge dataValue={entry.power} dataLabel="PL" />
-                        <DataBadge
-                          dataValue={entry.stats.reps}
-                          dataLabel="reps"
-                        />
-                        <DataBadge
-                          dataValue={entry.stats.sets}
-                          dataLabel="sets"
-                        />
-                        <DataBadge
-                          dataValue={entry.stats.vol}
-                          dataLabel={
-                            currentUserData.unitsSystem === "metric"
-                              ? "kg"
-                              : "lbs"
-                          }
-                        />
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
-
-                  {entry.wExercises.map(
-                    (
-                      exercise: { name: string; exercises: Exercise[] },
-                      index: number
-                    ) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          borderRadius: "4px",
-                          boxShadow: 1,
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            textAlign: "center",
-                            fontSize: "large",
-                            background:
-                              "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                            boxShadow: 2,
-                            borderRadius: "4px",
-                          }}
-                          onClick={() =>
-                            handleSelectCompletedExercise(
-                              exercise.name.toLocaleUpperCase()
-                            )
-                          }
-                        >
-                          {exercise.name.toLocaleUpperCase()}
-                        </Typography>
-
-                        <Divider sx={{ backgroundColor: "aliceblue" }} />
-                        {exercise.exercises.map(
-                          (exercise: Exercise, exerciseIndex: number) => (
-                            <Box
-                              key={exerciseIndex}
-                              sx={{
-                                display: "grid",
-                                gridAutoFlow: "column",
-                                gridTemplateColumns: "1fr 1fr 4fr",
-                                justifyContent: "space-evenly",
-                                justifyItems: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              {exercise.comment ? ( // Check if 'comment' property exists
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  onClick={() =>
-                                    handleViewCommentModalVisibility(
-                                      exercise.comment
-                                    )
-                                  }
-                                >
-                                  <CommentIcon
-                                    sx={{
-                                      zIndex: 0,
-                                    }}
-                                  />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <CommentIcon style={{ opacity: 0 }} />
-                                </IconButton>
-                              )}
-
-                              {exercise.is_pr ? (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon
-                                    sx={{ zIndex: -1, color: "#520975" }}
-                                  />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon
-                                    sx={{ opacity: 0, zIndex: 0 }}
-                                  />
-                                </IconButton>
-                              )}
-
-                              <Box
-                                sx={{
-                                  display: "grid",
-                                  gridTemplateColumns:
-                                    "repeat(2, minmax(auto, 1fr))",
-                                  alignItems: "center",
-                                  justifyItems: "center",
-                                  width: "100%",
-                                  justifyContent: "space-evenly",
-                                  borderLeft: exercise.dropset
-                                    ? "5px solid red"
-                                    : "5px solid transparent",
-                                }}
-                              >
-                                {exercise.weight !== 0 && (
-                                  <Typography>
-                                    {`${exercise.weight.toFixed(2)} ${
-                                      currentUserData.unitsSystem === "metric"
-                                        ? "kg"
-                                        : "lbs"
-                                    }`}
-                                  </Typography>
-                                )}
-
-                                {exercise.reps !== 0 && (
-                                  <Typography>{exercise.reps} reps</Typography>
-                                )}
-
-                                {exercise.distance !== 0 && (
-                                  <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                                )}
-
-                                {exercise.time !== 0 && (
-                                  <Typography>
-                                    {exercise.time !== 0
-                                      ? formatTime(exercise.time)
-                                      : ""}
-                                  </Typography>
-                                )}
-                              </Box>
-
-                              <Divider />
-                            </Box>
-                          )
-                        )}
-                      </Box>
-                    )
-                  )}
-                </Box>
-              )
-            )}
-
-          {filteredUserTrainingData.length === 0 && (
-            <Paper
-              elevation={2}
-              sx={{
-                height: "calc(100dvh - 168px)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+      <Box
+        className="AAAAThisIsPossiblyTheOtherThingThatWorks"
+        sx={{
+          paddingBottom: "64px",
+          gap: 2,
+          display: "flex",
+          flexDirection: "column",
+        }}
+        ref={containerRef}
+      >
+        {filteredUserTrainingData.length > 0 &&
+          filteredUserTrainingData.map((entry: IWorkoutData, index: number) => (
+            <Box
+              className="exercises"
+              display="flex"
+              flexDirection="column"
+              gap={0.75}
+              key={index}
             >
-              <SearchIcon fontSize="large" />
-              <Typography textAlign="center" fontSize="1rem">
-                Workout log empty for this date.
-              </Typography>
-            </Paper>
-          )}
-        </Box>
-      </Zoom>
+              {filteredUserTrainingData.length > 1 && (
+                <Typography textAlign="center" variant="subtitle1">
+                  Workout Session {index + 1}
+                </Typography>
+              )}
+
+              <Accordion sx={{ borderRadius: "4px" }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                    alignItems: "center",
+                  }}
+                >
+                  <Rating
+                    readOnly
+                    max={7}
+                    size="large"
+                    name="simple-controlled"
+                    sx={{ color: "#FFA500" }}
+                    value={entry.wEval.value}
+                    icon={<StarsIcon fontSize="inherit" />}
+                  />
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>"{entry.wEval.comment}"</Typography>
+                  <Box>
+                    <FormControlLabel
+                      control={<Switch />}
+                      label="Trained better than the last time?"
+                      checked={entry.wEval.trainHarder}
+                    />
+                    <FormControlLabel
+                      control={<Switch />}
+                      label="Warmed up & stretched properly?"
+                      checked={entry.wEval.warmStretch}
+                    />
+                    <FormControlLabel
+                      control={<Switch />}
+                      label="Any discomfort/pain?"
+                      checked={entry.wEval.feelPain}
+                    />
+                  </Box>
+                  <Box display="flex" justifyContent="space-around">
+                    <DataBadge dataValue={entry.power} dataLabel="PL" />
+                    <DataBadge dataValue={entry.stats.reps} dataLabel="reps" />
+                    <DataBadge dataValue={entry.stats.sets} dataLabel="sets" />
+                    <DataBadge
+                      dataValue={entry.stats.vol}
+                      dataLabel={
+                        currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
+                      }
+                    />
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {entry.wExercises.map(
+                (
+                  exercise: { name: string; exercises: Exercise[] },
+                  index: number
+                ) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      borderRadius: "4px",
+                      boxShadow: 1,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        textAlign: "center",
+                        fontSize: "large",
+                        background:
+                          "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
+                        boxShadow: 2,
+                        borderRadius: "4px",
+                      }}
+                      onClick={() =>
+                        handleSelectCompletedExercise(
+                          exercise.name.toLocaleUpperCase()
+                        )
+                      }
+                    >
+                      {exercise.name.toLocaleUpperCase()}
+                    </Typography>
+
+                    <Divider sx={{ backgroundColor: "aliceblue" }} />
+                    {exercise.exercises.map(
+                      (exercise: Exercise, exerciseIndex: number) => (
+                        <Box
+                          key={exerciseIndex}
+                          sx={{
+                            display: "grid",
+                            gridAutoFlow: "column",
+                            gridTemplateColumns: "1fr 1fr 4fr",
+                            justifyContent: "space-evenly",
+                            justifyItems: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {exercise.comment ? ( // Check if 'comment' property exists
+                            <IconButton
+                              size="large"
+                              aria-label="account of current user"
+                              aria-controls="menu-appbar"
+                              aria-haspopup="true"
+                              onClick={() =>
+                                handleViewCommentModalVisibility(
+                                  exercise.comment
+                                )
+                              }
+                            >
+                              <CommentIcon
+                                sx={{
+                                  zIndex: 0,
+                                }}
+                              />
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              size="large"
+                              aria-label="account of current user"
+                              aria-controls="menu-appbar"
+                              aria-haspopup="true"
+                              color="inherit"
+                              disabled // Placeholder element
+                            >
+                              <CommentIcon style={{ opacity: 0 }} />
+                            </IconButton>
+                          )}
+
+                          {exercise.is_pr ? (
+                            <IconButton
+                              size="large"
+                              aria-label="account of current user"
+                              aria-controls="menu-appbar"
+                              aria-haspopup="true"
+                              color="inherit"
+                              disabled // Placeholder element
+                            >
+                              <EmojiEventsIcon
+                                sx={{ zIndex: -1, color: "#520975" }}
+                              />
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              size="large"
+                              aria-label="account of current user"
+                              aria-controls="menu-appbar"
+                              aria-haspopup="true"
+                              color="inherit"
+                              disabled // Placeholder element
+                            >
+                              <EmojiEventsIcon sx={{ opacity: 0, zIndex: 0 }} />
+                            </IconButton>
+                          )}
+
+                          <Box
+                            sx={{
+                              display: "grid",
+                              gridTemplateColumns:
+                                "repeat(2, minmax(auto, 1fr))",
+                              alignItems: "center",
+                              justifyItems: "center",
+                              width: "100%",
+                              justifyContent: "space-evenly",
+                              borderLeft: exercise.dropset
+                                ? "5px solid red"
+                                : "5px solid transparent",
+                            }}
+                          >
+                            {exercise.weight !== 0 && (
+                              <Typography>
+                                {`${exercise.weight.toFixed(2)} ${
+                                  currentUserData.unitsSystem === "metric"
+                                    ? "kg"
+                                    : "lbs"
+                                }`}
+                              </Typography>
+                            )}
+
+                            {exercise.reps !== 0 && (
+                              <Typography>{exercise.reps} reps</Typography>
+                            )}
+
+                            {exercise.distance !== 0 && (
+                              <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                            )}
+
+                            {exercise.time !== 0 && (
+                              <Typography>
+                                {exercise.time !== 0
+                                  ? formatTime(exercise.time)
+                                  : ""}
+                              </Typography>
+                            )}
+                          </Box>
+
+                          <Divider />
+                        </Box>
+                      )
+                    )}
+                  </Box>
+                )
+              )}
+            </Box>
+          ))}
+
+        {filteredUserTrainingData.length === 0 && (
+          <Paper
+            elevation={2}
+            sx={{
+              height: "calc(100dvh - 168px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <SearchIcon fontSize="large" />
+            <Typography textAlign="center" fontSize="1rem">
+              Workout log empty for this date.
+            </Typography>
+          </Paper>
+        )}
+      </Box>
     </Container>
   );
 }

@@ -1,7 +1,6 @@
 import groupDataOverall from "../utility/groupDataOverall";
 import getFlattenedOverallExerciseData from "../utility/getFlattenedOverallExerciseData";
-import { IWorkoutData } from "../../../firebaseDataFunctions/completeWorkout";
-
+import { IWorkoutData } from "../../../interfaces/IUserTrainingData";
 function getOverallStats(userTrainingData:IWorkoutData[]) {
 
     const flattenedData = getFlattenedOverallExerciseData(

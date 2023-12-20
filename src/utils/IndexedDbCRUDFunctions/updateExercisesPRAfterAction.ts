@@ -1,9 +1,9 @@
 import getIndexedDbExercises from "./getIndexedDbExercises";
-import { IWorkoutData } from "../firebaseDataFunctions/completeWorkout";
+
+import { IWorkoutData, Exercise } from "../interfaces/IUserTrainingData";
 import getFlattenedExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
 import { IIndexedDbUpdatedEntry } from "./checkExerciseIsPR";
 import { MaxExerciseData } from "./checkExerciseIsPR";
-import Exercise from "../interfaces/Exercise";
 import { getMaxObject } from "./checkExerciseIsPR";
 
 async function updateExercisesPRAfterAction(

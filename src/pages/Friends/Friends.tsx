@@ -23,7 +23,7 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Newsfeed from "./Newsfeed";
 import Container from "@mui/material/Container";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";

@@ -1,11 +1,14 @@
-import { IWorkoutData } from "./completeWorkout";
+import {
+  IWorkoutData,
+  IUserTrainingData,
+  Exercise,
+} from "../interfaces/IUserTrainingData";
 import { doc, collection, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { IUserTrainingData } from "../../context/TrainingData";
+import { IUserFeatsDataEntry } from "../interfaces/IUserFeats";
 import getFlattenedExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
 import getFlattenedAllExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedAllExerciseData";
-import { IUserFeatsDataEntry } from "../../context/TrainingData";
-import Exercise from "../interfaces/Exercise";
+
 import getOverallStats from "../completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
 import toast from "react-hot-toast";
 

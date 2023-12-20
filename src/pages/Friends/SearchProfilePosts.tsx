@@ -13,7 +13,7 @@ import { db } from "../../config/firebase";
 import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { Button,Typography } from "@mui/material";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 
 interface SearchProfilePostsProps {
   queriedUser: any;
@@ -97,7 +97,7 @@ function SearchProfilePosts({ queriedUser, id }: SearchProfilePostsProps) {
           height: "100%",
         }}
       >
-        <LoadingCircle />
+        <LoadingScreenCircle text="Please wait while we find the Dragon balls..."/>
       </Box>
     );
   }

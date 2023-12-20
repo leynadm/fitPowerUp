@@ -17,16 +17,15 @@ import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import CommentIcon from "@mui/icons-material/Comment";
 import ViewCommentModal from "../../components/ui/ViewCommentModal";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
-import CommentWorkoutModal from "./CompleteWorkoutModal";
+import CompleteWorkoutModal from "./CompleteWorkoutModal";
 import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CopyWorkoutModal from "../../components/ui/CopyWorkoutModal";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -41,7 +40,6 @@ function NewWorkout({
   const navigate = useNavigate();
 
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
-  const [openCopyWorkoutModal, setOpenCopyWorkoutModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
   const [openCompleteWorkoutModal, setOpenCompleteWorkoutModal] =
     useState(false);
@@ -67,7 +65,7 @@ function NewWorkout({
     navigate(`workout_categories/exercises/selected/${exerciseName}`);
   };
 
-  function handleCommentWorkoutModalVisibility() {
+  function CompleteWorkoutModalVisibility() {
     setOpenCompleteWorkoutModal(!openCompleteWorkoutModal);
   }
 
@@ -89,10 +87,6 @@ function NewWorkout({
       }}
       className="WrapperInsideNewWorkout"
     >
-      <CopyWorkoutModal
-        openCopyWorkoutModal={openCopyWorkoutModal}
-        setOpenCopyWorkoutModal={setOpenCopyWorkoutModal}
-      />
 
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
@@ -100,7 +94,8 @@ function NewWorkout({
         exerciseComment={exerciseComment}
       />
 
-      <CommentWorkoutModal
+
+      <CompleteWorkoutModal
         openCompleteWorkoutModal={openCompleteWorkoutModal}
         setOpenCompleteWorkoutModal={setOpenCompleteWorkoutModal}
         existingExercises={existingExercises}
@@ -165,7 +160,7 @@ function NewWorkout({
                       aria-controls="menu-appbar"
                       aria-haspopup="true"
                       color="inherit"
-                      onClick={handleCommentWorkoutModalVisibility}
+                      onClick={CompleteWorkoutModalVisibility}
                     >
                       <DoneOutlineIcon sx={{ color: "white" }} />
                     </IconButton>

@@ -1,6 +1,5 @@
-import { IWorkoutData } from "../firebaseDataFunctions/completeWorkout";
+import { IWorkoutData, Exercise } from "../interfaces/IUserTrainingData";
 import getFlattenedExerciseData from "../completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
-import Exercise from "../interfaces/Exercise";
 import getIndexedDbExercises from "./getIndexedDbExercises";
 
 export interface IIndexedDbUpdatedEntry {
@@ -21,7 +20,7 @@ export interface MaxExerciseData {
   maxReps: number | 0;
   maxDistance: number | 0;
   maxTime: number | 0;
-  maxVolume:number|0
+  maxVolume: number | 0;
 }
 
 async function checkExerciseIsPR(
@@ -50,22 +49,18 @@ async function checkExerciseIsPR(
   if (!maxEntry) {
     return;
   }
-  const maxResultsArr = getMaxResultsArr(combinedArray)
-  console.log('INSIDE SAVING THE FIRST EXERCISE')
-  console.log({maxEntry})
-  console.log(updatedEntryToSave)
+  const maxResultsArr = getMaxResultsArr(combinedArray);
+  console.log("INSIDE SAVING THE FIRST EXERCISE");
+  console.log({ maxEntry });
+  console.log(updatedEntryToSave);
 
   if (updatedEntryToSave.reps !== 0 && updatedEntryToSave.weight !== 0) {
     if (
       (updatedEntryToSave.reps >= maxEntry.maxReps &&
-        updatedEntryToSave.weight > maxEntry.maxWeight)
-         ||
-        
-         (updatedEntryToSave.reps > maxEntry.maxReps &&
-        updatedEntryToSave.weight >= maxEntry.maxWeight) 
-        ||
-      
-        updatedEntryToSave.reps > maxEntry.maxReps ||
+        updatedEntryToSave.weight > maxEntry.maxWeight) ||
+      (updatedEntryToSave.reps > maxEntry.maxReps &&
+        updatedEntryToSave.weight >= maxEntry.maxWeight) ||
+      updatedEntryToSave.reps > maxEntry.maxReps ||
       updatedEntryToSave.weight > maxEntry.maxWeight
     ) {
       isPR = true;
@@ -73,8 +68,6 @@ async function checkExerciseIsPR(
     }
 
     //cHECK IF THE NEW ENTRY IS EQUAL TO THE HIGHEST MAXARRAY VALUES (REPS/WEIGHT)
-
-
   }
 
   if (updatedEntryToSave.distance !== 0 && updatedEntryToSave.time !== 0) {
@@ -178,13 +171,16 @@ async function checkExerciseIsPR(
   return isPR;
 }
 
-
-export function getMaxResultsArr(
-  newCombinedArr:Exercise[]|undefined)
-{
+export function getMaxResultsArr(newCombinedArr: Exercise[] | undefined) {
   if (!newCombinedArr) {
-    return { maxWeight: [], maxReps: [], maxDistance: [], maxTime: [],maxVolume:[] };
-  }  
+    return {
+      maxWeight: [],
+      maxReps: [],
+      maxDistance: [],
+      maxTime: [],
+      maxVolume: [],
+    };
+  }
 
   const maxResultsArrObj: {
     maxWeight: number[];
@@ -202,27 +198,33 @@ export function getMaxResultsArr(
 
   for (let index = 0; index < newCombinedArr.length; index++) {
     const newCombinedArrElement = newCombinedArr[index];
-    maxResultsArrObj.maxWeight.push(newCombinedArrElement.weight)
-    maxResultsArrObj.maxReps.push(newCombinedArrElement.reps)
-    maxResultsArrObj.maxTime.push(newCombinedArrElement.time)
-    maxResultsArrObj.maxDistance.push(newCombinedArrElement.distance)
-    maxResultsArrObj.maxVolume.push(newCombinedArrElement.reps*newCombinedArrElement.weight)
+    maxResultsArrObj.maxWeight.push(newCombinedArrElement.weight);
+    maxResultsArrObj.maxReps.push(newCombinedArrElement.reps);
+    maxResultsArrObj.maxTime.push(newCombinedArrElement.time);
+    maxResultsArrObj.maxDistance.push(newCombinedArrElement.distance);
+    maxResultsArrObj.maxVolume.push(
+      newCombinedArrElement.reps * newCombinedArrElement.weight
+    );
   }
-/* 
+  /* 
     maxResultsArrObj.maxWeight.sort((a, b) => a - b);
     maxResultsArrObj.maxReps.sort((a, b) => a - b);
     maxResultsArrObj.maxTime.sort((a, b) => a - b);
     maxResultsArrObj.maxDistance.sort((a, b) => a - b);
     maxResultsArrObj.maxVolume.sort((a, b) => a - b);    
  */
-  return maxResultsArrObj
+  return maxResultsArrObj;
 }
 
-export function getMaxObject(
-  newCombinedArr: Exercise[] | undefined
-) {
+export function getMaxObject(newCombinedArr: Exercise[] | undefined) {
   if (!newCombinedArr) {
-    return { maxWeight: 0, maxReps: 0, maxDistance: 0, maxTime: 0,maxVolume:0 };
+    return {
+      maxWeight: 0,
+      maxReps: 0,
+      maxDistance: 0,
+      maxTime: 0,
+      maxVolume: 0,
+    };
   }
 
   const maxObject: MaxExerciseData = newCombinedArr.reduce(
@@ -241,10 +243,10 @@ export function getMaxObject(
       }
       return accumulator;
     },
-    { maxWeight: 0, maxReps: 0, maxDistance: 0, maxTime: 0,maxVolume:0 }
+    { maxWeight: 0, maxReps: 0, maxDistance: 0, maxTime: 0, maxVolume: 0 }
   );
 
-  maxObject.maxVolume=maxObject.maxReps*maxObject.maxWeight
+  maxObject.maxVolume = maxObject.maxReps * maxObject.maxWeight;
 
   return maxObject;
 }

@@ -1,4 +1,4 @@
-import Exercise from "../../interfaces/Exercise";
+import { Exercise } from "../../interfaces/IUserTrainingData";
 import { format, getISOWeek } from "date-fns";
 
 function groupDataByTimePeriodAverage(

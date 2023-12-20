@@ -11,9 +11,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import VerifiedIcon from "@mui/icons-material/Verified";
 import RedditIcon from "@mui/icons-material/Reddit";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { useContext } from "react";
 import updateUnitSystemPreference from "../../utils/firebaseDataFunctions/updateUnitSystemPreference";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -22,21 +21,22 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { AuthContext } from "../../context/Auth";
 import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
-import { fetchUserBodyTrackerData } from "../../context/TrainingData";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { useNavigate } from "react-router-dom";
 import updateDefaultWeightIncrement from "../../utils/firebaseDataFunctions/updateDefaultWeightIncrement";
-import { fetchUserTrainingData } from "../../context/TrainingData";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import getFlattenedExercisesForExport from "../../utils/progressFunctions/getFlattenedExercisesForExport";
 import getFlattenedWorkoutsForExport from "../../utils/progressFunctions/getFlattenedWorkoutsForExport";
-import CoffeeIcon from '@mui/icons-material/Coffee';
+import ResetTrainingDataModal from "../../components/ui/ResetTrainingDataModal";
 function Settings() {
-  const {
-    userTrainingData,
-    userBodyTrackerData,
-    setUserTrainingData,
-    setUserBodyTrackerData,
-  } = useContext(TrainingDataContext);
+  const { userTrainingData, fetchUserTrainingData } = useContext(
+    UserTrainingDataContext
+  );
+
+  const { userBodyTrackerData, fetchUserBodyTrackerData } = useContext(
+    BodyTrackerDataContext
+  );
+
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
 
@@ -46,17 +46,19 @@ function Settings() {
     currentUserData.unitsSystem
   );
 
-  const myEmailName= 'fitpowerupapp'
-  const emailClient = 'gmail.com'
+  const [openResetTrainingData, setOpenResetTrainingData] = useState(false);
+
+  const myEmailName = "fitpowerupapp";
+  const emailClient = "gmail.com";
 
   const navigate = useNavigate();
-  
+
   const [shouldDownload, setShouldDownload] = useState(false);
 
-    // Function to handle button click
-    const handleDownloadClick = () => {
-      setShouldDownload(true);
-    };
+  // Function to handle button click
+  const handleDownloadClick = () => {
+    setShouldDownload(true);
+  };
 
   const handleDefaultWeightIncrementChange = (event: SelectChangeEvent) => {
     setUpdatedDefaultWeightIncrement(event.target.value);
@@ -75,7 +77,7 @@ function Settings() {
     );
     await fetchCurrentUserData(currentUser, setCurrentUserData);
   }
- 
+
   async function handleUpdateUnitsSystemChange() {
     await updateUnitSystemPreference(
       userTrainingData,
@@ -85,14 +87,46 @@ function Settings() {
       currentUser.uid
     );
     await fetchCurrentUserData(currentUser, setCurrentUserData);
-    await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
-    await fetchUserTrainingData(currentUser, setUserTrainingData);
+    await fetchUserBodyTrackerData();
+    await fetchUserTrainingData();
   }
 
+  const flattenedExerciseData =
+    getFlattenedExercisesForExport(userTrainingData);
+  const flattenedWorkoutData = getFlattenedWorkoutsForExport(userTrainingData);
 
-  const flattenedExerciseData = getFlattenedExercisesForExport(userTrainingData)
-  const flattenedWorkoutData = getFlattenedWorkoutsForExport(userTrainingData)
-  
+  const exercisesHeaders = [
+    { label: "Date", key: "date" },
+    { label: "Exercise", key: "exercise" },
+    { label: "Muscle Group", key: "group" },
+    { label: "Weight", key: "weight" },
+    { label: "Reps", key: "reps" },
+    { label: "Distance", key: "distance" },
+    { label: "Distance Unit", key: "distance_unit" },
+    { label: "Time", key: "time" },
+    { label: "Dropset", key: "dropset" },
+    { label: "PR Check", key: "is_pr" },
+    { label: "Comment", key: "comment" },
+    { label: "ID Order", key: "idOrder" },
+    { label: "Workout ID", key: "workoutId" },
+  ];
+
+  const workoutHeaders = [
+    { label: "Workout ID", key: "id" },
+    { label: "Date", key: "date" },
+    { label: "Workout Power Level", key: "power" },
+    { label: "Reps", key: "reps" },
+    { label: "Volume", key: "vol" },
+    { label: "Comment", key: "comment" },
+    { label: "Pain Check", key: "feelPain" },
+    { label: "Train Harder Check", key: "trainHarder" },
+    { label: "Stretch & Warm-up Check", key: "warmStretch" },
+    { label: "Workout Rating", key: "value" },
+  ];
+
+  function handleResetTrainingData() {
+    setOpenResetTrainingData(!openResetTrainingData);
+  }
 
   return (
     <Container
@@ -104,6 +138,10 @@ function Settings() {
         flexDirection: "column",
       }}
     >
+      <ResetTrainingDataModal
+        openResetTrainingData={openResetTrainingData}
+        setOpenResetTrainingData={setOpenResetTrainingData}
+      />
       <AppBar
         elevation={3}
         position="fixed"
@@ -282,32 +320,33 @@ function Settings() {
                 The Export Exercises performs a minimalist export containing
                 only exercise data, including specific KPI values (weight, reps,
                 etc.) together with exercise comments and metadata.
-                {/* 
-                 When uploading previously exported data to fitPowerUp, you can choose to import only the exercise value, although workout metadata values like workout comments, workout rating, etc. will NOT be included.
-               */}
-                 </Typography>
+              </Typography>
               <Button variant="dbz_mini" style={{ width: "15rem" }}>
                 <CSVLink
                   data={flattenedExerciseData}
                   filename="fitPowerUp_Export.csv"
                   target="_blank"
                   style={{ textDecoration: "none" }}
+                  headers={exercisesHeaders}
                 >
                   Export Exercises
                 </CSVLink>
               </Button>
 
               <Typography variant="body2">
-                The Export Workouts function performs an export of workout level data, specifically workout comments, workout rating, as well as KPIs.                
+                The Export Workouts function performs an export of workout level
+                data, specifically workout comments, workout rating, as well as
+                KPIs.
                 {/* 
                  When uploading previously exported data to fitPowerUp, you can choose to import only the exercise value, although workout metadata values like workout comments, workout rating, etc. will NOT be included.
                */}
-                 </Typography>
+              </Typography>
               <Button variant="dbz_mini" style={{ width: "15rem" }}>
                 <CSVLink
                   data={flattenedWorkoutData}
                   filename="fitPowerUp_Workouts_Export.csv"
                   target="_blank"
+                  headers={workoutHeaders}
                   style={{ textDecoration: "none" }}
                 >
                   Export Workouts
@@ -327,13 +366,17 @@ function Settings() {
               Import a compatible dataset to fitPowerUp.
             </Typography>
             <Box pt="8px">
-              <Button variant="dbz_mini"
-              onClick={()=>navigate("import-data")}
-              >Go To Import</Button>
+              <Button
+                variant="dbz_mini"
+                onClick={() => navigate("import-data")}
+              >
+                Go To Import
+              </Button>
             </Box>
           </CardContent>
         </Card>
 
+        {/* 
         <Card>
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
@@ -341,7 +384,7 @@ function Settings() {
             </Typography>
 
             <Typography variant="body2">
-              Delete all your account data! This includes your training data,
+              Delete all your account data! This includes your workouts data,
               body tracker data as well as personal data - including photos,
               posts, power level, feats, etc. Your registered email address will
               be removed from all fitPowerUp systems and you will be logged out
@@ -355,6 +398,31 @@ function Settings() {
             </Typography>
             <Box pt="8px">
               <Button variant="dbz_mini">Delete Account</Button>
+            </Box>
+          </CardContent>
+        </Card>
+        */}
+
+        <Card>
+          <CardContent>
+            <Typography color="text.secondary" gutterBottom>
+              Reset Your Training Data
+            </Typography>
+
+            <Typography variant="body2">
+              Delete your training data, including your workouts data, body
+              tracker, power level and feats, etc.
+              <br />
+              This process is{" "}
+              <strong>
+                permanent and irreversible, and no data can be recovered
+                afterwards!
+              </strong>
+            </Typography>
+            <Box pt="8px">
+              <Button variant="dbz_mini" onClick={handleResetTrainingData}>
+                Reset Training Data
+              </Button>
             </Box>
           </CardContent>
         </Card>
@@ -372,10 +440,11 @@ function Settings() {
               about the app by pressing the button below.
             </Typography>
             <Box pt="8px">
-              <Button variant="dbz_mini" 
-              href={`mailto:${myEmailName}@${emailClient}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              <Button
+                variant="dbz_mini"
+                href={`mailto:${myEmailName}@${emailClient}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Send Feedback
               </Button>
@@ -437,46 +506,13 @@ function Settings() {
               app.
             </Typography>
 
-            <Box pt="8px"
-            
-            >
-              <Button variant="dbz_mini"
-              onClick={()=>navigate("development-log")}
-              >SEE DEVELOPMENT LOG</Button>
-            </Box>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <Typography
-              color="text.secondary"
-              gutterBottom
-              sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-            >
-              Buy Me A Coffee (or Protein Shake)
-              <VerifiedIcon
-                sx={{ color: "#3f51b5", width: "1rem", height: "1rem" }}
-              />
-            </Typography>
-
-            <Typography variant="body2">
-              Hey there, Daniel here!
-              <br />
-              <strong>fitPowerUp</strong> is a passion project I developed in my
-              spare time as a hobby, mainly due to my enjoyment of weightlifting
-              and Dragon Ball Z. The app always was and always will be free. No
-              payment is required in order to use the app. Now, in case you{" "}
-              <em>absolutely voluntarily</em> choose to support me as an
-              independent developer, you can buy me a coffee (or a protein
-              shake) here.
-            </Typography>
-
             <Box pt="8px">
-              <Button variant="dbz_mini"
-
-              href="https://www.buymeacoffee.com/danielmatei" target="_blank"
-              >Buy Me A Coffee <CoffeeIcon/></Button>
+              <Button
+                variant="dbz_mini"
+                onClick={() => navigate("development-log")}
+              >
+                SEE DEVELOPMENT LOG
+              </Button>
             </Box>
           </CardContent>
         </Card>

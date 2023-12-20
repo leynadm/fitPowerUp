@@ -1,18 +1,22 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext} from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
-import LaunchingApp from "../pages/Login/Launching";
+import LoadingScreen from "../components/ui/LoadingScreen";
+import Box from "@mui/material/Box";
 interface AuthRouteProps {
   type: "home" | "login" | "signup" | "/" | "launching";
 }
-
 const AuthRoute = ({ type }: AuthRouteProps) => {
   const { currentUser, loginFetchTrigger } = useContext(AuthContext);
 
   if (!loginFetchTrigger) {
     // Render a loading state or a spinner while authentication is resolving
-    return <LaunchingApp />;
-  }
+    return( 
+    <Box height="100svh" display="flex" justifyContent="center" alignItems="center" flexDirection="column"> 
+
+    <LoadingScreen text="Connecting to the server..." />
+    </Box>)
+  } 
 
   if (type === "login") {
     return currentUser === null ? (

@@ -1,17 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserSelectedExercises } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import Container from "@mui/material/Container";
 import { Typography, Box } from "@mui/material";
 import Replay10Icon from "@mui/icons-material/Replay10";
 import ScaleIcon from "@mui/icons-material/Scale";
-import TimesOneMobiledataIcon from "@mui/icons-material/TimesOneMobiledata";
-import LuggageIcon from "@mui/icons-material/Luggage";
+
 import FunctionsIcon from "@mui/icons-material/Functions";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-import Exercise from "../../utils/interfaces/Exercise";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 import { AuthContext } from "../../context/Auth";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -21,8 +19,10 @@ import toast from "react-hot-toast";
 
 function CompletedDetailsOverview() {
   const { exerciseName } = useParams();
-  const { userTrainingData, dateForWorkout } =
-    useContext(TrainingDataContext);
+  const { userTrainingData, dateForWorkout } = useContext(
+    UserTrainingDataContext
+  );
+
   const { currentUserData } = useContext(AuthContext);
   const historicStats = getHistoricWorkoutStatsForExercise();
   const workoutStatus = getWorkoutStatsForExercise();
@@ -187,14 +187,6 @@ function CompletedDetailsOverview() {
     return historicStats;
   }
 
-
-  /* 
-  const exerciseSelected: IUserSelectedExercises =
-    userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) =>
-        exercise.name.toUpperCase() === exerciseName?.toUpperCase()
-    ); */
-
   return (
     <Container maxWidth="md" sx={{ paddingBottom: "80px" }}>
       <Typography
@@ -232,14 +224,10 @@ function CompletedDetailsOverview() {
               <CircularProgress />
             </Box>
           ) : (
-            <Box
-            
-            >
+            <Box>
               <img
                 src={exerciseImgURL}
-                style={{ minHeight: "100%", objectFit: "cover",
-              
-              }}
+                style={{ minHeight: "100%", objectFit: "cover" }}
                 width="100%"
                 height="100%"
                 alt=""

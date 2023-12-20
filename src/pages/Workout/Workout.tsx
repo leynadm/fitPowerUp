@@ -1,18 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-} from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import CompletedWorkoutsTabs from "./CompletedWorkoutsTabs";
 import { Routes, Route } from "react-router-dom";
 import NewWorkout from "./NewWorkout";
 import ExerciseSelected from "./ExerciseSelected";
 import Settings from "../Settings/Settings";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import WorkoutCalendar from "./WorkoutCalendar";
-import getExercisesByDate from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import BodyTracker from "../BodyTracker/BodyTracker";
 import Analysis from "../Analysis/Analysis";
 import SendFeedback from "../Settings/SendFeedback";
@@ -23,6 +16,7 @@ import ExerciseSelectionMenu from "./ExerciseSelectionMenu";
 import TermsAndConditions from "../Login/TermsAndConditions";
 import ImportData from "../Settings/ImportData";
 import DevelopmentLog from "../Settings/DevelopmentLog";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -31,6 +25,9 @@ interface HomeProps {
 }
 
 function Workout({ existingExercises, setExistingExercises }: HomeProps) {
+  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
+  console.log(userExercisesLibrary);
+
   return (
     <Routes>
       <Route
@@ -54,7 +51,7 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       <Route path="settings/send-feedback" element={<SendFeedback />} />
 
       <Route
-        path="/new/workout_categories/exercises/selected/:exerciseName/*"
+        path="/new/workout_categories/exercises/:selectedMuscleGroup/selected/:exerciseName/*"
         element={<ExerciseSelected />}
       />
 
@@ -64,7 +61,7 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       />
 
       <Route
-        path="/new/workout_categories/exercises"
+        path="/new/workout_categories/exercises/:selectedMuscleGroup/*"
         element={<ExerciseSelectionMenu />}
       />
 

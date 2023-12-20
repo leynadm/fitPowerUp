@@ -1,6 +1,5 @@
-import { IWorkoutData } from "../../firebaseDataFunctions/completeWorkout";
-import Exercise from "../../interfaces/Exercise";
- 
+import { IWorkoutData,Exercise } from "../../interfaces/IUserTrainingData";
+
 function getFlattenedExerciseData(userTrainingData:IWorkoutData[],exerciseName:string,timeframe:string) {
  
      if (!exerciseName) {

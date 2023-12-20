@@ -1,4 +1,4 @@
-import { IWorkoutData } from "../firebaseDataFunctions/completeWorkout";
+import { IWorkoutData } from "../interfaces/IUserTrainingData";
 interface IWorkoutExportData {
   date: string;
   id: string;

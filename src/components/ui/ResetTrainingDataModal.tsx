@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import WarningIcon from "@mui/icons-material/Warning";
-
+import resetTrainingData from "../../utils/firebaseDataFunctions/resetTrainingData";
+import { AuthContext } from "../../context/Auth";
+import { auth } from "../../config/firebase";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -18,22 +20,28 @@ const style = {
 };
 
 interface ParentComponentProps {
-  openDeleteAllData: boolean;
-  setOpenDeleteAllData: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDeleteAllEntries: () => void;
+  openResetTrainingData: boolean;
+  setOpenResetTrainingData: Dispatch<SetStateAction<boolean>>;
 }
 
-function DeleteAllDataModal({
-  openDeleteAllData,
-  setOpenDeleteAllData,
-  handleDeleteAllEntries,
+function ResetTrainingDataModal({
+  openResetTrainingData,
+  setOpenResetTrainingData,
 }: ParentComponentProps) {
-  const handleClose = () => setOpenDeleteAllData(false);
+  const { currentUser } = useContext(AuthContext);
+  const handleClose = () => setOpenResetTrainingData(false);
+
+  async function handleResetTrainingData(){
+
+    await resetTrainingData(currentUser.uid)
+    auth.signOut()
+    setOpenResetTrainingData(false)
+  }
 
   return (
     <div>
       <Modal
-        open={openDeleteAllData}
+        open={openResetTrainingData}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -45,12 +53,14 @@ function DeleteAllDataModal({
             component="h2"
             sx={{ display: "flex", alignItems: "center", gap: 1 }}
           >
-            <WarningIcon /> Warning
+            <WarningIcon style={{ color: "red" }} /> Warning
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            You are about to delete <strong>ALL</strong> your exercise data!
-            <br></br>The data will be exported before being erased, and a file
-            will be saved on your device.<br></br>
+            You are about to delete <strong>ALL</strong> your training data,
+            specifically your workouts data, bodytracker data, power and feats
+            data, etc. Your social media activity will be preserved.<br></br>
+            <strong>This process cannot be reversed!</strong>
+            <br />
             Please ensure that you want to proceed with the deletion process
             before taking this action!
           </Typography>
@@ -60,15 +70,15 @@ function DeleteAllDataModal({
             }}
           >
             <Button
-              variant="contained"
+              variant="dbz_save"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={handleDeleteAllEntries}
+              onClick={handleResetTrainingData}
             >
               DELETE
             </Button>
             <Button
-              variant="contained"
+              variant="dbz_clear"
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >
@@ -81,4 +91,4 @@ function DeleteAllDataModal({
   );
 }
 
-export default DeleteAllDataModal;
+export default ResetTrainingDataModal;

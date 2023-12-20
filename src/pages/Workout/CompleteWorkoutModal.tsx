@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction, useContext } from "react";
+import React, { useState, Dispatch, SetStateAction, useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -11,19 +11,21 @@ import StarsIcon from "@mui/icons-material/Stars";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
 import uuid from "react-uuid";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import completeWorkout from "../../utils/firebaseDataFunctions/completeWorkout";
 import { AuthContext } from "../../context/Auth";
 import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
 import calculateOneRepMax from "../../utils/progressFunctions/calculateOneRepMax";
 import deleteAllEntries from "../../utils/IndexedDbCRUDFunctions/deleteAllEntries";
 import { useNavigate } from "react-router-dom";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { fetchUserTrainingData } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
-import { fetchUserFeatsData } from "../../context/TrainingData";
 import getUserWeight from "../../utils/getUserWeight";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -56,28 +58,55 @@ function CompleteWorkoutModal({
     formatDateForTextField(new Date())
   );
   const { currentUser } = useContext(AuthContext);
-  
-  const isOnline = useOnlineStatus()
-  
-  const {
-    setUserTrainingData,
-    userTrainingData,
-    userFeatsData,
-    setUserFeatsData,
-    userBodyTrackerData,
-  } = useContext(TrainingDataContext);
+
+  const isOnline = useOnlineStatus();
+
+  const { userTrainingData, refetchUserTrainingData } = useContext(
+    UserTrainingDataContext
+  );
+  const { userBodyTrackerData,refetchUserBodyTrackerData } = useContext(BodyTrackerDataContext);
+
+  const { userFeatsData, refetchUserFeatsData } =
+    useContext(UserFeatsDataContext);
   const navigate = useNavigate();
 
+
+  useEffect(()=>{
+
+    if(userBodyTrackerData.length===0 && userFeatsData.length===0){
+      const fetchData = async () => {
+        await refetchUserBodyTrackerData();
+        await refetchUserTrainingData();
+        await refetchUserFeatsData()
+      };
+  
+      fetchData();
+    }
+
+  },[])
+
+  
+  let userBodyWeight = 0;
+
+  if(userBodyTrackerData.length>0){
+    userBodyWeight =getUserWeight(userBodyTrackerData);
+
+  }
+
+
+
+  if(userBodyTrackerData.length===0){
+    return(
+      <LoadingScreenCircle text="Please wait, Yamcha needs a band-aid..."/>
+    )
+
+  }
   const userTrainingDataSize = userTrainingData.length;
 
   function handleClose() {
     setOpenCompleteWorkoutModal(false);
   }
 
-  console.log(userBodyTrackerData);
-
-  const userBodyWeight = getUserWeight(userBodyTrackerData);
-  
   function markTrainHarderCheck() {
     setTrainHarderCheck((prevState) => !prevState);
   }
@@ -91,7 +120,10 @@ function CompleteWorkoutModal({
   }
 
   async function handleCompleteWorkout() {
-    const existingExercisesArr = convertDateEntriesToWorkout(existingExercises,workoutDate);
+    const existingExercisesArr = convertDateEntriesToWorkout(
+      existingExercises,
+      workoutDate
+    );
 
     const workoutSessionPowerLevel =
       calculateWorkoutPowerLevel(existingExercises);
@@ -115,17 +147,17 @@ function CompleteWorkoutModal({
       power: workoutSessionPowerLevel,
       wExercises: existingExercisesArr,
     };
-    console.log('logging workout data:')
-    console.log(workoutData)
+    console.log("logging workout data:");
+    console.log(workoutData);
     try {
       await completeWorkout(currentUser.uid, workoutData, userTrainingDataSize);
       await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
 
       deleteAllEntries();
 
-      await fetchUserTrainingData(currentUser, setUserTrainingData);
+      await refetchUserTrainingData();
 
-      await fetchUserFeatsData(currentUser, setUserFeatsData);
+      await refetchUserFeatsData();
 
       navigate("congratulations", {
         state: { workoutData },
@@ -241,7 +273,7 @@ function CompleteWorkoutModal({
               onClick={handleCompleteWorkout}
               disabled={!isOnline}
             >
-              {isOnline?'Complete':'Reconecting...'}
+              {isOnline ? "Complete" : "Reconecting..."}
             </Button>
             <Button
               variant="dbz_clear"
@@ -259,10 +291,9 @@ function CompleteWorkoutModal({
 
 export default CompleteWorkoutModal;
 
-
 export function convertDateEntriesToWorkout(
   existingExercises: { name: string; exercises: Exercise[] }[],
-  workoutDate:string
+  workoutDate: string
 ) {
   const existingExercisesArr = existingExercises;
 
@@ -290,7 +321,7 @@ export function calculateWorkoutSessionStats(
   let totalReps = 0;
   let totalSets = 0;
   let totalWeight = 0;
-  
+
   for (let index = 0; index < existingExercisesArr.length; index++) {
     const exerciseEntry = existingExercisesArr[index];
     const exerciseEntryExercises = exerciseEntry.exercises;
@@ -343,10 +374,7 @@ export function calculateWorkoutPowerLevel(
       exercise.weight > 0 &&
       exercise.reps > 0
     ) {
-      const exerciseWeight = calculateOneRepMax(
-        exercise.weight,
-        exercise.reps
-      );
+      const exerciseWeight = calculateOneRepMax(exercise.weight, exercise.reps);
       totalWeight = totalWeight + exerciseWeight;
     }
   }

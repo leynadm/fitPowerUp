@@ -9,19 +9,6 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import ListSubheader from "@mui/material/ListSubheader";
 import { timeframeOptions } from "../../utils/completedWorkoutsChartFunctions/statisticsOptions";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
-import groupDataByMuscleG from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleG";
-import getNumberOfRepsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfRepsByMuscleGroup";
-import getFlattenedOverallMuscleGroupData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallMuscleGroupData";
-import getTrainingVolumeByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getTrainingVolumeByMuscleGroup";
-import groupDataByWorkoutsMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByWorkoutsMuscleGroups";
-import groupDataByWorkoutsExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByWorkoutsExercise";
-import getNumberOfSetsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfSetsByMuscleGroup";
-import getNumberOfWorkoutsByMuscleGroup from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/muscleGroups/getNumberOfWorkoutsByMuscleGroup";
-import getNumberOfRepsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfRepsByExercise";
-import getNumberOfSetsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfSetsByExercise";
-import getNumberOfWorkoutsByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getNumberOfWorkoutsByExercise";
-import getTrainingVolumeByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getTrainingVolumeByExercise";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
 import Replay10Icon from "@mui/icons-material/Replay10";
 import ScaleIcon from "@mui/icons-material/Scale";
@@ -30,10 +17,9 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import getMenuMaxHeight from "../../utils/miscelaneous/getMenuMaxHeight";
 import getOverallStats from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/exercises/getOverallStats";
-import groupDataByMuscleGForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByMuscleGForVolume";
 import capitalizeWords from "../../utils/capitalizeWords";
 import Paper from "@mui/material/Paper";
-
+import fetchModeledDataBreakdown from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/fetchModeldDataBreakdown";
 import {
   Radar,
   RadarChart,
@@ -48,7 +34,7 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 
 import { useContext } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import {
   Typography,
@@ -60,10 +46,6 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import groupDataByExerciseForVolume from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExerciseForVolume";
-import groupDataByExercise from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/groupDataByExercise";
-import getFlattenedOverallExerciseData from "../../utils/completedWorkoutsChartFunctions/breakdownFunctions/utility/getFlattenedOverallExerciseData";
-import toast from "react-hot-toast";
 
 interface TreemapNode {
   name: string;
@@ -71,7 +53,7 @@ interface TreemapNode {
 }
 
 function ExerciseBreakdownAnalysis() {
-  const { userTrainingData } = useContext(TrainingDataContext);
+  const { userTrainingData } = useContext(UserTrainingDataContext);
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m");
   const [selectedKPI, setSelectedKPI] = useState(
@@ -87,7 +69,6 @@ function ExerciseBreakdownAnalysis() {
     | undefined
   >([]);
 
-  console.log(modeledData);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -95,27 +76,61 @@ function ExerciseBreakdownAnalysis() {
     const clickedKPi = event.target.value;
     setSelectedKPI(clickedKPi);
 
-    setModeledData(
-      fetchModeledData(
-        userTrainingData,
-        clickedKPi,
-        selectedTimeframe,
-        startDate,
-        endDate
-      )
+    const modeledDataResult = fetchModeledDataBreakdown(
+      userTrainingData,
+      clickedKPi,
+      selectedTimeframe,
+      startDate,
+      endDate
     );
+
+    if (!modeledDataResult) {
+      return;
+    }
+
+    // Check the dataType to determine how to handle the result
+    if (
+      modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(true);
+    } else if (
+      !modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(false);
+    }
   };
 
   useEffect(() => {
-    setModeledData(
-      fetchModeledData(
-        userTrainingData,
-        selectedKPI,
-        selectedTimeframe,
-        startDate,
-        endDate
-      )
+    const modeledDataResult = fetchModeledDataBreakdown(
+      userTrainingData,
+      selectedKPI,
+      selectedTimeframe,
+      startDate,
+      endDate
     );
+
+    if (!modeledDataResult) {
+      return;
+    }
+
+    // Check the dataType to determine how to handle the result
+    if (
+      modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(true);
+    } else if (
+      !modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(false);
+    }
   }, []);
 
   const handleStandardTimeframeChange = (option: any) => {
@@ -123,308 +138,36 @@ function ExerciseBreakdownAnalysis() {
     setSelectedTimeframe(clickedTimeframe); // Update the selected timeframe
     setStartDate("");
     setEndDate("");
-    setModeledData(
-      fetchModeledData(userTrainingData, selectedKPI, clickedTimeframe, "", "")
+
+    const modeledDataResult = fetchModeledDataBreakdown(
+      userTrainingData,
+      selectedKPI,
+      clickedTimeframe,
+      "",
+      ""
     );
+
+    if (!modeledDataResult) {
+      return;
+    }
+
+    // Check the dataType to determine how to handle the result
+    if (
+      modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(true);
+    } else if (
+      !modeledDataResult.muscleGroupChartCheck &&
+      modeledDataResult?.standardData
+    ) {
+      setModeledData(modeledDataResult.standardData);
+      setMuscleGroupChart(false);
+    }
   };
 
   const overallStatsObj = getOverallStats(userTrainingData);
-
-  // MUSCLE GROUPS ONLY - 4 FUNCTIONS
-
-  function handleGetNumberOfRepsByMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
-
-    const modeledData = groupedData
-      ? getNumberOfRepsByMuscleGroup(groupedData)
-      : [];
-
-    return modeledData;
-  }
-
-  function handleGetNumberOfSetsByMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData ? groupDataByMuscleG(flattenedData) : [];
-
-    const modeledData = groupedData
-      ? getNumberOfSetsByMuscleGroup(groupedData)
-      : [];
-
-    return modeledData;
-  }
-
-  function handleGetNumberOfWorkoutsByMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-    const groupedData = flattenedData
-      ? groupDataByWorkoutsMuscleGroup(flattenedData)
-      : [];
-
-    const modeledData = groupedData
-      ? getNumberOfWorkoutsByMuscleGroup(groupedData)
-      : [];
-
-    return modeledData;
-  }
-
-  function handleGetTrainingVolumeByMuscleGroup(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallMuscleGroupData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData
-      ? groupDataByMuscleGForVolume(flattenedData)
-      : [];
-
-    const modeledData = groupedData
-      ? getTrainingVolumeByMuscleGroup(groupedData)
-      : [];
-
-    return modeledData;
-  }
-
-  // EXERCISE GROUPS ONLY ONLY - 4 FUNCTIONS
-
-  function handleGetNumberOfRepsByExercise(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallExerciseData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
-
-    const modeledData = groupedData
-      ? getNumberOfRepsByExercise(groupedData)
-      : [];
-
-    if (modeledData) {
-      modeledData.sort((a, b) => b.value - a.value);
-    }
-
-    return modeledData;
-  }
-
-  function handleGetNumberOfWorkoutsByExercise(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallExerciseData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-    const groupedData = flattenedData
-      ? groupDataByWorkoutsExercise(flattenedData)
-      : [];
-
-    const modeledData = groupedData
-      ? getNumberOfWorkoutsByExercise(groupedData)
-      : [];
-
-    if (modeledData) {
-      modeledData.sort((a, b) => b.value - a.value);
-    }
-
-    return modeledData;
-  }
-
-  function handleGetTrainingVolumeByExercise(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallExerciseData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData
-      ? groupDataByExerciseForVolume(flattenedData)
-      : [];
-
-    const modeledData = groupedData
-      ? getTrainingVolumeByExercise(groupedData)
-      : [];
-
-    if (modeledData) {
-      modeledData.sort((a, b) => b.value - a.value);
-    }
-    return modeledData;
-  }
-
-  function handleGetNumberOfSetsByExercise(
-    userTrainingData: IWorkoutData[],
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) {
-    const flattenedData = getFlattenedOverallExerciseData(
-      userTrainingData,
-      timeframe,
-      startDate,
-      endDate
-    );
-
-    const groupedData = flattenedData ? groupDataByExercise(flattenedData) : [];
-
-    const modeledData = groupedData
-      ? getNumberOfSetsByExercise(groupedData)
-      : [];
-
-    if (modeledData) {
-      modeledData.sort((a, b) => b.value - a.value);
-    }
-
-    return modeledData;
-  }
-
-  const fetchModeledData = (
-    userTrainingData: IWorkoutData[],
-    kpi: string,
-    timeframe: string,
-    startDate: string,
-    endDate: string
-  ) => {
-    let data;
-    switch (kpi) {
-      case "Number of Reps by Muscle Group":
-        data = handleGetNumberOfRepsByMuscleGroup(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(true);
-        break;
-
-      case "Number of Workouts by Muscle Group":
-        data = handleGetNumberOfWorkoutsByMuscleGroup(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(true);
-        break;
-
-      case "Training Volume by Muscle Group":
-        data = handleGetTrainingVolumeByMuscleGroup(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(true);
-        break;
-
-      case "Number of Sets by Muscle Group":
-        data = handleGetNumberOfSetsByMuscleGroup(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(true);
-        break;
-      case "Number of Reps by Exercise":
-        data = handleGetNumberOfRepsByExercise(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(false);
-        break;
-
-      case "Number of Workouts by Exercise":
-        data = handleGetNumberOfWorkoutsByExercise(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(false);
-        break;
-
-      case "Training Volume by Exercise":
-        data = handleGetTrainingVolumeByExercise(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(false);
-        break;
-
-      case "Number of Sets by Exercise":
-        data = handleGetNumberOfSetsByExercise(
-          userTrainingData,
-          timeframe,
-          startDate,
-          endDate
-        );
-        setMuscleGroupChart(false);
-        break;
-
-      default:
-        break;
-    }
-
-    return data;
-  };
 
   const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newStartDate = event.target.value;
@@ -434,15 +177,32 @@ function ExerciseBreakdownAnalysis() {
     } else {
       setStartDate(newStartDate);
 
-      setModeledData(
-        fetchModeledData(
-          userTrainingData,
-          selectedKPI,
-          selectedTimeframe,
-          newStartDate,
-          endDate
-        )
+      const modeledDataResult = fetchModeledDataBreakdown(
+        userTrainingData,
+        selectedKPI,
+        selectedTimeframe,
+        newStartDate,
+        endDate
       );
+
+      if (!modeledDataResult) {
+        return;
+      }
+
+      // Check the dataType to determine how to handle the result
+      if (
+        modeledDataResult.muscleGroupChartCheck &&
+        modeledDataResult?.standardData
+      ) {
+        setModeledData(modeledDataResult.standardData);
+        setMuscleGroupChart(true);
+      } else if (
+        !modeledDataResult.muscleGroupChartCheck &&
+        modeledDataResult?.standardData
+      ) {
+        setModeledData(modeledDataResult.standardData);
+        setMuscleGroupChart(false);
+      }
     }
   };
 
@@ -452,15 +212,33 @@ function ExerciseBreakdownAnalysis() {
       //toast.error('The end date has to be later than the starting date!')
     } else {
       setEndDate(newEndDate);
-      setModeledData(
-        fetchModeledData(
-          userTrainingData,
-          selectedKPI,
-          selectedTimeframe,
-          startDate,
-          newEndDate
-        )
+
+      const modeledDataResult = fetchModeledDataBreakdown(
+        userTrainingData,
+        selectedKPI,
+        selectedTimeframe,
+        startDate,
+        newEndDate
       );
+
+      if (!modeledDataResult) {
+        return;
+      }
+
+      // Check the dataType to determine how to handle the result
+      if (
+        modeledDataResult.muscleGroupChartCheck &&
+        modeledDataResult?.standardData
+      ) {
+        setModeledData(modeledDataResult.standardData);
+        setMuscleGroupChart(true);
+      } else if (
+        !modeledDataResult.muscleGroupChartCheck &&
+        modeledDataResult?.standardData
+      ) {
+        setModeledData(modeledDataResult.standardData);
+        setMuscleGroupChart(false);
+      }
     }
   };
 

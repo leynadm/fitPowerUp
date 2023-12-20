@@ -1,6 +1,5 @@
 import { format, getISOWeek } from "date-fns";
-import Exercise from "../../interfaces/Exercise";
-
+import { Exercise } from "../../interfaces/IUserTrainingData";
 function groupDataByTimePeriodMax(
     flattenedData: Exercise[],
     timePeriod: string

@@ -3,10 +3,6 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import SettingsIcon from "@mui/icons-material/Settings";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -20,15 +16,18 @@ import uuid from "react-uuid";
 import { exercisesMapObjectArr } from "../../utils/exercisesMapObject";
 import { calculateWorkoutPowerLevel } from "../Workout/CompleteWorkoutModal";
 import { calculateWorkoutSessionStats } from "../Workout/CompleteWorkoutModal";
-import Exercise from "../../utils/interfaces/Exercise";
 import uploadImportedData from "../../utils/firebaseDataFunctions/uploadImportedData";
 import { AuthContext } from "../../context/Auth";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { fetchUserTrainingData } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import toast from "react-hot-toast";
 import TaskIcon from "@mui/icons-material/Task";
 import ReportIcon from '@mui/icons-material/Report';
+import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
+import getUserWeight from "../../utils/getUserWeight";
+import { UserFeatsDataContext } from "../../context/UserFeatsData";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 interface fitNotesExercise {
   date: string;
   exercise: string;
@@ -45,11 +44,22 @@ interface fitNotesExercise {
 function ImportData() {
   const [datasetOrigin, setDatasetOrigin] = useState("FitNotes");
   const { currentUser } = useContext(AuthContext);
-  const { userTrainingData, setUserTrainingData } =
-    useContext(TrainingDataContext);
+  
+  const { userTrainingData, refetchUserTrainingData } =
+    useContext(UserTrainingDataContext);
+
+    
+    const { userFeatsData } =
+    useContext(UserFeatsDataContext);
+    const { userBodyTrackerData } =
+    useContext(BodyTrackerDataContext);
+
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importedFileRows, setImportedFileRows] = useState<string[][]>([]);
   const [missingExercises, setMissingExercises] = useState<string[]>([]);
+
+  const userBodyWeight = getUserWeight(userBodyTrackerData)
 
   const handleDatasetOriginChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDatasetOrigin(e.target.value);
@@ -61,8 +71,10 @@ function ImportData() {
 
   async function handleImportSelectedData(importedFileRows: string[][]) {
     try {
-      const rowsArrOfObjects = importedFileRows.map(
-        ([
+
+      const rowsArrOfObjects = importedFileRows.map(row => {
+        // Destructure the row with a fallback for comment
+        const [
           date,
           exercise,
           category,
@@ -72,8 +84,10 @@ function ImportData() {
           distance,
           distanceUnit,
           time,
-          comment,
-        ]) => ({
+          comment = '' // Provide a default value for comment (e.g., an empty string)
+        ] = row;
+      
+        return {
           date,
           exercise,
           category,
@@ -83,9 +97,9 @@ function ImportData() {
           distance,
           distanceUnit,
           time,
-          comment,
-        })
-      );
+          comment // This will be either the extracted value or the default
+        };
+      });
 
       const groupedRowsByDate = groupBy(rowsArrOfObjects, (row) => row.date);
       const entries: { name: string; exercises: Exercise[] }[][] = [];
@@ -116,7 +130,7 @@ function ImportData() {
           id: uuid(),
           date: convertedFitnotesEntries[0].exercises[0].date,
           wEval: {
-            comment: "Imported Entry",
+            comment: "",
             value: 0,
             feelPain: false,
             warmStretch: false,
@@ -134,17 +148,22 @@ function ImportData() {
         workoutDataArr.push(individualSessionWorkoutData);
       }
 
+      console.log(workoutDataArr)
+      
       await uploadImportedData(
         currentUser.uid,
         workoutDataArr,
         userTrainingData
       );
 
-      await fetchUserTrainingData(currentUser, setUserTrainingData);
+      await updateUserFeats(currentUser.uid,userFeatsData,userBodyWeight)
+      await refetchUserTrainingData()
+      
       toast.success("Your data was imported successfully!");
     
       setImportedFileRows([])
       setMissingExercises([])
+     
     } catch (error) {
       console.log(error);
       toast.error("Oops, handleImportSelectedData had an error!");
@@ -170,8 +189,9 @@ function ImportData() {
         try {
           const rows = text.split("\n").map((row) => row.split(","));
         
-          const rowsArrOfObjects = rows.map(
-            ([
+          const rowsArrOfObjects = rows.map(row => {
+            // Destructure the row with a fallback for comment
+            const [
               date,
               exercise,
               category,
@@ -181,8 +201,10 @@ function ImportData() {
               distance,
               distanceUnit,
               time,
-              comment,
-            ]) => ({
+              comment = '' // Provide a default value for comment (e.g., an empty string)
+            ] = row;
+          
+            return {
               date,
               exercise,
               category,
@@ -192,9 +214,9 @@ function ImportData() {
               distance,
               distanceUnit,
               time,
-              comment,
-            })
-          );
+              comment // This will be either the extracted value or the default
+            };
+          });
     
           const groupedRowsByDate = groupBy(rowsArrOfObjects, (row) => row.date);
           
@@ -472,8 +494,13 @@ function getFitNotesWorkoutExercises(workoutExercises: fitNotesExercise[]) {
       dropset: false,
     };
 
-    if (exerciseEntry.comment !== "") {
-      adaptedExerciseEntry.comment = exerciseEntry.comment;
+    if(exerciseEntry.comment){
+      const cleanedCommentRow = exerciseEntry.comment.replace(/\r/g, '').trim();
+
+      if (cleanedCommentRow!=='') {
+        adaptedExerciseEntry.comment = cleanedCommentRow;
+      }
+  
     }
 
     const group = groupedExercisesByName[adaptedExerciseEntry.exercise];

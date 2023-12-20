@@ -11,14 +11,15 @@ import {
   Bar,
   Rectangle,
   AreaChart,
-  Area,
+  Area, 
   LabelList,
 } from "recharts";
 import { useEffect } from "react";
 import Container from "@mui/material/Container";
 import { useContext } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
+import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
 import { Select, MenuItem } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
@@ -35,7 +36,7 @@ import {
 } from "../../utils/completedWorkoutsChartFunctions/statisticsOptions";
 import groupBodyTrackerDataByTimePeriodAvg from "../../utils/completedWorkoutsChartFunctions/utility/groupBodyTrackerDataByTimePeriodAvg";
 function BodyTrackerGraph() {
-  const { userBodyTrackerData } = useContext(TrainingDataContext);
+  const { userBodyTrackerData } = useContext(BodyTrackerDataContext);
 
   const [selectedDataGroup, setSelectedDataGroup] = useState("day");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1m");

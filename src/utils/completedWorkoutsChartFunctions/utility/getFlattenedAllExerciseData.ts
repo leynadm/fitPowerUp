@@ -1,6 +1,5 @@
-import { IWorkoutData } from "../../firebaseDataFunctions/completeWorkout";
-import Exercise from "../../interfaces/Exercise";
-
+import { IWorkoutData } from "../../interfaces/IUserTrainingData";
+import { Exercise } from "../../interfaces/IUserTrainingData";
 function getFlattenedAllExerciseData(userTrainingData:IWorkoutData[],timeframe:string) {
 
     const today = new Date();

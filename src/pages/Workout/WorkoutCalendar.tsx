@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import dayjs, { Dayjs } from "dayjs";
 import Badge from "@mui/material/Badge";
@@ -10,12 +6,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { AppBar, Paper, Toolbar } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import CalendarWorkoutModal from "../../components/ui/CalendarWorkoutModal";
-import { TrainingDataContext } from "../../context/TrainingData";
 import getWorkoutDates from "../../utils/firebaseUtilityFunctions/getWorkoutDates";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import toast from "react-hot-toast";
@@ -26,14 +20,15 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import formatTime from "../../utils/formatTime";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useNavigate } from "react-router-dom";
-import Exercise from "../../utils/interfaces/Exercise";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { IWorkoutData } from "../../utils/firebaseDataFunctions/uploadImportedData";
 import { AuthContext } from "../../context/Auth";
-import Fade from "@mui/material/Fade";
 import Grow from "@mui/material/Grow";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 function WorkoutCalendar() {
-  const { dateForWorkout, userTrainingData, setDateForWorkout } =
-    useContext(TrainingDataContext);
+  const { dateForWorkout, userTrainingData, setDateForWorkout } = useContext(
+    UserTrainingDataContext
+  );
   const [uniqueDates, setUniqueDates] = useState<string[]>([]);
   const [calendarDateValue, setCalendarDateValue] = useState(
     dayjs(dateForWorkout)
@@ -110,7 +105,7 @@ function WorkoutCalendar() {
       setWorkoutDateExercises([]);
     }
 
-    setKey((prevKey) => prevKey + 1); // Change key to re-trigger animation
+    setKey((prevKey) => prevKey + 1);
   };
 
   async function handleCopyWorkout() {
@@ -156,7 +151,7 @@ function WorkoutCalendar() {
         }
         userEntryTransaction.oncomplete = async function () {
           db.close();
-          navigate("/home/workout/new")
+          navigate("/home/workout/new");
           /* 
           await updateExercisesPRAfterAction(
             userTrainingData,
@@ -177,14 +172,11 @@ function WorkoutCalendar() {
     }
   }
 
-
-  function handleGoToDate(){
-
+  function handleGoToDate() {
     const formattedDate = calendarDateValue.format("YYYY-MM-DD");
 
-    setDateForWorkout(formattedDate)
-    navigate("/home/workout")
- 
+    setDateForWorkout(formattedDate);
+    navigate("/home/workout");
   }
   return (
     <Container sx={{ pb: "72px" }}>
@@ -275,12 +267,14 @@ function WorkoutCalendar() {
               >
                 <Typography
                   variant="h6"
-                  sx={{ textAlign: "center", fontSize: "medium",
-                background:"radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                boxShadow: 2,
-                borderRadius: "4px",
-                }}
-                  
+                  sx={{
+                    textAlign: "center",
+                    fontSize: "medium",
+                    background:
+                      "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
+                    boxShadow: 2,
+                    borderRadius: "4px",
+                  }}
                 >
                   {group.name.toLocaleUpperCase()}
                 </Typography>

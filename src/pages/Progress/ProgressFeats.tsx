@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import {
-  IUserFeatsDataEntry,
-  TrainingDataContext,
-} from "../../context/TrainingData";
+import { IUserFeatsDataEntry } from "../../utils/interfaces/IUserFeats";
 import formatNumber from "../../utils/formatNumber";
 import Rating from "@mui/material/Rating";
 import Radio from "@mui/material/Radio";
@@ -18,8 +15,9 @@ import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
 import { AuthContext } from "../../context/Auth";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
+import { UserFeatsDataContext } from "../../context/UserFeatsData";
 function ProgressGraph() {
-  const { userFeatsData } = useContext(TrainingDataContext);
+  const { userFeatsData } = useContext(UserFeatsDataContext);
   const { currentUserData } = useContext(AuthContext);
   const [filterSelection, setFilterSelection] = useState("All");
 
@@ -42,29 +40,6 @@ function ProgressGraph() {
     }
   }
 
-/* 
-function loopThroughData(){
-
-
-  for (let index = 0; index < preselectedExercisesOrigin.length; index++) {
-    const element = preselectedExercisesOrigin[index];
-    
-    //let exerciseMuscles = element.name+": "
-
-    console.log(element.type)
-    
-    for (let index = 0; index < element.mInvolved.length; index++) {
-      const elementMuscles = element.mInvolved[index];
-      
-      console.log(elementMuscles)
-      //exerciseMuscles = exerciseMuscles + " " + elementMuscles
-    }  
-
-    //console.log(exerciseMuscles)
-  }
-
-} */
-
   const Row = ({
     index,
     style,
@@ -84,20 +59,18 @@ function loopThroughData(){
     );
 
     function checkVariableRecord(type: string, featValue: number) {
-
       const userWeightMeasurementChoice =
         currentUserData.unitsSystem === "metric" ? "kg" : "lbs";
 
       if (type === "Volume") {
         if (userWeightMeasurementChoice === "kg") {
-          const formattedNumber = formatNumber(featValue)
+          const formattedNumber = formatNumber(featValue);
           return `${formattedNumber} kg`;
         } else {
-          const formattedNumber = formatNumber(featValue*2.2)
+          const formattedNumber = formatNumber(featValue * 2.2);
           return `${formattedNumber} lbs`;
         }
-      } 
-
+      }
     }
 
     return (
@@ -106,15 +79,12 @@ function loopThroughData(){
           {featEntry.name}
         </Typography>
         <Box display="flex" gap={1} alignItems="center">
-
           <Typography variant="overline" color="text.secondary">
             {featEntry.feat} {variableObjective}
           </Typography>
-          {
-            featEntry.state&&
+          {featEntry.state && (
             <CheckCircleIcon fontSize="small" sx={{ color: "#520975" }} />
-          }
-
+          )}
         </Box>
 
         <Box display="flex" alignItems="center" sx={{ marginBottom: 1 }}>
@@ -131,27 +101,26 @@ function loopThroughData(){
         </Box>
 
         <Box sx={{ position: "relative", width: "100%" }}>
-          {featEntry.state?(
+          {featEntry.state ? (
             <TextField
-            id="filled-basic"
-            variant="filled"
-            InputProps={{
-              readOnly: true,
-            }}
-            defaultValue={featEntry.description}
-            sx={{
-              width: "100%",
-              verticalAlign: "center",
-              alignContent: "center",
-              textAlign: "center",
-              // Other styles...
-            }}
-            multiline
-          />
-          ):(
+              id="filled-basic"
+              variant="filled"
+              InputProps={{
+                readOnly: true,
+              }}
+              defaultValue={featEntry.description}
+              sx={{
+                width: "100%",
+                verticalAlign: "center",
+                alignContent: "center",
+                textAlign: "center",
+                // Other styles...
+              }}
+              multiline
+            />
+          ) : (
             <Box height="64px" width="100%" borderRadius="4px"></Box>
-          )
-          }
+          )}
           {!featEntry.state && (
             <>
               <Box
@@ -161,9 +130,9 @@ function loopThroughData(){
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  height:"72px",
-                  width:"100%",
-                  borderRadius:"4px",
+                  height: "72px",
+                  width: "100%",
+                  borderRadius: "4px",
                   backgroundColor: "rgba(239, 239, 239, 1)", // Semi-transparent overlay
                   pointerEvents: "none", // To keep the text field interactable
                 }}
@@ -181,7 +150,6 @@ function loopThroughData(){
               />
             </>
           )}
-
         </Box>
       </Box>
     );

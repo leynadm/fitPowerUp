@@ -1,7 +1,5 @@
-import { useLocation } from "react-router-dom";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { useLocation, useParams } from "react-router-dom";
 import { useContext } from "react";
-import { IUserSelectedExercises } from "../../context/TrainingData";
 import Container from "@mui/material/Container";
 import { useState, useMemo, useEffect } from "react";
 import { AppBar, Toolbar } from "@mui/material";
@@ -15,39 +13,102 @@ import { useNavigate } from "react-router-dom";
 import { FixedSizeList } from "react-window";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
-import toast from "react-hot-toast";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import CircularProgress from "@mui/material/CircularProgress";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 function ExerciseSelectionMenu() {
+  
+  const { selectedMuscleGroup } = useParams();
   const muscleGroup: string = useLocation().state.muscleGroup;
-  const { userSelectedExercises } = useContext(TrainingDataContext);
+  const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
+    UserExercisesLibraryContext
+  );
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();
-  const muscleGroupExercises: IUserSelectedExercises[] =
-    getMuscleGroupExercises();
 
-  const filteredExercises = useMemo(() => {
-    return muscleGroupExercises.filter((exercise) => {
-      return exercise.name
-        .toLocaleLowerCase()
-        .includes(query.toLocaleLowerCase());
-    });
-  }, [query]);
+  const navigate = useNavigate();
+
+  const [muscleGroupExercises, setMuscleGroupExercises] = useState<
+    IUserExercisesLibrary[]
+  >(()=>{
+    if(userExercisesLibrary.length>0){
+      return getMuscleGroupExercises()
+    } else {
+      return []
+    }
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userExercisesLibrary.length === 0) {
+        await refetchUserExercisesLibrary();
+      }
+      updateMuscleGroupExercises()
+    };
+
+    const tempMuscleGroupExercises = getMuscleGroupExercises();
+    setMuscleGroupExercises(tempMuscleGroupExercises);
+
+    fetchData().catch(console.error); // Handle errors
+  }, [userExercisesLibrary,muscleGroup,selectedMuscleGroup]);
+
+
+  function updateMuscleGroupExercises() {
+    // Ensure that userExercisesLibrary is not empty and contains exercises
+    if (userExercisesLibrary.length > 0 && userExercisesLibrary[0].exercises) {
+      const tempMuscleGroupExercises = getMuscleGroupExercises();
+      setMuscleGroupExercises(tempMuscleGroupExercises);
+    }
+  }
 
   function getMuscleGroupExercises() {
-    const exercisesArray: IUserSelectedExercises[] =
-      userSelectedExercises[0].exercises;
-    const filteredArray: IUserSelectedExercises[] = exercisesArray.filter(
-      (item: IUserSelectedExercises) => item.group === muscleGroup
-    );
-    filteredArray.sort((a, b) => a.name.localeCompare(b.name));
 
-    return filteredArray;
+    if(userExercisesLibrary.length>0){
+      const exercisesArray: IUserExercisesLibrary[] =
+      userExercisesLibrary[0].exercises;
+
+    if (muscleGroup) {
+      const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
+        (item: IUserExercisesLibrary) => item.group === muscleGroup
+      );
+      filteredArray.sort((a, b) => a.name.localeCompare(b.name));
+
+      return filteredArray;
+    } else {
+      const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
+        (item: IUserExercisesLibrary) =>
+          item.group.toLocaleLowerCase() ===
+          selectedMuscleGroup?.toLocaleLowerCase()
+      );
+
+      filteredArray.sort((a, b) => a.name.localeCompare(b.name));
+      return filteredArray;
+    }
+    } else {
+      return []
+    }
+    
+  }
+
+  const filteredExercises = useMemo(() => {
+    return muscleGroupExercises
+      ? muscleGroupExercises.filter((exercise) => {
+          return exercise.name.toLowerCase().includes(query.toLowerCase());
+        })
+      : [];
+  }, [query, muscleGroupExercises]);
+
+  if (userExercisesLibrary.length === 0) {
+    return (
+      <LoadingScreenCircle text="Hang tight! Goku is running on Snake Way..." />
+    );
   }
 
   function handleTileClick(exerciseName: string) {
     navigate(`selected/${exerciseName}`);
   }
 
+  
   const Row = ({
     index,
     style,
@@ -120,7 +181,6 @@ function ExerciseSelectionMenu() {
             <img
               src={imageURL}
               alt={userExercise.name}
-
               width="100%"
               style={{
                 maxHeight: "128px",
@@ -138,11 +198,10 @@ function ExerciseSelectionMenu() {
       </Box>
     );
   };
-
+ 
   return (
     <>
       <Container maxWidth="md">
-        
         <AppBar
           elevation={2}
           position="fixed"
@@ -152,7 +211,7 @@ function ExerciseSelectionMenu() {
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
-        <Container maxWidth="md">
+          <Container maxWidth="md">
             <Toolbar disableGutters>
               <FitnessCenterIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -204,12 +263,7 @@ function ExerciseSelectionMenu() {
                     color="inherit"
                     //onClick={getOnlyFavorites}
                   >
-                    {/* 
-                  <BookmarkIcon
-                    sx={{
-                      color: showFavoriteOnly ? "orange" : "white",
-                    }}
-                  /> */}
+
                   </IconButton>
 
                   <IconButton
@@ -225,12 +279,12 @@ function ExerciseSelectionMenu() {
                 </Box>
               </Box>
             </Toolbar>
-            </Container>
+          </Container>
         </AppBar>
 
         <ExerciseSearchingBar query={query} setQuery={setQuery} />
 
-        <Box >
+        <Box>
           <FixedSizeList
             height={window.innerHeight - 165}
             itemCount={filteredExercises.length}
@@ -241,6 +295,7 @@ function ExerciseSelectionMenu() {
           </FixedSizeList>
         </Box>
       </Container>
+    
     </>
   );
 }

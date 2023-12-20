@@ -1,7 +1,6 @@
-import { IUserBodyTrackerDataEntry } from "../context/TrainingData";
+import { IUserBodyTrackerDataEntry } from "./interfaces/IBodyTracker";
 function getUserWeight(userBodyTrackerData: IUserBodyTrackerDataEntry[]) {
 
-  console.log(userBodyTrackerData)
   userBodyTrackerData.sort(
     (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
       const dateA = new Date(a.date);

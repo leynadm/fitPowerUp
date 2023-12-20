@@ -1,19 +1,23 @@
-import { IUserSelectedExercises } from "../../context/TrainingData";
+import { IUserExercisesLibrary } from "../interfaces/IUserExercisesLibrary";
 
-type IUserSelectedExercisesObj = {
-  exercises: IUserSelectedExercises[]; // Replace 'Exercise[]' with the actual type
+type IUserExercisesLibraryObj = {
+  exercises: IUserExercisesLibrary[]; // Replace 'Exercise[]' with the actual type
 };
 
 function getExercisesMuscleGroups(
-  userSelectedExercises: IUserSelectedExercisesObj[]
+  userExercisesLibrary: IUserExercisesLibraryObj[]
 ) {
+
+  if(userExercisesLibrary.length===0){
+    return []
+  }
   let uniqueMuscleGroupsArr: string[] = [];
 
-  let userSelectedExercisesArr: IUserSelectedExercises[] =
-    userSelectedExercises[0].exercises;
+  let userExercisesLibraryArr: IUserExercisesLibrary[] =
+    userExercisesLibrary[0].exercises;
 
-  for (let index = 0; index < userSelectedExercisesArr.length; index++) {
-    const element = userSelectedExercisesArr[index];
+  for (let index = 0; index < userExercisesLibraryArr.length; index++) {
+    const element = userExercisesLibraryArr[index];
 
     if (!uniqueMuscleGroupsArr.includes(element.group)) {
       uniqueMuscleGroupsArr.push(element.group);

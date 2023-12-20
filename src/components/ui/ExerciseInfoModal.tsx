@@ -7,18 +7,15 @@ import React, {
 } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserSelectedExercises } from "../../context/TrainingData";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import { Typography } from "@mui/material";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
-import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
-import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
+import SportsGymnasticsIcon from "@mui/icons-material/SportsGymnastics";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -29,15 +26,13 @@ const style = {
   boxShadow: 24,
   p: 2,
   borderRadius: 1,
-   
+
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-   
-  gap:1,
-  overflow:'scroll',
 
-
+  gap: 1,
+  overflow: "scroll",
 };
 
 interface ParentComponentProps {
@@ -51,35 +46,39 @@ function ExerciseInfoModal({
   setOpenExerciseInfoModal,
   exerciseName,
 }: ParentComponentProps) {
-  const { userSelectedExercises } = useContext(TrainingDataContext);
+  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
   const [exerciseImageURL, setExerciseImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchImageURL = async () => {
-      const exerciseImageRef = ref(
-        storage,
-        `assets/exercises-assets/${exerciseName
-          ?.replaceAll(" ", "-")
-          .toLocaleLowerCase()}.jpg`
-      );
-      try {
-        const url = await getDownloadURL(exerciseImageRef);
-        setExerciseImageURL(url);
-      } catch (error) {
-        //toast.error("Oops, there was an error fetching the image!");
-        console.error("Error fetching image:", error);
-      } finally {
-        setIsLoading(false); // Stop loading whether there was an error or not
-      }
-    };
-
-    fetchImageURL();
+    if(exerciseName){
+      const fetchImageURL = async () => {
+        const exerciseImageRef = ref(
+          storage,
+          `assets/exercises-assets/${exerciseName
+            ?.replaceAll(" ", "-")
+            .toLocaleLowerCase()}.jpg`
+        );
+        try {
+          const url = await getDownloadURL(exerciseImageRef);
+          setExerciseImageURL(url);
+        } catch (error) {
+          //toast.error("Oops, there was an error fetching the image!");
+          console.error("Error fetching image:", error);
+        } finally {
+          setIsLoading(false); // Stop loading whether there was an error or not
+        }
+      };
+  
+      fetchImageURL();
+    }
+    
   }, []); // Dependency array includes index and userExercise
 
-  const exerciseSelected: IUserSelectedExercises =
-    userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) =>
+
+  const exerciseSelected: IUserExercisesLibrary =
+    userExercisesLibrary[0].exercises.find(
+      (exercise: IUserExercisesLibrary) =>
         exercise.name.toUpperCase() === exerciseName?.toUpperCase()
     );
 
@@ -88,7 +87,7 @@ function ExerciseInfoModal({
   }
 
   function searchExercise() {
-    var query = encodeURIComponent(exerciseSelected.name);
+    let query = encodeURIComponent(exerciseSelected.name);
     window.open("https://www.google.com/search?q=" + query, "_blank");
   }
 
@@ -105,11 +104,7 @@ function ExerciseInfoModal({
             {exerciseSelected.name.toLocaleUpperCase()}
           </Typography>
 
-          <Box
-            display="flex"
-            justifyContent="center"
-
-          >
+          <Box display="flex" justifyContent="center">
             {isLoading ? (
               <Box display="flex" justifyContent="center" alignItems="center">
                 <CircularProgress />
@@ -120,10 +115,7 @@ function ExerciseInfoModal({
                 alt={exerciseSelected.name}
                 width="100%"
                 height="100%"
-                
-                style={{ minHeight: "270px", objectFit: "cover",
-              
-              }}
+                style={{ minHeight: "270px", objectFit: "cover" }}
               />
             )}
           </Box>

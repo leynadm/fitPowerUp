@@ -1,5 +1,4 @@
-import Exercise from "../../../interfaces/Exercise";
-
+import { Exercise } from "../../../interfaces/IUserTrainingData";
 function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
   const groupedData: {
     summedWeight: number;
@@ -57,7 +56,6 @@ function groupDataByWorkoutsMuscleGroup(flattenedData: Exercise[]) {
     groupedExercise.summedReps += exercise.reps;
     groupedExercise.summedDistance += exercise.distance;
     groupedExercise.summedTime += exercise.time;
-    console.log(groupedExercise)
     trackDate = exercise.date;
     currentMuscleGroup=exercise.group
   });

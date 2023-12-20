@@ -223,7 +223,7 @@ function LandingPage() {
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
               alt=""
               style={{
-                maxWidth: "280px",
+                maxWidth: "256px",
                 width: "100%",
                 height: "100%",
               }}
@@ -310,7 +310,7 @@ function LandingPage() {
                 <Box
                   display="flex"
                   flexDirection="column"
-                  alignItems="center"
+                  alignItems="flex-start"
                   justifyContent="center"
                 >
                   <Typography
@@ -334,10 +334,10 @@ function LandingPage() {
               </Box>
             </Box>
 
-            <Box display="flex" justifyContent="center" width="100%">
-              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+            <Box display="flex" justifyContent="center" width="100%" >
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
                 fitPowerUp offers you a library of more than one thousand
-                exercises! And guess what? You can add your own too!
+                exercises! <br/>And guess what? You can add your own too!
               </Typography>
             </Box>
 
@@ -359,7 +359,7 @@ function LandingPage() {
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.webp?alt=media&token=3e8b16c8-39a7-4865-9535-4b4743404c45"
                   alt=""
                   style={{
-                    maxWidth: "280px",
+                    maxWidth: "256px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -410,7 +410,7 @@ function LandingPage() {
             </Box>
 
             <Box display="flex" justifyContent="center" width="100%">
-              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
                 You can instantly access an in-depth breakdown analysis for
                 every exercise!
               </Typography>
@@ -434,7 +434,7 @@ function LandingPage() {
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-1.webp?alt=media&token=81fc5f04-417c-40a6-beb9-5f19c6074ac4"
                   alt=""
                   style={{
-                    maxWidth: "280px",
+                    maxWidth: "256px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -490,8 +490,8 @@ function LandingPage() {
               color="white"
               width="100%"
             >
-              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
-                The analysis goes beyond exercises! You can get breakdowns on
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
+                The analysis goes beyond exercises!<br/> You can get breakdowns on
                 your muscle groups, aggregated data and more!
               </Typography>
             </Box>
@@ -514,7 +514,7 @@ function LandingPage() {
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-1.webp?alt=media&token=88107327-146b-43b6-902f-38290795d1e0"
                   alt=""
                   style={{
-                    maxWidth: "280px",
+                    maxWidth: "256px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -568,9 +568,9 @@ function LandingPage() {
               color="white"
               width="100%"
             >
-              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
                 Every workout you complete gives you a chance to increase your
-                power level. Why not getting stronger while having fun?!
+                power level. <br/>Why not getting stronger while having fun?
               </Typography>
             </Box>
 
@@ -592,7 +592,7 @@ function LandingPage() {
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-1.webp?alt=media&token=9bf050f9-a151-4dc7-b816-c096b2411b80"
                   alt=""
                   style={{
-                    maxWidth: "280px",
+                    maxWidth: "256px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -647,7 +647,7 @@ function LandingPage() {
               color="white"
               width="100%"
             >
-              <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+              <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
                 Unlock DBZ heroes with the Path feature and reach new gym
                 milestones in the Feats menu!
               </Typography>
@@ -670,7 +670,7 @@ function LandingPage() {
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.webp?alt=media&token=67df5913-9ee9-4f22-94f4-ffaefee9a973"
                   alt=""
                   style={{
-                    maxWidth: "280px",
+                    maxWidth: "256px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -726,9 +726,9 @@ function LandingPage() {
             color="white"
             width="100%"
           >
-            <Typography fontWeight="bold" fontSize="1.25rem" align="center">
+            <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
               Easy install & runs everywhere! fitPowerUp uses the PWA
-              technology, meaning it works seamlessly across all devices just
+              technology, <br/>meaning it works seamlessly across all devices just
               like a native app!
             </Typography>
           </Box>
@@ -746,7 +746,7 @@ function LandingPage() {
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
                 alt=""
                 style={{
-                  maxWidth: "280px",
+                  maxWidth: "256px",
                   width: "100%",
                   height: "100%",
                 }}
@@ -786,7 +786,7 @@ function LandingPage() {
             Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
           </Typography>
 
-          <Typography color="white" variant="caption" align="center">
+          <Typography color="white" variant="caption" align="center" padding={1.5}>
             This app is a fan-made creation, inspired by the Dragon Ball Z
             series, which is a property of FUNimation, Toei Animation, Fuji TV,
             and Akira Toriyama. All intellectual property rights for Dragon Ball

@@ -1,6 +1,4 @@
-import { IWorkoutData } from "../../firebaseDataFunctions/completeWorkout";
-import Exercise from "../../interfaces/Exercise";
-
+import { IWorkoutData,Exercise } from "../../interfaces/IUserTrainingData";
 function getFlattenedMuscleGroupData(
   userTrainingData: IWorkoutData[],
   muscleGroup: string,

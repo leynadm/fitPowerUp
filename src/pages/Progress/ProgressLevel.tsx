@@ -16,12 +16,12 @@ import {
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useContext, useState } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import { AuthContext } from "../../context/Auth";
-import { IUserSelectedExercises } from "../../context/TrainingData";
 import Button from "@mui/material/Button";
 import getFlattenedExerciseData from "../../utils/completedWorkoutsChartFunctions/utility/getFlattenedExerciseData";
-import Exercise from "../../utils/interfaces/Exercise";
+import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 import toast from "react-hot-toast";
 import getUserWeight from "../../utils/getUserWeight";
@@ -30,9 +30,17 @@ import capitalizeWords from "../../utils/capitalizeWords";
 import { useCallback, useEffect, useRef } from "react";
 import PublishIcon from "@mui/icons-material/Publish";
 import { Paper } from "@mui/material";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 function ProgressLevel() {
-  const { userTrainingData, userSelectedExercises, userBodyTrackerData } =
-    useContext(TrainingDataContext);
+  const { userTrainingData,  } =
+    useContext(UserTrainingDataContext);
+    const { userExercisesLibrary  } =
+    useContext(UserExercisesLibraryContext);
+
+    const { userBodyTrackerData  } =
+    useContext(BodyTrackerDataContext);
+
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
   const firebaseTimestamp = new Date(
@@ -118,8 +126,8 @@ function ProgressLevel() {
 
   const [firstExerciseSelected, setFirstExerciseSelected] = useState(
     currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
-      ? userSelectedExercises[0].exercises.find(
-          (exercise: IUserSelectedExercises) =>
+      ? userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
             currentUserData.firstPowerExercise.toUpperCase()
         )
@@ -128,8 +136,8 @@ function ProgressLevel() {
 
   const [secondExerciseSelected, setSecondExerciseSelected] = useState(
     currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
-      ? userSelectedExercises[0].exercises.find(
-          (exercise: IUserSelectedExercises) =>
+      ? userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
             currentUserData.secondPowerExercise.toUpperCase()
         )
@@ -138,8 +146,8 @@ function ProgressLevel() {
 
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState(
     currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
-      ? userSelectedExercises[0].exercises.find(
-          (exercise: IUserSelectedExercises) =>
+      ? userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
             currentUserData.thirdPowerExercise.toUpperCase()
         )
@@ -154,8 +162,8 @@ function ProgressLevel() {
     },
   ];
 
-  const userSelectedExercisesStrArr = userSelectedExercises[0].exercises
-    .map((userExercise: IUserSelectedExercises) =>
+  const userSelectedExercisesStrArr = userExercisesLibrary[0].exercises
+    .map((userExercise: IUserExercisesLibrary) =>
       capitalizeWords(userExercise.name)
     )
     .sort((a: string, b: string) =>
@@ -163,8 +171,8 @@ function ProgressLevel() {
     );
 
   function findExerciseByName(name: string) {
-    return userSelectedExercises[0].exercises.find(
-      (exercise: IUserSelectedExercises) =>
+    return userExercisesLibrary[0].exercises.find(
+      (exercise: IUserExercisesLibrary) =>
         exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
     );
   }

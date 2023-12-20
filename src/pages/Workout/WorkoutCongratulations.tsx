@@ -1,8 +1,7 @@
 import { useLocation } from "react-router-dom";
 import Container from "@mui/material/Container";
-import { IWorkoutData } from "../../utils/firebaseDataFunctions/completeWorkout";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import { Box } from "@mui/system";
-import StatMiniCard from "../../components/ui/StatMiniCard";
 import { Button, Rating } from "@mui/material";
 import StarsIcon from "@mui/icons-material/Stars";
 import { AuthContext } from "../../context/Auth";

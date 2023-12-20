@@ -14,7 +14,7 @@ import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { Link } from "react-router-dom";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import toast from "react-hot-toast";
 interface UserData {
   id: string;
@@ -109,7 +109,7 @@ function UserProfileFollowers() {
           height: "100%",
         }}
       >
-        <LoadingCircle />
+        <LoadingScreenCircle text="" />
       </Box>
     );
   }

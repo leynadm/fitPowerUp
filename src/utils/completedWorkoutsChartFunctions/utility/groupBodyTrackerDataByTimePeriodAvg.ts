@@ -1,7 +1,5 @@
-import Exercise from "../../interfaces/Exercise";
 import { format, getISOWeek } from "date-fns";
-import { IUserBodyTrackerDataEntry } from "../../../context/TrainingData";
-
+import { IUserBodyTrackerDataEntry } from "../../interfaces/IBodyTracker";
 export interface IBodyTrackerGroupedData {
   date: string;
   averageWeight: number;

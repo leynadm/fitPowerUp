@@ -2,9 +2,7 @@ import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
-import { FixedSizeList, VariableSizeList } from "react-window";
+import { FixedSizeList } from "react-window";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -14,13 +12,14 @@ import PercentIcon from "@mui/icons-material/Percent";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { AuthContext } from "../../context/Auth";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
-import { useRef } from "react";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
+import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
 function BodyTrackerHistory() {
-  const { userBodyTrackerData } = useContext(TrainingDataContext);
+  const { userBodyTrackerData } = useContext(BodyTrackerDataContext);
   const { currentUserData } = useContext(AuthContext);
 
   const userBodyTrackerDataArr = userBodyTrackerData;
-  
+
   if (userBodyTrackerDataArr.length > 0) {
     userBodyTrackerDataArr.sort(
       (a: IUserBodyTrackerDataEntry, b: IUserBodyTrackerDataEntry) => {
@@ -42,110 +41,106 @@ function BodyTrackerHistory() {
     const userBodyTrackerEntry = userBodyTrackerDataArr[index];
 
     return (
-      
-        <Box gap={2} style={style} >
-          <Typography variant="subtitle1" paddingLeft="8px">
-            {userBodyTrackerEntry.date}
-          </Typography>
+      <Box gap={2} style={style}>
+        <Typography variant="subtitle1" paddingLeft="8px">
+          {userBodyTrackerEntry.date}
+        </Typography>
 
-          <Accordion sx={{ margin: "8px" }}
+        <Accordion sx={{ margin: "8px" }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`panel-${index}-content`}
+            id={`panel-${index}-header`}
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel-${index}-content`}
-              id={`panel-${index}-header`}
-
-            >
-              <Box display="flex" width="100%" justifyContent="space-between">
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                  }}
-                >
-                  <MonitorWeightIcon fontSize="medium" />
-                  <Typography>
-                    {userBodyTrackerEntry.weight}{" "}
-                    {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
-                  </Typography>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                  }}
-                >
-                  <PercentIcon fontSize="medium" />
-                  <Typography>{userBodyTrackerEntry.bodyFat}</Typography>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                  }}
-                >
-                  <RestaurantIcon fontSize="medium" />
-                  <Typography>
-                    {userBodyTrackerEntry.caloricIntake} cal
-                  </Typography>
-                </div>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box display="grid" gridTemplateColumns="1fr 1fr">
+            <Box display="flex" width="100%" justifyContent="space-between">
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+                <MonitorWeightIcon fontSize="medium" />
                 <Typography>
-                  Neck: {userBodyTrackerEntry.neck}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                  {userBodyTrackerEntry.weight}{" "}
+                  {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
                 </Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+                <PercentIcon fontSize="medium" />
+                <Typography>{userBodyTrackerEntry.bodyFat}</Typography>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+                <RestaurantIcon fontSize="medium" />
                 <Typography>
-                  Shoulders: {userBodyTrackerEntry.shoulders}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+                  {userBodyTrackerEntry.caloricIntake} cal
                 </Typography>
-                <Typography>
-                  Chest: {userBodyTrackerEntry.chest}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Waist: {userBodyTrackerEntry.waist}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Left Bicep: {userBodyTrackerEntry.leftBicep}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Right Bicep: {userBodyTrackerEntry.rightBicep}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Left Forearm: {userBodyTrackerEntry.leftForearm}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Right Forearm: {userBodyTrackerEntry.rightForearm}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Left Thigh: {userBodyTrackerEntry.leftThigh}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Right Thigh: {userBodyTrackerEntry.rightThigh}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Left Calf: {userBodyTrackerEntry.leftCalf}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-                <Typography>
-                  Right Calf: {userBodyTrackerEntry.rightCalf}{" "}
-                  {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
-                </Typography>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Box>
-      
+              </div>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box display="grid" gridTemplateColumns="1fr 1fr">
+              <Typography>
+                Neck: {userBodyTrackerEntry.neck}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Shoulders: {userBodyTrackerEntry.shoulders}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Chest: {userBodyTrackerEntry.chest}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Waist: {userBodyTrackerEntry.waist}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Bicep: {userBodyTrackerEntry.leftBicep}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Bicep: {userBodyTrackerEntry.rightBicep}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Forearm: {userBodyTrackerEntry.leftForearm}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Forearm: {userBodyTrackerEntry.rightForearm}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Thigh: {userBodyTrackerEntry.leftThigh}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Thigh: {userBodyTrackerEntry.rightThigh}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Left Calf: {userBodyTrackerEntry.leftCalf}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+              <Typography>
+                Right Calf: {userBodyTrackerEntry.rightCalf}{" "}
+                {/* {currentUserData.unitsSystem === "metric" ? "cm" : "in"} */}
+              </Typography>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
     );
   };
 

@@ -1,5 +1,4 @@
-import Exercise from "../../../interfaces/Exercise";
-
+import { Exercise } from "../../../interfaces/IUserTrainingData";
 function groupDataByMuscleGForVolume(flattenedData: Exercise[]) {
   const groupedData: {
     summedWeight: number;

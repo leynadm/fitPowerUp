@@ -11,14 +11,14 @@ import Container from "@mui/material/Container";
 import { VariableSizeList } from "react-window";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import getCompletedExercisesHistory from "../../utils/firebaseDataFunctions/getCompletedExercisesHistory";
 function ExerciseSelectedHistory() {
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
   const { exerciseName } = useParams();
-  const { userTrainingData } = useContext(TrainingDataContext);
+  const { userTrainingData } = useContext(UserTrainingDataContext);
   const { currentUserData } = useContext(AuthContext);
 
   const exerciseHistoryArr = getCompletedExercisesHistory(

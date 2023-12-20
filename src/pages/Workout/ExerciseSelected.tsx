@@ -140,12 +140,13 @@ function ExerciseSelected() {
         </Container>
       </AppBar>
 
+{/* 
       <ExerciseInfoModal
         openExerciseInfoModal={openExerciseInfoModal}
         setOpenExerciseInfoModal={setOpenExerciseInfoModal}
         exerciseName={exerciseName}
       />
-
+ */}
       <ButtonGroup
         variant="text"
         aria-label="outlined button group"

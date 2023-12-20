@@ -1,6 +1,4 @@
-import { IWorkoutData } from "./completeWorkout";
-import Exercise from "../interfaces/Exercise";
-
+import { IWorkoutData,Exercise } from "../interfaces/IUserTrainingData";
 function getCompletedExercisesHistory(
   userTrainingData: IWorkoutData[],
   exerciseName: string | undefined

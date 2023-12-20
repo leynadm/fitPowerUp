@@ -13,16 +13,14 @@ import { AuthContext } from "../../context/Auth";
 import { ChangeEvent, useContext, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import saveBodyTrackerEntry from "../../utils/firebaseDataFunctions/saveBodyTrackerEntry";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
-import { fetchUserBodyTrackerData } from "../../context/TrainingData";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import toast from "react-hot-toast";
-
+import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
 function BodyTrackerTrack() {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
-  const { userBodyTrackerData, setUserBodyTrackerData } =
-    useContext(TrainingDataContext);
+  const { userBodyTrackerData, refetchUserBodyTrackerData } =
+    useContext(BodyTrackerDataContext);
 
   const userBodyTrackerDataSize = userBodyTrackerData.length 
   const [saveButtonText, setSaveButtonText] = useState("save");
@@ -83,7 +81,7 @@ function BodyTrackerTrack() {
         saveButtonText,
         userBodyTrackerDataSize
       );
-      await fetchUserBodyTrackerData(currentUser, setUserBodyTrackerData);
+      await refetchUserBodyTrackerData();
     } else {
       toast.error("You need to add data to at least one field!");
     }

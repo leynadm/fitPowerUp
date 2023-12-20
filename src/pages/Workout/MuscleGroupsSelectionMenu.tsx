@@ -1,6 +1,4 @@
 import { useContext, useMemo, useState, useEffect } from "react";
-import { TrainingDataContext } from "../../context/TrainingData";
-import { IUserSelectedExercises } from "../../context/TrainingData";
 import { AppBar, Divider, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -9,29 +7,58 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import { useNavigate } from "react-router-dom";
-import ExerciseSelectionTile from "../../components/ui/ExerciseSelectionTile";
 import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExercisesMuscleGroups";
 import { FixedSizeList } from "react-window";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
-import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import getMuscleGroupExercises from "../../utils/firebaseDataFunctions/getMuscleGroupExercises";
+
 function MuscleGroupsSelectionMenu() {
   const [query, setQuery] = useState("");
 
-  const { userSelectedExercises } = useContext(TrainingDataContext);
+  const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
+    UserExercisesLibraryContext
+  );
+  const [exercisesMuscleGroupsArr, setExercisesMuscleGroupsArr] = useState(
+    () => {
+      if (userExercisesLibrary.length > 0) {
+        return getExercisesMuscleGroups(userExercisesLibrary);
+      }
 
-  const exercisesMuscleGroupsArr = getExercisesMuscleGroups(
-    userSelectedExercises
+      return [];
+    }
   );
 
-  const muscleGroupExercises: IUserSelectedExercises[] =
-    getMuscleGroupExercises();
+  const [muscleGroupExercises, setMuscleGroupExercises] = useState(() => {
+    if (userExercisesLibrary.length > 0) {
+      const muscleGroupExercises: IUserExercisesLibrary[] =
+        getMuscleGroupExercises(userExercisesLibrary);
+      return muscleGroupExercises;
+    }
+
+    return [];
+  });
+
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      if (userExercisesLibrary.length === 0) {
+        await refetchUserExercisesLibrary();
+      }
+    };
+
+    setExercisesMuscleGroupsArr(getExercisesMuscleGroups(userExercisesLibrary));
+    setMuscleGroupExercises(getMuscleGroupExercises(userExercisesLibrary));
+
+    fetchData().catch(console.error); // Handle errors
+  }, [userExercisesLibrary]);
 
   const filteredExercises = useMemo(() => {
     return muscleGroupExercises.filter((exercise) => {
@@ -39,27 +66,18 @@ function MuscleGroupsSelectionMenu() {
         .toLocaleLowerCase()
         .includes(query.toLocaleLowerCase());
     });
-  }, [query]);
+  }, [query, muscleGroupExercises]);
 
   const navigate = useNavigate();
 
-  if (userSelectedExercises === undefined) {
-    return <>Querying Data...</>;
-  }
-
-  function getMuscleGroupExercises() {
-    const exercisesArray: IUserSelectedExercises[] =
-      userSelectedExercises[0].exercises;
-    const filteredArray: IUserSelectedExercises[] = exercisesArray.filter(
-      (item: IUserSelectedExercises) => item.group
+  if (userExercisesLibrary.length === 0) {
+    return (
+      <LoadingScreenCircle text="Hold on, Trunks is still explaining the time travel rules..." />
     );
-    filteredArray.sort((a, b) => a.name.localeCompare(b.name));
-
-    return filteredArray;
   }
 
   const handleMuscleGroupClick = (muscleGroup: string) => {
-    navigate("exercises", { state: { muscleGroup } });
+    navigate(`exercises/${muscleGroup}`, { state: { muscleGroup } });
   };
 
   function handleTileClick(exerciseName: string) {
@@ -96,7 +114,6 @@ function MuscleGroupsSelectionMenu() {
 
       fetchImageURL();
     }, [index, userExercise]); // Dependency array includes index and userExercise
-
 
     const rowStyle = {
       ...style,
@@ -299,7 +316,7 @@ function MuscleGroupsSelectionMenu() {
             <FixedSizeList
               height={window.innerHeight - 170}
               itemCount={filteredExercises.length}
-              itemSize={275}
+              itemSize={200}
               width="100%"
             >
               {Row}

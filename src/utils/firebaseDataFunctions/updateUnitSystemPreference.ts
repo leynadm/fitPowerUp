@@ -1,11 +1,9 @@
-import { IWorkoutData } from "./completeWorkout";
-import { IUserBodyTrackerDataEntry } from "../../context/TrainingData";
+import { IWorkoutData } from "../interfaces/IUserTrainingData";
 import { doc, collection, writeBatch } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 
-import { IUserBodyTrackerData } from "../../context/TrainingData";
-
+import { IUserBodyTrackerData } from "../interfaces/IBodyTracker";
 async function updateUnitSystemPreference(
   userTrainingData: IWorkoutData[],
   userBodyTrackerData: IUserBodyTrackerData,

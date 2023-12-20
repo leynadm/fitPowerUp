@@ -1,24 +1,8 @@
-import Exercise from "../interfaces/Exercise";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { arrayUnion } from "firebase/firestore";
-import IWorkoutEvaluationData from "../interfaces/WorkoutEvaluationData";
 import toast from "react-hot-toast";
-
-interface IWorkoutDataWorkoutStats {
-  sets: number;
-  reps: number;
-  vol: number;
-}
-
-export interface IWorkoutData {
-  date: string;
-  wEval: IWorkoutEvaluationData;
-  wExercises: { name: string; exercises: Exercise[] }[];
-  id: string;
-  power: number;
-  stats: IWorkoutDataWorkoutStats;
-}
+import { IWorkoutData } from "../interfaces/IUserTrainingData";
 
 async function completeWorkout(
   userId: string,

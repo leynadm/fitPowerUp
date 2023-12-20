@@ -7,14 +7,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Routes, Route } from "react-router-dom";
-import { TrainingDataContext } from "../../context/TrainingData";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import CompletedDetailsOverview from "./CompletedDetailsOverview";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 
 function CompletedWorkoutsTabs() {
-  const { userTrainingData } = useContext(TrainingDataContext);
+  const { userTrainingData } = useContext(UserTrainingDataContext);
 
   const navigate = useNavigate();
   if (userTrainingData === undefined) {

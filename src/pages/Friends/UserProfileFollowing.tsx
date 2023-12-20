@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
-import LoadingCircle from "../../components/ui/LoadingCircle";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import toast from "react-hot-toast";
 interface UserData {
   id: string;
@@ -110,7 +110,7 @@ function UserProfileFollowing() {
           height: "100%",
         }}
       >
-        <LoadingCircle />
+        <LoadingScreenCircle text="" />
       </Box>
     );
   }

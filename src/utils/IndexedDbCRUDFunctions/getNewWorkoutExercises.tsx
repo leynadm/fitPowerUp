@@ -1,4 +1,4 @@
-import Exercise from "../interfaces/Exercise";
+import { Exercise } from "../interfaces/IUserTrainingData";
 import toast from "react-hot-toast";
 
 async function getNewWorkoutExercises(setExistingExercises: any) {
