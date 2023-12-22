@@ -12,11 +12,12 @@ function NoConnection() {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
-        gap:1
+        gap:1,
+        height:"calc(100svh - 112px)"
       }}
     >
       <Typography sx={{ textAlign: "center" }}>
-        Oops! You are offline.<br></br> Please check your internet connection.
+        Hey, it seems you are offline.<br></br> Please check your internet connection.
       </Typography>
       <WifiOffIcon />
     </Box>

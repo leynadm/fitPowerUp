@@ -680,8 +680,8 @@ function CompletedWorkouts() {
           ))}
 
         {filteredUserTrainingData.length === 0 && (
-          <Paper
-            elevation={2}
+          <Box
+
             sx={{
               height: "calc(100dvh - 168px)",
               display: "flex",
@@ -694,7 +694,7 @@ function CompletedWorkouts() {
             <Typography textAlign="center" fontSize="1rem">
               Workout log empty for this date.
             </Typography>
-          </Paper>
+          </Box>
         )}
       </Box>
     </Container>

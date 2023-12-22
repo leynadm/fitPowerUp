@@ -62,12 +62,10 @@ function BodyTrackerTrack() {
     }));
   }
   };
-  if (!userBodyTrackerData) {
-    return <>Loading</>;
-  }
 
   async function handleSaveBodyTrackerEntry() {
     let checkIfAtLeastOneValueIsAdded = false;
+    
     for (const [key, value] of Object.entries(bodyKPIDataObj)) {
       if (parseFloat(value) !== 0 && value !== "" && key !== "date") {
         checkIfAtLeastOneValueIsAdded = true;
@@ -95,46 +93,69 @@ function BodyTrackerTrack() {
     const userBodyTrackerDataJSON = JSON.stringify(userBodyTrackerData);
     const userBodyTrackerDataArr = JSON.parse(userBodyTrackerDataJSON);
 
-    const isPropertyEqual = userBodyTrackerDataArr.some(
+    console.log(userBodyTrackerDataJSON)
+    console.log(userBodyTrackerDataArr)
+    
+    
+    const matchedEntry = userBodyTrackerDataArr.find(
       (item: IUserBodyTrackerDataEntry) => item.date === newDate
     );
-
-    if (isPropertyEqual) {
+  
+    if (matchedEntry) {
       setSaveButtonText("Update");
-
-      for (let index = 0; index < userBodyTrackerDataArr.length; index++) {
-        const userBodyTrackerEntry = userBodyTrackerDataArr[index];
-
         setBodyKPIDataObj({
-          date: userBodyTrackerEntry.date,
-          weight: String(userBodyTrackerEntry.weight),
-          bodyFat: String(userBodyTrackerEntry.bodyFat),
-          caloricIntake: String(userBodyTrackerEntry.caloricIntake),
-          neck: String(userBodyTrackerEntry.neck),
-          shoulders: String(userBodyTrackerEntry.shoulders),
-          chest: String(userBodyTrackerEntry.chest),
-          leftBicep: String(userBodyTrackerEntry.leftBicep),
-          rightBicep: String(userBodyTrackerEntry.rightBicep),
-          leftForearm: String(userBodyTrackerEntry.leftForearm),
-          rightForearm: String(userBodyTrackerEntry.rightForearm),
-          waist: String(userBodyTrackerEntry.waist),
-          hips: String(userBodyTrackerEntry.hips),
-          leftThigh: String(userBodyTrackerEntry.leftThigh),
-          rightThigh: String(userBodyTrackerEntry.rightThigh),
-          leftCalf: String(userBodyTrackerEntry.leftCalf),
-          rightCalf: String(userBodyTrackerEntry.rightCalf),
+          date: matchedEntry.date,
+          weight: String(matchedEntry.weight),
+          bodyFat: String(matchedEntry.bodyFat),
+          caloricIntake: String(matchedEntry.caloricIntake),
+          neck: String(matchedEntry.neck),
+          shoulders: String(matchedEntry.shoulders),
+          chest: String(matchedEntry.chest),
+          leftBicep: String(matchedEntry.leftBicep),
+          rightBicep: String(matchedEntry.rightBicep),
+          leftForearm: String(matchedEntry.leftForearm),
+          rightForearm: String(matchedEntry.rightForearm),
+          waist: String(matchedEntry.waist),
+          hips: String(matchedEntry.hips),
+          leftThigh: String(matchedEntry.leftThigh),
+          rightThigh: String(matchedEntry.rightThigh),
+          leftCalf: String(matchedEntry.leftCalf),
+          rightCalf: String(matchedEntry.rightCalf),
         });
-      }
 
-      return;
-    } else {
+      } else {
+      
+
+        
+      setBodyKPIDataObj({
+        date: event.target.value,
+        weight: "",
+        bodyFat: "",
+        caloricIntake: "",
+        neck: "",
+        shoulders: "",
+        chest: "",
+        leftBicep: "",
+        rightBicep: "",
+        leftForearm: "",
+        rightForearm: "",
+        waist: "",
+        hips: "",
+        leftThigh: "",
+        rightThigh: "",
+        leftCalf: "",
+        rightCalf: "",
+      });  
+
       setSaveButtonText("Save");
-    }
 
+    }
+/* 
     setBodyKPIDataObj((prevState) => ({
       ...prevState,
       date: event.target.value,
     }));
+ */
   };
 
   const handleClearButton = () => {
@@ -178,7 +199,7 @@ function BodyTrackerTrack() {
             type="date"
             fullWidth
             onChange={(event) => handleOnChangeForDate(event)}
-            value={bodyKPIDataObj.date}
+
           />
           {saveButtonText === "Update" && (
             <Typography>You've already added data for this date.</Typography>

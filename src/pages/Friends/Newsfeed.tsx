@@ -3,6 +3,7 @@ import UserWorkoutCard from "./UserWorkoutCard";
 import Box from "@mui/material/Box";
 import { AuthContext } from "../../context/Auth";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 import {
   collection,
   query,
@@ -24,15 +25,7 @@ import { SocialDataContext } from "../../context/SocialData";
 
 function Newsfeed() {
   const { currentUser, currentUserData } = useContext(AuthContext);
-  /* 
-  const [latestDoc, setLatestDoc] = useState<any>(null);
-  const [userFeed, setUserFeed] = useState<any>([]);
-  const [postIDsCache, setPostIDsCache] = useState<any>([]);
-  const [usersDataCache, setUsersDataCache] = useState<any>([]);
-  const [hasPosts, setHasPosts] = useState(false);
-    const [feedDataNullCheck, setFeedDataNullCheck] = useState(false);
- */
-   
+
   const {
     userFeed,
     setUserFeed,
@@ -50,23 +43,12 @@ function Newsfeed() {
 
   const [loading, setLoading] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-
+  
+  const isOnline = useOnlineStatus()
+  console.log('logging is online:')
+  console.log(isOnline)
+  console.log('inside Newsfeed!')
   let renderedOnce = false;
-
-  useEffect(() => {
-
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
 
   useEffect(() => {
 
@@ -87,7 +69,7 @@ function Newsfeed() {
 
     const postsRef = collection(db, "posts");
     const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 2);
     const sevenDaysAgoTimestamp = Timestamp.fromDate(sevenDaysAgo);
     let postsQuery;
     if (latestDoc) {
@@ -155,8 +137,6 @@ function Newsfeed() {
       ...newFeedData,
     ]);
   }
-
-
 
 
   async function getFeed() {
@@ -338,10 +318,11 @@ function Newsfeed() {
     }
   }
 
-  if (!isOnline) {
-    return <NoConnection />;
+  if(!isOnline){
+    return(
+      <NoConnection/>
+    )
   }
-
   if (loading && !hasPosts) {
     return (
       <Box
@@ -361,7 +342,10 @@ function Newsfeed() {
   }
 
   return (
-    <>
+    <Box height="100%">
+
+
+
       {hasPosts && isOnline && !feedDataNullCheck ? (
         <Box sx={{ paddingBottom: "56px", marginTop: "8px", height: "100%" }}>
           {userFeed.map((post: PostData, index: number) => (
@@ -412,8 +396,9 @@ function Newsfeed() {
           </Typography>
 
         </Box>
-      )}
-    </>
+      )} 
+
+    </Box>
   );
 }
 

@@ -13,7 +13,6 @@ export const useUserExercisesLibrary = () => {
 
   const fetchUserExercisesLibrary = async () => {
     if (!currentUser) return;
-
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userCollectionRef = collection(usersDocRef, "userCollection");
 

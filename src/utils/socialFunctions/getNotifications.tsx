@@ -2,7 +2,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 
-function getNotifications(currentUserUid: string, setNotifications: any) {
+async function getNotifications(currentUserUid: string, setNotifications: any) {
+
   const notificationDocRef = doc(db, "notifications", currentUserUid);
 
   getDoc(notificationDocRef)

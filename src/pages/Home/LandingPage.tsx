@@ -337,7 +337,7 @@ function LandingPage() {
             <Box display="flex" justifyContent="center" width="100%" >
               <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
                 fitPowerUp offers you a library of more than one thousand
-                exercises! <br/>And guess what? You can add your own too!
+                exercises! <br/>And you can add your own too!
               </Typography>
             </Box>
 
@@ -491,7 +491,7 @@ function LandingPage() {
               width="100%"
             >
               <Typography fontWeight="bold" fontSize="1.25rem" align="center" padding={1.5}>
-                The analysis goes beyond exercises!<br/> You can get breakdowns on
+                You get a complete analysis, with breakdowns on
                 your muscle groups, aggregated data and more!
               </Typography>
             </Box>

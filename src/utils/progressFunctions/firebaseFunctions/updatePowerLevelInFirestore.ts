@@ -1,6 +1,6 @@
 import { updateDoc, doc} from "firebase/firestore";
 import { db } from "../../../config/firebase";
-
+import { serverTimestamp } from "firebase/firestore";
 async function updatePowerLevelInFirestore(
   userId:string,
   firstExercise:string,
@@ -12,13 +12,15 @@ async function updatePowerLevelInFirestore(
 ) {
   const userDocRef = doc(db, "users", userId);
 
+
   await updateDoc(userDocRef, {
     firstPowerExercise:firstExercise,
     secondPowerExercise:secondExercise,
     thirdPowerExercise:thirdExercise,
     powerLevel:powerLevel,
     strengthLevel:strengthLevel,
-    experienceLevel:experienceLevel
+    experienceLevel:experienceLevel,
+    lastUpdateTimestamp:serverTimestamp()
   });
 }
 

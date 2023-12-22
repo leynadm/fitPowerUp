@@ -19,7 +19,6 @@ import User from "../../utils/interfaces/User";
 import { AuthContext } from "../../context/Auth";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import PersonIcon from "@mui/icons-material/Person";
@@ -46,11 +45,14 @@ import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
 import SearchViewCharacterProgressModal from "../../components/ui/SearchViewCharacterProgressModal";
 import toast from "react-hot-toast";
-import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
+import useOnlineStatus from "../../hooks/useOnlineStatus";
+
 function SearchUserProfile() {
   const { id } = useParams<{ id: string }>();
-  const {setUserFeed,setFeedDataNullCheck, setHasPosts,setUsersDataCache}=useContext(SocialDataContext)
-  const { currentUser,currentUserData,setCurrentUserData } = useContext(AuthContext);
+  const { setUserFeed, setFeedDataNullCheck, setHasPosts, setUsersDataCache } =
+    useContext(SocialDataContext);
+  const { currentUser, currentUserData, setCurrentUserData } =
+    useContext(AuthContext);
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [follow, setFollow] = useState<string>("");
   const [queriedUser, setQueriedUser] = useState<User>();
@@ -60,12 +62,14 @@ function SearchUserProfile() {
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [followersLimitModalOpen, setFollowersLimitModalOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isNewsfeedHovered, setIsNewsfeedHovered] = useState(false);
+  const [isSpottersHovered, setIsSpottersHovered] = useState(false);
+  const [isSpottingHovered, setIsSpottingHovered] = useState(false);
+
   const [
     openSearchViewCharacterProgressModal,
     setOpenSearchViewCharacterProgressModal,
   ] = useState(false);
-
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -74,18 +78,7 @@ function SearchUserProfile() {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     if (isOnline) {
@@ -94,7 +87,7 @@ function SearchUserProfile() {
       getSearchProfileFollowers();
     }
   }, [id]);
- 
+
   const navigate = useNavigate();
 
   async function getRelationshipStatus() {
@@ -102,10 +95,10 @@ function SearchUserProfile() {
       if (!id) {
         throw new Error("User ID is undefined");
       }
-  
+
       const followersFeedRef = doc(db, "followers-feed", id);
       const documentSnapshot = await getDoc(followersFeedRef);
-  
+
       if (documentSnapshot.exists()) {
         const data = documentSnapshot.data();
         const users = data.users || [];
@@ -119,72 +112,67 @@ function SearchUserProfile() {
         setFollow("Start To Spot");
       }
     } catch (error) {
-      toast.error("Oops, getRelationshipStatus has an error!")
+      toast.error("Oops, getRelationshipStatus has an error!");
       // Handle the error here
       console.error("Error getting relationship status:", error);
       // You can also show a user-friendly error message to the user
       // For example: setErrorState("Failed to get relationship status. Please try again later.");
     }
   }
-  
 
   async function getProfileData() {
     try {
       const userRef = doc(collection(db, "users"), id);
       const docSnap = await getDoc(userRef);
-  
+
       if (docSnap.exists()) {
         const userData = docSnap.data() as User;
         const userDataWithId = { ...userData, id: docSnap.id };
         setQueriedUser(userDataWithId);
       } else {
-
       }
     } catch (error) {
-      toast.error("Oops, getProfileData has an error!")
+      toast.error("Oops, getProfileData has an error!");
       // Handle the error here
       console.error("Error fetching profile data:", error);
       // You can also show a user-friendly error message to the user
       // For example: setErrorState("Failed to fetch profile data. Please try again later.");
     }
   }
-  
 
   async function followUser() {
     try {
-
-
       if (currentUser.isAnonymous === true) {
         setGuestProfileModalOpen(true);
         return;
       }
 
       if (currentUser.emailVerified === false) {
-        toast("You need to verify your email first!")
+        toast("You need to verify your email first!");
         return;
       }
-  
+
       const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
       const followersFeedDoc = await getDoc(followersFeedRef);
-  
+
       if (!followersFeedDoc.exists()) {
         await setDoc(followersFeedRef, {
           lastPost: null,
           recentPosts: [],
           users: arrayUnion(currentUser.uid),
         });
-  
+
         setFollow("Stop Spotting");
         setUserFollowers(userFollowers + 1);
       } else {
         const followersFeedData = followersFeedDoc.data();
         const users = followersFeedData.users;
-  
-        if (users.length < 25) {
+
+        if (users.length <= 10) {
           await updateDoc(followersFeedRef, {
             users: arrayUnion(currentUser.uid),
           });
-  
+
           const currentUserfollowersFeedRef = doc(
             collection(db, "followers-feed"),
             `${currentUser.uid}`
@@ -192,79 +180,72 @@ function SearchUserProfile() {
           await updateDoc(currentUserfollowersFeedRef, {
             following: arrayUnion(id),
           });
-  
+
           setFollow("Stop Spotting");
           setUserFollowers(userFollowers + 1);
-  
+
           getSearchProfileFollowers();
           navigate("");
-          setUserFeed([])
-          setHasPosts(false)
-          setFeedDataNullCheck(true)
+          setUserFeed([]);
+          setHasPosts(false);
+          setFeedDataNullCheck(true);
         } else {
           setFollowersLimitModalOpen(!followersLimitModalOpen);
-  
         }
       }
     } catch (error) {
-      toast.error("Oops, followUser has an error!")
+      toast.error("Oops, followUser has an error!");
       // Handle any errors that occur during the execution of the function
       console.error("Error in followUser():", error);
       // You can add specific error handling here based on the error type if needed.
     }
   }
-  
 
- 
   async function unfollowUser() {
     try {
       const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
       const followersFeedDoc = await getDoc(followersFeedRef);
-  
+
       if (!followersFeedDoc.exists()) {
         // If the followers feed document doesn't exist, there's nothing to unfollow
         return;
       }
-  
+
       const followersFeedData = followersFeedDoc.data();
       if (!followersFeedData.users.includes(currentUser.uid)) {
         // If the current user is not in the users array, they're not following this user
         return;
       }
-  
+
       await updateDoc(followersFeedRef, {
         users: arrayRemove(currentUser.uid),
       });
-  
+
       setFollow("Start To Spot");
       setUserFollowers(userFollowers - 1);
-  
+
       const currentUserfollowersFeedRef = doc(
         collection(db, "followers-feed"),
         `${currentUser.uid}`
       );
-   
+
       await updateDoc(currentUserfollowersFeedRef, {
         following: arrayRemove(id),
       });
-    
+
       getSearchProfileFollowers();
-      setUserFeed([])
-      setHasPosts(false)
-      setFeedDataNullCheck(true)
+      setUserFeed([]);
+      setHasPosts(false);
+      setFeedDataNullCheck(true);
 
       navigate("");
     } catch (error) {
-      toast.error("Oops, unfollowUser has an error!")
+      toast.error("Oops, unfollowUser has an error!");
       // Handle any errors that occur during the execution of the function
       console.error("Error in unfollowUser():", error);
       // You can add specific error handling here based on the error type if needed.
     }
   }
-  
-
-
-
 
   function handleFollowerClick() {
     if (follow === "Start To Spot") {
@@ -273,7 +254,6 @@ function SearchUserProfile() {
       unfollowUser();
     }
   }
-
 
   function handleSearchUserProfilePostsBtn() {
     navigate("");
@@ -311,12 +291,11 @@ function SearchUserProfile() {
       setGuestProfileModalOpen(true);
       return;
     }
-    
+
     if (currentUser.emailVerified === false) {
-      toast("You need to verify your email first!")
+      toast("You need to verify your email first!");
       return;
     }
-
 
     const userRef = doc(collection(db, "users"), currentUser.uid);
 
@@ -325,13 +304,13 @@ function SearchUserProfile() {
     });
 
     // Assuming you have the currentUserData state and setCurrentUserData setter from useState hook
-    setCurrentUserData((prevUserData:any) => {
+    setCurrentUserData((prevUserData: any) => {
       return {
         ...prevUserData,
         blocked: [...prevUserData.blocked, id],
       };
     });
-    
+
     unfollowUser();
 
     handleClose();
@@ -343,7 +322,9 @@ function SearchUserProfile() {
   }
 
   function handleSearchViewCharacterProgressModalClick() {
-    setOpenSearchViewCharacterProgressModal(!openSearchViewCharacterProgressModal);
+    setOpenSearchViewCharacterProgressModal(
+      !openSearchViewCharacterProgressModal
+    );
   }
 
   return (
@@ -358,7 +339,16 @@ function SearchUserProfile() {
         setFollowersLimitModalOpen={setFollowersLimitModalOpen}
       />
 
-      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
+      <AppBar
+        elevation={0}
+        position="fixed"
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <PersonIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -427,13 +417,16 @@ function SearchUserProfile() {
               flexDirection: "column",
             }}
           >
+
+
+
+
             <Box
               sx={{
                 display: "flex",
                 gap: 2,
                 backgroundColor: "white",
                 padding: "8px",
-                marginTop: "8px",
                 borderTopLeftRadius: "5px",
                 borderTopRightRadius: "5px",
               }}
@@ -458,16 +451,14 @@ function SearchUserProfile() {
                 >
                   <Avatar
                     alt="Remy Sharp"
-                    sx={{ width: 56, height: 56, alignSelf: "center" }}
+                    sx={{ width: 64, height: 64, alignSelf: "center" }}
                   />
                 </Stack>
               )}
 
               <Box
                 sx={{
-                  marginLeft: "8px",
-                  marginTop: "8px",
-                  marginBottom: "8px",
+
                   width: "100%",
                   justifyContent: "center",
                   justifyItems: "center",
@@ -493,38 +484,41 @@ function SearchUserProfile() {
                   )}
                 </Typography>
 
-                <Button
-                  variant="contained"
-                  sx={{ width: "80%" }}
-                  onClick={handleFollowerClick}
-                >
-                  {follow}
-                  {follow === "Start To Spot" ? (
-                    <FavoriteIcon />
-                  ) : (
-                    <HeartBrokenIcon />
-                  )}
-                </Button>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Button
+                    variant="dbz_mini_icon"
+                    sx={{ width: "75%" }}
+                    onClick={handleFollowerClick}
+                  >
+                    {follow}
+                    {follow === "Start To Spot" ? (
+                      <FavoriteIcon sx={{ verticalAlign: "middle" }} />
+                    ) : (
+                      <HeartBrokenIcon />
+                    )}
+                  </Button>
 
-                <IconButton
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem onClick={blockUser}>Block User</MenuItem>
-                </Menu>
+                  <IconButton
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                    sx={{height:"32px"}}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItem onClick={blockUser}>Block User</MenuItem>
+                  </Menu>
+                </Box>
               </Box>
             </Box>
 
@@ -538,18 +532,23 @@ function SearchUserProfile() {
                 backgroundColor: "white",
                 borderBottomLeftRadius: "5px",
                 borderBottomRightRadius: "5px",
-                boxShadow: 1,
               }}
             >
               {queriedUser?.hidePowerLevel ||
               (queriedUser?.powerLevel === undefined &&
                 queriedUser?.strengthLevel === undefined &&
                 queriedUser?.experienceLevel === undefined) ? (
-                <Typography
-                  sx={{ fontSize: "1rem", padding: "8px", fontWeight: "bold" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    width: "100%",
+                    justifyItems: "center",
+                  }}
                 >
-                  Unknown Power Level
-                </Typography>
+                  <p style={{ fontSize: "1.25rem" }}>Unknown Power Level</p>
+                </Box>
               ) : (
                 <Box
                   sx={{
@@ -562,40 +561,40 @@ function SearchUserProfile() {
                 >
                   <Typography
                     sx={{
-                      fontSize: "2rem",
+                      fontSize: "1.5rem",
                       fontWeight: "bold",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <PowerLevelIcon width="2rem" height="2rem" />
+                    <PowerLevelIcon width="1.5rem" height="1.5rem" />
                     {queriedUser?.powerLevel}
                   </Typography>
 
                   <Typography
                     sx={{
-                      fontSize: "2rem",
+                      fontSize: "1.5rem",
                       fontWeight: "bold",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <StrengthIcon width="1.5rem" height="1.5rem" />
+                    <StrengthIcon width="1rem" height="1rem" />
                     {queriedUser?.strengthLevel}
                   </Typography>
 
                   <Typography
                     sx={{
-                      fontSize: "2rem",
+                      fontSize: "1.5rem",
                       fontWeight: "bold",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <ExperienceIcon width="1.5rem" height="1.5rem" />
+                    <ExperienceIcon width="1rem" height="1rem" />
                     {queriedUser?.experienceLevel}
                   </Typography>
                 </Box>
@@ -603,7 +602,7 @@ function SearchUserProfile() {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
+          <Box sx={{ display: "flex", width: "100%" }}>
             <Box
               sx={{
                 display: "flex",
@@ -623,19 +622,22 @@ function SearchUserProfile() {
                   width: "100%",
                   margin: 1,
                   fontSize: "small",
-                  border: "none",
-                  borderRadius: 2,
-                  backgroundColor: "white",
+                  flexGrow: 1,
                   ":hover": {
-                    bgcolor: "success.main", // theme.palette.primary.main
+                    bgcolor: "success.secondary", // theme.palette.primary.main
                     border: "none",
                   },
                 }}
                 key="posts"
-                variant="contained"
+                variant="dbz_mini"
                 onClick={handleSearchUserProfilePostsBtn}
+                onMouseEnter={() => setIsNewsfeedHovered(true)}
+                onMouseLeave={() => setIsNewsfeedHovered(false)}
+  
               >
-                <FeedIcon sx={{ color: "#000000" }} />
+              <FeedIcon
+                sx={{ color: isNewsfeedHovered ? "white" : "#000000" }}
+              />
               </Button>
 
               <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
@@ -654,27 +656,29 @@ function SearchUserProfile() {
               }}
             >
               <Button
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  flexGrow: 1,
-                  margin: 1,
-                  fontSize: "small",
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                margin: 1,
+                fontSize: "small",
+
+                flexGrow: 1,
+                ":hover": {
+                  bgcolor: "success.secondary", // theme.palette.primary.main
                   border: "none",
-                  borderRadius: 2,
-                  backgroundColor: "white",
-                  ":hover": {
-                    bgcolor: "success.main", // theme.palette.primary.main
-                    border: "none",
-                  },
-                }}
+                },
+              }}
                 key="followers"
-                variant="contained"
+                variant="dbz_mini"
                 onClick={handleSearchUserProfileFollowersBtn}
+                onMouseEnter={() => setIsSpottersHovered(true)}
+                onMouseLeave={() => setIsSpottersHovered(false)}
               >
-                <FavoriteIcon sx={{ color: "#000000" }} />
+              <FavoriteIcon
+                sx={{ color: isSpottersHovered ? "white" : "#000000" }}
+              />
               </Button>
               <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
                 {userFollowers === 1
@@ -700,23 +704,22 @@ function SearchUserProfile() {
                   alignItems: "center",
                   justifyContent: "center",
                   width: "100%",
-                  color: "black",
-                  flexGrow: 1,
                   margin: 1,
                   fontSize: "small",
-                  border: "none",
-                  borderRadius: 2,
-                  backgroundColor: "white",
+  
+                  flexGrow: 1,
                   ":hover": {
-                    bgcolor: "success.main", // theme.palette.primary.main
+                    bgcolor: "success.secondary", // theme.palette.primary.main
                     border: "none",
                   },
                 }}
                 key="following"
-                variant="contained"
+                variant="dbz_mini"
                 onClick={handleSearchUserProfileFollowingBtn}
+                onMouseEnter={() => setIsSpottingHovered(true)}
+                onMouseLeave={() => setIsSpottingHovered(false)}
               >
-                <FavoriteBorderIcon sx={{ color: "#000000" }} />
+                <FavoriteBorderIcon                 sx={{ color: isSpottingHovered ? "white" : "#000000" }}/>
               </Button>
               <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
                 {userFollowing === 1

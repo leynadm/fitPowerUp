@@ -11,7 +11,7 @@ export const useUserTrainingData = () => {
 
   const fetchUserTrainingData = async () => {
     if (!currentUser) return;
-
+    console.log('fetching user Training Data')
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userTrainingCollectionRef = collection(
       usersDocRef,

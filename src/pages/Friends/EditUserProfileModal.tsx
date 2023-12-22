@@ -21,6 +21,7 @@ import User from "../../utils/interfaces/User";
 import Switch from "@mui/material/Switch";
 import toast from "react-hot-toast";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
+import capitalizeWords from "../../utils/capitalizeWords";
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,7 +65,6 @@ function EditUserProfileModal({
   */
   const [profileImageURL, setProfileImageURL] = useState("");
   const [saving, setSaving] = useState(false);
-  const [noteDisplayStatus, setNoteDisplayStatus] = useState(false);
 
   const [profileImage, setProfileImage] = useState(
     currentUserData.profileImage
@@ -259,25 +259,24 @@ function EditUserProfileModal({
 
   function hideProfileToggle() {
     setHideProfile((prevHideProfile) => !prevHideProfile);
-    setNoteDisplayStatus(true);
+
   }
 
   function hidePowerLevelToggle() {
     setHidePowerLevel((prevHidePowerLevel) => !prevHidePowerLevel);
-    setNoteDisplayStatus(true);
+
   }
   function hideFollowersToggle() {
     setHideFollowers((prevHideFollowers) => !prevHideFollowers);
-    setNoteDisplayStatus(true);
+
   }
   function hideFollowingToggle() {
     setHideFollowing((prevHideFollowing) => !prevHideFollowing);
-    setNoteDisplayStatus(true);
+
   }
 
   function handleClose() {
     setSaving(false);
-    setNoteDisplayStatus(false);
     setEditProfileModalOpen(false);
   }
 
@@ -332,15 +331,10 @@ function EditUserProfileModal({
                     fontSize: "large",
                   }}
                 >
-                  {currentUserData.fullname[2]}
+                  {capitalizeWords(currentUserData.fullname[2])}
                 </Typography>
                 <Button
-                  variant="outlined"
-                  sx={{
-                    backgroundColor: "white",
-                    color: "black",
-                    width: "100%",
-                  }}
+                  variant="dbz_mini"
                   onClick={handleProfilePhotoChange} // Handle the click event to trigger file input click
                 >
                   Change profile photo
@@ -402,12 +396,13 @@ function EditUserProfileModal({
                     checked={sex === "male"}
                   />
                 </RadioGroup>
+                {/* 
                 {noteDisplayStatus && (
                   <Typography sx={{ fontSize: "small", textAlign: "center" }}>
                     Note: Changing the settings below will sign you out. Please
                     log in again to see the updated changes.
                   </Typography>
-                )}
+                )} */}
                 <FormControlLabel
                   control={
                     <Switch checked={hideProfile} onClick={hideProfileToggle} />
@@ -450,7 +445,7 @@ function EditUserProfileModal({
               }}
             >
               <Button
-                variant="contained"
+                variant="dbz_save"
                 color="success"
                 sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
                 onClick={updateUserData}
@@ -458,7 +453,7 @@ function EditUserProfileModal({
                 Save
               </Button>
               <Button
-                variant="contained"
+                variant="dbz_clear"
                 sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
                 onClick={handleClose}
               >

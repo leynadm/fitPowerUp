@@ -38,11 +38,6 @@ function ExerciseSelectedTrack() {
 
   const { currentUserData } = useContext(AuthContext);
 
-  /* 
-  const exerciseSelected = userExercisesLibrary[0].exercises.find(
-    (exercise: IUserExercisesLibrary) => exercise.name === exerciseName
-  ); */
-
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const lastExercise = getLastCompletedExerciseEntry();
   const [editingExercise, setEditingExercise] = useState(false);
@@ -98,10 +93,9 @@ function ExerciseSelectedTrack() {
     };
 
     const fetchLocalExerciseData = async () => {
-      if(exerciseSelected){
+      if (exerciseSelected) {
         await getExistingExercises(exerciseSelected.name, setExistingExercises);
       }
-    
     };
 
     fetchLocalExerciseData();
@@ -110,8 +104,8 @@ function ExerciseSelectedTrack() {
 
   const entryToSave = {
     date: new Date(),
-    exercise: exerciseSelected!==null?exerciseSelected.name: null,
-    group: exerciseSelected!==null ?exerciseSelected.group: null,
+    exercise: exerciseSelected !== null ? exerciseSelected.name : null,
+    group: exerciseSelected !== null ? exerciseSelected.group : null,
     weight: weightValue,
     reps: repsValue,
     distance: distanceValue,
@@ -122,7 +116,7 @@ function ExerciseSelectedTrack() {
   };
 
   function getLastCompletedExerciseEntry() {
-    if (userExercisesLibrary.length===0) {
+    if (userExercisesLibrary.length === 0) {
       return;
     }
 
@@ -163,7 +157,12 @@ function ExerciseSelectedTrack() {
     }
   }
 
-  function handleUpdateExerciseSelection(exerciseId: number) {
+  function handleUpdateExerciseSelection(exerciseId: number,exerciseReps:number,exerciseWeight:number,exerciseDistance:number,exerciseTime:number,exerciseDistanceUnit:string) {
+    setRepsValue(exerciseReps)
+    setTimeValue(exerciseTime)
+    setDistanceValue(exerciseDistance)
+    setDistanceUnit(exerciseDistanceUnit)
+    setWeightValue(exerciseWeight.toString())
     setEditingExercise(true);
     setIdExerciseUpdate(exerciseId);
   }
@@ -1046,25 +1045,51 @@ function ExerciseSelectedTrack() {
                   ? "5px solid red"
                   : "5px solid transparent",
               }}
-              onClick={() => handleUpdateExerciseSelection(exercise.id)}
+              onClick={() => handleUpdateExerciseSelection(exercise.id,exercise.reps,exercise.weight,exercise.distance,exercise.time,exercise.distance_unit)}
             >
               {exercise.weight !== 0 && (
-                <Typography>
+                <Typography
+                  fontStyle={
+                    editingExercise && idExerciseUpdate === exercise.id
+                      ? "italic"
+                      : "normal"
+                  }
+                >
                   {`${exercise.weight.toFixed(2)} ${
                     currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
                   }`}
                 </Typography>
               )}
               {exercise.reps !== 0 && (
-                <Typography>{exercise.reps} reps</Typography>
+                <Typography
+                  fontStyle={
+                    editingExercise && idExerciseUpdate === exercise.id
+                      ? "italic"
+                      : "normal"
+                  }
+                >
+                  {exercise.reps} reps
+                </Typography>
               )}
 
               {exercise.distance !== 0 && (
-                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                <Typography
+                  fontStyle={
+                    editingExercise && idExerciseUpdate === exercise.id
+                      ? "italic"
+                      : "normal"
+                  }
+                >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
               )}
 
               {exercise.time !== 0 && (
-                <Typography>
+                <Typography
+                  fontStyle={
+                    editingExercise && idExerciseUpdate === exercise.id
+                      ? "italic"
+                      : "normal"
+                  }
+                >
                   {exercise.time !== 0 ? formatTime(exercise.time) : ""}
                 </Typography>
               )}

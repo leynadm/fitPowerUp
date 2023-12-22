@@ -16,6 +16,7 @@ import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import toast from "react-hot-toast";
+import UserProfileBar from "../../components/ui/UserProfileBar";
 interface UserData {
   id: string;
   [key: string]: any; // Add this if there are other properties in the user data object.
@@ -118,139 +119,9 @@ function UserProfileFollowing() {
   return (
     <>
       {hasFollowing ? (
-        <Box sx={{ paddingBottom: "56px" }}>
+        <Box display="flex" flexDirection="column" gap={1} paddingBottom="56px">
           {userIndividualFollowingData.map((user, index) => (
-            <Box
-              key={index}
-              sx={{
-                paddingTop: "8px",
-                margin: 0,
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                flexDirection: "column",
-                alignItems: "center",
-                boxShadow: 1,
-              }}
-            >
-              <List
-                sx={{
-                  width: "100%",
-                  bgcolor: "background.paper",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  alignSelf: "center",
-                  justifySelf: "center",
-                }}
-              >
-                <ListItem
-                  alignItems="flex-start"
-                  sx={{ display: "flex", alignItems: "center" }}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      sx={{ flexGrow: 1 }}
-                      alt="Remy Sharp"
-                      src={user.profileImage}
-                    />
-                  </ListItemAvatar>
-
-                  <Link
-                    to={`/home/friends/results/u/${user.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Typography
-                      sx={{
-                        flexGrow: 1,
-                        alignSelf: "center",
-                        fontSize: "large",
-                        fontWeight: "bold",
-                        color: "black",
-                        display: "flex",
-                        gap: 1,
-                        alignItems: "center",
-                      }}
-                    >
-                      {`${user.name} ${user.surname}`}
-
-                      {user.verified && (
-                        <VerifiedIcon
-                          sx={{
-                            color: "#3f51b5",
-                            width: "1rem",
-                            height: "1rem",
-                          }}
-                        />
-                      )}
-                    </Typography>
-
-                    {user.hidePowerLevel ||
-                    (user.powerLevel === undefined &&
-                      user.strengthLevel === undefined &&
-                      user.experienceLevel === undefined) ? (
-                      <Typography sx={{ textDecoration: "none" }}>
-                        Unknown Power Level
-                      </Typography>
-                    ) : (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            fontSize: "1.25rem",
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <PowerLevelIcon width="1.35rem" height="1.35rem" />
-                          {user.powerLevel}
-                        </Typography>{" "}
-                        <Typography
-                          sx={{
-                            fontSize: "1.25rem",
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <StrengthIcon width="1.15rem" height="1.15rem" />
-                          {user.strengthLevel}
-                        </Typography>{" "}
-                        <Typography
-                          sx={{
-                            fontSize: "1.25rem",
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ExperienceIcon width="1.15rem" height="1.15rem" />
-                          {user.experienceLevel}
-                        </Typography>{" "}
-                      </Box>
-                    )}
-                  </Link>
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                    }}
-                  ></Box>
-                </ListItem>
-              </List>
-            </Box>
+            <UserProfileBar user={user} index={index} />
           ))}
 
           <Button

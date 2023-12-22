@@ -217,21 +217,23 @@ function PostComment({
               <Box>
                 <Collapse in={expandedReplies} timeout="auto" unmountOnExit>
                   <Divider sx={{ width: "100%" }} />
-                  <CardContent sx={{ ":last-child": { padding: 0 } }}>
+                  <CardContent sx={{ ":last-child": { padding:0  } }}>
                     <Box
                       sx={{
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         height: "100%",
+                        paddingTop:"8px"
                       }}
                     > 
                       <TextField
                         multiline
                         id="input-with-sx"
                         label="Reply to the comment"
-                        variant="outlined"
+                        className="dbz-subvariant"
                         sx={{ width: "100%" }}
+                        size="small"
                         onChange={(e) => setReplyText(e.target.value)}
                         value={replyText}
                       />

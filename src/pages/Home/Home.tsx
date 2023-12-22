@@ -7,12 +7,13 @@ import Workout from "../Workout/Workout";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import VerifyEmailDialog from "../../components/ui/VerifyEmailDialog";
 import RestTimer from "../../components/ui/RestTimer";
-import { SocialDataProvider } from "../../context/SocialData";
 import { LogDataProvider } from "../../context/LogData";
 import { UserTrainingDataProvider } from "../../context/UserTrainingData";
 import { UserExercisesLibraryDataProvider } from "../../context/UserExercisesLibrary";
 import { BodyTrackerDataProvider } from "../../context/BodyTrackerData";
 import { UserFeatsDataProvider } from "../../context/UserFeatsData";
+import { FriendsSummaryProvider } from "../../context/FriendsSummary";
+import { SocialDataProvider } from "../../context/SocialData";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
@@ -29,46 +30,48 @@ function Home({
   const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(false);
 
   return (
-    <SocialDataProvider>
-      <UserTrainingDataProvider>
-        <UserExercisesLibraryDataProvider>
-          <BodyTrackerDataProvider>
+    <UserTrainingDataProvider>
+      <UserExercisesLibraryDataProvider>
+        <BodyTrackerDataProvider>
           <UserFeatsDataProvider>
             <LogDataProvider>
-              <VerifyEmailDialog
-                verifyEmailModalOpen={verifyEmailModalOpen}
-                setVerifyEmailModalOpen={setVerifyEmailModalOpen}
-              />
-
-              <RestTimer />
-
-              <Navbar />
-
-              <Routes>
-                <Route
-                  path="workout/*"
-                  index
-                  element={
-                    <Workout
-                      existingExercises={existingExercises}
-                      setExistingExercises={setExistingExercises}
-                    />
-                  }
+              <FriendsSummaryProvider>
+                <SocialDataProvider>
+                <VerifyEmailDialog
+                  verifyEmailModalOpen={verifyEmailModalOpen}
+                  setVerifyEmailModalOpen={setVerifyEmailModalOpen}
                 />
 
-                <Route
-                  path="friends/*"
-                  element={<Friends existingExercises={existingExercises} />}
-                />
+                <RestTimer />
 
-                <Route path="progress/*" element={<Progress />} />
-              </Routes>
+                <Navbar />
+
+                <Routes>
+                  <Route
+                    path="workout/*"
+                    index
+                    element={
+                      <Workout
+                        existingExercises={existingExercises}
+                        setExistingExercises={setExistingExercises}
+                      />
+                    }
+                  />
+
+                  <Route
+                    path="friends/*"
+                    element={<Friends existingExercises={existingExercises} />}
+                  />
+
+                  <Route path="progress/*" element={<Progress />} />
+                </Routes>
+                </SocialDataProvider>
+              </FriendsSummaryProvider>
             </LogDataProvider>
-            </UserFeatsDataProvider>
-          </BodyTrackerDataProvider>
-        </UserExercisesLibraryDataProvider>
-      </UserTrainingDataProvider>
-    </SocialDataProvider>
+          </UserFeatsDataProvider>
+        </BodyTrackerDataProvider>
+      </UserExercisesLibraryDataProvider>
+    </UserTrainingDataProvider>
   );
 }
 

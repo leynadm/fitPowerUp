@@ -1,9 +1,6 @@
 import React, {
   useState,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
+  useContext
 } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -34,6 +31,9 @@ import SearchPost from "./SearchPost";
 import { AuthContext } from "../../context/Auth";
 import { Toaster } from "react-hot-toast";
 import BlockedUsers from "./BlockedUsers";
+import SpottingBoard from "./SpottingBoard";
+import { FriendsSummaryProvider } from "../../context/FriendsSummary";
+
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
 }
@@ -178,7 +178,7 @@ function Friends({ existingExercises }: HomeProps) {
   }
 
   return (
-    <Container sx={{ width: "100%" }}>
+    <Container maxWidth="sm">
 
       <AppBar
         position="fixed"

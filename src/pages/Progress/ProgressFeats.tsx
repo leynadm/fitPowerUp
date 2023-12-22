@@ -16,6 +16,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { AuthContext } from "../../context/Auth";
 import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import { UserFeatsDataContext } from "../../context/UserFeatsData";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 function ProgressGraph() {
   const { userFeatsData } = useContext(UserFeatsDataContext);
   const { currentUserData } = useContext(AuthContext);
@@ -195,16 +196,7 @@ function ProgressGraph() {
       </FormControl>
 
       {userFeatsDataArr.length === 0 ? (
-        <Box height="100%" justifyContent="center" display="flex">
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <NoAvailableDataBox />
-          </Box>
-        </Box>
+        <LoadingScreenCircle text="Waiting for Piccolo to finish his dramatic entrance..."/>
       ) : (
         <VariableSizeList
           height={window.innerHeight - 170}

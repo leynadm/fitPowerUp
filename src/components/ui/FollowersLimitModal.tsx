@@ -44,13 +44,16 @@ export default function FollowersLimitModal({
           <Typography sx={{ padding: "8px" }}>
             Scalability Testing Limitation.
             <br></br>
-            Please note that for scalability testing reasons, there is a
-            temporary maximum limit of 50 followed users per account.
+            In the spirit of fostering a close community and deeper
+            connections, our 'Spotting' feature allows you to follow and stay
+            connected with up to 10 fellow warriors.
             <br></br>
-            Thank you for your cooperation and understanding during this phase.
+            By limiting to 10 'Spotted'
+            users, we encourage meaningful interactions and focused support,
+            mirroring the close camaraderie seen in the world of Dragon Ball Z.
             <br></br>
-            There will be further updates in order to enhance the platform for a
-            better user experience.
+            Choose wisely those who inspire and motivate you in your fitness
+            journey, and together, push beyond your limits!
             <br></br>
             Thank you!"
           </Typography>
@@ -61,7 +64,7 @@ export default function FollowersLimitModal({
             }}
           >
             <Button
-              variant="contained"
+              variant="dbz_mini"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={() =>
                 setFollowersLimitModalOpen(!followersLimitModalOpen)

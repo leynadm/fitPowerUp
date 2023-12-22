@@ -745,8 +745,11 @@ export default function UserWorkoutCard({
                 multiline
                 id="input-with-sx"
                 label="Write a comment"
-                variant="outlined"
-                sx={{ width: "100%" }}
+                className="dbz-subvariant"
+                size="small"
+                sx={{ width: "100%"
+              }}
+
                 onChange={(e) => setCommentText(e.target.value)}
                 value={commentText}
               />

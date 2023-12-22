@@ -17,6 +17,7 @@ declare module "@mui/material/Button" {
     dbz_mini: true;
     dbz_save: true;
     dbz_clear: true;
+    dbz_mini_icon: true;
   }
 }
 
@@ -94,6 +95,35 @@ function App() {
             },
           },
           
+          {
+            props: { variant: "dbz_mini_icon" },
+            style: {
+              backgroundColor: "#FFA500",
+              border: "2px solid #422800",
+              borderRadius: "30px",
+              boxShadow: "4px 4px 0 0 #422800",
+              color: "black",
+              cursor: "pointer",
+              fontWeight: 600,
+              fontSize: "1rem",
+              padding: "0 16px 0 16px",
+              textAlign: "center",
+              textDecoration: "none",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              touchAction: "manipulation",
+              display:"flex",
+              gap:2,
+              "&:hover": {
+                backgroundColor: "#520975",
+                color: "#FFFFFF",
+              },
+              "&:active": {
+                boxShadow: "2px 2px 0 0 #422800",
+                transform: "translate(2px, 2px)",
+              },
+            },
+          },
 
           {
             props: { variant: "dbz_mini" },
@@ -104,7 +134,6 @@ function App() {
               boxShadow: "4px 4px 0 0 #422800",
               color: "black",
               cursor: "pointer",
-              display: "inline-block",
               fontWeight: 600,
               fontSize: "1rem",
               padding: "0 16px 0 16px",
@@ -113,7 +142,6 @@ function App() {
               userSelect: "none",
               WebkitUserSelect: "none",
               touchAction: "manipulation",
-
               "&:hover": {
                 backgroundColor: "#520975",
                 color: "#FFFFFF",
@@ -159,6 +187,29 @@ function App() {
       MuiTextField: {
         styleOverrides: {
           root: {
+            "&.dbz-subvariant": {
+              "& fieldset": {
+                borderRadius:"25px"
+              },
+              "& .MuiInputBase-input": {
+                padding: 0 // Adjust this as needed
+              },
+              "& .MuiInputBase-input.MuiInputBase-input": {
+                padding: 0, // Adjust this as needed
+              },
+              "& .MuiInputBase-input:hover + fieldset": {
+                border: `1px solid blue`,
+                padding:0
+              },
+              "& .MuiInputBase-input:focus + fieldset": {
+                border: `1px solid blue`,
+                padding:0
+              },
+              "& label.Mui-focused": {
+                color: "#520975",
+              },
+            },
+            
             "& label.Mui-focused": {
               color: "#520975",
             },
@@ -167,7 +218,7 @@ function App() {
             },
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "#520975",
+                borderColor: "#520975"
               },
               "&:hover fieldset": {
                 borderColor: "#520975",
@@ -179,6 +230,8 @@ function App() {
           },
         },
       },
+      
+
       MuiAutocomplete: {
         styleOverrides: {
           root: {

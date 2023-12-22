@@ -17,7 +17,6 @@ import {
 import { useEffect } from "react";
 import Container from "@mui/material/Container";
 import { useContext } from "react";
-import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
 import { Select, MenuItem } from "@mui/material";
@@ -52,7 +51,7 @@ function BodyTrackerGraph() {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
 
-      return dateB.getTime() - dateA.getTime();
+      return dateA.getTime() - dateB.getTime();
     }
   );
 
@@ -215,7 +214,8 @@ function BodyTrackerGraph() {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" fontSize={15} tick={{ dy: 10 }} />
+              <XAxis dataKey="date" fontSize={15} tick={{ dy: 10 }} 
+              />
               <YAxis
                 name="Weight"
                 unit=" kg"

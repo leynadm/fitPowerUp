@@ -16,15 +16,30 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { db } from "../../config/firebase";
-
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 function Notifications() {
   const { currentUser } = useContext(AuthContext);
 
   const [notificationsData, setNotificationsData] = useState([]);
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
-    getNotifications(currentUser.uid, setNotificationsData);
-  }, [currentUser.uid]);
+    if (isOnline) {
+      const fetchNotifications = async () => {
+        try {
+          console.log('fetching notifications')
+          await getNotifications(currentUser.uid, setNotificationsData);
+        } catch (error) {
+          console.log(error);
+          console.error(error);
+        }
+      };
+
+      fetchNotifications();
+    } else {
+      console.log("Offline - Not fetching notifications");
+    }
+  }, [isOnline]);
 
   function deleteNotifications() {
     try {
@@ -47,7 +62,6 @@ function Notifications() {
   return (
     <Box
       sx={{
-        marginTop: "8px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -112,9 +126,17 @@ function Notifications() {
           Delete Notifications
         </Button>
       ) : (
-        <Typography sx={{ padding: "8px" }}>
-          You don't have any notifications.
-        </Typography>
+        <Box
+          height="calc(100svh - 112px)"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Typography sx={{ padding: "8px" }}>
+            You don't have any notifications.
+          </Typography>
+        </Box>
       )}
     </Box>
   );

@@ -46,19 +46,23 @@ function MuscleGroupsSelectionMenu() {
     return [];
   });
 
+
   useEffect(() => {
-    
     const fetchData = async () => {
       if (userExercisesLibrary.length === 0) {
         await refetchUserExercisesLibrary();
       }
     };
 
-    setExercisesMuscleGroupsArr(getExercisesMuscleGroups(userExercisesLibrary));
-    setMuscleGroupExercises(getMuscleGroupExercises(userExercisesLibrary));
+
+    if(userExercisesLibrary.length>0){
+      setExercisesMuscleGroupsArr(getExercisesMuscleGroups(userExercisesLibrary));
+      setMuscleGroupExercises(getMuscleGroupExercises(userExercisesLibrary[0].exercises));
+    }
 
     fetchData().catch(console.error); // Handle errors
   }, [userExercisesLibrary]);
+
 
   const filteredExercises = useMemo(() => {
     return muscleGroupExercises.filter((exercise) => {
@@ -80,8 +84,8 @@ function MuscleGroupsSelectionMenu() {
     navigate(`exercises/${muscleGroup}`, { state: { muscleGroup } });
   };
 
-  function handleTileClick(exerciseName: string) {
-    navigate(`exercises/selected/${exerciseName}`);
+  function handleTileClick(exerciseName: string,exerciseMuscleGroup:string) {
+    navigate(`exercises/${exerciseMuscleGroup}/selected/${exerciseName}`, { state: { muscleGroup:exerciseMuscleGroup } });
   }
 
   const Row = ({
@@ -128,7 +132,7 @@ function MuscleGroupsSelectionMenu() {
         borderRadius="4px"
         style={rowStyle}
         pt={2}
-        onClick={() => handleTileClick(userExercise.name)}
+        onClick={() => handleTileClick(userExercise.name,userExercise.group)}
       >
         <Typography align="center">
           {userExercise.name.toLocaleUpperCase()}

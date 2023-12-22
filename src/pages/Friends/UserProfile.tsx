@@ -43,13 +43,16 @@ function UserProfile() {
   ] = useState(false);
   const navigate = useNavigate();
 
+  const [isNewsfeedHovered, setIsNewsfeedHovered] = useState(false);
+  const [isSpottersHovered, setIsSpottersHovered] = useState(false);
+  const [isSpottingHovered, setIsSpottingHovered] = useState(false);
+
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-
 
     return () => {
       window.removeEventListener("online", handleOnline);
@@ -83,7 +86,7 @@ function UserProfile() {
     try {
       const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
       const documentSnapshot = await getDoc(followersFeedRef);
-  
+
       if (documentSnapshot.exists()) {
         const data = documentSnapshot.data();
         const users = data.users || [];
@@ -94,14 +97,13 @@ function UserProfile() {
         setUserIndividualFollowing(following);
       }
     } catch (error) {
-      toast.error("Oops, getProfileFollowers has an error!")
+      toast.error("Oops, getProfileFollowers has an error!");
       // Handle the error here
       console.error("Error fetching profile followers:", error);
       // You can also show a user-friendly error message to the user
       // For example: setErrorState("Failed to fetch followers data. Please try again later.");
     }
   }
-  
 
   if (!isOnline) {
     return <NoConnection />;
@@ -113,8 +115,17 @@ function UserProfile() {
 
   return (
     <Box>
-      <AppBar elevation={0} position="fixed" style={{ top: 0, height: "56px" }}>
-        <Container maxWidth="xl">
+      <AppBar
+        elevation={0}
+        position="fixed"
+        style={{
+          top: 0,
+          height: "56px",
+          background:
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+        }}
+      >
+        <Container maxWidth="md">
           <Toolbar disableGutters>
             <AccountBoxIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -187,10 +198,8 @@ function UserProfile() {
             gap: 2,
             backgroundColor: "white",
             padding: "8px",
-            marginTop: "8px",
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
-            boxShadow: 1,
           }}
         >
           {currentUserData.profileImage !== "" ? (
@@ -214,16 +223,13 @@ function UserProfile() {
               <Avatar
                 alt="Remy Sharp"
                 src="/static/images/avatar/1.jpg"
-                sx={{ width: 56, height: 56, alignSelf: "center" }}
+                sx={{ width: 64, height: 64, alignSelf: "center" }}
               />
             </Stack>
           )}
 
           <Box
             sx={{
-              marginLeft: "8px",
-              marginTop: "8px",
-              marginBottom: "8px",
               width: "100%",
               justifyContent: "center",
               justifyItems: "center",
@@ -250,7 +256,7 @@ function UserProfile() {
             </Typography>
 
             <Button
-              variant="contained"
+              variant="dbz_mini"
               sx={{ width: "80%" }}
               onClick={() => setEditProfileModalOpen(true)}
             >
@@ -268,24 +274,15 @@ function UserProfile() {
             width: "100%",
             justifyItems: "center",
             backgroundColor: "white",
-            borderBottomLeftRadius: "5px",
-            borderBottomRightRadius: "5px",
-            boxShadow: 1,
           }}
         >
           {currentUserData.hidePowerLevel ||
           (currentUserData.powerLevel === undefined &&
             currentUserData.strengthLevel === undefined &&
             currentUserData.experienceLevel === undefined) ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                width: "100%",
-                justifyItems: "center",
-              }}
-            ></Box>
+            <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+              Unknown Power Level
+            </Typography>
           ) : (
             <Box
               sx={{
@@ -298,14 +295,15 @@ function UserProfile() {
             >
               <Typography
                 sx={{
-                  fontSize: "2rem",
+                  fontSize: "1.5rem",
                   fontWeight: "bold",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <PowerLevelIcon width="2rem" height="2rem" />
+                <PowerLevelIcon width="1.5rem" height="1.5rem" />
+
                 {currentUserData.powerLevel !== undefined
                   ? currentUserData.powerLevel
                   : "-"}
@@ -313,14 +311,14 @@ function UserProfile() {
 
               <Typography
                 sx={{
-                  fontSize: "2rem",
+                  fontSize: "1.5rem",
                   fontWeight: "bold",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <StrengthIcon width="1.5rem" height="1.5rem" />
+                <StrengthIcon width="1rem" height="1rem" />
 
                 {currentUserData.strengthLevel !== undefined
                   ? currentUserData.strengthLevel
@@ -329,14 +327,14 @@ function UserProfile() {
 
               <Typography
                 sx={{
-                  fontSize: "2rem",
+                  fontSize: "1.5rem",
                   fontWeight: "bold",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <ExperienceIcon width="1.5rem" height="1.5rem" />
+                <ExperienceIcon width="1rem" height="1rem" />
                 {currentUserData.experienceLevel !== undefined
                   ? currentUserData.experienceLevel
                   : "-"}
@@ -345,7 +343,7 @@ function UserProfile() {
           )}
         </Box>
 
-        <Box sx={{ display: "flex", width: "100%", padding: "8px" }}>
+        <Box sx={{ display: "flex", width: "100%" }}>
           <Box
             sx={{
               display: "flex",
@@ -365,19 +363,21 @@ function UserProfile() {
                 width: "100%",
                 margin: 1,
                 fontSize: "small",
-                border: "none",
-                borderRadius: 2,
-                backgroundColor: "white",
+                flexGrow: 1,
                 ":hover": {
-                  bgcolor: "success.main", // theme.palette.primary.main
+                  bgcolor: "success.secondary", // theme.palette.primary.main
                   border: "none",
                 },
               }}
               key="posts"
-              variant="contained"
+              variant="dbz_mini"
               onClick={handleUserProfilePostsBtn}
+              onMouseEnter={() => setIsNewsfeedHovered(true)}
+              onMouseLeave={() => setIsNewsfeedHovered(false)}
             >
-              <FeedIcon sx={{ color: "#000000" }} />
+              <FeedIcon
+                sx={{ color: isNewsfeedHovered ? "white" : "#000000" }}
+              />
             </Button>
 
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
@@ -401,22 +401,23 @@ function UserProfile() {
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
-                flexGrow: 1,
                 margin: 1,
                 fontSize: "small",
-                border: "none",
-                borderRadius: 2,
-                backgroundColor: "white",
+                flexGrow: 1,
                 ":hover": {
-                  bgcolor: "success.main", // theme.palette.primary.main
+                  bgcolor: "success.secondary", // theme.palette.primary.main
                   border: "none",
                 },
               }}
               key="followers"
-              variant="contained"
+              variant="dbz_mini"
               onClick={handleUserProfileFollowersBtn}
+              onMouseEnter={() => setIsSpottersHovered(true)}
+              onMouseLeave={() => setIsSpottersHovered(false)}
             >
-              <FavoriteIcon sx={{ color: "#000000" }} />
+              <FavoriteIcon
+                sx={{ color: isSpottersHovered ? "white" : "#000000" }}
+              />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
               {userFollowers === 1
@@ -442,23 +443,24 @@ function UserProfile() {
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100%",
-                color: "black",
-                flexGrow: 1,
                 margin: 1,
                 fontSize: "small",
-                border: "none",
-                borderRadius: 2,
-                backgroundColor: "white",
+
+                flexGrow: 1,
                 ":hover": {
-                  bgcolor: "success.main", // theme.palette.primary.main
+                  bgcolor: "success.secondary", // theme.palette.primary.main
                   border: "none",
                 },
               }}
               key="following"
-              variant="contained"
+              variant="dbz_mini"
               onClick={handleUserProfileFollowingBtn}
+              onMouseEnter={() => setIsSpottingHovered(true)}
+              onMouseLeave={() => setIsSpottingHovered(false)}
             >
-              <FavoriteBorderIcon sx={{ color: "#000000" }} />
+              <FavoriteBorderIcon
+                sx={{ color: isSpottingHovered ? "white" : "#000000" }}
+              />
             </Button>
             <Typography sx={{ fontSize: "small", fontWeight: "light" }}>
               {userFollowing === 1

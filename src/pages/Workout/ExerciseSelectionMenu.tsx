@@ -17,8 +17,9 @@ import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibr
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import CircularProgress from "@mui/material/CircularProgress";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import { AuthContext } from "../../context/Auth";
 function ExerciseSelectionMenu() {
-  
+  const {currentUserData} = useContext(AuthContext)
   const { selectedMuscleGroup } = useParams();
   const muscleGroup: string = useLocation().state.muscleGroup;
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
@@ -27,7 +28,7 @@ function ExerciseSelectionMenu() {
   const [query, setQuery] = useState("");
 
   const navigate = useNavigate();
-
+    const isMale = currentUserData.sex==="male"?true:false
   const [muscleGroupExercises, setMuscleGroupExercises] = useState<
     IUserExercisesLibrary[]
   >(()=>{
@@ -122,10 +123,21 @@ function ExerciseSelectionMenu() {
 
     useEffect(() => {
       const fetchImageURL = async () => {
-        const exerciseImageRef = ref(
-          storage,
-          `assets/exercises-assets/${userExercise.id}.jpg`
-        );
+        
+        let exerciseImageRef;
+        
+        if(!isMale && userExercise.multi){
+          exerciseImageRef = ref(
+            storage,
+            `assets/exercises-assets/${userExercise.id}(2).jpg`
+          );
+        } else {
+          exerciseImageRef = ref(
+            storage,
+            `assets/exercises-assets/${userExercise.id}.jpg`
+          );
+        }
+        
         try {
           const url = await getDownloadURL(exerciseImageRef);
           setImageURL(url);

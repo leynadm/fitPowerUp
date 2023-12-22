@@ -25,24 +25,27 @@ import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import updatePowerLevelInFirestore from "../../utils/progressFunctions/firebaseFunctions/updatePowerLevelInFirestore";
 import toast from "react-hot-toast";
 import getUserWeight from "../../utils/getUserWeight";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import capitalizeWords from "../../utils/capitalizeWords";
-import { useCallback, useEffect, useRef } from "react";
-import PublishIcon from "@mui/icons-material/Publish";
+import { useEffect } from "react";
 import { Paper } from "@mui/material";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 function ProgressLevel() {
-  const { userTrainingData,  } =
-    useContext(UserTrainingDataContext);
-    const { userExercisesLibrary  } =
-    useContext(UserExercisesLibraryContext);
+  const { userTrainingData, refetchUserTrainingData } = useContext(
+    UserTrainingDataContext
+  );
+  const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
+    UserExercisesLibraryContext
+  );
 
-    const { userBodyTrackerData  } =
-    useContext(BodyTrackerDataContext);
+  const { userBodyTrackerData, refetchUserBodyTrackerData } = useContext(
+    BodyTrackerDataContext
+  );
 
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
+
   const firebaseTimestamp = new Date(
     currentUserData.lastUpdateTimestamp.toMillis()
   );
@@ -57,22 +60,12 @@ function ProgressLevel() {
     setCalculatedMaximumExperienceLevel,
   ] = useState(0);
   const isToday = isSameDay(firebaseTimestamp, currentDate);
-  console.log(isToday);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-  const imgRef = useRef<HTMLImageElement>(null);
 
-  const updateImageDimensions = useCallback(() => {
-    const width = window.innerWidth; // Assuming full window for simplicity
-    const height = window.innerHeight;
-    // Here you would put the logic to calculate the image's actual dimensions
-    // For this example, we'll just set it directly
-    setImageDimensions({ width, height });
-  }, []);
+  console.log({ isToday });
 
   function isSameDay(d1: Date, d2: Date) {
+    console.log(d1);
+    console.log(d2);
     return (
       d1.getFullYear() === d2.getFullYear() &&
       d1.getMonth() === d2.getMonth() &&
@@ -80,52 +73,16 @@ function ProgressLevel() {
     );
   }
 
-  useEffect(() => {
-    // Capture the current value of the ref in a variable
-    const imgElement = imgRef.current;
-
-    // Check if imgElement is not null
-    if (imgElement) {
-      const handleLoad = () => {
-        const width = imgElement.offsetWidth;
-        const height = imgElement.offsetHeight;
-        setImageDimensions({ width, height });
-      };
-
-      // Add event listener
-      imgElement.addEventListener("load", handleLoad);
-
-      // Cleanup function to remove the event listener
-      return () => {
-        imgElement.removeEventListener("load", handleLoad);
-      };
-    }
-  }, []);
-
-  const labelsData = [
-    {
-      id: "shoulders",
-      top: (27 / 100) * imageDimensions.width,
-      left: (35 / 100) * imageDimensions.width,
-    },
-    { id: "biceps", top: "35%", left: "20%" },
-    { id: "chest", top: "35%", left: "20%" },
-    { id: "core", top: "35%", left: "20%" },
-    { id: "forearms", top: "35%", left: "20%" },
-    { id: "full body", top: "35%", left: "20%" },
-    { id: "legs", top: "35%", left: "20%" },
-    { id: "back", top: "35%", left: "20%" },
-    { id: "triceps", top: "35%", left: "20%" },
-  ];
-
-  const shouldersData = labelsData.find((label) => label.id === "shoulders");
-
   const findDeadlift = findExerciseByName("barbell deadlift");
   const findBenchPress = findExerciseByName("flat barbell bench press");
   const findSquat = findExerciseByName("barbell squat");
 
+  const [userExercisesLibraryStrArr, setUserExercisesLibraryStrArr] = useState<
+    string[]
+  >([]);
+
   const [firstExerciseSelected, setFirstExerciseSelected] = useState(
-    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+    userExercisesLibrary.length > 0
       ? userExercisesLibrary[0].exercises.find(
           (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
@@ -135,7 +92,7 @@ function ProgressLevel() {
   );
 
   const [secondExerciseSelected, setSecondExerciseSelected] = useState(
-    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+    userExercisesLibrary.length > 0
       ? userExercisesLibrary[0].exercises.find(
           (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
@@ -145,7 +102,7 @@ function ProgressLevel() {
   );
 
   const [thirdExerciseSelected, setThirdExerciseSelected] = useState(
-    currentUserData.firstPowerExercise !== "No Exercise Selected Yet"
+    userExercisesLibrary.length > 0
       ? userExercisesLibrary[0].exercises.find(
           (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
@@ -154,6 +111,69 @@ function ProgressLevel() {
       : findDeadlift
   );
 
+  useEffect(() => {
+    if (userExercisesLibrary.length === 0) {
+      const fetchData = async () => {
+        await refetchUserExercisesLibrary();
+        await refetchUserTrainingData();
+        await refetchUserBodyTrackerData();
+      };
+      fetchData();
+    } else {
+      const userSelectedExercisesStrArr = userExercisesLibrary[0].exercises
+        .map((userExercise: IUserExercisesLibrary) =>
+          capitalizeWords(userExercise.name)
+        )
+        .sort((a: string, b: string) =>
+          a.localeCompare(b, undefined, { sensitivity: "base" })
+        );
+
+      setUserExercisesLibraryStrArr(userSelectedExercisesStrArr);
+
+      console.log(userExercisesLibrary);
+      const firstExerciseFound = () =>
+        userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.firstPowerExercise.toUpperCase()
+        );
+      console.log("found first:");
+      console.log(firstExerciseFound());
+
+      setFirstExerciseSelected(firstExerciseFound());
+
+      const secondExerciseFound = () =>
+        userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.secondPowerExercise.toUpperCase()
+        );
+
+      console.log(secondExerciseFound());
+      setSecondExerciseSelected(secondExerciseFound());
+
+      const thirdExerciseFound = () =>
+        userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
+            exercise.name.toUpperCase() ===
+            currentUserData.thirdPowerExercise.toUpperCase()
+        );
+
+      setThirdExerciseSelected(thirdExerciseFound());
+    }
+  }, [userExercisesLibrary]);
+
+  function findExerciseByName(name: string) {
+    if (userExercisesLibrary.length === 0) {
+      return "";
+    }
+
+    return userExercisesLibrary[0].exercises.find(
+      (exercise: IUserExercisesLibrary) =>
+        exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
+    );
+  }
+
   const data = [
     {
       name: "PL",
@@ -161,25 +181,6 @@ function ProgressLevel() {
       Experience: currentUserData.experienceLevel,
     },
   ];
-
-  const userSelectedExercisesStrArr = userExercisesLibrary[0].exercises
-    .map((userExercise: IUserExercisesLibrary) =>
-      capitalizeWords(userExercise.name)
-    )
-    .sort((a: string, b: string) =>
-      a.localeCompare(b, undefined, { sensitivity: "base" })
-    );
-
-  function findExerciseByName(name: string) {
-    return userExercisesLibrary[0].exercises.find(
-      (exercise: IUserExercisesLibrary) =>
-        exercise.name.toLocaleUpperCase() === name.toLocaleUpperCase()
-    );
-  }
-
-  if (!userTrainingData) {
-    return <>Updating...</>;
-  }
 
   const handleAutocompleteChange = (newValue: string | null, order: string) => {
     if (newValue) {
@@ -257,6 +258,11 @@ function ProgressLevel() {
   }
 
   async function handlePublishPowerLevel() {
+    if (isToday) {
+      toast.error("You can only update your Power Level once a day");
+      return;
+    }
+
     try {
       await updatePowerLevelInFirestore(
         currentUser.uid,
@@ -268,6 +274,7 @@ function ProgressLevel() {
         calculatedMaximumExperienceLevel
       );
       await fetchCurrentUserData(currentUser, setCurrentUserData);
+      toast.error("Your power level was updated!");
     } catch (error) {
       console.log(error);
       console.error(error);
@@ -330,6 +337,7 @@ function ProgressLevel() {
     return maxRM;
   }
 
+  /* 
   function calculateScaledImageSize(
     containerWidth: number,
     containerHeight: number,
@@ -351,6 +359,12 @@ function ProgressLevel() {
     }
 
     return { scaledWidth, scaledHeight };
+  } */
+
+  if (userExercisesLibrary.length === 0) {
+    return (
+      <LoadingScreenCircle text="Please wait, Krillin is being resurected..." />
+    );
   }
 
   return (
@@ -425,73 +439,76 @@ function ProgressLevel() {
           </BarChart>
         </ResponsiveContainer>
 
-        <Box display="flex" flexDirection="column" gap={2}>
-          <Typography variant="subtitle1" textAlign="center">
-            Select your strongest lifts to calculate your maximum Power Level
-          </Typography>
-          <Autocomplete
-            disableClearable
-            fullWidth
-            options={userSelectedExercisesStrArr}
-            value={
-              firstExerciseSelected
-                ? capitalizeWords(firstExerciseSelected.name)
-                : undefined
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="First Exercise"
-                variant="outlined"
-              />
-            )}
-            onChange={(event, value) =>
-              handleAutocompleteChange(value, "first")
-            }
-          />
+        {userExercisesLibrary.length > 0 && (
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Typography variant="subtitle1" textAlign="center">
+              Select your strongest lifts to calculate your maximum Power Level
+            </Typography>
 
-          <Autocomplete
-            disableClearable
-            fullWidth
-            options={userSelectedExercisesStrArr}
-            value={
-              secondExerciseSelected
-                ? capitalizeWords(secondExerciseSelected.name)
-                : undefined
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Second Exercise"
-                variant="outlined"
-              />
-            )}
-            onChange={(event, value) =>
-              handleAutocompleteChange(value, "second")
-            }
-          />
+            <Autocomplete
+              disableClearable
+              fullWidth
+              options={userExercisesLibraryStrArr}
+              value={
+                firstExerciseSelected
+                  ? capitalizeWords(firstExerciseSelected.name)
+                  : undefined
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="First Exercise"
+                  variant="outlined"
+                />
+              )}
+              onChange={(event, value) =>
+                handleAutocompleteChange(value, "first")
+              }
+            />
 
-          <Autocomplete
-            disableClearable
-            fullWidth
-            options={userSelectedExercisesStrArr}
-            value={
-              thirdExerciseSelected
-                ? capitalizeWords(thirdExerciseSelected.name)
-                : undefined
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Third Exercise"
-                variant="outlined"
-              />
-            )}
-            onChange={(event, value) =>
-              handleAutocompleteChange(value, "third")
-            }
-          />
-        </Box>
+            <Autocomplete
+              disableClearable
+              fullWidth
+              options={userExercisesLibraryStrArr}
+              value={
+                secondExerciseSelected
+                  ? capitalizeWords(secondExerciseSelected.name)
+                  : undefined
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Second Exercise"
+                  variant="outlined"
+                />
+              )}
+              onChange={(event, value) =>
+                handleAutocompleteChange(value, "second")
+              }
+            />
+
+            <Autocomplete
+              disableClearable
+              fullWidth
+              options={userExercisesLibraryStrArr}
+              value={
+                thirdExerciseSelected
+                  ? capitalizeWords(thirdExerciseSelected.name)
+                  : undefined
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Third Exercise"
+                  variant="outlined"
+                />
+              )}
+              onChange={(event, value) =>
+                handleAutocompleteChange(value, "third")
+              }
+            />
+          </Box>
+        )}
 
         <Box
           sx={{
@@ -529,13 +546,21 @@ function ProgressLevel() {
             gap={1}
           >
             <Box display="flex" justifyContent="space-evenly" width="100%">
-              <Typography>PL: {calculatedMaximumPowerLevel}</Typography>
-              <Typography>STR: {calculatedMaximumStrengthLevel}</Typography>
-              <Typography>EXP: {calculatedMaximumExperienceLevel}</Typography>
+              <Typography>
+                New PL: <strong>{calculatedMaximumPowerLevel}</strong>
+              </Typography>
+              <Typography>
+                New Str: <strong>{calculatedMaximumStrengthLevel}</strong>
+              </Typography>
+              <Typography>
+                New Exp: <strong>{calculatedMaximumExperienceLevel}</strong>
+              </Typography>
             </Box>
 
             {isToday ? (
-              <Typography>You can only save your PL once a day.</Typography>
+              <Typography align="center">
+                You already updated your Power Level today.
+              </Typography>
             ) : (
               <Button
                 variant="dbz_mini"
@@ -548,72 +573,6 @@ function ProgressLevel() {
           </Box>
         </Paper>
       )}
-
-      {/*
-      <Box
-        width="100%"
-        marginTop="16px"
-        gap={1}
-        display="flex"
-        flexDirection="column"
-        boxShadow={2}
-        borderRadius="4px"
-        padding="8px"
-      >
-        <Typography align="center" variant="h6">
-          WORKOUT MUSCLE CHART
-        </Typography>
-       
-        <ButtonGroup
-          variant="contained"
-          aria-label="outlined primary button group"
-          fullWidth
-        >
-          <Button>Sets</Button>
-          <Button>Reps</Button>
-          <Button>Volume</Button>
-          <Button>1RM</Button>
-        </ButtonGroup>
-
-        <Box display="flex" justifyContent="space-evenly" gap={1} width="100%">
-          <TextField type="date" fullWidth></TextField>
-          <TextField type="date" fullWidth></TextField>
-        </Box>
- 
-        <div
-
-          style={{
-            position:"relative",
-            display:"block",
-          }}
-
-        >
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Fchart-images%2Ffemale-saiyan-chart.jpg?alt=media&token=33f84156-70c8-4e60-9f1c-6ba80f49f578"
-            alt=""
-            height="100%"
-            width="100%"
-            ref={imgRef}
-            style={{
-              objectFit:"contain",
-              objectPosition:"center"
-
-            }}
-          ></img>
-         {/* 
-          <p
-          style={{
-            position:"absolute",
-            left:'32%',top:'25%'
-          }}
-            
-          >
-            23
-          </p>
-       
-        </div>
-      </Box>
-    */}
     </Box>
   );
 }

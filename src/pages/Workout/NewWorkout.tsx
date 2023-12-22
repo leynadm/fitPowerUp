@@ -61,8 +61,8 @@ function NewWorkout({
     navigate("workout_categories");
   };
 
-  const handleSelectWorkoutExercise = (exerciseName: string) => {
-    navigate(`workout_categories/exercises/selected/${exerciseName}`);
+  const handleSelectWorkoutExercise = (exerciseName: string,exerciseGroup:string) => {
+    navigate(`workout_categories/exercises/${exerciseGroup}/selected/${exerciseName}`);
   };
 
   function CompleteWorkoutModalVisibility() {
@@ -253,7 +253,7 @@ function NewWorkout({
                     borderRadius: "4px",
                     color: "white",
                   }}
-                  onClick={() => handleSelectWorkoutExercise(group.name)}
+                  onClick={() => handleSelectWorkoutExercise(group.name,group.exercises[0].group)}
                 >
                   {group.name.toLocaleUpperCase()}
                 </Typography>

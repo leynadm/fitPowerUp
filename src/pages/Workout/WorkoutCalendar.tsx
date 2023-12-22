@@ -26,7 +26,7 @@ import { AuthContext } from "../../context/Auth";
 import Grow from "@mui/material/Grow";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 function WorkoutCalendar() {
-  const { dateForWorkout, userTrainingData, setDateForWorkout } = useContext(
+  const { dateForWorkout, userTrainingData, setDateForWorkout,refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
   const [uniqueDates, setUniqueDates] = useState<string[]>([]);
@@ -59,10 +59,12 @@ function WorkoutCalendar() {
     } else {
       setWorkoutDateExercises([]);
     }
-  }, []);
+  }, [userTrainingData]);
 
   if (!userTrainingData || !dateForWorkout) {
-    return <>No Data</>;
+    return(
+<p>No Data</p>
+    ) 
   }
 
   function ServerDay(props: PickersDayProps<Dayjs>) {
