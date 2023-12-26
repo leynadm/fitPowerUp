@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef, Dispatch, SetStateAction } from "react";
+import React, { useContext, useEffect, useState, useRef, Dispatch, SetStateAction,MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
@@ -28,7 +28,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
-import { IUserTrainingData, IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
@@ -37,7 +37,7 @@ import StarsIcon from "@mui/icons-material/Stars";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DataBadge from "../../components/ui/DataBadge";
-import { Paper } from "@mui/material";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
@@ -46,6 +46,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import DeleteCompletedWorkout from "../../components/ui/DeleteCompletedWorkoutModal";
+
+
 function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -54,6 +58,18 @@ function CompletedWorkouts() {
   const { userTrainingData, dateForWorkout, setDateForWorkout } = useContext(
     UserTrainingDataContext
   );
+  
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const [openDeleteCompletedWorkout, setOpenDeleteCompletedWorkout] =
+    useState(false);
 
   const { currentUserData } = useContext(AuthContext);
 
@@ -62,6 +78,7 @@ function CompletedWorkouts() {
   >([]);
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
+
 
   const [swipe, setSwipe] = useState<any>({
     moved: false,
@@ -104,6 +121,20 @@ function CompletedWorkouts() {
   }, [userTrainingData, dateForWorkout]);
 
   const containerRef = useRef<HTMLElement>(null);
+  
+  const workoutId = ()=>{
+
+    if(filteredUserTrainingData.length>0){
+      return filteredUserTrainingData[0].id
+    } else {
+      return null
+    }
+  }
+
+  function handleOpenDeleteCompletedWorkout(){
+    handleClose()
+    setOpenDeleteCompletedWorkout(!openDeleteCompletedWorkout)
+  }
 
   const handleLeftArrowClick = () => {
     const newDate = convertStringToDate(dateForWorkout);
@@ -216,6 +247,11 @@ function CompletedWorkouts() {
         exerciseComment={exerciseComment}
       />
 
+      <DeleteCompletedWorkout
+      setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
+      openDeleteCompletedWorkout={openDeleteCompletedWorkout}
+      workoutId={workoutId()}
+      />
       <AppBar
         elevation={2}
         style={{
@@ -305,14 +341,14 @@ function CompletedWorkouts() {
                 </ListItemIcon>
                 <ListItemText>Analysis</ListItemText>
               </MenuItem>
-              
+
               <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
                 <ListItemIcon>
                   <FormatListNumberedIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Preset Workouts</ListItemText>
               </MenuItem>
-              
+
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
@@ -457,7 +493,7 @@ function CompletedWorkouts() {
                 </Typography>
               )}
 
-              <Accordion sx={{ borderRadius: "4px" }}>
+              <Accordion sx={{ borderRadius: "4px", padding: 0 }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -467,6 +503,7 @@ function CompletedWorkouts() {
                     justifyContent: "center",
                     width: "100%",
                     alignItems: "center",
+                    margin: 0,
                   }}
                 >
                   <Rating
@@ -479,7 +516,7 @@ function CompletedWorkouts() {
                     icon={<StarsIcon fontSize="inherit" />}
                   />
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{ pb: 0, pt: 0 }}>
                   <Typography>"{entry.wEval.comment}"</Typography>
                   <Box>
                     <FormControlLabel
@@ -508,6 +545,55 @@ function CompletedWorkouts() {
                         currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                       }
                     />
+                  </Box>
+                  <Box
+                    width="100%"
+                    display="flex"
+                    flexDirection="row-reverse"
+                    padding={1}
+                  >
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                      sx={{p:0}}
+                    >
+                      <MoreHorizIcon
+                        sx={{ alignSelf: "flex-end" }}
+                        fontSize="small"
+                      />
+                    </IconButton>
+
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      <MenuItem
+                      >
+                        <IconButton
+                          size="large"
+                          aria-label="account of current user"
+                          aria-controls="menu-appbar"
+                          aria-haspopup="true"
+                          sx={{p:0,m:0}}
+                          onClick={handleOpenDeleteCompletedWorkout}
+                        >
+                          <DeleteForeverIcon
+                            sx={{
+                              zIndex: 0,
+                            }}
+                          />
+                          <ListItemText>Delete Workout</ListItemText>
+                        </IconButton>
+                      </MenuItem>
+                    </Menu>
                   </Box>
                 </AccordionDetails>
               </Accordion>
@@ -667,7 +753,6 @@ function CompletedWorkouts() {
 
         {filteredUserTrainingData.length === 0 && (
           <Box
-
             sx={{
               height: "calc(100dvh - 168px)",
               display: "flex",

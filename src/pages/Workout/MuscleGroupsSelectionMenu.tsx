@@ -20,7 +20,6 @@ import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibr
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import getMuscleGroupExercises from "../../utils/firebaseDataFunctions/getMuscleGroupExercises";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { myBigObj } from "../../utils/myExercisesCheck";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 
 function MuscleGroupsSelectionMenu() {

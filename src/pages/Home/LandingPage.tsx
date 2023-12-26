@@ -208,7 +208,7 @@ function LandingPage() {
           height="calc(100svh - 56px)"
           display="grid"
           alignItems="center"
-          gridTemplateRows="4fr 1.5fr 4.5fr 1fr"
+          gridTemplateRows="4.5fr 1fr 4.5fr 1fr"
           width="100%"
           position="relative"
         >
@@ -223,7 +223,7 @@ function LandingPage() {
               "& img": {
                 maxWidth: {
                   xs: "256px", // Full width on extra-small devices
-                  sm: "384px", // Max width of 256px on small devices and above
+                  sm: "256px", // Max width of 256px on small devices and above
                   md: "384px", // Max width of 256px on small devices and above
                   lg: "384px", // Max width of 256px on small devices and above
                 },
@@ -962,6 +962,13 @@ function LandingPage() {
             justifyContent="center"
             alignItems="center"
             gap={1}
+            sx={{
+              fontSize: {
+                sm: "1rem", // Max width of 256px on small devices and above
+                md: "1rem", // Max width of 256px on small devices and above
+                lg: "1.25rem", // Max width of 256px on small devices and above
+              },
+            }}
           >
             Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
           </Typography>
