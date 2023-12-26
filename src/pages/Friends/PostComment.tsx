@@ -102,8 +102,6 @@ function PostComment({
 
           setReplyText("");
           getPostComments();
-          console.log(currentUser.uid)
-          console.log({postUserId})
           if(postUserId!==currentUser.uid){
             addNotificationEntry(
               postUserId,
@@ -133,9 +131,7 @@ function PostComment({
       [commentId]: deleteField(),
     })
       .then(() => {
-        console.log("Comment deleted successfully");
         getPostComments();
-
         setDeleteCommentModalOpen(!deleteCommentModalOpen);
       })
       .catch((error) => {
@@ -168,14 +164,16 @@ function PostComment({
                 alignItems: "center",
               }}
             >
+              {/* 
               <Link
                 to={`/home/friends/results/u/${comment.userId}`}
                 style={{ textDecoration: "none", color: "black" }}
-              >
+              > */}
                 <h6 style={{ margin: 0, textAlign: "left" }}>
                   {comment.name} {comment.surname}
                 </h6>
-              </Link>
+                {/* 
+              </Link> */}
 
               {(comment.userId === currentUser.uid ||
                 postUserId === currentUser.uid) && (
@@ -211,7 +209,10 @@ function PostComment({
                     fontSize: "small",
                   }}
                 >
-                  Reply
+                   
+                  {comment.replies && comment.replies.length===0&&'Be first to reply'}
+                  {comment.replies && comment.replies.length>0? `Replies (${comment.replies.length})`:'Reply'}
+
                 </ExpandReplies>
               </Box>
               <Box>

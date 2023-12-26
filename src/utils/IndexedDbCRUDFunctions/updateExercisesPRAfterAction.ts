@@ -40,7 +40,7 @@ export async function iterateRecordsAndUpdate(
   updatedEntryToSave: IIndexedDbUpdatedEntry
 ) {
   try {
-    const request = indexedDB.open("fitScouterDb", 2);
+    const request = indexedDB.open("fitPowerUpDb", 2);
 
     request.onsuccess = function (event: Event) {
       const db = (event.target as IDBRequest).result;
@@ -227,7 +227,6 @@ export async function iterateRecordsAndUpdate(
           cursor.continue();
         } else {
           // No more records
-          console.log("All records processed.");
           db.close();
         }
       };

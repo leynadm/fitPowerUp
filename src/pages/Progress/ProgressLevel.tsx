@@ -61,11 +61,7 @@ function ProgressLevel() {
   ] = useState(0);
   const isToday = isSameDay(firebaseTimestamp, currentDate);
 
-  console.log({ isToday });
-
   function isSameDay(d1: Date, d2: Date) {
-    console.log(d1);
-    console.log(d2);
     return (
       d1.getFullYear() === d2.getFullYear() &&
       d1.getMonth() === d2.getMonth() &&
@@ -130,16 +126,13 @@ function ProgressLevel() {
 
       setUserExercisesLibraryStrArr(userSelectedExercisesStrArr);
 
-      console.log(userExercisesLibrary);
       const firstExerciseFound = () =>
         userExercisesLibrary[0].exercises.find(
           (exercise: IUserExercisesLibrary) =>
             exercise.name.toUpperCase() ===
             currentUserData.firstPowerExercise.toUpperCase()
         );
-      console.log("found first:");
-      console.log(firstExerciseFound());
-
+     
       setFirstExerciseSelected(firstExerciseFound());
 
       const secondExerciseFound = () =>
@@ -149,7 +142,6 @@ function ProgressLevel() {
             currentUserData.secondPowerExercise.toUpperCase()
         );
 
-      console.log(secondExerciseFound());
       setSecondExerciseSelected(secondExerciseFound());
 
       const thirdExerciseFound = () =>
@@ -276,7 +268,6 @@ function ProgressLevel() {
       await fetchCurrentUserData(currentUser, setCurrentUserData);
       toast.error("Your power level was updated!");
     } catch (error) {
-      console.log(error);
       console.error(error);
       toast.error("Oops, we could save your new power level!");
     }

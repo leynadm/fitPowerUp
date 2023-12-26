@@ -62,8 +62,6 @@ function ExerciseSelectedHistory() {
   }) => {
     const group = exerciseHistoryArr[index];
 
-    console.log(group)
-    
     return (
       <Box key={index} style={style} className="exercise-complete">
         <Typography
@@ -218,12 +216,7 @@ function ExerciseSelectedHistory() {
   };
 
   return (
-    <Container
-      sx={{
-
-      }}
-      maxWidth="md"
-    >
+    <Container sx={{}} maxWidth="md">
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
@@ -246,7 +239,7 @@ function ExerciseSelectedHistory() {
       </Typography>
       <Divider />
 
-      <VariableSizeList 
+      <VariableSizeList
         height={window.innerHeight - 190}
         itemCount={exerciseHistoryArr.length}
         itemSize={(index) => {
@@ -256,11 +249,9 @@ function ExerciseSelectedHistory() {
           return exerciseHeight + 56;
         }}
         width="100%"
-
       >
         {Row}
       </VariableSizeList>
-
     </Container>
   );
 }

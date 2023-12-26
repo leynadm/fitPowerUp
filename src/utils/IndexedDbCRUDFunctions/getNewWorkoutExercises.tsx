@@ -2,7 +2,7 @@ import { Exercise } from "../interfaces/IUserTrainingData";
 import toast from "react-hot-toast";
 
 async function getNewWorkoutExercises(setExistingExercises: any) {
-  const request = indexedDB.open("fitScouterDb", 2);
+  const request = indexedDB.open("fitPowerUpDb", 2);
 
   request.onsuccess = function () {
     const db = request.result;

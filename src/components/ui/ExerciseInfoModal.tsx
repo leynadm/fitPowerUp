@@ -50,8 +50,10 @@ function ExerciseInfoModal({
   const [exerciseImageURL, setExerciseImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const exerciseSelected = findExerciseSelected();
+
   useEffect(() => {
-    if(exerciseName){
+    if (exerciseName && userExercisesLibrary.length > 0) {
       const fetchImageURL = async () => {
         const exerciseImageRef = ref(
           storage,
@@ -69,26 +71,32 @@ function ExerciseInfoModal({
           setIsLoading(false); // Stop loading whether there was an error or not
         }
       };
-  
+
       fetchImageURL();
     }
-    
-  }, []); // Dependency array includes index and userExercise
+  }, [userExercisesLibrary]); // Dependency array includes index and userExercise
 
+  function findExerciseSelected() {
+    if (userExercisesLibrary.length > 0) {
+      const exerciseSelected: IUserExercisesLibrary =
+        userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) =>
+            exercise.name.toUpperCase() === exerciseName?.toUpperCase()
+        );
 
-  const exerciseSelected: IUserExercisesLibrary =
-    userExercisesLibrary[0].exercises.find(
-      (exercise: IUserExercisesLibrary) =>
-        exercise.name.toUpperCase() === exerciseName?.toUpperCase()
-    );
+      return exerciseSelected;
+    }
+  }
 
   function handleClose() {
     setOpenExerciseInfoModal(false);
   }
 
   function searchExercise() {
-    let query = encodeURIComponent(exerciseSelected.name);
-    window.open("https://www.google.com/search?q=" + query, "_blank");
+    if (exerciseSelected) {
+      let query = encodeURIComponent(exerciseSelected.name);
+      window.open("https://www.google.com/search?q=" + query, "_blank");
+    }
   }
 
   return (
@@ -101,7 +109,7 @@ function ExerciseInfoModal({
       >
         <Box sx={style}>
           <Typography align="center" variant="h6">
-            {exerciseSelected.name.toLocaleUpperCase()}
+            {exerciseSelected && exerciseSelected.name.toLocaleUpperCase()}
           </Typography>
 
           <Box display="flex" justifyContent="center">
@@ -112,7 +120,7 @@ function ExerciseInfoModal({
             ) : (
               <img
                 src={exerciseImageURL}
-                alt={exerciseSelected.name}
+                alt={exerciseSelected && exerciseSelected.name}
                 width="100%"
                 height="100%"
                 style={{ minHeight: "270px", objectFit: "cover" }}
@@ -143,11 +151,12 @@ function ExerciseInfoModal({
             </Typography>
 
             <ul style={{ listStyleType: "square", marginLeft: "50px" }}>
-              {exerciseSelected.mInvolved.map(
-                (muscle: string, index: number) => (
-                  <li key={index}>{muscle}</li>
-                )
-              )}
+              {exerciseSelected &&
+                exerciseSelected.mInvolved.map(
+                  (muscle: string, index: number) => (
+                    <li key={index}>{muscle}</li>
+                  )
+                )}
             </ul>
           </Box>
         </Box>

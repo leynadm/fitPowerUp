@@ -147,9 +147,7 @@ function ImportData() {
 
         workoutDataArr.push(individualSessionWorkoutData);
       }
-
-      console.log(workoutDataArr)
-      
+        
       await uploadImportedData(
         currentUser.uid,
         workoutDataArr,

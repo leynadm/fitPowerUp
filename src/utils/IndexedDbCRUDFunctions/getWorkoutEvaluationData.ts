@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 function getWorkoutEvaluationData(currentDate:Date): Promise<any> {
   
   // Open the database
-  const request = window.indexedDB.open("fitScouterDb", 1);
+  const request = window.indexedDB.open("fitPowerUpDb", 1);
 
   return new Promise((resolve, reject) => {
     request.onsuccess = function (event: any) {

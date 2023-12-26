@@ -43,15 +43,12 @@ export default function DeleteCommentModal({
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            sx={{ display: "flex", alignItems: "center" }}
           >
-            <WarningIcon /> Warning
+            <WarningIcon style={{color:"red"}} /> Warning
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            You are about to delete this comment, which is an irreversible
-            action.<br></br> Once the comment is deleted, it cannot be recovered.<br></br> Please
-            ensure that you want to proceed with deleting this comment before
-            taking this action!
+          <Typography align="center" id="modal-modal-description" >
+            Are you sure you want to delete this comment?
           </Typography>
           <Box
             sx={{
@@ -59,7 +56,7 @@ export default function DeleteCommentModal({
             }}
           >
             <Button
-              variant="contained"
+              variant="dbz_save"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
                 onClick={deleteComment}
@@ -67,7 +64,7 @@ export default function DeleteCommentModal({
               DELETE
             </Button>
             <Button
-              variant="contained"
+              variant="dbz_clear"
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >

@@ -75,17 +75,18 @@ function PostReply({
               }}
             >
 
+              {/* 
               <Link
                 to={`/home/friends/results/u/${reply.userId}`}
                 style={{ textDecoration: "none", color: "black" }}
-              > 
+              >  */}
 
               <h6 style={{ margin: 0, textAlign: "left" }}>
                 {reply.name} {reply.surname}
               </h6>
-
+{/* 
               </Link>
-
+ */}
               {(reply.userId === currentUser.uid ||
                 postUserId === currentUser.uid) && (
                 <IconButton onClick={handleDeleteReplyClick}>

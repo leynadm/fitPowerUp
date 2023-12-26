@@ -50,7 +50,6 @@ function ProgressPath() {
       currentUserData.powerLevel <= MAX.bracket;
 
     function handleNavigateScreen(){
-console.log('yes')
       navigate(`hero/${pathPointsEntry.id}`,{
         state:pathPointsEntry.quote
       })

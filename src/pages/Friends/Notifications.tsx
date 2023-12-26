@@ -27,7 +27,6 @@ function Notifications() {
     if (isOnline) {
       const fetchNotifications = async () => {
         try {
-          console.log('fetching notifications')
           await getNotifications(currentUser.uid, setNotificationsData);
         } catch (error) {
           console.log(error);

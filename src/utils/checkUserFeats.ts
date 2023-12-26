@@ -25,7 +25,7 @@ export const feats = [
     feat: "Complete 10 Workouts",
     name: "Becoming A Threat",
     description:
-      "Ten workouts? Your power level now is definitely over... 10. 15? Fine, 20. Frieza's watching!",
+      "Ten workouts? Your power level now is definitely over... 50. OK, 100? Fine, 200! Keep at it!",
     state: false,
     date: "",
     level: 1,
@@ -69,7 +69,7 @@ export const feats = [
     feat: "Complete 100 Workouts",
     name: "Standing On Your Own!",
     description:
-      "100 workouts! You're not just a Super Saiyan, actually you probably aren't. But keep going, you will get there!",
+      "100 workouts! You're not just a Super Saiyan, you're...actually you probably aren't. But keep it up, you will get there!",
     state: false,
     date: "",
     level: 3,
@@ -101,8 +101,7 @@ export const feats = [
   {
     feat: "Complete 750 Workouts",
     name: "Earth Enemies Should Stay Away!",
-    description:
-      "750 workouts, wow, you're not kidding! Earth surely has a new protector now, keep smashing it!",
+    description: "750 workouts, wow, you're not kidding! Time to take on Cell!",
     state: false,
     date: "",
     level: 6,
@@ -113,14 +112,24 @@ export const feats = [
     feat: "Complete 1,000 Workouts",
     name: "Shenron's Ultimate Wish",
     description:
-      "1000 workouts! Look in the mirror and congratulate yourself, you've made it - and your hair is probably blonde.",
+      "1000 workouts! Look in the mirror and congratulate yourself, you've made it - time to die your hair blonde.",
     state: false,
     date: "",
     level: 7,
     type: "Workouts Consistency",
     featValue: 1000,
   },
-
+  {
+    feat: "Complete 2 Workouts In A Week",
+    name: "Following Gohan's steps",
+    state: false,
+    description:
+      "Two workouts in a week? Kid Gohan would be proud of you, keep the momentum!",
+    date: "",
+    level: 1,
+    type: "Workouts Streak",
+    featValue: 2,
+  },
   {
     feat: "Complete 3 Workouts In A Week",
     name: "Piccolo's Special Training",
@@ -570,7 +579,8 @@ export const feats = [
   {
     feat: "Shoulder Press 0.75x Your Bodyweight",
     name: "Size: Namekian Dragon Balls",
-    description: "Wow, three quarters of your bodyweight! You're like Ginyu before the body switch - getting ready for a big transformation there!"!,
+    description:
+      "Wow, three quarters of your bodyweight! You're like Ginyu before the body switch - getting ready for a big transformation there!!",
     state: false,
     date: "",
     level: 5,
@@ -789,12 +799,23 @@ export const feats = [
     feat: "Perform 10 Consecutive Sit-ups/Crunches",
     name: "EZ PZ, Goku's Rice Is Nice & Breezy",
     description:
-      "Ten sit-ups in a row? You're crunching it like Goku crunches on a bowl of rice - always hungry for more!",
+      "Ten in a row? You're crunching it like Goku crunches on a bowl of rice - always hungry for more!",
     state: false,
     date: "",
     level: 1,
     type: "Exercises - Sit-Ups/Crunches",
-    featValue: 1,
+    featValue: 10,
+  },
+  {
+    feat: "Perform 25 Consecutive Sit-ups/Crunches",
+    name: "Shredded SSJs Are Made In The Kitchen",
+    description:
+      "25 in a row? Put the same effort in the kitchen and you'll make it in ̶n̶o̶ some time!",
+    state: false,
+    date: "",
+    level: 1,
+    type: "Exercises - Sit-Ups/Crunches",
+    featValue: 25,
   },
   {
     feat: "Perform 50 Consecutive Sit-ups/Crunches",
@@ -806,6 +827,17 @@ export const feats = [
     level: 4,
     type: "Exercises - Sit-Ups/Crunches",
     featValue: 50,
+  },
+  {
+    feat: "Perform 75 Consecutive Sit-ups/Crunches",
+    name: "Leaving the Ginyu Force",
+    description:
+      "If you've got this far, you know what you have to do! Well done, champ!",
+    state: false,
+    date: "",
+    level: 4,
+    type: "Exercises - Sit-Ups/Crunches",
+    featValue: 75,
   },
   {
     feat: "Perform 100 Consecutive Sit-ups/Crunches",
@@ -937,5 +969,5 @@ export const feats = [
     level: 7,
     type: "Exercises - Chin Up",
     featValue: 24,
-  },
-];
+  }
+]

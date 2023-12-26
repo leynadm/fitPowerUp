@@ -1,4 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  Dispatch,
+  useRef,
+  SetStateAction,
+  ChangeEvent,
+} from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -11,10 +18,7 @@ import CardMedia from "@mui/material/CardMedia";
 import ImageIcon from "@mui/icons-material/Image";
 import CardContent from "@mui/material/CardContent";
 import Collapse from "@mui/material/Collapse";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
+import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -27,6 +31,10 @@ import CommentIcon from "@mui/icons-material/Comment";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
 import toast from "react-hot-toast";
+import Paper from "@mui/material/Paper";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import { filterUserTrainingsPerDay } from "../Workout/CompletedWorkouts";
+import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import {
   collection,
   setDoc,
@@ -44,21 +52,22 @@ import { db } from "../../config/firebase";
 import uuid from "react-uuid";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import User from "../../utils/interfaces/User";
+import GroupedWorkout from "../../components/ui/GroupedWorkout";
+
 const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 1,
   borderRadius: 1,
   width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  gap: 1,
 };
 
 interface FriendsProps {
   addContentModalOpen: boolean;
-  setAddContentModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
-  existingExercises:any;
-  unitsSystem: string;
+  setAddContentModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -76,68 +85,37 @@ interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
 
-async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
-  if (currentUser === null) {
-    return;
-  }
-
-  if (currentUser.isAnonymous === false) {
-    const docRef = doc(db, "users", currentUser.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const userData = docSnap.data() as User;
-      setCurrentUserData(userData);
-      return userData;
-    }
-  }
-}
-
 function AddContentModal({
   addContentModalOpen,
   setAddContentModalOpen,
-  existingExercises,
-  unitsSystem,
 }: FriendsProps) {
   const [postDate, setPostDate] = useState(new Date());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
-  const [expanded, setExpanded] = React.useState(false);
-  const { currentUser, currentUserData } = useContext(AuthContext);
+  const [expanded, setExpanded] = useState(false);
   const [postText, setPostText] = useState("");
   const [addWorkout, setAddWorkout] = useState(false);
   const [limitInfo, setLimitInfo] = useState("");
   const [saving, setSaving] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const navigate = useNavigate();
   const firebaseApp = getApp();
   const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
+  const { currentUser, currentUserData } = useContext(AuthContext);
 
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+  const { userTrainingData } = useContext(UserTrainingDataContext);
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
-  
-
-  if(currentUserData===undefined){
-    return<div>undefined</div>
-  }
+  const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
+    IWorkoutData[]
+  >([]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const fileInputRef = useRef(null);
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
     if (file) {
@@ -173,6 +151,21 @@ function AddContentModal({
     setSaving(false);
     setAddContentModalOpen(false);
   }
+
+  const handleChangeTrainingDate = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = event.target.value;
+    if (event.target.value) {
+      filterUserTrainingsPerDay(
+        selectedDate,
+        userTrainingData,
+        setFilteredUserTrainingData
+      );
+      setExpanded(true);
+    } else {
+      setExpanded(false);
+      setFilteredUserTrainingData([])
+    }
+  };
 
   async function addPost() {
     const hasThreePosts = await checkUserPosts();
@@ -223,7 +216,7 @@ function AddContentModal({
           }
 
           if (retryAttempts === 0) {
-            toast.error("Oops, we encountered an error! Try again later!")
+            toast.error("Oops, we encountered an error! Try again later!");
             console.error("Retries exhausted. Unable to fetch resized image.");
             // Handle the error and display an error message to the user
           }
@@ -235,7 +228,7 @@ function AddContentModal({
       const serverTimestampObj = serverTimestamp();
       const timestamp = Timestamp.fromMillis(Date.now());
 
-
+      
       await setDoc(newPostRef, {
         createdAt: serverTimestampObj,
         postText: postText,
@@ -244,13 +237,13 @@ function AddContentModal({
         timestamp: timestamp,
         commentsCount: 0,
         showWorkout: addWorkout,
-        workoutData: existingExercises,
-        unitsSystem: unitsSystem,
+        workoutData: filteredUserTrainingData.length>0?filteredUserTrainingData[0].wExercises:[] ,
+        unitsSystem: currentUserData.unitsSystem,
         documentId: newPostRef.id,
         postAppreciation: [],
       });
 
-      const newFollowersFeedRef = doc(
+   const newFollowersFeedRef = doc(
         collection(db, "followers-feed"),
         currentUser.uid
       );
@@ -290,7 +283,6 @@ function AddContentModal({
     setFileSource(null);
   }
 
-
   return (
     <Box
       sx={{
@@ -301,327 +293,219 @@ function AddContentModal({
         height: "100%",
       }}
     >
-      {isOnline && (
-        <Dialog
-          open={addContentModalOpen}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          fullWidth
-          sx={{
-            height: "100%",
-            paddingBottom: "56px",
-            marginBottom: "56px",
-          }}
-        >
-          {currentUser.isAnonymous === false ? (
-            <Box sx={style}>
-              <CardHeader
-                avatar={
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={currentUserData.profileImage}
-                    sx={{ width: 48, height: 48, alignSelf: "center" }}
-                  />
-                }
-                title={`${currentUserData.name} ${currentUserData.surname}` }
-                titleTypographyProps={{ variant: "h6", padding: 0, margin: 0 }}
-                subheader={postDate.toDateString()}
+      <Dialog
+        open={addContentModalOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        fullWidth
+        maxWidth="md"
+        sx={{
+          "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+              width: "100%",
+            },
+          },
+
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Box sx={style}>
+          <CardHeader
+            avatar={
+              <Avatar
+                alt="Remy Sharp"
+                src={currentUserData.profileImage}
+                sx={{ width: 48, height: 48, alignSelf: "center", p: 0, m: 0 }}
               />
-
-              {fileSource && (
-                <CardMedia
-                  component="img"
-                  height="50%"
-                  image={fileSource}
-                  alt="Uploaded image"
-                  sx={{ borderRadius: 1 }}
-                />
-              )}
-
-              <TextField
-                id="standard-textarea"
-                label="Share your thoughts..."
-                multiline
-                variant="filled"
-                rows={2}
-                sx={{ width: "100%", marginTop: "8px" }}
-                onChange={(event) => setPostText(event.target.value)}
+            }
+            title={`${currentUserData.name} ${currentUserData.surname}`}
+            titleTypographyProps={{ variant: "h6", padding: 0, margin: 0 }}
+            subheader={postDate.toDateString()}
+          />
+          <Box position="relative">
+            {fileSource && (
+              <CardMedia
+                component="img"
+                height="50%"
+                image={fileSource}
+                alt="Uploaded image"
+                sx={{ borderRadius: 1 }}
               />
+            )}
 
-              <Box
+            {fileSource && (
+              <IconButton
+                onClick={removeFile}
                 sx={{
-                  width: "100%",
-                  display: "flex",
-                  paddingLeft: "0",
-                  paddingTop: "8px",
-                  paddingBottom: "8px",
+                  position: "absolute",
+                  top: 0, // Adjust if necessary
+                  right: 0, // Adjust if necessary
                 }}
               >
-                <Button
-                  component="label"
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "0",
-                  }}
-                >
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <ImageIcon sx={{ margin: 0, padding: 0 }} />
-                    <p>Add a photo to your post</p>
-                    <input
-                      type="file"
-                      accept="image/png, image/jpeg"
-                      hidden
-                      onChange={handleFileChange}
-                    />
-                  </Box>
-                </Button>
+                <DeleteForeverIcon />
+              </IconButton>
+            )}
+          </Box>
 
-                <Box>
-                  {fileSource && (
-                    <IconButton onClick={removeFile}>
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  )}
-                </Box>
-              </Box>
-              <Box>
-                <FormControl component="fieldset">
-                  <FormGroup
-                    aria-label="position"
-                    sx={{ display: "flex", flexDirection: "row" }}
-                  >
-                    <FormControlLabel
-                      value="end"
-                      control={
-                        <Checkbox
-                          value={addWorkout}
-                          onChange={() => setAddWorkout(!addWorkout)}
-                        />
-                      }
-                      label="Show workout in post"
-                      labelPlacement="end"
-                    />
-                  </FormGroup>
-                </FormControl>
-              </Box>
-              <Box sx={{ display: "flex" }}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                  onClick={addPost}
-                >
-                  POST
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-                  onClick={handleClose}
-                >
-                  Cancel
-                </Button>
-              </Box>
+          <TextField
+            id="standard-textarea"
+            label="Share your thoughts..."
+            multiline
+            variant="outlined"
+            maxRows={5}
+            rows={2}
+            inputProps={{ maxLength: 2048 }}
+            sx={{ width: "100%", marginTop: "8px" }}
+            onChange={(event) => setPostText(event.target.value)}
+          />
+
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Button
+              component="label"
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                justifyContent: "space-between",
+                padding: "0",
+              }}
+            >
               <Box
                 sx={{
-                  padding: "8px",
+                  display: "grid",
+                  gridTemplateColumns: "8fr 2fr",
+                  width: "100%",
+                  p: 1,
+                  border: "1px black solid",
+                }}
+              >
+                <Typography variant="subtitle2" flexGrow={1}>
+                  Add a picture to your post
+                </Typography>
+
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                  flexGrow={1}
+                >
+                  <ImageIcon fontSize="medium" />
+
+                  <input
+                    style={{ width: "100%" }}
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                </Box>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "8fr 2fr",
+                  width: "100%",
+                  pl: 1,
+                  pr: 1,
+                  border: "1px black solid",
+                }}
+              >
+                <TextField
+                  size="small"
+                  type="date"
+                  required
+                  onChange={handleChangeTrainingDate}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        border: "none",
+                      },
+                      "&:hover fieldset": {
+                        border: "none",
+                      },
+                      "&.Mui-focused fieldset": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                  flexGrow={1}
+                >
+                  <FitnessCenterIcon fontSize="medium" />
+                </Box>
+              </Box>
+            </Button>
+          </Box>
+
+          <Box sx={{ display: "flex" }}>
+            <Button
+              variant="dbz_save"
+              color="success"
+              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+              onClick={addPost}
+            >
+              POST
+            </Button>
+            <Button
+              variant="dbz_clear"
+              sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
+          {saving &&
+          <Box
+                sx={{
+                  padding: 1,
                   display: "flex",
                   justifyContent: "center",
                 }}
               >
-                {saving && <LinearWithValueLabel />}
+                 <LinearWithValueLabel />
+              </Box>}
+
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent sx={{ p: 0, m: 0 }}>
+              <Box>
+                {filteredUserTrainingData.length > 0 && (
+                  <GroupedWorkout
+                    workoutExercises={filteredUserTrainingData[0].wExercises}
+                  />
+                )}
               </Box>
-              <Typography
-                sx={{
-                  fontSize: "small",
-                  textAlign: "center",
-                  paddingTop: "0.25rem",
-                }}
-              >
-                {limitInfo}
-              </Typography>
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-
-              <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                  <Box>
-                    {existingExercises
-                      /* 
-              .sort(
-                (a, b) =>
-                  new Date(b.date).getTime() - new Date(a.date).getTime()
-              ) */
-                      .map((group:any, index:number) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            borderRadius: "4px",
-                            boxShadow: 1,
-                            margin: "16px",
-                            backgroundColor: "white",
-                          }}
-                        >
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              textAlign: "center",
-                              fontSize: "medium",
-                              backgroundColor: "#F0F2F5",
-                            }}
-                          >
-                            {group.name.toLocaleUpperCase()}
-                          </Typography>
-
-                          <Divider sx={{ backgroundColor: "aliceblue" }} />
-                          {group.exercises.map((exercise:any, exerciseIndex:number) => (
-                            <Box
-                              key={exerciseIndex}
-                              sx={{
-                                display: "grid",
-                                gridAutoFlow: "column",
-                                gridTemplateColumns: "1fr 1fr 4fr",
-                                justifyContent: "space-evenly",
-                                justifyItems: "center",
-                                alignItems: "center",
-                                width: "100%",
-                              }}
-                            >
-                              {exercise.comment ? ( // Check if 'comment' property exists
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                >
-                                  <CommentIcon
-                                    sx={{
-                                      zIndex: 0,
-                                    }}
-                                  />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <CommentIcon style={{ opacity: 0 }} />
-                                </IconButton>
-                              )}
-
-                              {exercise.is_pr ? (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon sx={{ zIndex: 0 }} />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon
-                                    sx={{ opacity: 0, zIndex: 0 }}
-                                  />
-                                </IconButton>
-                              )}
-
-                              <Box
-                                sx={{
-                                  display: "grid",
-
-                                  gridTemplateColumns: "1fr 1fr",
-                                  alignItems: "center",
-                                  justifyItems: "center",
-                                  width: "100%",
-                                  justifyContent: "space-evenly",
-                                }}
-                              >
-                                {exercise.weight !== 0 && (
-                                  <Typography sx={{ fontSize: "small" }}>
-                                    {`${exercise.weight.toFixed(2)} ${
-                                      unitsSystem === "metric" ? "kgs" : "lbs"
-                                    }`}
-                                  </Typography>
-                                )}
-
-                                {exercise.reps !== 0 && (
-                                  <Typography sx={{ fontSize: "small" }}>
-                                    {exercise.reps} reps
-                                  </Typography>
-                                )}
-
-                                {exercise.distance !== 0 && (
-                                  <Typography
-                                    sx={{ fontSize: "small" }}
-                                  >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                                )}
-
-                                {exercise.time !== 0 && (
-                                  <Typography sx={{ fontSize: "small" }}>
-                                    {exercise.time !== 0
-                                      ? formatTime(exercise.time)
-                                      : ""}
-                                  </Typography>
-                                )}
-                              </Box>
-
-                              <Divider />
-                            </Box>
-                          ))}
-                        </Box>
-                      ))}
-                  </Box>
-                </CardContent>
-              </Collapse>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                style,
-              }}
-            >
-              <IconButton>
-                <InfoIcon />
-                Info
-              </IconButton>
-              <Typography sx={{ padding: "8px" }}>
-                As a guest, you are welcome to use all workout log features, but
-                posting is restricted.
-                <br></br>
-                To access posting capabilities, please create an account or
-                authenticate using Google Login.
-                <br></br>
-                Once authenticated, you can proceed to create a post.
-              </Typography>
-            </Box>
-          )}
-        </Dialog>
-      )}
+            </CardContent>
+          </Collapse>
+        </Box>
+      </Dialog>
     </Box>
   );
 }
 
 export default AddContentModal;
- 

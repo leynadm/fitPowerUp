@@ -16,7 +16,7 @@ import ExerciseSelectionMenu from "./ExerciseSelectionMenu";
 import TermsAndConditions from "../Login/TermsAndConditions";
 import ImportData from "../Settings/ImportData";
 import DevelopmentLog from "../Settings/DevelopmentLog";
-import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
+import PresetWorkouts from "./PresetWorkouts/PresetWorkouts";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -25,8 +25,6 @@ interface HomeProps {
 }
 
 function Workout({ existingExercises, setExistingExercises }: HomeProps) {
-  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
-  console.log(userExercisesLibrary);
 
   return (
     <Routes>
@@ -80,6 +78,8 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       <Route path="bodytracker/*" element={<BodyTracker />} />
 
       <Route path="new/congratulations" element={<WorkoutCongratulations />} />
+      <Route path="preset-workouts/*" element={<PresetWorkouts />} />
+
     </Routes>
   );
 }

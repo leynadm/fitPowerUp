@@ -64,8 +64,6 @@ export const FriendsSummaryProvider = ({
         currentUserDataArr.push(currentUserDataWithId)
         const combinedArray = overviewData?.concat(currentUserDataWithId);
 
-        console.log(combinedArray)
-         
         if(combinedArray){
  
           combinedArray.sort((a: any, b: any) => b.powerLevel - a.powerLevel);

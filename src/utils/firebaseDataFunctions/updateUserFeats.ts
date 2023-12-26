@@ -22,7 +22,6 @@ async function updateUserFeats(
 
     const userDocRef = doc(db, "users", userId);
 
-    const userCollectionRef = collection(userDocRef, "userCollection");
     const userTrainingCollectionRef = collection(
       userDocRef,
       "userTrainingCollection"
@@ -31,6 +30,7 @@ async function updateUserFeats(
     const querySnapshot = await getDocs(userTrainingCollectionRef);
 
     const sessions: IUserTrainingData[] = [];
+
     querySnapshot.forEach((doc) => {
       // Assuming each document in the collection represents a training session
       // You might want to adjust this line depending on your data structure
@@ -64,12 +64,14 @@ async function updateUserFeats(
         );
       }
 
-      if (userFeatEntry.type === "Workout Streak") {
+      if (userFeatEntry.type === "Workouts Streak") {
         const streakObject = calculateWorkoutsStreak(flattenedAllExerciseData);
 
         const featValueCheck = streakObject[userFeatEntry.featValue];
 
-        userFeatEntry.state = featValueCheck >= 1;
+        if (featValueCheck >= 1) {
+          userFeatEntry.state = true;
+        }
       }
 
       if (userFeatEntry.type === "Sets") {
@@ -94,131 +96,225 @@ async function updateUserFeats(
       }
 
       if (userFeatEntry.type === "Exercises - Deadlift") {
-        const flattenedExerciseDataDeadlift = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Deadlift",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Barbell Deadlift",
+          "Barbell Romanian Deadlift",
+          "Barbell Stiff Leg Deadlift",
+          "Barbell Sumo Deadlift",
+          "Barbell Sumo Romanian Deadlift",
+          "Deficit Deadlift",
+        ];
 
-        userFeatEntry.state = calculateDeadLift(
-          flattenedExerciseDataDeadlift,
-          userFeatEntry,
-          userBodyWeight
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculateDeadLift(
+            flattenedExerciseData,
+            userFeatEntry,
+            userBodyWeight
+          );
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises - Bench Press") {
-        const flattenedExerciseDataBenchPress = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Bench Press",
-          "all"
-        );
-
-        const benchPress = calculateBenchPress(
-          flattenedExerciseDataBenchPress,
-          userFeatEntry,
-          userBodyWeight
-        );
-
-        const flattenedExerciseDataBarbellFloorPress = getFlattenedExerciseData(
-          userTrainingDataResult,
+        const exercisesToCheck = [
+          "Flat Barbell Bench Press",
+          "Flat Barbell Wide Grip Bench Press",
+          "Paused Bench Press",
           "Barbell Floor Press",
-          "all"
-        );
+        ];
 
-        const barbellFloorPress = calculateBenchPress(
-          flattenedExerciseDataBarbellFloorPress,
-          userFeatEntry,
-          userBodyWeight
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
 
-        if (benchPress || barbellFloorPress) {
-          userFeatEntry.state = true;
+          const result = calculateBenchPress(
+            flattenedExerciseData,
+            userFeatEntry,
+            userBodyWeight
+          );
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
         }
       }
 
       if (userFeatEntry.type === "Exercises - Shoulder Press") {
-        const flattenedExerciseDataMilitaryPress = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Military Press",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Barbell Close Grip Overhead Press",
+          "Barbell Overhead Press",
+          "Barbell Seated Overhead Press",
+          "Seated Behind The Neck Overhead Press",
+          "Wide Grip Overhead Press",
+        ];
 
-        const militaryPress = calculateShoulderPress(
-          flattenedExerciseDataMilitaryPress,
-          userFeatEntry,
-          userBodyWeight
-        );
-
-        const flattenedExerciseDataBarbellSeatedShoulderPress =
-          getFlattenedExerciseData(
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
             userTrainingDataResult,
-            "Seated Shoulder Press",
+            exercise,
             "all"
           );
 
-        const seatedShoulderPress = calculateShoulderPress(
-          flattenedExerciseDataBarbellSeatedShoulderPress,
-          userFeatEntry,
-          userBodyWeight
-        );
+          const result = calculateShoulderPress(
+            flattenedExerciseData,
+            userFeatEntry,
+            userBodyWeight
+          );
 
-        if (militaryPress || seatedShoulderPress) {
-          userFeatEntry.state = true;
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
         }
       }
 
       if (userFeatEntry.type === "Exercises - Squat") {
-        const flattenedExerciseDataSquat = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Squat",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Barbell Squat",
+          "Pause Squat",
+          "Barbell Bulgarian Split Squat",
+          "Barbell Front Squat",
+          "Barbell Sumo Squat",
+          "Crossed Arm Barbell Front Squat",
+          "Zercher Squat",
+        ];
 
-        userFeatEntry.state = calculateSquat(
-          flattenedExerciseDataSquat,
-          userFeatEntry,
-          userBodyWeight
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculateSquat(
+            flattenedExerciseData,
+            userFeatEntry,
+            userBodyWeight
+          );
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises - Pull Up") {
-        const flattenedExerciseDataPullUp = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Pull Ups",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Pull Up",
+          "One Arm Pull Up",
+          "Neutral Grip Pull Up",
+          "L Pull Up",
+          "Neutral Grip Pull Up",
+          "Commando Pull Up",
+          "Close Grip Pull Up",
+          "TRX Pull Up",
+          "Wide Grip Pull Up",
+        ];
 
-        userFeatEntry.state = calculatePullUps(
-          flattenedExerciseDataPullUp,
-          userFeatEntry
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculatePullUps(flattenedExerciseData, userFeatEntry);
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises - Push Up") {
-        const flattenedExerciseDataPushUps = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Push Ups",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Band Push Up",
+          "Bosu Ball Push Up",
+          "Chest Tap Push Up",
+          "Clap Push Up",
+          "Close Grip Push Up",
+          "Decline Push Up",
+          "Decline Push Up Against Wall",
+          "Diamond Push Up",
+          "Dumbbell Push Up",
+          "Elevated Push Up",
+          "Finger Push Up",
+          "Knuckle Push Up",
+          "Medicine Ball Close Grip Push Up",
+          "Push Up",
+          "Push Up Plus",
+          "Reverse Push Up",
+          "Ring Push Up",
+          "Rotational Push Up",
+          "Shoulder Tap Push Up",
+          "Single Arm Push Up",
+          "Spiderman Push Up",
+          "Superman Push Up",
+          "Wide Hand Push Up",
+        ];
 
-        userFeatEntry.state = calculatePushUps(
-          flattenedExerciseDataPushUps,
-          userFeatEntry
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculatePushUps(flattenedExerciseData, userFeatEntry);
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises - Plank") {
-        const flattenedExerciseDataChinUp = getFlattenedExerciseData(
-          userTrainingDataResult,
+        const exercisesToCheck = [
+          "Weighted Front Plank",
+          "Side Plank",
+          "Reverse Plank With Leg Lift",
+          "Reverse Plank",
+          "Plank With Leg Lift",
+          "Plank Toe Taps",
+          "Plank Jack",
+          "Plank Arm Lifts",
           "Plank",
-          "all"
-        );
+          "Elbow To Knee Side Plank",
+          "Body Saw Plank",
+          "Bench Adductors Side Plank",
+        ];
 
-        userFeatEntry.state = calculatePlank(
-          flattenedExerciseDataChinUp,
-          userFeatEntry
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculatePlank(flattenedExerciseData, userFeatEntry);
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises") {
@@ -229,30 +325,64 @@ async function updateUserFeats(
       }
 
       if (userFeatEntry.type === "Exercises - Sit-Ups/Crunches") {
-        const flattenedExerciseDataSitUps = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Sit Ups",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Assisted Sit Up",
+          "Assisted Sit Up With Chair",
+          "Band Decline Sit Up",
+          "Decline Sit Up",
+          "Decline Twisting Sit Up",
+          "Dumbbell Decline Overhead Sit Up",
+          "Flexion Leg Sit Up",
+          "Janda Sit Up",
+          "Medicine Ball Sit Up",
+          "Roman Chair Sit Up",
+          "Sit Up",
+          "Sit Up Twist",
+          "V Sit Up",
+          "Weighted Decline Sit Up",
+          "Ab Bench Crunch",
+          "Air Bike Crunch",
+          "Band Standing Crunch",
+          "Alternate Oblique Crunch",
+          "Bench Oblique Crunch",
+          "Bosu Ball Crunch",
+          "Bicycle Crunch",
+          "Stability Ball Crunch",
+          "Seated Leg Raise Crunch Machine",
+          "Seated Cable Crunch",
+          "Seated Abdominal Crunch Machine",
+          "Seated 8 Leg Crunch",
+          "Decline Crunch",
+          "Decline Reverse Crunch",
+          "Dumbbell Straight Arm Crunch",
+          "Floor Crunch",
+          "Kneeling Band Crunch",
+          "Kneeling Cable Crunch",
+          "Lever Lying Crunch",
+          "Long Arm Crunch",
+          "Medicine Ball Crunch",
+          "Raise Legs Crunch",
+          "Twisting Crunch",
+          "Weighted Crunch",
+          "Weighted Twisting Crunch",
+        ];
 
-        const flattenedExerciseDataCrunches = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Crunches",
-          "all"
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
 
-        const sitUps = calculateSitUpsOrCrunches(
-          flattenedExerciseDataSitUps,
-          userFeatEntry
-        );
+          const result = calculateSitUpsOrCrunches(
+            flattenedExerciseData,
+            userFeatEntry
+          );
 
-        const crunches = calculateSitUpsOrCrunches(
-          flattenedExerciseDataCrunches,
-          userFeatEntry
-        );
-
-        if (sitUps || crunches) {
-          userFeatEntry.state = true;
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
         }
       }
 
@@ -270,29 +400,52 @@ async function updateUserFeats(
       }
 
       if (userFeatEntry.type === "Exercises - Hanging Leg Raises") {
-        const flattenedExerciseDataHangingLegRaises = getFlattenedExerciseData(
-          userTrainingDataResult,
+        const exercisesToCheck = [
           "Hanging Leg Raise",
-          "all"
-        );
+          "Hanging Leg Raise With Arm Slings",
+          "Weighted Hanging Leg Hip Raise",
+        ];
 
-        userFeatEntry.state = calculateHangingLegRaise(
-          flattenedExerciseDataHangingLegRaises,
-          userFeatEntry
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculateHangingLegRaise(
+            flattenedExerciseData,
+            userFeatEntry
+          );
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
 
       if (userFeatEntry.type === "Exercises - Chin Up") {
-        const flattenedExerciseDataChinUp = getFlattenedExerciseData(
-          userTrainingDataResult,
-          "Chin Ups",
-          "all"
-        );
+        const exercisesToCheck = [
+          "Chin Up",
+          "Close Grip Chin Up",
+          "Neutral Grip Chin Up",
+        ];
 
-        userFeatEntry.state = calculateChinUps(
-          flattenedExerciseDataChinUp,
-          userFeatEntry
-        );
+        for (const exercise of exercisesToCheck) {
+          const flattenedExerciseData = getFlattenedExerciseData(
+            userTrainingDataResult,
+            exercise,
+            "all"
+          );
+
+          const result = calculateChinUps(flattenedExerciseData, userFeatEntry);
+
+          if (result) {
+            userFeatEntry.state = true;
+            break;
+          }
+        }
       }
     }
 
@@ -310,8 +463,10 @@ export default updateUserFeats;
 
 function calculateWorkoutsStreak(flattenedAllExerciseData: Exercise[]) {
   const entriesPerWeek = calculateEntriesPerWeek(flattenedAllExerciseData);
+
   const weekCounts = countWeeksWithCertainEntries(
     entriesPerWeek,
+    2,
     3,
     4,
     5,
@@ -349,8 +504,11 @@ function calculateWorkoutConsistency(
     return true;
   } else if (featEntry.featValue === 25 && uniqueDateCount >= 25) {
     return true;
+  } else if (featEntry.featValue === 10 && uniqueDateCount >= 10) {
+    return true;
+  } else if (featEntry.featValue === 5 && uniqueDateCount >= 5) {
+    return true;
   } else if (featEntry.featValue === 1 && uniqueDateCount >= 1) {
-    console.log("it should be here.");
     return true;
   } else {
     return false;
@@ -646,9 +804,7 @@ function calculateBenchPress(
   featEntry: IUserFeatsDataEntry,
   userBodyWeight: number
 ) {
-  console.log("logging userBodyWeight");
-  console.log(userBodyWeight);
-
+ 
   if (flattenedExerciseData.length === 0) {
     return false;
   }
@@ -657,13 +813,6 @@ function calculateBenchPress(
     (max: number, obj: Exercise) => (obj.weight > max ? obj.weight : max),
     flattenedExerciseData[0].weight
   );
-  console.log("logging full flattened exercise data");
-  console.log(flattenedExerciseData);
-  console.log("logging only the first entry:");
-  console.log(flattenedExerciseData[0].weight);
-
-  console.log("logging maxWeight in Bench Press");
-  console.log(maxWeight);
 
   if (featEntry.featValue === 1.25 && maxWeight >= userBodyWeight * 1.25) {
     return true;
@@ -838,6 +987,8 @@ function calculateSitUpsOrCrunches(
     return true;
   } else if (featEntry.featValue === 25 && maxReps >= 25) {
     return true;
+  } else if (featEntry.featValue === 10 && maxReps >= 10) {
+    return true;
   } else {
     return false;
   }
@@ -855,39 +1006,46 @@ function getWeekNumber(d: Date): number {
 
 function calculateEntriesPerWeek(
   exercises: Exercise[]
-): Record<number, number[]> {
-  const entriesPerWeek: Record<number, number[]> = {};
+): Record<number, Set<string>[]> {
+  const entriesPerWeek: Record<number, Set<string>[]> = {};
 
   exercises.forEach((exercise) => {
     const date = new Date(exercise.date);
     const year = date.getFullYear();
     const week = getWeekNumber(date);
+    const dateString = date.toISOString().split("T")[0]; // format as 'YYYY-MM-DD'
 
     if (!entriesPerWeek[year]) {
       entriesPerWeek[year] = [];
     }
 
     if (!entriesPerWeek[year][week]) {
-      entriesPerWeek[year][week] = 0;
+      entriesPerWeek[year][week] = new Set();
     }
 
-    entriesPerWeek[year][week]++;
+    entriesPerWeek[year][week].add(dateString);
   });
 
   return entriesPerWeek;
 }
 
 function countWeeksWithCertainEntries(
-  entriesPerWeek: Record<number, number[]>,
+  entriesPerWeek: Record<number, Set<string>[]>,
   ...entryCounts: number[]
 ): Record<number, number> {
   const counts: Record<number, number> = {};
 
+  entryCounts.forEach((count) => {
+    counts[count] = 0;
+  });
+
   for (const year in entriesPerWeek) {
-    entryCounts.forEach((count) => {
-      counts[count] = entriesPerWeek[year].filter(
-        (weekEntries) => weekEntries >= count
-      ).length;
+    entriesPerWeek[year].forEach((weekSet) => {
+      entryCounts.forEach((count) => {
+        if (weekSet.size === count) {
+          counts[count]++;
+        }
+      });
     });
   }
 

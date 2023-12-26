@@ -13,7 +13,6 @@ export const useBodyTrackerData = () => {
   const fetchUserBodyTrackerData = async () => {
     if (!currentUser) return;
 
-    console.log('fetching user body tracker data')
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userBodyTrackerCollectionRef = collection(usersDocRef, "userBodyTrackerCollection");
 

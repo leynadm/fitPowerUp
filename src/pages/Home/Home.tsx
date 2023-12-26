@@ -14,6 +14,7 @@ import { BodyTrackerDataProvider } from "../../context/BodyTrackerData";
 import { UserFeatsDataProvider } from "../../context/UserFeatsData";
 import { FriendsSummaryProvider } from "../../context/FriendsSummary";
 import { SocialDataProvider } from "../../context/SocialData";
+import { PresetWorkoutsDataProvider } from "../../context/UserPresetWorkouts";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
@@ -37,34 +38,38 @@ function Home({
             <LogDataProvider>
               <FriendsSummaryProvider>
                 <SocialDataProvider>
-                <VerifyEmailDialog
-                  verifyEmailModalOpen={verifyEmailModalOpen}
-                  setVerifyEmailModalOpen={setVerifyEmailModalOpen}
-                />
+                  <PresetWorkoutsDataProvider>
+                    <VerifyEmailDialog
+                      verifyEmailModalOpen={verifyEmailModalOpen}
+                      setVerifyEmailModalOpen={setVerifyEmailModalOpen}
+                    />
 
-                <RestTimer />
+                    <RestTimer />
 
-                <Navbar />
+                    <Navbar />
 
-                <Routes>
-                  <Route
-                    path="workout/*"
-                    index
-                    element={
-                      <Workout
-                        existingExercises={existingExercises}
-                        setExistingExercises={setExistingExercises}
+                    <Routes>
+                      <Route
+                        path="workout/*"
+                        index
+                        element={
+                          <Workout
+                            existingExercises={existingExercises}
+                            setExistingExercises={setExistingExercises}
+                          />
+                        }
                       />
-                    }
-                  />
 
-                  <Route
-                    path="friends/*"
-                    element={<Friends existingExercises={existingExercises} />}
-                  />
+                      <Route
+                        path="friends/*"
+                        element={
+                          <Friends/>
+                        }
+                      />
 
-                  <Route path="progress/*" element={<Progress />} />
-                </Routes>
+                      <Route path="progress/*" element={<Progress />} />
+                    </Routes>
+                  </PresetWorkoutsDataProvider>
                 </SocialDataProvider>
               </FriendsSummaryProvider>
             </LogDataProvider>

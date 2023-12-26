@@ -61,15 +61,14 @@ export default function DeletePostModal({
             }}
           >
             <Button
-              variant="contained"
-              color="success"
+              variant="dbz_save"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
                 onClick={deletePost}
             >
               DELETE
             </Button>
             <Button
-              variant="contained"
+              variant="dbz_clear"
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >

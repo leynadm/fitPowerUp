@@ -94,7 +94,7 @@ function App() {
               },
             },
           },
-          
+
           {
             props: { variant: "dbz_mini_icon" },
             style: {
@@ -112,8 +112,8 @@ function App() {
               userSelect: "none",
               WebkitUserSelect: "none",
               touchAction: "manipulation",
-              display:"flex",
-              gap:2,
+              display: "flex",
+              gap: 2,
               "&:hover": {
                 backgroundColor: "#520975",
                 color: "#FFFFFF",
@@ -184,32 +184,49 @@ function App() {
           },
         ],
       },
+
+      MuiSelect: {
+        styleOverrides: {
+          select: {
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#520975",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#520975", // Optional: Change color on hover
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#520975", // Optional: Change color when focused
+            },
+          },
+        },
+      },
+
       MuiTextField: {
         styleOverrides: {
           root: {
             "&.dbz-subvariant": {
               "& fieldset": {
-                borderRadius:"25px"
+                borderRadius: "25px",
               },
               "& .MuiInputBase-input": {
-                padding: 0 // Adjust this as needed
+                padding: 0, // Adjust this as needed
               },
               "& .MuiInputBase-input.MuiInputBase-input": {
                 padding: 0, // Adjust this as needed
               },
               "& .MuiInputBase-input:hover + fieldset": {
                 border: `1px solid blue`,
-                padding:0
+                padding: 0,
               },
               "& .MuiInputBase-input:focus + fieldset": {
                 border: `1px solid blue`,
-                padding:0
+                padding: 0,
               },
               "& label.Mui-focused": {
                 color: "#520975",
               },
             },
-            
+
             "& label.Mui-focused": {
               color: "#520975",
             },
@@ -218,7 +235,7 @@ function App() {
             },
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "#520975"
+                borderColor: "#520975",
               },
               "&:hover fieldset": {
                 borderColor: "#520975",
@@ -230,7 +247,6 @@ function App() {
           },
         },
       },
-      
 
       MuiAutocomplete: {
         styleOverrides: {

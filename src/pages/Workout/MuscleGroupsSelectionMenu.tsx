@@ -19,13 +19,17 @@ import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary"
 import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import getMuscleGroupExercises from "../../utils/firebaseDataFunctions/getMuscleGroupExercises";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import { myBigObj } from "../../utils/myExercisesCheck";
+import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 
 function MuscleGroupsSelectionMenu() {
   const [query, setQuery] = useState("");
-
+  const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
+
   const [exercisesMuscleGroupsArr, setExercisesMuscleGroupsArr] = useState(
     () => {
       if (userExercisesLibrary.length > 0) {
@@ -46,7 +50,6 @@ function MuscleGroupsSelectionMenu() {
     return [];
   });
 
-
   useEffect(() => {
     const fetchData = async () => {
       if (userExercisesLibrary.length === 0) {
@@ -54,15 +57,17 @@ function MuscleGroupsSelectionMenu() {
       }
     };
 
-
-    if(userExercisesLibrary.length>0){
-      setExercisesMuscleGroupsArr(getExercisesMuscleGroups(userExercisesLibrary));
-      setMuscleGroupExercises(getMuscleGroupExercises(userExercisesLibrary[0].exercises));
+    if (userExercisesLibrary.length > 0) {
+      setExercisesMuscleGroupsArr(
+        getExercisesMuscleGroups(userExercisesLibrary)
+      );
+      setMuscleGroupExercises(
+        getMuscleGroupExercises(userExercisesLibrary[0].exercises)
+      );
     }
 
     fetchData().catch(console.error); // Handle errors
   }, [userExercisesLibrary]);
-
 
   const filteredExercises = useMemo(() => {
     return muscleGroupExercises.filter((exercise) => {
@@ -84,8 +89,14 @@ function MuscleGroupsSelectionMenu() {
     navigate(`exercises/${muscleGroup}`, { state: { muscleGroup } });
   };
 
-  function handleTileClick(exerciseName: string,exerciseMuscleGroup:string) {
-    navigate(`exercises/${exerciseMuscleGroup}/selected/${exerciseName}`, { state: { muscleGroup:exerciseMuscleGroup } });
+  function handleTileClick(exerciseName: string, exerciseMuscleGroup: string) {
+    navigate(`exercises/${exerciseMuscleGroup}/selected/${exerciseName}`, {
+      state: { muscleGroup: exerciseMuscleGroup },
+    });
+  }
+
+  function handleAddNewExerciseModal() {
+    setOpenAddNewExerciseModal(!openAddNewExerciseModal);
   }
 
   const Row = ({
@@ -132,7 +143,7 @@ function MuscleGroupsSelectionMenu() {
         borderRadius="4px"
         style={rowStyle}
         pt={2}
-        onClick={() => handleTileClick(userExercise.name,userExercise.group)}
+        onClick={() => handleTileClick(userExercise.name, userExercise.group)}
       >
         <Typography align="center">
           {userExercise.name.toLocaleUpperCase()}
@@ -189,6 +200,10 @@ function MuscleGroupsSelectionMenu() {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
+        <AddNewExerciseModal
+          openAddNewExerciseModal={openAddNewExerciseModal}
+          setOpenAddNewExerciseModal={setOpenAddNewExerciseModal}
+        />
         <Container maxWidth="md">
           <Toolbar disableGutters>
             <FitnessCenterIcon
@@ -232,6 +247,7 @@ function MuscleGroupsSelectionMenu() {
             </Typography>
 
             <Box sx={{ marginLeft: "auto" }} display="flex">
+              {/* 
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -246,16 +262,16 @@ function MuscleGroupsSelectionMenu() {
                   }}
                 />
               </IconButton>
-
+              */}
               <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
-                //              onClick={handleAddNewExerciseModal}
+                onClick={handleAddNewExerciseModal}
               >
-                <AddOutlinedIcon />
+                <AddBoxIcon />
               </IconButton>
             </Box>
           </Toolbar>
@@ -320,7 +336,7 @@ function MuscleGroupsSelectionMenu() {
             <FixedSizeList
               height={window.innerHeight - 170}
               itemCount={filteredExercises.length}
-              itemSize={200}
+              itemSize={225}
               width="100%"
             >
               {Row}

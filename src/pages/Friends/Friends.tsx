@@ -34,11 +34,8 @@ import BlockedUsers from "./BlockedUsers";
 import SpottingBoard from "./SpottingBoard";
 import { FriendsSummaryProvider } from "../../context/FriendsSummary";
 
-interface HomeProps {
-  existingExercises: { name: string; exercises: Exercise[] }[];
-}
 
-function Friends({ existingExercises }: HomeProps) {
+function Friends() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -266,8 +263,6 @@ function Friends({ existingExercises }: HomeProps) {
         <AddContentModal
           addContentModalOpen={addContentModalOpen}
           setAddContentModalOpen={setAddContentModalOpen}
-          existingExercises={existingExercises}
-          unitsSystem={currentUserData.unitsSystem}
         />
       )}
 

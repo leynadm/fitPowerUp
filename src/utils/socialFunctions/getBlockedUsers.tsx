@@ -20,8 +20,6 @@ function getBlockedUsers(currentUserUid: string, setBlockedUsers: any) {
         const currentUserData = docSnapshot.data();
         const listOfBlockedUsers = currentUserData.blocked;
 
-        console.log(listOfBlockedUsers);
-
         if (Array.isArray(listOfBlockedUsers) && listOfBlockedUsers.length > 0) {
           // Now query the "users" collection to get all blocked users
           const usersCollectionRef = collection(db, "users");
@@ -46,8 +44,6 @@ function getBlockedUsers(currentUserUid: string, setBlockedUsers: any) {
               // Now you can use the blockedUsersData array as needed
               setBlockedUsers(blockedUsersData);
 
-              console.log('logging blockedUsersData:')
-              console.log(blockedUsersData)
             })
             .catch((error) => {
               toast.error("Oops, getBlockedUsers has an error!");
@@ -55,11 +51,10 @@ function getBlockedUsers(currentUserUid: string, setBlockedUsers: any) {
             });
         } else {
             setBlockedUsers([]);
-            console.log("List of blocked users is empty or not an array.");
           // Handle the case when the list of blocked users is empty or not an array.
         }
       } else {
-        console.log("User document not found!");
+        //console.log("User document not found!");
       }
     })
     .catch((error) => {

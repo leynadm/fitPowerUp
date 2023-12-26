@@ -27,6 +27,7 @@ import updateExercisesPRAfterAction from "../../utils/IndexedDbCRUDFunctions/upd
 import getExistingComment from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingComment";
 import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingExercises";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import { validateIndexedDbEntry } from "../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userTrainingData, refetchUserTrainingData } = useContext(
@@ -292,18 +293,20 @@ function ExerciseSelectedTrack() {
     }
   }
 
-  function safelyParseFloat(value: string | number): number | null {
+  function safelyParseFloat(value: string | number): number {
+    let numberValue: number;
+  
     if (typeof value === "string") {
-      // If it's a string, parse it to a float
-      return parseFloat(value) || null; // Use null if parsing fails
+      numberValue = parseFloat(value);
     } else if (typeof value === "number") {
-      // If it's already a number, return it
-      return value;
+      numberValue = value;
     } else {
-      // Handle other types (optional)
       console.error("Unsupported type");
-      return null;
+      return 0;
     }
+  
+    // Check for NaN or negative value
+    return isNaN(numberValue) || numberValue < 0 ? 0 : numberValue;
   }
 
   async function handleSaveExerciseEntry() {
@@ -315,7 +318,9 @@ function ExerciseSelectedTrack() {
     }
   }
 
+
   async function saveExerciseEntry() {
+    
     const checkEntriesValidity = exerciseFieldValidation();
 
     if (checkEntriesValidity) {
@@ -334,13 +339,13 @@ function ExerciseSelectedTrack() {
       return;
     }
 
-    let weightValueFloat: number | null;
-    weightValueFloat = safelyParseFloat(entryToSave.weight);
+    let weightValueFloat = safelyParseFloat(entryToSave.weight);
+    let repsValueFloat = safelyParseFloat(entryToSave.reps)
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
+    let timeValueFloat = safelyParseFloat(entryToSave.time)
+    
 
-    // TO FIGURE OUT HOW TO SAVE THINGS ACCURATELY
-    if (weightValueFloat === null) {
-      return;
-    }
+
 
     const updatedEntryToSave = {
       date: entryToSave.date,
@@ -356,9 +361,19 @@ function ExerciseSelectedTrack() {
     };
 
     updatedEntryToSave.weight = weightValueFloat;
+    updatedEntryToSave.reps = repsValueFloat;
+    updatedEntryToSave.distance = distanceValueFloat;
+    updatedEntryToSave.time = timeValueFloat;
 
+    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
+    
+    if (secondEntryValidation) {
+      toast.error('You can only use positive numbers!')
+      return;
+    }
+    
     try {
-      const request = indexedDB.open("fitScouterDb", 2);
+      const request = indexedDB.open("fitPowerUpDb", 2);
 
       request.onsuccess = function () {
         const db = request.result;
@@ -389,7 +404,6 @@ function ExerciseSelectedTrack() {
 
         request.onerror = function () {
           toast.error("Oops, saveExerciseEntry has an error!");
-          console.log("found error:");
         };
       };
     } catch (error) {
@@ -416,13 +430,21 @@ function ExerciseSelectedTrack() {
       return;
     }
 
-    let weightValueFloat = safelyParseFloat(entryToSave.weight);
-    if (weightValueFloat === null) {
+    let weightValueFloat = safelyParseFloat(entryToSave.weight);    
+    let repsValueFloat = safelyParseFloat(entryToSave.reps)
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
+    let timeValueFloat = safelyParseFloat(entryToSave.time)
+    
+
+    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
+    
+    if (secondEntryValidation) {
+      toast.error('You can only use positive numbers!')
       return;
     }
-
+    
     try {
-      const request = indexedDB.open("fitScouterDb", 2);
+      const request = indexedDB.open("fitPowerUpDb", 2);
 
       request.onerror = function (event) {
         toast.error("Oops, there was an error opening the database.");
@@ -466,17 +488,13 @@ function ExerciseSelectedTrack() {
                 exerciseSelected.name,
                 setExistingExercises
               );
-
-              console.log("Record updated successfully");
             };
 
             updateRequest.onerror = function () {
               toast.error("Oops, there was an error updating the record.");
               console.error("Error updating record");
             };
-          } else {
-            console.log("Record not found");
-          }
+          } 
         };
 
         userEntryTransaction.oncomplete = function () {
@@ -491,7 +509,7 @@ function ExerciseSelectedTrack() {
 
   async function deleteEntry(id: number, exerciseName: string) {
     try {
-      const request = indexedDB.open("fitScouterDb", 2);
+      const request = indexedDB.open("fitPowerUpDb", 2);
 
       request.onsuccess = function (event) {
         const db = (event.target as IDBRequest).result;
@@ -545,13 +563,11 @@ function ExerciseSelectedTrack() {
 
   function handleTextFieldChange(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
-    console.log({ value });
 
     if (/^-?\d*[\.,]?\d*$/.test(value) || value === "" || value === null) {
       if (id === "reps") {
         setRepsValue(parseInt(value, 10));
       } else if (id === "weight") {
-        console.log(typeof value);
         setWeightValue(value);
       } else if (id === "distance") {
         setDistanceValue(parseFloat(value));
@@ -562,8 +578,6 @@ function ExerciseSelectedTrack() {
   }
 
   const handleAddButtonClick = (measurement: string) => {
-    console.log(weightValue);
-    console.log(typeof weightValue);
 
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
@@ -697,6 +711,7 @@ function ExerciseSelectedTrack() {
         isDropset={isDropset}
         idExerciseUpdate={idExerciseUpdate}
         setDropsetRenderTrigger={setDropsetRenderTrigger}
+        databaseSelection="user-exercises-entries"
       />
 
       <Typography
@@ -970,7 +985,7 @@ function ExerciseSelectedTrack() {
         </Button>
 
         <Button
-          variant={editingExercise ? "dbz_mini" : "dbz_save"}
+          variant={editingExercise ? "dbz_mini" : "dbz_clear"}
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
           onClick={handleClearButtonClick}
         >

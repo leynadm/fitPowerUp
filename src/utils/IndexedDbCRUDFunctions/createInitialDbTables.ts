@@ -2,8 +2,7 @@ import toast from "react-hot-toast";
 import updateAppVersionWithNewDocs from "../accountSetupFunctions/updateAppVersionWithNewDocs";
 function createInitialDbTables(USERID: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    const request = indexedDB.open("fitScouterDb", 2);
-    console.log("running create initial db tables:");
+    const request = indexedDB.open("fitPowerUpDb", 2);
     if (!request) {
       toast.error(
         "Oops, failed to open the database in createInitialDbTables!"
@@ -26,35 +25,29 @@ function createInitialDbTables(USERID: string): Promise<void> {
       if (event.oldVersion < 2) {
         if (db.objectStoreNames.contains("preselected-exercises")) {
           db.deleteObjectStore("preselected-exercises");
-          console.log("deleted preselected-exercises");
         }
         if (db.objectStoreNames.contains("user-body-tracker")) {
           db.deleteObjectStore("user-body-tracker");
-          console.log("deleted user-body-tracker");
         }
         if (db.objectStoreNames.contains("user-data-preferences")) {
           db.deleteObjectStore("user-data-preferences");
-          console.log("deleted user-data-preferences");
         }
         if (db.objectStoreNames.contains("user-power-level")) {
           db.deleteObjectStore("user-power-level");
-          console.log("deleted user-power-level");
         }
         if (db.objectStoreNames.contains("workout-evaluation")) {
-          console.log("deleting workout-evaluation");
           db.deleteObjectStore("workout-evaluation");
         }
 
         if (db.objectStoreNames.contains("user-exercises-entries")) {
-          console.log("deleting user-exercises-entries");
           db.deleteObjectStore("user-exercises-entries");
         }
 
         if (db.objectStoreNames.contains("user-records-entries")) {
-          console.log("deleting user-records-entries");
           db.deleteObjectStore("user-records-entries");
         }
 
+        //CREATE INDEXED DB TABLE FOR USER-EXERCISES-ENTRIES
         const user_entries = db.createObjectStore("user-exercises-entries", {
           keyPath: "id",
           autoIncrement: true,
@@ -64,7 +57,7 @@ function createInitialDbTables(USERID: string): Promise<void> {
         user_entries.createIndex("exercise_name", "exercise", {
           unique: false,
         });
-        user_entries.createIndex("exercise_category", "category", {
+        user_entries.createIndex("exercise_group", "group", {
           unique: false,
         });
         user_entries.createIndex("exercise_weight", "weight", {
@@ -103,10 +96,57 @@ function createInitialDbTables(USERID: string): Promise<void> {
             unique: false,
           }
         );
+
+        const user_preset_workouts = db.createObjectStore("user-preset-workouts", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+
+        user_preset_workouts.createIndex("exercise_date", "date", { unique: false });
+        user_preset_workouts.createIndex("exercise_name", "exercise", {
+          unique: false,
+        });
+        user_preset_workouts.createIndex("exercise_group", "group", {
+          unique: false,
+        });
+        user_preset_workouts.createIndex("exercise_weight", "weight", {
+          unique: false,
+        });
+        user_preset_workouts.createIndex("exercise_reps", "reps", { unique: false });
+        user_preset_workouts.createIndex("exercise_distance", "distance", {
+          unique: false,
+        });
+        user_preset_workouts.createIndex("exercise_distance_unit", "distance_unit", {
+          unique: false,
+        });
+        user_preset_workouts.createIndex("exercise_time", "time", { unique: false });
+        user_preset_workouts.createIndex("exercise_pr", "pr", { unique: false });
+        user_preset_workouts.createIndex(
+          "exercise_name_and_date",
+          ["exercise", "date"],
+          {
+            unique: false,
+          }
+        );
+        user_preset_workouts.createIndex("exercise_name_and_pr", ["exercise", "pr"], {
+          unique: false,
+        });
+        user_preset_workouts.createIndex(
+          "exercise_name_and_weight",
+          ["exercise", "weight"],
+          {
+            unique: false,
+          }
+        );
+        user_preset_workouts.createIndex(
+          "exercise_name_and_reps",
+          ["exercise", "reps"],
+          {
+            unique: false,
+          }
+        );
       }
     };
-
-    
 
     request.onsuccess = async function () {
       const db = request.result;

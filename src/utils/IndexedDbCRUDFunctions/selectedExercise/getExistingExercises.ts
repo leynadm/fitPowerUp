@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { Exercise } from "../../interfaces/IUserTrainingData";
 import { Dispatch,SetStateAction } from "react";
 async function getExistingExercises(exerciseSelectedName:string,setExistingExercises:Dispatch<SetStateAction<Exercise[]>>) {
-    const request = indexedDB.open("fitScouterDb", 2);
+    const request = indexedDB.open("fitPowerUpDb", 2);
 
     request.onsuccess = function () {
       const db = request.result;
@@ -49,7 +49,6 @@ async function getExistingExercises(exerciseSelectedName:string,setExistingExerc
 
     request.onerror = function () {
       toast.error("Oops, couldn't open the database!");
-      console.log("Error opening database");
     };
   }
 

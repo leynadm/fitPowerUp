@@ -34,7 +34,6 @@ function addNotificationEntry(postUserId:string, action: string,currentUserUid:s
     })
     .then(() => {
       // Comment added successfully
-      console.log("Comment added");
     })
     .catch((error) => {
       // Error occurred while adding comment

@@ -162,7 +162,7 @@ function ProgressGraph() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      height="calc(100% - 95px)"
+      height="calc(100% - 112px)"
     >
       {/* 
       <Button onClick={loopThroughData}>Check Data</Button>
@@ -195,11 +195,11 @@ function ProgressGraph() {
         </RadioGroup>
       </FormControl>
 
-      {userFeatsDataArr.length === 0 ? (
+      {userFeatsData.length === 0 ? (
         <LoadingScreenCircle text="Waiting for Piccolo to finish his dramatic entrance..."/>
       ) : (
         <VariableSizeList
-          height={window.innerHeight - 170}
+          height={window.innerHeight - 200}
           itemCount={userFeatsDataArr.length}
           itemSize={(index) => {
             const featEntry = userFeatsDataArr[index];

@@ -15,9 +15,6 @@ function SpottingBoard() {
   const { friendsSummaryOverview } = useContext(
     FriendsSummaryContext
   );
-
-console.log(friendsSummaryOverview)
-
   return (
     <Box
       height="100%"

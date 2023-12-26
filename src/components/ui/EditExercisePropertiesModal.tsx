@@ -76,7 +76,7 @@ function EditExercisePropertiesModal({
       return;
     }
 
-    const request = indexedDB.open("fitScouterDb");
+    const request = indexedDB.open("fitPowerUpDb",2);
 
     request.onerror = (event) => {
       toast.error("Oops, getExerciseToUpdate couldn't open the database!")

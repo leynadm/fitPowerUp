@@ -45,9 +45,6 @@ function Newsfeed() {
   const [loadButtonStatus, setLoadButtonStatus] = useState(false);
   
   const isOnline = useOnlineStatus()
-  console.log('logging is online:')
-  console.log(isOnline)
-  console.log('inside Newsfeed!')
   let renderedOnce = false;
 
   useEffect(() => {

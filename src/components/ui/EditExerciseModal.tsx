@@ -69,7 +69,7 @@ function EditExerciseModal({
 
   function getEntryValues(): Promise<any> {
     return new Promise((resolve, reject) => {
-      const request = window.indexedDB.open("fitScouterDb");
+      const request = window.indexedDB.open("fitPowerUpDb",2);
   
       request.onerror = function (event) {
         reject(request.error);
@@ -118,7 +118,7 @@ function EditExerciseModal({
 
   function saveUpdatedExercise() {
 
-    const request = window.indexedDB.open("fitScouterDb");
+    const request = window.indexedDB.open("fitPowerUpDb",2);
     request.onsuccess = function (event: any) {
       const db = event.target.result;
       const transaction = db.transaction("user-exercises-entries", "readwrite");
@@ -329,8 +329,6 @@ function EditExerciseModal({
                       value={distanceUnit}
                       options={["m", "km", "ft", "mi"]}
                       onChange={(event, newValue) => {
-                        console.log("logging new value");
-                        console.log(newValue);
                         setDistanceUnit(newValue || "m");
                       }}
                       disableClearable

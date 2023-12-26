@@ -60,12 +60,12 @@ async function createUserDoc(userID: string, fullname: string | null) {
         powerLevel: 0,
         strengthLevel: 0,
         experienceLevel: 0,
-        firstPowerExercise: "No Exercise Selected Yet",
-        secondPowerExercise: "No Exercise Selected Yet",
-        thirdPowerExercise: "No Exercise Selected Yet",
-        country: { country: "", countryCode: "" },
+        firstPowerExercise:"barbell deadlift",
+        secondPowerExercise:"flat barbell bench press",
+        thirdPowerExercise:"barbell squat",
         unitsSystem:"metric",
-        defaultWeightIncrement:2.5
+        defaultWeightIncrement:2.5,
+        appVersion: 2.0,
       });
 
       // Create a subcollection "workouts" within the "users" document
@@ -114,11 +114,11 @@ async function createUserDoc(userID: string, fullname: string | null) {
       });
 
       // Create the body tracker document within the "user-training-data" subcollection
-      const userRecordsDocRef = doc(userCollectionRef, "userRecords");
+      const userPresetWorkoutsDocRef = doc(userCollectionRef, "userPresetWorkouts");
 
-      batch.set(userRecordsDocRef, {
-        userRecordsData:[]        
-      });
+      batch.set(userPresetWorkoutsDocRef,{
+        presetWorkouts:[]
+      }) 
 
       const followersFeedDocRef = doc(db, "followers-feed", userID);
       
@@ -133,7 +133,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
 
       batch.set(notificationsDocRef, { 
       });
-  
+   
       // Commit the batch to create all the documents simultaneously
       await batch.commit();
     }

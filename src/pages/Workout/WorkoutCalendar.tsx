@@ -112,7 +112,7 @@ function WorkoutCalendar() {
 
   async function handleCopyWorkout() {
     try {
-      const request = indexedDB.open("fitScouterDb", 2);
+      const request = indexedDB.open("fitPowerUpDb", 2);
 
       request.onsuccess = function () {
         const db = request.result;
@@ -166,7 +166,6 @@ function WorkoutCalendar() {
 
         request.onerror = function () {
           toast.error("Oops, saveExerciseEntry has an error!");
-          console.log("found error:");
         };
       };
     } catch (error) {

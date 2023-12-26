@@ -29,8 +29,6 @@ function CompletedDetailsOverview() {
   const [exerciseImgURL, setExerciseImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true); // New state for loading status
 
-  console.log(exerciseName?.replaceAll(" ", "-"));
-
   useEffect(() => {
     const fetchImageURL = async () => {
       const exerciseImageRef = ref(

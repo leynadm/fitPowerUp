@@ -44,7 +44,6 @@ async function updateAppVersionWithNewDocs(userID: string) {
       const userData = userDocDataSnap.data();
 
       if (userData.appVersion === 2) {
-        console.log("for some reason app version === 2");
         return;
       }
     }
@@ -113,6 +112,14 @@ async function updateAppVersionWithNewDocs(userID: string) {
 
     // Create the body tracker document within the "user-training-data" subcollection
     const userFeatsDocRef = doc(userCollectionRef, "userFeats");
+
+    
+    // Create the body tracker document within the "user-training-data" subcollection
+    const userPresetWorkoutsDocRef = doc(userCollectionRef, "userPresetWorkouts");
+
+    batch.set(userPresetWorkoutsDocRef,{
+      presetWorkouts:[]
+    }) 
 
     batch.set(userFeatsDocRef, {
       userFeatsData: featsParsedJSON,

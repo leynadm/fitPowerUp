@@ -6,7 +6,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import capitalizeWords from "../../utils/capitalizeWords";
 import Box from "@mui/material/Box";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +18,9 @@ import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary"
 import CircularProgress from "@mui/material/CircularProgress";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { AuthContext } from "../../context/Auth";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 function ExerciseSelectionMenu() {
-  const {currentUserData} = useContext(AuthContext)
+  const { currentUserData } = useContext(AuthContext);
   const { selectedMuscleGroup } = useParams();
   const muscleGroup: string = useLocation().state.muscleGroup;
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
@@ -28,14 +29,14 @@ function ExerciseSelectionMenu() {
   const [query, setQuery] = useState("");
 
   const navigate = useNavigate();
-    const isMale = currentUserData.sex==="male"?true:false
+  const isMale = currentUserData.sex === "male" ? true : false;
   const [muscleGroupExercises, setMuscleGroupExercises] = useState<
     IUserExercisesLibrary[]
-  >(()=>{
-    if(userExercisesLibrary.length>0){
-      return getMuscleGroupExercises()
+  >(() => {
+    if (userExercisesLibrary.length > 0) {
+      return getMuscleGroupExercises();
     } else {
-      return []
+      return [];
     }
   });
 
@@ -44,15 +45,14 @@ function ExerciseSelectionMenu() {
       if (userExercisesLibrary.length === 0) {
         await refetchUserExercisesLibrary();
       }
-      updateMuscleGroupExercises()
+      updateMuscleGroupExercises();
     };
 
     const tempMuscleGroupExercises = getMuscleGroupExercises();
     setMuscleGroupExercises(tempMuscleGroupExercises);
 
     fetchData().catch(console.error); // Handle errors
-  }, [userExercisesLibrary,muscleGroup,selectedMuscleGroup]);
-
+  }, [userExercisesLibrary, muscleGroup, selectedMuscleGroup]);
 
   function updateMuscleGroupExercises() {
     // Ensure that userExercisesLibrary is not empty and contains exercises
@@ -63,32 +63,30 @@ function ExerciseSelectionMenu() {
   }
 
   function getMuscleGroupExercises() {
-
-    if(userExercisesLibrary.length>0){
+    if (userExercisesLibrary.length > 0) {
       const exercisesArray: IUserExercisesLibrary[] =
-      userExercisesLibrary[0].exercises;
+        userExercisesLibrary[0].exercises;
 
-    if (muscleGroup) {
-      const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
-        (item: IUserExercisesLibrary) => item.group === muscleGroup
-      );
-      filteredArray.sort((a, b) => a.name.localeCompare(b.name));
+      if (muscleGroup) {
+        const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
+          (item: IUserExercisesLibrary) => item.group === muscleGroup
+        );
+        filteredArray.sort((a, b) => a.name.localeCompare(b.name));
 
-      return filteredArray;
+        return filteredArray;
+      } else {
+        const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
+          (item: IUserExercisesLibrary) =>
+            item.group.toLocaleLowerCase() ===
+            selectedMuscleGroup?.toLocaleLowerCase()
+        );
+
+        filteredArray.sort((a, b) => a.name.localeCompare(b.name));
+        return filteredArray;
+      }
     } else {
-      const filteredArray: IUserExercisesLibrary[] = exercisesArray.filter(
-        (item: IUserExercisesLibrary) =>
-          item.group.toLocaleLowerCase() ===
-          selectedMuscleGroup?.toLocaleLowerCase()
-      );
-
-      filteredArray.sort((a, b) => a.name.localeCompare(b.name));
-      return filteredArray;
+      return [];
     }
-    } else {
-      return []
-    }
-    
   }
 
   const filteredExercises = useMemo(() => {
@@ -109,7 +107,6 @@ function ExerciseSelectionMenu() {
     navigate(`selected/${exerciseName}`);
   }
 
-  
   const Row = ({
     index,
     style,
@@ -123,10 +120,9 @@ function ExerciseSelectionMenu() {
 
     useEffect(() => {
       const fetchImageURL = async () => {
-        
         let exerciseImageRef;
-        
-        if(!isMale && userExercise.multi){
+
+        if (!isMale && userExercise.multi) {
           exerciseImageRef = ref(
             storage,
             `assets/exercises-assets/${userExercise.id}(2).jpg`
@@ -137,7 +133,7 @@ function ExerciseSelectionMenu() {
             `assets/exercises-assets/${userExercise.id}.jpg`
           );
         }
-        
+
         try {
           const url = await getDownloadURL(exerciseImageRef);
           setImageURL(url);
@@ -207,10 +203,11 @@ function ExerciseSelectionMenu() {
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>
+
       </Box>
     );
   };
- 
+
   return (
     <>
       <Container maxWidth="md">
@@ -236,12 +233,12 @@ function ExerciseSelectionMenu() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
 
-                  letterSpacing: ".3rem",
+                  letterSpacing: ".1rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
               >
-                {muscleGroup.toLocaleUpperCase()}
+                {capitalizeWords(muscleGroup)}
               </Typography>
 
               <FitnessCenterIcon
@@ -257,12 +254,12 @@ function ExerciseSelectionMenu() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
 
-                  letterSpacing: ".3rem",
+                  letterSpacing: ".1rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
               >
-                {muscleGroup.toLocaleUpperCase()}
+                {capitalizeWords(muscleGroup)}
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
@@ -274,10 +271,8 @@ function ExerciseSelectionMenu() {
                     aria-haspopup="true"
                     color="inherit"
                     //onClick={getOnlyFavorites}
-                  >
-
-                  </IconButton>
-
+                  ></IconButton>
+                  {/* 
                   <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -288,6 +283,7 @@ function ExerciseSelectionMenu() {
                   >
                     <AddOutlinedIcon />
                   </IconButton>
+     */}
                 </Box>
               </Box>
             </Toolbar>
@@ -300,14 +296,13 @@ function ExerciseSelectionMenu() {
           <FixedSizeList
             height={window.innerHeight - 165}
             itemCount={filteredExercises.length}
-            itemSize={200}
+            itemSize={225}
             width="100%"
           >
             {Row}
           </FixedSizeList>
         </Box>
       </Container>
-    
     </>
   );
 }

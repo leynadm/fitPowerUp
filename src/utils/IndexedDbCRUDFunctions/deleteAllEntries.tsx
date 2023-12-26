@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 
 async function deleteAllEntries() {
   // Open the IndexedDB database
-  const request = window.indexedDB.open("fitScouterDb");
+  const request = window.indexedDB.open("fitPowerUpDb");
 
   // Handle successful database opening
   request.onsuccess = function (event) {
@@ -17,7 +17,6 @@ async function deleteAllEntries() {
 
     clearRequest.onsuccess = function (event: any) {
       // Display a success toast message
-      toast.success("Entries successfully deleted!");
     };
 
     // Close the transaction and database

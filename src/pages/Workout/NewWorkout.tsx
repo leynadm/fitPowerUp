@@ -26,6 +26,7 @@ import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -87,7 +88,6 @@ function NewWorkout({
       }}
       className="WrapperInsideNewWorkout"
     >
-
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
@@ -177,6 +177,7 @@ function NewWorkout({
                     <AddOutlinedIcon sx={{ color: "white" }} />
                   </IconButton>
                 </Box>
+                
               </Box>
             </Toolbar>
           </Container>
@@ -197,7 +198,6 @@ function NewWorkout({
               alignItems: "center",
               flexGrow: 1,
               height: "100%",
-              paddingBottom: "56px",
             }}
           >
             <IconButton
@@ -210,7 +210,7 @@ function NewWorkout({
               onClick={handleNewWorkout}
             >
               <AddIcon fontSize="medium" />
-              <Typography fontSize="1rem">Add exercise</Typography>
+              <Typography fontSize="1rem">Add new exercise</Typography>
             </IconButton>
 
             <IconButton
@@ -223,8 +223,22 @@ function NewWorkout({
               onClick={() => navigate("/home/workout/calendar")}
             >
               <ContentCopyIcon fontSize="medium" />
-              <Typography fontSize="1rem">Copy workout</Typography>
+              <Typography fontSize="1rem">Copy previous workout</Typography>
             </IconButton>
+
+            <IconButton
+              aria-label="add workout"
+              sx={{
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={() => navigate("/home/workout/preset-workouts")}
+            >
+              <FormatListNumberedIcon fontSize="medium" />
+              <Typography fontSize="1rem">Copy preset workout</Typography>
+            </IconButton>
+
           </Box>
         ) : (
           <Box

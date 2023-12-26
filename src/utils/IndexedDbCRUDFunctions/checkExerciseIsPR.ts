@@ -50,9 +50,6 @@ async function checkExerciseIsPR(
     return;
   }
   const maxResultsArr = getMaxResultsArr(combinedArray);
-  console.log("INSIDE SAVING THE FIRST EXERCISE");
-  console.log({ maxEntry });
-  console.log(updatedEntryToSave);
 
   if (updatedEntryToSave.reps !== 0 && updatedEntryToSave.weight !== 0) {
     if (

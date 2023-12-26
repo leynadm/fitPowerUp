@@ -26,6 +26,7 @@ interface ParentComponentProps {
   setCommentValue: React.Dispatch<React.SetStateAction<string>>;
   idExerciseUpdate: number;
   setDropsetRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
+  databaseSelection:string
 }
  
 function CommentModal({
@@ -37,8 +38,8 @@ function CommentModal({
   isDropset,
   setIsDropset,
   setDropsetRenderTrigger,
+  databaseSelection
 }: ParentComponentProps) {
-
 
   function handleClose() {
     setCommentValue("");
@@ -46,11 +47,11 @@ function CommentModal({
   }
 
   function saveComment() {
-    const request = window.indexedDB.open("fitScouterDb");
+    const request = window.indexedDB.open("fitPowerUpDb",2);
     request.onsuccess = function (event: any) {
       const db = event.target.result;
-      const transaction = db.transaction("user-exercises-entries", "readwrite");
-      const objectStore = transaction.objectStore("user-exercises-entries");
+      const transaction = db.transaction(databaseSelection, "readwrite");
+      const objectStore = transaction.objectStore(databaseSelection);
 
       const getRequest = objectStore.get(idExerciseUpdate);
 
@@ -61,7 +62,7 @@ function CommentModal({
           data.dropset = isDropset;
           const updateRequest = objectStore.put(data);
           updateRequest.onsuccess = function () {
-            console.log("Record updated successfully");
+            //console.log("Record updated successfully");
           };
           updateRequest.onerror = function () {
             toast.error("Oops, saveComment has an error!")
@@ -131,7 +132,7 @@ function CommentModal({
             }}
           >
             <Button
-              variant="contained"
+              variant="dbz_save"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={saveComment}
@@ -139,7 +140,7 @@ function CommentModal({
               Save
             </Button>
             <Button
-              variant="contained"
+              variant="dbz_clear"
               sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
               onClick={handleClose}
             >

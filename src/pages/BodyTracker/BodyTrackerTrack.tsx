@@ -63,6 +63,7 @@ function BodyTrackerTrack() {
   }
   };
 
+
   async function handleSaveBodyTrackerEntry() {
     let checkIfAtLeastOneValueIsAdded = false;
     
@@ -93,10 +94,6 @@ function BodyTrackerTrack() {
     const userBodyTrackerDataJSON = JSON.stringify(userBodyTrackerData);
     const userBodyTrackerDataArr = JSON.parse(userBodyTrackerDataJSON);
 
-    console.log(userBodyTrackerDataJSON)
-    console.log(userBodyTrackerDataArr)
-    
-    
     const matchedEntry = userBodyTrackerDataArr.find(
       (item: IUserBodyTrackerDataEntry) => item.date === newDate
     );

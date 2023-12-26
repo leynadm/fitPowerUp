@@ -11,7 +11,6 @@ export const useUserFeatsData = () => {
 
   const fetchUserFeatsData = async () => {
     if (!currentUser) return;
-    console.log('fetching user feats data')
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userCollectionRef = collection(usersDocRef, "userCollection");
     const userFeatsDataDocRef = doc(userCollectionRef, "userFeats");

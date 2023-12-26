@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef, Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
@@ -28,7 +28,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
-import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import { IUserTrainingData, IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
@@ -38,6 +38,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DataBadge from "../../components/ui/DataBadge";
 import { Paper } from "@mui/material";
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
@@ -68,12 +69,9 @@ function CompletedWorkouts() {
     touchStart: 0,
   });
 
-  //console.log(userTrainingData)
   const { moved, touchEnd, touchStart } = swipe;
 
   const SENSITIVITY = 125;
-
-  console.log(dateForWorkout);
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     let touchStartX = e.targetTouches[0].clientX;
@@ -102,7 +100,7 @@ function CompletedWorkouts() {
   }
 
   useEffect(() => {
-    filterUserTrainingsPerDay(dateForWorkout);
+    filterUserTrainingsPerDay(dateForWorkout,userTrainingData,setFilteredUserTrainingData);
   }, [userTrainingData, dateForWorkout]);
 
   const containerRef = useRef<HTMLElement>(null);
@@ -113,27 +111,16 @@ function CompletedWorkouts() {
     const convertedDate = formatDateForTextField(newDate);
     setDateForWorkout(convertedDate);
 
-    filterUserTrainingsPerDay(convertedDate);
+    filterUserTrainingsPerDay(convertedDate,userTrainingData,setFilteredUserTrainingData);
   };
 
   const handleRightArrowClick = () => {
     const newDate = convertStringToDate(dateForWorkout);
     newDate.setDate(newDate.getDate() + 1);
     const convertedDate = formatDateForTextField(newDate);
-    console.log(convertedDate);
     setDateForWorkout(convertedDate);
-    filterUserTrainingsPerDay(convertedDate);
+    filterUserTrainingsPerDay(convertedDate,userTrainingData,setFilteredUserTrainingData);
   };
-
-  function filterUserTrainingsPerDay(convertedDate: string) {
-    if (userTrainingData) {
-      const filteredUserTrainingDataArr = userTrainingData.filter(
-        (entry: IWorkoutData, index: number) => entry.date === convertedDate
-      );
-
-      setFilteredUserTrainingData(filteredUserTrainingDataArr);
-    }
-  }
 
   function convertStringToDate(dateString: string) {
     const newDate = new Date(dateString);
@@ -142,8 +129,7 @@ function CompletedWorkouts() {
 
   const pages = [
     "Analysis",
-    /* 
-    "Preset Workouts", */
+    "Preset Workouts", 
     "Body Tracker",
     "Settings",
     "Sign Out",
@@ -319,14 +305,14 @@ function CompletedWorkouts() {
                 </ListItemIcon>
                 <ListItemText>Analysis</ListItemText>
               </MenuItem>
-              {/* 
+              
               <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
                 <ListItemIcon>
-                  <FormatListNumberedRtlIcon fontSize="small" />
+                  <FormatListNumberedIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Preset Workouts</ListItemText>
               </MenuItem>
-               */}
+              
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
@@ -702,3 +688,13 @@ function CompletedWorkouts() {
 }
 
 export default CompletedWorkouts;
+
+export function filterUserTrainingsPerDay(convertedDate: string,userTrainingData:IWorkoutData[],setFilteredUserTrainingData:Dispatch<SetStateAction<IWorkoutData[]>>) {
+  if (userTrainingData) {
+    const filteredUserTrainingDataArr = userTrainingData.filter(
+      (entry: IWorkoutData, index: number) => entry.date === convertedDate
+    );
+
+    setFilteredUserTrainingData(filteredUserTrainingDataArr);
+  }
+}

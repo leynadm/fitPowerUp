@@ -25,6 +25,7 @@ import getUserWeight from "../../utils/getUserWeight";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import { Container } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -147,8 +148,6 @@ function CompleteWorkoutModal({
       power: workoutSessionPowerLevel,
       wExercises: existingExercisesArr,
     };
-    console.log("logging workout data:");
-    console.log(workoutData);
     try {
       await completeWorkout(currentUser.uid, workoutData, userTrainingDataSize);
       await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
@@ -187,7 +186,8 @@ function CompleteWorkoutModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+
+        <Container sx={style}>
           <Box
             sx={{
               display: "flex",
@@ -222,7 +222,7 @@ function CompleteWorkoutModal({
             onChange={handleWorkoutDateChange}
             value={workoutDate}
             variant="filled"
-          ></TextField>
+          />
 
           <TextField
             id="outlined-multiline-flexible"
@@ -230,6 +230,7 @@ function CompleteWorkoutModal({
             multiline
             maxRows={6}
             minRows={2}
+            inputProps={{ maxLength: 512 }}
             variant="filled"
             sx={{
               width: "100%",
@@ -283,7 +284,7 @@ function CompleteWorkoutModal({
               Cancel
             </Button>
           </Box>
-        </Box>
+        </Container>
       </Modal>
     </div>
   );

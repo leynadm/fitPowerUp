@@ -4,7 +4,7 @@ async function getIndexedDbExercises(
 ): Promise<Exercise[]> {
   return new Promise((resolve, reject) => {
     // Open the IndexedDB database
-    const request = indexedDB.open("fitScouterDb", 2);
+    const request = indexedDB.open("fitPowerUpDb", 2);
 
     // Handle database open success
     request.onsuccess = (event: Event) => {

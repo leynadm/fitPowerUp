@@ -7,6 +7,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import resetTrainingData from "../../utils/firebaseDataFunctions/resetTrainingData";
 import { AuthContext } from "../../context/Auth";
 import { auth } from "../../config/firebase";
+import { Container } from "@mui/material";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -31,11 +32,10 @@ function ResetTrainingDataModal({
   const { currentUser } = useContext(AuthContext);
   const handleClose = () => setOpenResetTrainingData(false);
 
-  async function handleResetTrainingData(){
-
-    await resetTrainingData(currentUser.uid)
-    auth.signOut()
-    setOpenResetTrainingData(false)
+  async function handleResetTrainingData() {
+    await resetTrainingData(currentUser.uid);
+    auth.signOut();
+    setOpenResetTrainingData(false);
   }
 
   return (
@@ -46,7 +46,7 @@ function ResetTrainingDataModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Container sx={style} maxWidth="md">
           <Typography
             id="modal-modal-title"
             variant="h6"
@@ -85,7 +85,7 @@ function ResetTrainingDataModal({
               Cancel
             </Button>
           </Box>
-        </Box>
+        </Container>
       </Modal>
     </div>
   );

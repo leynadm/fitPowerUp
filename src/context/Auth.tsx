@@ -34,13 +34,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           enablePersistentData();
           createInitialDbTables(user.uid)
             .then(() => {
-              console.log("Tables are inside the database.");
+              //console.log("Tables are inside the database.");
             })
             .catch((error) => {
               console.error("Error creating tables:", error);
             })
             .finally(() => {
-              console.log("IndexedDb tables creation completed.");
+              //console.log("IndexedDb tables creation completed.");
             });
 
           const docRef = doc(db, "users", user.uid);

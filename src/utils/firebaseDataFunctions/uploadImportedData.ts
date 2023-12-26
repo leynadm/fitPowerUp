@@ -42,7 +42,6 @@ async function uploadImportedData(
         `userTrainingCollection/userTrainingData_${i + 1}`
       );
 
-      console.log(userTrainingDataDocRef);
       await setDoc(userTrainingDataDocRef, {
         workoutSessions: chunk,
       });

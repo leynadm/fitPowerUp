@@ -1,12 +1,12 @@
 export interface IUserExercisesLibrary {
     group: string;
     favorite: boolean;
-    measurement: [];
+    measurement: string[];
     id:string;
     type:string;
-    mInvolved:[string]
+    mInvolved:string[]
     erase:boolean;
-    equipment:[string]
+    equipment:string[]
     multi:boolean
     name:string
   }

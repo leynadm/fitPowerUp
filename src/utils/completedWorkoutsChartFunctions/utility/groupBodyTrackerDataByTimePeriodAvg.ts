@@ -355,7 +355,6 @@ function groupBodyTrackerDataByTimePeriodAvg(
       }
     }
   );
-  console.log({ groupedData });
   return groupedData;
 }
 

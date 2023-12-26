@@ -60,8 +60,6 @@ export default function SignUp() {
       );
 
       const user = userCredential.user;
-      console.log('logging user:')  
-      console.log({user})
       await createUserDoc(user.uid,fullName)
 
       await sendEmailVerification(user);
@@ -73,7 +71,6 @@ export default function SignUp() {
         toast.error("Oops, handleSignUp has an error!")
       } else {
         toast.error("An unknown error occurred")
-        console.log("An unknown error occurred:", error);
       }
     }
   };

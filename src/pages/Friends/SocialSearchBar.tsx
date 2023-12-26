@@ -45,7 +45,6 @@ function SocialSearchBar() {
   const [usersFound, setUsersFound] = useState<any>({});
   const {currentUser,currentUserData} = useContext(AuthContext)
   async function getUsers() {
-    console.log("User to search is: " + userToSearch);
 
     let q;
 
