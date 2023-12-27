@@ -244,12 +244,10 @@ function NewPresetWorkout() {
     }
   };
 
-  console.log(workoutState);
   const handleRoutineCheck = (
     event: React.SyntheticEvent,
     checked: boolean
   ) => {
-    console.log(checked);
 
     if (!checked) {
       setWorkoutRoutineCheck(false);
