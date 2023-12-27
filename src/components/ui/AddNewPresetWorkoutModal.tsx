@@ -41,8 +41,8 @@ interface ParentComponentProps {
     routineDescription: string;
     routineBy: string;
     routineLinkReference: string;
-    workoutBy:string;
-    workoutLinkReference:string;
+    workoutBy: string;
+    workoutLinkReference: string;
   };
   workoutRoutineCheck: boolean;
   routineTypeCheck: string;
@@ -92,12 +92,11 @@ function AddNewPresetWorkoutModal({
       exercisesinRoutine: tempExercisesInRoutine,
       routineLinkReference: workoutState.routineLinkReference,
       delete: true,
-      workoutBy:workoutState.workoutBy,
-      workoutLinkReference:workoutState.workoutLinkReference
+      workoutBy: workoutState.workoutBy,
+      workoutLinkReference: workoutState.workoutLinkReference,
     };
 
     try {
-
       await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData);
 
       deleteAllPresetEntries();
@@ -105,7 +104,6 @@ function AddNewPresetWorkoutModal({
       toast.success("Preset workout succesfully added !");
 
       navigate("/home/workout/preset-workouts");
-   
     } catch (error) {
       console.log(error);
     }
@@ -215,7 +213,7 @@ function AddNewPresetWorkoutModal({
               />
             )}
 
-            {!workoutRoutineCheck&&
+            {!workoutRoutineCheck && (
               <Box display="flex" flexDirection="column" width="100%" gap={1}>
                 <TextField
                   id="outlined-basic"
@@ -242,7 +240,7 @@ function AddNewPresetWorkoutModal({
                   value={workoutState.workoutLinkReference}
                 />
               </Box>
-            }
+            )}
 
             <Box
               sx={{

@@ -16,10 +16,11 @@ import AddHomeIcon from "@mui/icons-material/AddHome";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 import HelpIcon from '@mui/icons-material/Help';
 import ExerciseInfoModal from "../../components/ui/ExerciseInfoModal";
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 function ExerciseSelected() {
   const [countdownValue, setCountdownValue] = useState(120);
-  const { showRestTimer, setShowRestTimer } = useContext(LogDataContext);
+  const { showRestTimer, setShowRestTimer,time,countdown } = useContext(LogDataContext);
   const [openExerciseInfoModal,setOpenExerciseInfoModal]= useState(false)
   const { exerciseName } = useParams();
 
@@ -101,9 +102,7 @@ function ExerciseSelected() {
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
-
-              
-
+                {/* 
               <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -113,8 +112,8 @@ function ExerciseSelected() {
                 >
                 <DeleteForeverIcon />
                 </IconButton>
-
-              <IconButton
+ */}
+                <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
@@ -122,10 +121,10 @@ function ExerciseSelected() {
                   color="inherit"
                   onClick={handleExerciseInfoModal}
                 >
-                <HelpIcon />
+                  <HelpIcon />
                 </IconButton>
 
-
+                {/* 
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -134,9 +133,14 @@ function ExerciseSelected() {
                   color="inherit"
                   onClick={handleShowRestTimer}
                 >
-                  <TimerIcon />
+                  {countdownValue===0?(<TimerIcon />):(
+                    <Typography>{countdown}</Typography>
+                  )
+                    
+                  }
+                  
                 </IconButton>
-
+ */}
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -152,7 +156,6 @@ function ExerciseSelected() {
           </Toolbar>
         </Container>
       </AppBar>
-
 
       <ExerciseInfoModal
         openExerciseInfoModal={openExerciseInfoModal}

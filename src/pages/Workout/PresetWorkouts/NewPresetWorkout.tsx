@@ -57,26 +57,47 @@ function NewPresetWorkout() {
     searchParams.get("workoutRoutineCheck") === "true" ? true : false
   );
 
-  const isDataValidated = ()=>{
-    if(workoutRoutineCheck){
-      if(workoutState.routineBy!==''&&
-        workoutState.routineName!==''&&
-        workoutState.routineDescription!==''&&
-        workoutState.workoutName!==''&&
-        workoutState.workoutDescription!==''
+  /* 
+  
+      if(routineTypeCheck==='existing' &&
+      
+      workoutState.routineName!==''&&
+      
       ){
-        return true
+
       }
-    } else if(
-      workoutState.workoutName!==''&&
-      workoutState.workoutDescription!==''&&
-      workoutState.workoutBy!==''
-      ){
-        return true    
+
+  */
+  const isDataValidated = () => {
+    if (
+      workoutRoutineCheck &&
+      routineTypeCheck === "new" &&
+      workoutState.routineBy !== "" &&
+      workoutState.routineName !== "" &&
+      workoutState.routineDescription !== "" &&
+      workoutState.workoutName !== "" &&
+      workoutState.workoutDescription !== ""
+    ) {
+      return true;
+    } else if (
+      workoutRoutineCheck &&
+      routineTypeCheck === "existing" &&
+      workoutState.routineName !== "" &&
+      workoutState.workoutName !== "" &&
+      workoutState.workoutDescription !== ""
+    ) {
+      return true;
+    } else if (
+      !workoutRoutineCheck &&
+      workoutState.workoutName !== "" &&
+      workoutState.workoutDescription !== "" &&
+      workoutState.workoutBy !== ""
+    ) {
+      return true;
     }
 
-    return false
-  }
+    return false;
+  };
   const [routineTypeCheck, setRoutineTypeCheck] = useState(
     searchParams.get("routineTypeCheck") || "new"
   );
@@ -113,7 +134,10 @@ function NewPresetWorkout() {
   const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
 
-    if (value!==''&& existingRoutinesNames.includes(value.toLocaleLowerCase())) {
+    if (
+      value !== "" &&
+      existingRoutinesNames.includes(value.toLocaleLowerCase())
+    ) {
       toast.error(`${value} routine already exists!`);
       return;
     }
@@ -220,8 +244,14 @@ function NewPresetWorkout() {
     }
   };
 
-  function handleRoutineCheck() {
-    if (workoutRoutineCheck) {
+  console.log(workoutState);
+  const handleRoutineCheck = (
+    event: React.SyntheticEvent,
+    checked: boolean
+  ) => {
+    console.log(checked);
+
+    if (!checked) {
       setWorkoutRoutineCheck(false);
       setWorkoutState((prevState) => ({
         ...prevState,
@@ -229,13 +259,6 @@ function NewPresetWorkout() {
         routineDescription: "",
         routineLinkReference: "",
         routineBy: "",
-        workoutName: "",
-        workoutDescription: "",
-        /* 
-        workoutBy: "",
-        workoutLinkReference: "",
-
-        */
       }));
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set("workoutRoutineCheck", "false");
@@ -254,16 +277,12 @@ function NewPresetWorkout() {
         routineBy: "",
         workoutBy: "",
         workoutLinkReference: "",
-        /* 
-        workoutName: "",
-        workoutDescription: "",
-        */
       }));
 
       // Update the URL without overwriting other parameters
       setSearchParams(newSearchParams);
     }
-  }
+  };
 
   const isWorkoutRoutineChecked = () => {
     const param = searchParams.get("workoutRoutineCheck");
@@ -358,7 +377,8 @@ function NewPresetWorkout() {
                   flexDirection: "row-reverse",
                 }}
               >
-                {(existingExercises.length > 0 && isDataValidated()) &&
+                {existingExercises.length > 0 &&
+                  isDataValidated() &&
                   workoutState.workoutName !== "" && (
                     <IconButton
                       size="large"
@@ -388,7 +408,7 @@ function NewPresetWorkout() {
         <FormControlLabel
           control={<Switch />}
           checked={isWorkoutRoutineChecked()}
-          onChange={handleRoutineCheck}
+          onChange={handleRoutineCheck} // Passing additional value
           label={
             workoutRoutineCheck
               ? "This workout is part of a routine"

@@ -969,5 +969,5 @@ export const feats = [
     level: 7,
     type: "Exercises - Chin Up",
     featValue: 24,
-  }
-]
+  },
+];

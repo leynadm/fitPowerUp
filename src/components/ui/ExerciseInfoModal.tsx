@@ -46,6 +46,7 @@ function ExerciseInfoModal({
   setOpenExerciseInfoModal,
   exerciseName,
 }: ParentComponentProps) {
+ 
   const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
   const [exerciseImageURL, setExerciseImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -53,24 +54,49 @@ function ExerciseInfoModal({
   const exerciseSelected = findExerciseSelected();
 
   useEffect(() => {
+
     if (exerciseName && userExercisesLibrary.length > 0) {
+
       const fetchImageURL = async () => {
-        const exerciseImageRef = ref(
-          storage,
-          `assets/exercises-assets/${exerciseName
-            ?.replaceAll(" ", "-")
-            .toLocaleLowerCase()}.jpg`
-        );
-        try {
-          const url = await getDownloadURL(exerciseImageRef);
-          setExerciseImageURL(url);
-        } catch (error) {
-          //toast.error("Oops, there was an error fetching the image!");
-          console.error("Error fetching image:", error);
-        } finally {
-          setIsLoading(false); // Stop loading whether there was an error or not
-        }
-      };
+        
+        if(exerciseSelected){
+
+          const exerciseImageRef = ref(
+            storage,
+            `assets/exercises-assets/${exerciseSelected.id
+              .toLocaleLowerCase()}.jpg`
+          );
+          try {
+            const url = await getDownloadURL(exerciseImageRef);
+            setExerciseImageURL(url);
+          } catch (error) {
+            //toast.error("Oops, there was an error fetching the image!");
+            console.error("Error fetching image:", error);
+          } finally {
+            setIsLoading(false); // Stop loading whether there was an error or not
+          }
+
+
+        } else {
+          const exerciseImageRef = ref(
+            storage,
+            `assets/exercises-assets/${exerciseName
+              ?.replaceAll(" ", "-")
+              .toLocaleLowerCase()}.jpg`
+          );
+          try {
+            const url = await getDownloadURL(exerciseImageRef);
+            setExerciseImageURL(url);
+          } catch (error) {
+            //toast.error("Oops, there was an error fetching the image!");
+            console.error("Error fetching image:", error);
+          } finally {
+            setIsLoading(false); // Stop loading whether there was an error or not
+          }
+        };
+        }        
+        
+        
 
       fetchImageURL();
     }
