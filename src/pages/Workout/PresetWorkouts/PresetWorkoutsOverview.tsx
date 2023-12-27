@@ -14,8 +14,9 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { MouseEvent } from "react";
 import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import RoutineCard from "./RoutineCard";
-import WorkoutCard from "./WorkoutCard";
+import { useEffect } from "react";
 import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
+import { Button } from "@mui/material";
 // This is the type for the accumulator
 interface IPresetWorkoutAccumulator {
   [key: string]: IPresetWorkoutGroup;
@@ -33,12 +34,22 @@ interface IPresetWorkoutDetails {
   delete?: boolean;
   workoutBy?:string
   workoutLinkReference?:string
-  // Add other relevant properties here
 }
 
 function PresetWorkoutsOverview() {
-  const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
 
+
+  const { presetWorkoutsData,refetchPresetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
+  
+  const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
+
+  const blob = new Blob([jsonString], { type: "application/json" });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = "myData.json"; // Filename for the downloaded file
+  
   const [selectedCategory, setSelectedCategory] = useState("routines"); // default value
 
   const routines = getRoutines(presetWorkoutsData);
@@ -46,6 +57,18 @@ function PresetWorkoutsOverview() {
   const workouts = getWorkouts(presetWorkoutsData);
 
   const isRoutineEmptyCheck = isRoutineEmpty(routines);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log('fetching the data')
+      if (presetWorkoutsData.length === 0) {
+        await refetchPresetWorkoutsData();
+        console.log('actually fetching')
+      }
+    };
+    console.log('fetching the data')
+    fetchData().catch(console.error); // Handle errors
+  }, [refetchPresetWorkoutsData]);
 
   function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
     if (routines) {
@@ -147,6 +170,7 @@ function PresetWorkoutsOverview() {
         </AppBar>
       </Box>
 
+                <Button onClick={()=>link.click()}>Trigger save</Button>
       <ToggleButtonGroup
         value={selectedCategory}
         onChange={handleAlignment}

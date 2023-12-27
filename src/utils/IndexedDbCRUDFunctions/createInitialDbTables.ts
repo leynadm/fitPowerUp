@@ -23,30 +23,7 @@ function createInitialDbTables(USERID: string): Promise<void> {
       const db = request.result; // Result of our open request
 
       if (event.oldVersion < 2) {
-        if (db.objectStoreNames.contains("preselected-exercises")) {
-          db.deleteObjectStore("preselected-exercises");
-        }
-        if (db.objectStoreNames.contains("user-body-tracker")) {
-          db.deleteObjectStore("user-body-tracker");
-        }
-        if (db.objectStoreNames.contains("user-data-preferences")) {
-          db.deleteObjectStore("user-data-preferences");
-        }
-        if (db.objectStoreNames.contains("user-power-level")) {
-          db.deleteObjectStore("user-power-level");
-        }
-        if (db.objectStoreNames.contains("workout-evaluation")) {
-          db.deleteObjectStore("workout-evaluation");
-        }
-
-        if (db.objectStoreNames.contains("user-exercises-entries")) {
-          db.deleteObjectStore("user-exercises-entries");
-        }
-
-        if (db.objectStoreNames.contains("user-records-entries")) {
-          db.deleteObjectStore("user-records-entries");
-        }
-
+        
         //CREATE INDEXED DB TABLE FOR USER-EXERCISES-ENTRIES
         const user_entries = db.createObjectStore("user-exercises-entries", {
           keyPath: "id",
@@ -54,6 +31,9 @@ function createInitialDbTables(USERID: string): Promise<void> {
         });
 
         user_entries.createIndex("exercise_date", "date", { unique: false });
+        user_entries.createIndex("exercise_amrap", "amrap", {
+          unique: false,
+        });
         user_entries.createIndex("exercise_name", "exercise", {
           unique: false,
         });
@@ -103,6 +83,9 @@ function createInitialDbTables(USERID: string): Promise<void> {
         });
 
         user_preset_workouts.createIndex("exercise_date", "date", { unique: false });
+        user_preset_workouts.createIndex("exercise_amrap", "amrap", {
+          unique: false,
+        });
         user_preset_workouts.createIndex("exercise_name", "exercise", {
           unique: false,
         });

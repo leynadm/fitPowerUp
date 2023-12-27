@@ -7,7 +7,6 @@ import Divider from "@mui/material/Divider";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
-import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CommentModal from "../../../components/ui/CommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -23,6 +22,7 @@ import { AuthContext } from "../../../context/Auth";
 import { AppBar, Toolbar } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddHomeIcon from "@mui/icons-material/AddHome";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useNavigate } from "react-router-dom";
 import {
   IWorkoutData,
@@ -50,7 +50,7 @@ function PresetWorkoutExercise() {
   );
 
   const { currentUserData } = useContext(AuthContext);
-
+  const [isAMRAP, setIsAMRAP] = useState(false)
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const lastExercise = getLastCompletedExerciseEntry();
   const [editingExercise, setEditingExercise] = useState(false);
@@ -127,6 +127,7 @@ function PresetWorkoutExercise() {
     time: timeValue,
     is_pr: false,
     dropset: false,
+    amrap:false
   };
 
   function getLastCompletedExerciseEntry() {
@@ -190,7 +191,7 @@ function PresetWorkoutExercise() {
 
   function handleModalVisibility(exerciseId: number) {
     setIdExerciseUpdate(exerciseId);
-    getExistingPresetExerciseComment(exerciseId, setCommentValue, setIsDropset);
+    getExistingPresetExerciseComment(exerciseId, setCommentValue, setIsDropset,setIsAMRAP);
     setOpenCommentModal(!openCommentModal);
   }
 
@@ -373,6 +374,7 @@ function PresetWorkoutExercise() {
       is_pr: entryToSave.is_pr,
       dropset: entryToSave.dropset,
       weight: 0,
+      amrap:entryToSave.amrap
     };
 
     updatedEntryToSave.weight = weightValueFloat;
@@ -743,6 +745,8 @@ function PresetWorkoutExercise() {
         idExerciseUpdate={idExerciseUpdate}
         setDropsetRenderTrigger={setDropsetRenderTrigger}
         databaseSelection="user-preset-workouts"
+        setIsAMRAP={setIsAMRAP}
+        isAMRAP={isAMRAP}
       />
 
       <Typography
@@ -1116,7 +1120,7 @@ function PresetWorkoutExercise() {
                 aria-haspopup="true"
                 onClick={() => handleModalVisibility(exercise.id)}
               >
-                <AddCommentIcon
+                <BorderColorIcon
                   sx={{
                     zIndex: 0,
                   }}
@@ -1178,7 +1182,7 @@ function PresetWorkoutExercise() {
                   }
                 >
                   {`${exercise.weight.toFixed(2)} ${
-                    currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                    currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                   }`}
                 </Typography>
               )}
@@ -1190,7 +1194,7 @@ function PresetWorkoutExercise() {
                       : "normal"
                   }
                 >
-                  {exercise.reps} reps
+                  {exercise.reps}{exercise.amrap&&"+"} reps
                 </Typography>
               )}
 

@@ -12,6 +12,7 @@ export interface Exercise {
   id: number;
   is_pr?: boolean;
   dropset: boolean;
+  amrap?:boolean
 }
 
 export interface IWorkoutDataWorkoutStats {

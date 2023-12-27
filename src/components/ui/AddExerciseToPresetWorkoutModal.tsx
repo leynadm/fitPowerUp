@@ -215,6 +215,11 @@ function AddExerciseToPresetWorkoutModal({
     );
   };
 
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+  };
+
   return (
     <div>
       <Modal
@@ -224,7 +229,7 @@ function AddExerciseToPresetWorkoutModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ExerciseSearchingBar query={query} setQuery={setQuery} />
+          <ExerciseSearchingBar query={query} onChange={onChange} />
           <FixedSizeList
             height={window.innerHeight - 165}
             itemCount={filteredExercises.length}

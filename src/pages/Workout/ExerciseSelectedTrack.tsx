@@ -28,6 +28,8 @@ import getExistingComment from "../../utils/IndexedDbCRUDFunctions/selectedExerc
 import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingExercises";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { validateIndexedDbEntry } from "../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userTrainingData, refetchUserTrainingData } = useContext(
@@ -72,6 +74,8 @@ function ExerciseSelectedTrack() {
   const [idExerciseUpdate, setIdExerciseUpdate] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [isDropset, setIsDropset] = useState<boolean>(false);
+  const [isAMRAP, setIsAMRAP] = useState(false)
+  
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
@@ -114,6 +118,7 @@ function ExerciseSelectedTrack() {
     time: timeValue,
     is_pr: false,
     dropset: false,
+    amrap:false
   };
 
   function getLastCompletedExerciseEntry() {
@@ -170,7 +175,7 @@ function ExerciseSelectedTrack() {
 
   function handleModalVisibility(exerciseId: number) {
     setIdExerciseUpdate(exerciseId);
-    getExistingComment(exerciseId, setCommentValue, setIsDropset);
+    getExistingComment(exerciseId, setCommentValue, setIsDropset,setIsAMRAP);
     setOpenCommentModal(!openCommentModal);
   }
 
@@ -358,6 +363,7 @@ function ExerciseSelectedTrack() {
       is_pr: entryToSave.is_pr,
       dropset: entryToSave.dropset,
       weight: 0,
+      amrap:entryToSave.amrap
     };
 
     updatedEntryToSave.weight = weightValueFloat;
@@ -712,6 +718,8 @@ function ExerciseSelectedTrack() {
         idExerciseUpdate={idExerciseUpdate}
         setDropsetRenderTrigger={setDropsetRenderTrigger}
         databaseSelection="user-exercises-entries"
+        isAMRAP={isAMRAP}
+        setIsAMRAP={setIsAMRAP}
       />
 
       <Typography
@@ -1018,7 +1026,7 @@ function ExerciseSelectedTrack() {
                 aria-haspopup="true"
                 onClick={() => handleModalVisibility(exercise.id)}
               >
-                <AddCommentIcon
+                <BorderColorIcon
                   sx={{
                     zIndex: 0,
                   }}
@@ -1083,7 +1091,7 @@ function ExerciseSelectedTrack() {
                       : "normal"
                   }
                 >
-                  {exercise.reps} reps
+                  {exercise.reps}{exercise.amrap && "+"} reps
                 </Typography>
               )}
 

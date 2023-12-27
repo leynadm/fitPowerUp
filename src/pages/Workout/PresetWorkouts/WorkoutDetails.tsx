@@ -110,6 +110,7 @@ function WorkoutDetails() {
               reps: exerciseEntry.reps,
               time: exerciseEntry.time,
               weight: exerciseEntry.weight,
+              amrap:exerciseEntry.amrap
             };
             userEntryTransactionStore.add(newEntryToSave);
           }

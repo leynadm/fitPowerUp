@@ -21,9 +21,13 @@ import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import getMuscleGroupExercises from "../../utils/firebaseDataFunctions/getMuscleGroupExercises";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
-
+import { useSearchParams } from "react-router-dom";
 function MuscleGroupsSelectionMenu() {
-  const [query, setQuery] = useState("");
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [query, setQuery] = useState(searchParams.get('query') || '');
+
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
@@ -49,6 +53,7 @@ function MuscleGroupsSelectionMenu() {
     return [];
   });
 
+  
   useEffect(() => {
     const fetchData = async () => {
       if (userExercisesLibrary.length === 0) {
@@ -97,6 +102,13 @@ function MuscleGroupsSelectionMenu() {
   function handleAddNewExerciseModal() {
     setOpenAddNewExerciseModal(!openAddNewExerciseModal);
   }
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    setSearchParams({ query: newQuery || '' });
+  };
+
 
   const Row = ({
     index,
@@ -277,7 +289,7 @@ function MuscleGroupsSelectionMenu() {
         </Container>
       </AppBar>
 
-      <ExerciseSearchingBar query={query} setQuery={setQuery} />
+      <ExerciseSearchingBar query={query} onChange={onChange} />
 
       <Box
         sx={{

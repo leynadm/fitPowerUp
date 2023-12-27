@@ -5,7 +5,6 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import toast from "react-hot-toast";
-import { Dispatch,SetStateAction } from "react";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -19,22 +18,22 @@ const style = {
 };
 
 interface ParentComponentProps {
-  openCommentModal: boolean;
-  setOpenCommentModal: Dispatch<SetStateAction<boolean>>;
+  openPresetExerciseCommentModal: boolean;
+  setOpenPresetExerciseCommentModal: React.Dispatch<React.SetStateAction<boolean>>;
   isDropset: boolean;
-  setIsDropset: Dispatch<SetStateAction<boolean>>;
+  setIsDropset: React.Dispatch<React.SetStateAction<boolean>>;
   isAMRAP: boolean;
-  setIsAMRAP: Dispatch<SetStateAction<boolean>>;
+  setIsAMRAP: React.Dispatch<React.SetStateAction<boolean>>;
   commentValue: string;
-  setCommentValue: Dispatch<SetStateAction<string>>;
+  setCommentValue: React.Dispatch<React.SetStateAction<string>>;
   idExerciseUpdate: number;
-  setDropsetRenderTrigger: Dispatch<SetStateAction<number>>;
+  setDropsetRenderTrigger: React.Dispatch<React.SetStateAction<number>>;
   databaseSelection:string
 }
  
-function CommentModal({
-  openCommentModal,
-  setOpenCommentModal,
+function PresetExerciseCommentModal({
+  openPresetExerciseCommentModal,
+  setOpenPresetExerciseCommentModal,
   commentValue,
   setCommentValue,
   idExerciseUpdate,
@@ -48,7 +47,7 @@ function CommentModal({
 
   function handleClose() {
     setCommentValue("");
-    setOpenCommentModal(false);
+    setOpenPresetExerciseCommentModal(false);
   }
 
   function saveComment() {
@@ -82,7 +81,7 @@ function CommentModal({
       transaction.oncomplete = function () {
         console.log("Transaction completed");
         setCommentValue("");
-        setOpenCommentModal(false);
+        setOpenPresetExerciseCommentModal(false);
       };
       transaction.onerror = function () {
         toast.error("Oops, saveComment has an error!")
@@ -109,7 +108,7 @@ function CommentModal({
   return (
     <div>
       <Modal
-        open={openCommentModal}
+        open={openPresetExerciseCommentModal}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -133,14 +132,13 @@ function CommentModal({
             checked={isDropset}
             onClick={markEntryAsDropset}
           />
-          
           <FormControlLabel
             control={<Switch defaultChecked />}
             label="Mark Entry as AMRAP"
             checked={isAMRAP}
             onClick={markEntryAsAMRAP}
           />
-          
+
           <Box
             sx={{
               width: "100%",
@@ -170,4 +168,4 @@ function CommentModal({
   );
 }
 
-export default CommentModal;
+export default PresetExerciseCommentModal;

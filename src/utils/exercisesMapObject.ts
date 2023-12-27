@@ -3494,10 +3494,6 @@ export const exercisesMapObjectArr = [
     fitNotesId: "",
   },
   {
-    id: "seated-one-arm-cable-row",
-    fitNotesId: "",
-  },
-  {
     id: "seated-overhead-dumbbell-press",
     fitNotesId: "",
   },
@@ -4659,7 +4655,7 @@ export const exercisesMapObjectArr = [
     fitNotesId: "",
   },
   {
-    id: "vbar-seated-row",
+    id: "vbar-seated-cable-row",
     fitNotesId: "Seated Cable Row",
   },
   {

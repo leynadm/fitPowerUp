@@ -18,15 +18,18 @@ import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary"
 import CircularProgress from "@mui/material/CircularProgress";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { AuthContext } from "../../context/Auth";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useSearchParams } from "react-router-dom";
 function ExerciseSelectionMenu() {
   const { currentUserData } = useContext(AuthContext);
   const { selectedMuscleGroup } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const muscleGroup: string = useLocation().state.muscleGroup;
+  
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(searchParams.get('query') || '');
 
   const navigate = useNavigate();
   const isMale = currentUserData.sex === "male" ? true : false;
@@ -42,7 +45,7 @@ function ExerciseSelectionMenu() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userExercisesLibrary.length === 0) {
+      if (userExercisesLibrary.length === 0 || !muscleGroup) {
         await refetchUserExercisesLibrary();
       }
       updateMuscleGroupExercises();
@@ -106,6 +109,19 @@ function ExerciseSelectionMenu() {
   function handleTileClick(exerciseName: string) {
     navigate(`selected/${exerciseName}`);
   }
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+  
+    // Update only the query parameter without affecting the path
+    const newSearchParams = new URLSearchParams();
+    if (newQuery) {
+      newSearchParams.set('query', newQuery);
+    }
+    setSearchParams(newSearchParams);
+  
+  };
 
   const Row = ({
     index,
@@ -290,7 +306,7 @@ function ExerciseSelectionMenu() {
           </Container>
         </AppBar>
 
-        <ExerciseSearchingBar query={query} setQuery={setQuery} />
+        <ExerciseSearchingBar query={query} onChange={onChange} />
 
         <Box>
           <FixedSizeList

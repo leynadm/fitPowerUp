@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { Dispatch,SetStateAction } from "react";
-function getExistingComment(idExerciseUpdate: number,setCommentValue:Dispatch<SetStateAction<string>>,setIsDropset:Dispatch<SetStateAction<boolean>>) {
+function getExistingComment(idExerciseUpdate: number,setCommentValue:Dispatch<SetStateAction<string>>,setIsDropset:Dispatch<SetStateAction<boolean>>,setIsAMRAP:Dispatch<SetStateAction<boolean>>) {
     const request = window.indexedDB.open("fitPowerUpDb");
     request.onsuccess = function (event: any) {
       const db = event.target.result;
@@ -18,6 +18,7 @@ function getExistingComment(idExerciseUpdate: number,setCommentValue:Dispatch<Se
             setCommentValue(data.comment);
           }
           setIsDropset(data.dropset);
+          setIsAMRAP(data.amrap)
         } else {
         }
       };

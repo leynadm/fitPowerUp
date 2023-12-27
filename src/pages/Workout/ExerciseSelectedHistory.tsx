@@ -162,7 +162,7 @@ function ExerciseSelectedHistory() {
                 </Typography>
               )}
               {exercise.reps !== 0 && (
-                <Typography>{exercise.reps} reps</Typography>
+                <Typography>{exercise.reps}{exercise.amrap&&"+"} reps</Typography>
               )}
 
               {exercise.distance !== 0 && (

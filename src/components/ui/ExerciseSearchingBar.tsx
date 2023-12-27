@@ -51,14 +51,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 interface ParentsProps {
   query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function ExerciseSearchingBar({query,setQuery}:ParentsProps) {
+function ExerciseSearchingBar({query,onChange}:ParentsProps) {
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-  };
+
 
   return (
     <Search sx={{ display: "flex" }}>
@@ -82,6 +80,7 @@ function ExerciseSearchingBar({query,setQuery}:ParentsProps) {
           type="search"
           onChange={onChange}
           fullWidth
+          value={query}
         />{" "}
       </Paper>
     </Search>

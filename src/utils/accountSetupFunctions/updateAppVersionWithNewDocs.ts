@@ -29,6 +29,13 @@ async function updateAppVersionWithNewDocs(userID: string) {
     const response = await fetch(url);
     const featsParsedJSON = await response.json();
 
+
+    const preselectedWorkoutsRef = ref(storage, "assets/files/presetWorkoutsData.json");
+    const preselectedWorkoutsUrl = await getDownloadURL(preselectedWorkoutsRef);
+    const preselectedWorkoutsResponse = await fetch(preselectedWorkoutsUrl);
+    const preselectedWorkoutsParsedJSON = await preselectedWorkoutsResponse.json();
+
+
     const preselectedExercisesRef = ref(
       storage,
       "assets/files/preselectedExercisesJSON.json"
@@ -113,17 +120,17 @@ async function updateAppVersionWithNewDocs(userID: string) {
     // Create the body tracker document within the "user-training-data" subcollection
     const userFeatsDocRef = doc(userCollectionRef, "userFeats");
 
-    
+    batch.set(userFeatsDocRef, {
+      userFeatsData: featsParsedJSON,
+    });
+
     // Create the body tracker document within the "user-training-data" subcollection
     const userPresetWorkoutsDocRef = doc(userCollectionRef, "userPresetWorkouts");
 
     batch.set(userPresetWorkoutsDocRef,{
-      presetWorkouts:[]
+      presetWorkouts:preselectedWorkoutsParsedJSON
     }) 
 
-    batch.set(userFeatsDocRef, {
-      userFeatsData: featsParsedJSON,
-    });
 
     // Commit the batch to create all the documents simultaneously
     await batch.commit();
