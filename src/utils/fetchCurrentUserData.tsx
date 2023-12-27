@@ -3,7 +3,10 @@ import { db } from "../config/firebase";
 import toast from "react-hot-toast";
 
 async function fetchCurrentUserData(currentUser:any, setCurrentUserData:any) {
+  
+  console.log('inside fetchcurrentuserdata')
   if (currentUser === null) {
+    console.log('returning from fetch, value is null')
     return;
   }
 

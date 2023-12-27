@@ -18,7 +18,7 @@ const RotatingBox = styled(Box)({
     },
   },
 });
-
+/* 
 const EllipsisTypography = styled(Typography)({
   "&::after": {
     content: '"."',
@@ -40,7 +40,7 @@ const EllipsisTypography = styled(Typography)({
     },
   },
 });
-
+ */
 function LoadingScreenDBZ() {
   return (
     <Box
@@ -54,7 +54,7 @@ function LoadingScreenDBZ() {
       <RotatingBox position="relative">
         <StarsIcon sx={{ color: "#FFA500" }} fontSize="large" />
       </RotatingBox>
-      <EllipsisTypography>Gathering the dragon balls</EllipsisTypography>
+      <Typography>Gathering the dragon balls...</Typography>
     </Box>
   );
 }

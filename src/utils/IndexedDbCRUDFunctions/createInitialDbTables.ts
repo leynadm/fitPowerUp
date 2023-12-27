@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import updateAppVersionWithNewDocs from "../accountSetupFunctions/updateAppVersionWithNewDocs";
-function createInitialDbTables(USERID: string): Promise<void> {
+function createInitialDbTables(USERID: string,appVersion:number|undefined): Promise<void> {
+    
   return new Promise<void>((resolve, reject) => {
     const request = indexedDB.open("fitPowerUpDb", 2);
     if (!request) {
@@ -133,14 +134,6 @@ function createInitialDbTables(USERID: string): Promise<void> {
 
     request.onsuccess = async function () {
       const db = request.result;
-
-      try {
-        await updateAppVersionWithNewDocs(USERID);
-
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
 
       db.close();
 

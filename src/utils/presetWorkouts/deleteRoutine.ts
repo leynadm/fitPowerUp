@@ -19,6 +19,10 @@ async function deleteRoutine(
       presetWorkout.routineName !== routineName
   );
 
+  if(filteredData.length===0){
+    return
+  }
+
   try {
     await updateDoc(userPresetWorkoutsDataDocRef, {
       presetWorkouts: filteredData,

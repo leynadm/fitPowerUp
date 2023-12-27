@@ -58,18 +58,18 @@ function PresetWorkoutsOverview() {
 
   const isRoutineEmptyCheck = isRoutineEmpty(routines);
 
+  /* 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('fetching the data')
+
       if (presetWorkoutsData.length === 0) {
         await refetchPresetWorkoutsData();
-        console.log('actually fetching')
+        console.log('actually fetching the preset workout data +1 read')
       }
     };
-    console.log('fetching the data')
     fetchData().catch(console.error); // Handle errors
-  }, [refetchPresetWorkoutsData]);
-
+  }, []);
+ */
   function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
     if (routines) {
       return Object.keys(obj).length === 0;

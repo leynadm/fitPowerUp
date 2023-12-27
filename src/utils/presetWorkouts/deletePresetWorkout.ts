@@ -19,6 +19,9 @@ async function deletePresetWorkout(
       presetWorkout.id !== workoutId
   );
 
+  if(filteredData.length===0){
+    return
+  }
   try {
     await updateDoc(userPresetWorkoutsDataDocRef, {
       presetWorkouts: filteredData,

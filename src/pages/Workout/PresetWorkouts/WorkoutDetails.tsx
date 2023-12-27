@@ -203,7 +203,8 @@ function WorkoutDetails() {
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
                 
-              <IconButton
+                {individualWorkout.delete&&
+                  <IconButton
                         size="large"
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
@@ -213,7 +214,9 @@ function WorkoutDetails() {
                       >
                         <DeleteForeverIcon sx={{ color: "white" }} />
                       </IconButton>
-                
+             
+                }
+                 
                 <Box sx={{ marginLeft: "auto" }}>
                   <IconButton
                     size="large"

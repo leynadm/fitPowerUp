@@ -1,17 +1,10 @@
-import {
-  doc,
-  getDoc,
-  collection,
-  writeBatch,
-} from "firebase/firestore";
+import { doc, getDoc, collection, writeBatch } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
 
 async function createUserDoc(userID: string, fullname: string | null) {
-  console.log("logging userID:");
-  console.log(userID);
   let firstName = "";
   let lastName = "";
 
@@ -94,9 +87,20 @@ async function createUserDoc(userID: string, fullname: string | null) {
 
       // Create a subcollection "workouts" within the "users" document
       const userCollectionRef = collection(usersDocRef, "userCollection");
+      const userTrainingCollectionRef = collection(
+        usersDocRef,
+        "userTrainingCollection"
+      );
+      const userBodyTrackerCollectionRef = collection(
+        usersDocRef,
+        "userBodyTrackerCollection"
+      );
 
       // Create a document within the "workouts" subcollection
-      const userTrainingDoc = doc(userCollectionRef, "userTrainingData");
+      const userTrainingDoc = doc(
+        userTrainingCollectionRef,
+        "userTrainingData_1"
+      );
 
       batch.set(userTrainingDoc, {
         workoutSessions: [],
@@ -120,18 +124,14 @@ async function createUserDoc(userID: string, fullname: string | null) {
       });
 
       // Create the body tracker document within the "user-training-data" subcollection
-      const userBodyTrackerDocRef = doc(userCollectionRef, "userBodyTracker");
+      const userBodyTrackerDocRef = doc(
+        userBodyTrackerCollectionRef,
+        "userBodyTrackerData_1"
+      );
 
       batch.set(userBodyTrackerDocRef, {
         bodyTrackerData: [],
         weight: 70,
-      });
-
-      // Create the body tracker document within the "user-training-data" subcollection
-      const userPowerLevelDocRef = doc(userCollectionRef, "userPowerLevel");
-
-      batch.set(userPowerLevelDocRef, {
-        powerLevelData: [],
       });
 
       // Create the body tracker document within the "user-training-data" subcollection

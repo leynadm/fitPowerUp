@@ -1,4 +1,11 @@
-import React, { useEffect, useState, createContext, ReactNode,Dispatch,SetStateAction } from "react";
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { auth } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
@@ -7,6 +14,7 @@ import toast from "react-hot-toast";
 import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
 import enablePersistentData from "../utils/enablePersistentData";
 import { serverTimestamp } from "firebase/firestore";
+import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -20,9 +28,7 @@ export const AuthContext = createContext<any>({
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
-  const [currentUserData, setCurrentUserData] = useState<User>(
-    
-  );
+  const [currentUserData, setCurrentUserData] = useState<User>();
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
 
   useEffect(() => {
@@ -30,27 +36,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setCurrentUser(user);
 
       if (user) {
-        if (user?.isAnonymous === false) {
-          enablePersistentData();
-          createInitialDbTables(user.uid)
-            .then(() => {
-              //console.log("Tables are inside the database.");
-            })
-            .catch((error) => {
-              console.error("Error creating tables:", error);
-            })
-            .finally(() => {
-              //console.log("IndexedDb tables creation completed.");
-            });
+        enablePersistentData();
 
-          const docRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(docRef);
+        createInitialDbTables(user.uid, currentUserData?.appVersion)
+          .then(() => {
+            //console.log("Tables are inside the database.");
+          })
+          .catch((error) => {
+            console.error("Error creating tables:", error);
+          })
+          .finally(() => {
+            //console.log("IndexedDb tables creation completed.");
+          });
 
-          if (docSnap.exists()) {
-            const userData = docSnap.data() as User;
-            setCurrentUserData(userData);
-          }
-        } 
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data() as User;
+          setCurrentUserData(userData);
+        }
       }
       setLoginFetchTrigger(true);
     });
@@ -77,17 +82,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   useEffect(() => {
+    if (!currentUserData) {
+      const fetchData = async () => {
+        const tempCurrentUserData = await fetchCurrentUserData(
+          currentUser,
+          setCurrentUserData
+        );
 
-    const fetchData = async () => {
-      await fetchCurrentUserData(
-        currentUser,
-        setCurrentUserData,
-      );
-    };
+        if (
+          tempCurrentUserData &&
+          currentUser !== null &&
+          tempCurrentUserData.appVersion !== 2
+        ) {
+          updateAppVersionWithNewDocs(currentUser.uid);
+        }
+      };
 
-    fetchData().catch(console.error);
-
- 
+      fetchData().catch(console.error);
+    }
   }, [currentUser]);
 
   return (
@@ -104,7 +116,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-export async function fetchCurrentUserData(currentUser:any,setCurrentUserData:Dispatch<SetStateAction<User | undefined>>) {
+export async function fetchCurrentUserData(
+  currentUser: any,
+  setCurrentUserData: Dispatch<SetStateAction<User | undefined>>
+) {
   if (currentUser === null) {
     return;
   }

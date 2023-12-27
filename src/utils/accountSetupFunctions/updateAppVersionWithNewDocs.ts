@@ -119,7 +119,6 @@ async function updateAppVersionWithNewDocs(userID: string) {
 
     // Create the body tracker document within the "user-training-data" subcollection
     const userFeatsDocRef = doc(userCollectionRef, "userFeats");
-
     batch.set(userFeatsDocRef, {
       userFeatsData: featsParsedJSON,
     });
