@@ -170,7 +170,8 @@ function PresetWorkoutsOverview() {
         </AppBar>
       </Box>
 
-                <Button onClick={()=>link.click()}>Trigger save</Button>
+
+      
       <ToggleButtonGroup
         value={selectedCategory}
         onChange={handleAlignment}
