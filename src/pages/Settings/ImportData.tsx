@@ -23,11 +23,12 @@ import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import toast from "react-hot-toast";
 import TaskIcon from "@mui/icons-material/Task";
-import ReportIcon from '@mui/icons-material/Report';
+import ReportIcon from "@mui/icons-material/Report";
 import updateUserFeats from "../../utils/firebaseDataFunctions/updateUserFeats";
 import getUserWeight from "../../utils/getUserWeight";
 import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
+import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 interface fitNotesExercise {
   date: string;
   exercise: string;
@@ -44,22 +45,24 @@ interface fitNotesExercise {
 function ImportData() {
   const [datasetOrigin, setDatasetOrigin] = useState("FitNotes");
   const { currentUser } = useContext(AuthContext);
-  
-  const { userTrainingData, refetchUserTrainingData } =
-    useContext(UserTrainingDataContext);
 
-    
-    const { userFeatsData } =
-    useContext(UserFeatsDataContext);
-    const { userBodyTrackerData } =
-    useContext(BodyTrackerDataContext);
+  const { userTrainingData, refetchUserTrainingData } = useContext(
+    UserTrainingDataContext
+  );
 
+  const { userFeatsData } = useContext(UserFeatsDataContext);
+  const { userBodyTrackerData } = useContext(BodyTrackerDataContext);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importedFileRows, setImportedFileRows] = useState<string[][]>([]);
   const [missingExercises, setMissingExercises] = useState<string[]>([]);
 
-  const userBodyWeight = getUserWeight(userBodyTrackerData)
+  if(userBodyTrackerData.length===0){
+    return(
+      <LoadingScreenCircle text="Waiting for Shenron to grant my wish..."/>
+    )
+  }
+  const userBodyWeight = getUserWeight(userBodyTrackerData);
 
   const handleDatasetOriginChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDatasetOrigin(e.target.value);
@@ -71,8 +74,7 @@ function ImportData() {
 
   async function handleImportSelectedData(importedFileRows: string[][]) {
     try {
-
-      const rowsArrOfObjects = importedFileRows.map(row => {
+      const rowsArrOfObjects = importedFileRows.map((row) => {
         // Destructure the row with a fallback for comment
         const [
           date,
@@ -84,9 +86,9 @@ function ImportData() {
           distance,
           distanceUnit,
           time,
-          comment = '' // Provide a default value for comment (e.g., an empty string)
+          comment = "", // Provide a default value for comment (e.g., an empty string)
         ] = row;
-      
+
         return {
           date,
           exercise,
@@ -97,7 +99,7 @@ function ImportData() {
           distance,
           distanceUnit,
           time,
-          comment // This will be either the extracted value or the default
+          comment, // This will be either the extracted value or the default
         };
       });
 
@@ -147,21 +149,21 @@ function ImportData() {
 
         workoutDataArr.push(individualSessionWorkoutData);
       }
-        
+
       await uploadImportedData(
         currentUser.uid,
         workoutDataArr,
         userTrainingData
       );
 
-      await updateUserFeats(currentUser.uid,userFeatsData,userBodyWeight)
-      await refetchUserTrainingData()
-      
+
+      await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
+      await refetchUserTrainingData();
+
       toast.success("Your data was imported successfully!");
-    
-      setImportedFileRows([])
-      setMissingExercises([])
-     
+
+      setImportedFileRows([]);
+      setMissingExercises([]);
     } catch (error) {
       console.log(error);
       toast.error("Oops, handleImportSelectedData had an error!");
@@ -186,8 +188,8 @@ function ImportData() {
         }
         try {
           const rows = text.split("\n").map((row) => row.split(","));
-        
-          const rowsArrOfObjects = rows.map(row => {
+
+          const rowsArrOfObjects = rows.map((row) => {
             // Destructure the row with a fallback for comment
             const [
               date,
@@ -199,9 +201,9 @@ function ImportData() {
               distance,
               distanceUnit,
               time,
-              comment = '' // Provide a default value for comment (e.g., an empty string)
+              comment = "", // Provide a default value for comment (e.g., an empty string)
             ] = row;
-          
+
             return {
               date,
               exercise,
@@ -212,33 +214,33 @@ function ImportData() {
               distance,
               distanceUnit,
               time,
-              comment // This will be either the extracted value or the default
+              comment, // This will be either the extracted value or the default
             };
           });
-    
-          const groupedRowsByDate = groupBy(rowsArrOfObjects, (row) => row.date);
-          
+
+          const groupedRowsByDate = groupBy(
+            rowsArrOfObjects,
+            (row) => row.date
+          );
+
           const allMissingExercises: string[][] = [];
 
           Object.entries(groupedRowsByDate).forEach(([key, value]) => {
             if (value && key !== "Date") {
               const transformedEntry = getFitNotesWorkoutExercises(value);
-              
+
               if (transformedEntry.missingExercisesArr.length > 0) {
                 allMissingExercises.push(transformedEntry.missingExercisesArr);
               }
-
             }
           });
-    
+
           const uniqueExercises = getUniqueDates(allMissingExercises);
-    
+
           setImportedFileRows(rows);
-          if(uniqueExercises.length>0){
+          if (uniqueExercises.length > 0) {
             setMissingExercises(uniqueExercises);
           }
-
-
         } catch (error) {
           toast.error("importUserData had an error!");
         }
@@ -257,7 +259,7 @@ function ImportData() {
         display: "flex",
         flexDirection: "column",
         paddingTop: 2,
-        paddingBottom:"72px"
+        paddingBottom: "72px",
       }}
     >
       <AppBar
@@ -424,8 +426,14 @@ function ImportData() {
             <strong>TOTAL MISSING EXERCISES: {missingExercises.length}</strong>
           </Typography>
 
-          <Box display="flex" alignItems="center" gap={1} border="2px solid black" borderRadius="4px">
-            <ReportIcon  fontSize="large"/>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            border="2px solid black"
+            borderRadius="4px"
+          >
+            <ReportIcon fontSize="large" />
             <Typography>
               The exercises above can't be imported into the fitPowerUp app
               because they're not in the app's library. You can either add them
@@ -492,13 +500,12 @@ function getFitNotesWorkoutExercises(workoutExercises: fitNotesExercise[]) {
       dropset: false,
     };
 
-    if(exerciseEntry.comment){
-      const cleanedCommentRow = exerciseEntry.comment.replace(/\r/g, '').trim();
+    if (exerciseEntry.comment) {
+      const cleanedCommentRow = exerciseEntry.comment.replace(/\r/g, "").trim();
 
-      if (cleanedCommentRow!=='') {
+      if (cleanedCommentRow !== "") {
         adaptedExerciseEntry.comment = cleanedCommentRow;
       }
-  
     }
 
     const group = groupedExercisesByName[adaptedExerciseEntry.exercise];
@@ -531,16 +538,18 @@ function mapFitNotesExercise(
   exercisesMapObjectArr: { id: string; fitNotesId: string }[]
 ) {
   // Iterate through the array
-
-  for (const exerciseMap of exercisesMapObjectArr) {
-    // Check if the fitNotesId matches the exerciseToMap
-    if (
-      exerciseMap.fitNotesId.toLocaleLowerCase() ===
-      exerciseToMap.toLocaleLowerCase()
-    ) {
-      return exerciseMap.id; // Return the corresponding id
+  if(exerciseToMap.length>0){
+    for (const exerciseMap of exercisesMapObjectArr) {
+      // Check if the fitNotesId matches the exerciseToMap
+      if (
+        exerciseMap.fitNotesId.toLocaleLowerCase() ===
+        exerciseToMap.toLocaleLowerCase()
+      ) {
+        return exerciseMap.id; // Return the corresponding id
+      }
     }
   }
+  
 
   return null;
 }

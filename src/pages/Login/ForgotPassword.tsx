@@ -45,7 +45,7 @@ export default function ForgotPassword() {
   return (
     <>
       {isEmailSent ? ( // Conditional rendering of the Container component
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <Box
             sx={{
@@ -90,7 +90,7 @@ export default function ForgotPassword() {
           </Box>
         </Container>
       ) : (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <Box
             sx={{
@@ -100,8 +100,7 @@ export default function ForgotPassword() {
               alignItems: "center",
             }}
           >
-
-<div
+            <div
               style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}
             >
               <img
@@ -110,12 +109,11 @@ export default function ForgotPassword() {
                   WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                   maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                 }}
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fforgotten-password_young_512x512.png?alt=media&token=fb09d2b8-4bd1-4f45-ad16-3a6a6152cc64&_gl=1*xlzgyf*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMzNzYyMS45NC4xLjE2OTgzMzc2MzkuNDIuMC4w"
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fnew-password.jpeg?alt=media&token=82a007d6-1a60-49da-9bfd-3fcf22f92acb"
                 alt=""
                 loading="lazy"
               ></img>
             </div>
-
 
             <Typography component="h1" variant="h5">
               Reset your password

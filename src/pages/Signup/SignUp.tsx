@@ -45,7 +45,7 @@ export default function SignUp() {
   const [surname, setSurname] = useState("");
   const navigate = useNavigate();
 
-  const fullName = name+surname
+  const fullName = name + surname;
   const handleLoginClick = () => {
     navigate("/login");
   };
@@ -60,17 +60,17 @@ export default function SignUp() {
       );
 
       const user = userCredential.user;
-      await createUserDoc(user.uid,fullName)
+      await createUserDoc(user.uid, fullName);
 
       await sendEmailVerification(user);
     } catch (error) {
-      toast.error("Oops, handleSignUp has an error!")
+      toast.error("Oops, handleSignUp has an error!");
       if (isFirebaseError(error)) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error("Oops, handleSignUp has an error!")
+        toast.error("Oops, handleSignUp has an error!");
       } else {
-        toast.error("An unknown error occurred")
+        toast.error("An unknown error occurred");
       }
     }
   };
@@ -89,7 +89,7 @@ export default function SignUp() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <Box
         sx={{
@@ -106,7 +106,7 @@ export default function SignUp() {
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fvegeta_register_512x512.png?alt=media&token=0ff23098-7abc-4160-8683-a25b6fbc73f0&_gl=1*1f4jiyl*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjg0ODAuMzMuMC4w"
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fvegeta_sign_up_512%20(1).jpg?alt=media&token=dd6eb535-adb9-4b78-b3b1-31fb4b4e51ae"
             alt=""
             loading="lazy"
           ></img>

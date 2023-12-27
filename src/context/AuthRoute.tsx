@@ -1,11 +1,12 @@
 import React, { useContext} from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
-import LoadingScreen from "../components/ui/LoadingScreen";
 import Box from "@mui/material/Box";
+import LoadingScreenDBZ from "../components/ui/LoadingScreenDBZ";
 interface AuthRouteProps {
   type: "home" | "login" | "signup" | "/" | "launching";
 }
+
 const AuthRoute = ({ type }: AuthRouteProps) => {
   const { currentUser, loginFetchTrigger } = useContext(AuthContext);
 
@@ -14,7 +15,7 @@ const AuthRoute = ({ type }: AuthRouteProps) => {
     return( 
     <Box height="100svh" display="flex" justifyContent="center" alignItems="center" flexDirection="column"> 
 
-    <LoadingScreen text="Connecting to the server..." />
+    <LoadingScreenDBZ />
     </Box>)
   } 
 

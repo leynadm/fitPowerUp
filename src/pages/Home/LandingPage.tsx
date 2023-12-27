@@ -17,7 +17,7 @@ import "../Home/styles/animation.css";
 import RedditIcon from "@mui/icons-material/Reddit";
 import EmailIcon from "@mui/icons-material/Email";
 import Link from "@mui/material/Link";
-
+import FakeUserReviewCard from "../../components/ui/UserReviewCard";
 function LandingPage() {
   const navigate = useNavigate();
   function useContainerRefs() {
@@ -38,6 +38,9 @@ function LandingPage() {
   const [isVisible, setIsVisible] = useState<boolean[]>(
     containerRefs.map(() => false)
   );
+
+  const [visibleCards, setVisibleCards] = useState([false, false, false, false]);
+  const totalCards = visibleCards.length;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -60,7 +63,30 @@ function LandingPage() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
+    let currentCard = 0;
+    let timeoutId: number | NodeJS.Timeout | null = null;
+
+    const showNextCard = () => {
+      setVisibleCards(visible => visible.map((_, index) => index <= currentCard));
+      currentCard++;
+
+      if (currentCard < totalCards) {
+        timeoutId = setTimeout(showNextCard, 5000); // Show next card after 1 second
+      } else {
+        timeoutId = setTimeout(() => setVisibleCards([false, false, false, false]), 3000); // Reset after 3 seconds
+        currentCard = 0; // Reset the current card index
+      }
+    };
+
+    // Start showing cards
+    timeoutId = setTimeout(showNextCard, 5000);
+
     return () => {
+      
+       if (timeoutId) {
+        clearTimeout(timeoutId as number);
+      }
+
       window.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt
@@ -71,6 +97,8 @@ function LandingPage() {
         }
       });
     };
+
+
   }, []);
 
   const callbackFunction: IntersectionObserverCallback = (entries) => {
@@ -104,21 +132,6 @@ function LandingPage() {
     event.preventDefault();
     setDeferredPrompt(event);
   }
-
-  /* 
-  useEffect(() => {
-    const mediaQueryList = window.matchMedia("(display-mode: standalone)");
-    const handleMediaQueryChange = (event: any) => {
-      setShowInstallButton(!event.matches);
-    };
-
-    mediaQueryList.addEventListener("change", handleMediaQueryChange);
-    setShowInstallButton(!mediaQueryList.matches);
-
-    return () => {
-      mediaQueryList.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []); */
 
   function handleInstallClick() {
     if (deferredPrompt === null) {
@@ -204,7 +217,8 @@ function LandingPage() {
           setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
         />
 
-        <Box
+        {/* 
+  <Box
           height="calc(100svh - 56px)"
           display="grid"
           alignItems="center"
@@ -212,7 +226,8 @@ function LandingPage() {
           width="100%"
           position="relative"
         >
-          <Box
+           
+<Box
             width="100%"
             display="flex"
             flexDirection="column"
@@ -283,6 +298,191 @@ function LandingPage() {
               Get Started
             </Button>
           </Box>
+           
+        </Box>
+*/}
+
+        <Box
+          height="calc(100svh - 56px)"
+          display="grid"
+          alignItems="center"
+          gridTemplateRows="4fr 0.75fr 4fr 1.25fr"
+          width="100%"
+          position="relative"
+        >
+          {/* FIRST BOX */}
+
+            <Box
+              width="100%"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              overflow="hidden"
+              sx={{
+                "& img": {
+                  maxWidth: {
+                    xs: "256px", // Full width on extra-small devices
+                    sm: "256px", // Max width of 256px on small devices and above
+                    md: "384px", // Max width of 256px on small devices and above
+                    lg: "384px", // Max width of 256px on small devices and above
+                  },
+                },
+              }}
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                loading="lazy"
+              />
+            </Box>
+
+
+          {/* */}
+          <Box sx={{ position: "relative" }} >
+            
+
+             <Box
+
+             sx={{
+               maxWidth: "100%", // Limit the width of the box
+               overflow: "hidden",
+               textAlign: "center", // Centers text horizontally in the box
+               maxHeight: "100%",
+               padding: 1,
+             }}
+           >
+             <span className="type" style={spanStyle}>
+               The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
+             </span>
+           </Box>
+{/* 
+
+            {visibleCards[3] && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top:"50%",
+                  left:"50%",
+                  zIndex: 4,
+                  transform: "translate(8%, 10%)",
+                  rotate: "-5deg",
+                  maxWidth:"100%"
+                }}
+              >
+                <FakeUserReviewCard
+                  fakeUser="Bald Warrior"
+                  starsRating={5}
+                  avatarInitials="K"
+                  reviewText="5 stars! With this app, I can track my workouts, my power level, and, yes, even my dea... I mean unexpected vacations!"
+                />
+              </Box>
+            )}
+
+            {visibleCards[2] && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top:"50%",
+                  left:"50%",
+                  zIndex: 3,
+                  transform: "translate(5%, 5%)",
+                  rotate: "-5deg",
+                }}
+              >
+                <FakeUserReviewCard
+                  fakeUser="Galactic Tyrant"
+                  starsRating={4}
+                  avatarInitials="F"
+                  reviewText="Not bad, but a feature to track the downfall of enemies would be a nice addition..."
+                />
+              </Box>
+            )}
+
+            {visibleCards[1] && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top:"50%",
+                  left:"50%",
+                  zIndex: 2,
+                  transform: "translate(5%, 40%)",
+                  rotate: "0deg",
+                }}
+              >
+                <FakeUserReviewCard
+                  fakeUser="Prince of All Gym Lifters"
+                  starsRating={3}
+                  avatarInitials="V"
+                  reviewText="I don't usually review, but this one is OK."
+                />
+              </Box>
+            )}
+
+            {visibleCards[0] && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top:"50%",
+                  left:"50%",
+                  zIndex: 1,
+                  transform: "translate(5%, 40%)",
+                  rotate: "4deg",
+                }}
+              >
+                <FakeUserReviewCard
+                  fakeUser="Time-Traveling Fighter"
+                  starsRating={5}
+                  avatarInitials="T"
+                  reviewText="I've seen the future and, and this app is still the best out there!"
+                />
+              </Box>
+            )}
+             */}
+          </Box>
+
+          {/* THIRD BOX */}
+          <Box
+            sx={{
+              backgroundImage:
+                'URL("https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431")',
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              overflow: "hidden",
+              /* 
+              filter: "blur(2px)",
+               */
+              "& img": {
+                maxWidth: {
+                  xs: "256px", // Full width on extra-small devices
+                  sm: "384px", // Max width of 256px on small devices and above
+                  md: "384px", // Max width of 256px on small devices and above
+                  lg: "384px", // Max width of 256px on small devices and above
+                },
+              },
+              position: "relative",
+            }}
+            display="flex"
+            flexDirection="column"
+            width="100%"
+            position="relative"
+            height="100%"
+          ></Box>
+          <Box display="flex" justifyContent="center">
+          <Button
+              onClick={getStartedClick}
+              variant="dbz"
+              
+            >
+              Get Started
+            </Button>
+
+          </Box>
         </Box>
 
         <Box
@@ -292,7 +492,6 @@ function LandingPage() {
           alignItems="center"
           justifyContent="space-around"
           flexDirection="column"
-          
           sx={{
             backgroundColor: "#18c2e6",
             background:
@@ -842,11 +1041,11 @@ function LandingPage() {
       </Box>
 
       <Box
-          height="100svh"
-          width="100%"
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
+        height="100svh"
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        flexDirection="column"
         sx={{
           backgroundColor: "red",
           background:
