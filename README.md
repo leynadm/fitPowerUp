@@ -89,12 +89,13 @@ The truth is there are a million and one workout loggers out there. The spice of
 
 ## Firebase
 - Optimizing costs: Firebase's firestore database is made of documents and Firebase charges for the following: document reads, document writes, document delets. They offer a generous free tier with 50000 free document reads per day. Now, based on my implementation of firebase, current features and a hypothetical average user behaviour, the app could support around ~3000-4000 DAU users within the free tier alone.
-
+he f
 ## Problem-Solving and Time Management
 - Scope Creep: I built this app purely in my free time, mainly weekends, thus the initial design of the app was much simpler and the features list much more limited. I experienced the joy of suddenly coming up with a new feature, and the realization that I would need to modify an integral part of the app to accomodate for it. I learned how "just one more feature" is not a good mantra for trying to release a project. 
  
 # Things that could still be done better
 Needless to say, I'm very proud of the app and I also realized how it could be much, much better. A few things that come to my mind:
 - React: looking at my code, plenty of my components could be rewritten with better reusability in mind.
-- Firebase Firestore: The ease of development with Firebase is great, but the temptation to try and keep your reads as low as possible is very high. In my case the issue was that it came at the cost of obviously better development practices. In the end I let my common sense prevail, even though that meant 2-3 reads more.
-
+- Firebase Firestore: The ease of development with Firebase is great, but the temptation to try and keep your reads as low as possible is very high. In my case the issue was that it came at the cost of obviously better development practices. In the end I let my common sense prevail, even though that meant 2-3 reads more. The social media component I tried to integrate is definitely not a good use case for firebase!
+- Organizing files: I organized the files of my code per page, rather than features they were part of. I think I should definitely research more on the best practices.
+- Testing: ...
