@@ -41,7 +41,7 @@ Workout Customization:
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/complete-workout.gif)
 
 ### Preset Workouts
-Users are given the ability to create their own custom workouts. They are saved in their own personal workouts libraries, and they seamlessly copy them in their workouts menu during workout days. They can also choose to follow a built-in workout the app provides them with.
+- Users are given the ability to create their own custom workouts. They are saved in their own personal workouts libraries, and they seamlessly copy them in their workouts menu during workout days. They can also choose to follow a built-in workout the app provides them with.
 
 ![preset-workouts](https://raw.githubusercontent.com/leynadm/files/main/preset-workouts.gif)
 
