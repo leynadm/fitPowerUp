@@ -46,17 +46,17 @@ Workout Customization:
 ![preset-workouts](https://raw.githubusercontent.com/leynadm/files/main/preset-workouts.gif)
 
 ### Body Tracker
-In adition to workout logging, users can track additional information - like specific body measurements or calories.
+- In adition to workout logging, users can track additional information - like specific body measurements or calories.
 
 ![body-tracker](https://raw.githubusercontent.com/leynadm/files/main/body-tracker.gif)
 
 ### Data Analysis and Tracking Progress
-The app offers in-depth analysis of workout data, covering over 15 key performance indicators. Users can track their progress across various metrics, such as muscle groups worked, overall workout intensity, and consistency.
+- The app offers in-depth analysis of workout data, covering over 15 key performance indicators. Users can track their progress across various metrics, such as muscle groups worked, overall workout intensity, and consistency.
 
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/analysis-screen.gif)
 
 ### Social Component
-Additionally, the app integrates a social component, where users can share their progress, follow others, and engage in challenges, further enhancing the workout tracking experience.
+- Additionally, the app integrates a social component, where users can share their progress, follow others, and engage in challenges, further enhancing the workout tracking experience.
 
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/social-component.gif)
 
@@ -69,12 +69,12 @@ The truth is there are a million and one workout loggers out there. The spice of
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/gamification-elements.gif)
 
 ### Quality of life & Settings
-The Calendar is a QoL feature meant to help users easily navigate through their workouts. The settings menu also provides the user with additional customization menu.
+- The Calendar is a QoL feature meant to help users easily navigate through their workouts. The settings menu also provides the user with additional customization menu.
 
 ![analysis](https://github.com/leynadm/files/blob/main/miscelaneous.gif)
 
 # Things I learned
-This is going to be a long list, but I'll try to summarize it and also break it down per topics.
+- This is going to be a long list, but I'll try to summarize it and also break it down per topics.
 
 ## Front-End Development:
 - Development Process: Building fitPowerUp really gave me a glimpse of what web-develoment can look like. There were numerous instances where I envisioned specific functionalities or designs, only to realize afterwards the complexity behind implementing them. This process really help me deepend my understanding of HTML, CSS, and JavaScript and specifically React. A specific example is virtualization. Only after rendering the entire library of exercises at once and have my app crash I realized the need for it...
