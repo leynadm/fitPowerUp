@@ -21,7 +21,7 @@ In terms of stack, I relied on tools I discovered while studying through the Odi
   <img src="https://github.com/devicons/devicon/blob/master/icons/firebase/firebase-plain.svg" title="Firebase" alt="Firebase" width="40" height="40"/>&nbsp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg" title="Material UI" alt="Material UI" width="40" height="40"/>&nbsp;
   <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2FIndexedDB.png?alt=media&token=7a6c33fd-50d3-44a0-9ded-9ba335f2668e&_gl=1*1jx1hrs*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjI1NjguNTcuMC4w" title="IndexedDb" alt="IndexedDb" width="60" height="40"/>&nbsp;
-  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2Frecharts-wide.png?alt=media&token=1705c17d-1f94-4a38-ae46-829aa4a7739b&_gl=1*1cvotfk*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjM3MDUuNDcuMC4w" title="Recharts" alt="Recharts" width="60" height="40"/>&nbsp;
+  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2Frecharts-wide.png?alt=media&token=1705c17d-1f94-4a38-ae46-829aa4a7739b&_gl=1*1cvotfk*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjM3MDUuNDcuMC4w" title="Recharts" alt="Recharts" width="80" height="40"/>&nbsp;
 </div>
 
 ## App Overview
