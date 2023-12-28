@@ -1,6 +1,8 @@
 # Introduction
 As part of the Odin Project curriculum, fitPowerUp represents my first successful attempt at building a full-stack web application. My goal was to create a Progressive Web App focused on fitness. After a few months of work, I managed to build an app that's both fully functional and engaging. Here's a summary of what I achieved.
 
+![body-tracker](https://github.com/leynadm/files/blob/main/landing-page-2.gif)
+
 ## The Stack
 In terms of stack, I relied on tools I discovered while studying through the Odin Project curriculum, as well as technologies I researched based on my needs.
 - HTML & CSS: I guess it's self-explanatory.
