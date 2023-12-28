@@ -34,6 +34,7 @@ In terms of stack, I relied on tools I discovered while studying through the Odi
 ### Adding Workouts
 Accessing the Exercise Library: 
 - Upon login, users have access to an extensive library of over 1000 exercises. It's a vast collection  that allows users to find and learn about various exercises that suit their fitness goals - and they can add their own exercises too.
+<br/>
 Workout Customization:
 - Users can then create their own workouts by selecting exercises from the library. They have the option to customize these workouts by adding personal notes, specifying sets and reps, flag more advanced techniques, like dropsets or AMRAP.
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/add-exercises.gif)
