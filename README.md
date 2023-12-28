@@ -36,18 +36,22 @@ Workout Customization:
 
 ### Preset Workouts
 Users are given the ability to create their own custom workouts. They are saved in their own personal workouts libraries, and they seamlessly copy them in their workouts menu during workout days. They can also choose to follow a built-in workout the app provides them with.
-![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/preset-workouts.gif)
+
+![preset-workouts](https://raw.githubusercontent.com/leynadm/files/main/preset-workouts.gif)
 
 ### Body Tracker
 In adition to workout logging, users can track additional information - like specific body measurements or calories.
-![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/body-tracker.gif)
+
+![body-tracker](https://raw.githubusercontent.com/leynadm/files/main/body-tracker.gif)
 
 ### Data Analysis and Tracking Progress
 The app offers in-depth analysis of workout data, covering over 15 key performance indicators. Users can track their progress across various metrics, such as muscle groups worked, overall workout intensity, and consistency.
+
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/analysis-screen.gif)
 
 ### Social Component
 Additionally, the app integrates a social component, where users can share their progress, follow others, and engage in challenges, further enhancing the workout tracking experience.
+
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/social-component.gif)
 
 ### Gamification Features:
@@ -55,10 +59,12 @@ The truth is there are a million and one workout loggers out there. The spice of
 - The power level feature calculates user's fitness 'power level' using the DOTS coefficient, mirroring DBZ's power scaling.
 - Users can also unlock DBZ characters as they progress, each representing a new level of fitness achievement.
 - Users can also unlock achievements based on specific workout goals, inspired by milestones in the Dragon Ball Z series.
+
 ![analysis](https://raw.githubusercontent.com/leynadm/files/main/gamification-elements.gif)
 
 ### Quality of life & Settings
 The Calendar is a QoL feature meant to help users easily navigate through their workouts. The settings menu also provides the user with additional customization menu.
+
 ![analysis](https://github.com/leynadm/files/blob/main/miscelaneous.gif)
 
 # Things I learned
