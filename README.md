@@ -18,8 +18,8 @@ In terms of stack, I relied on tools I discovered while studying through the Odi
   <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/firebase/firebase-plain.svg" title="Firebase" alt="Firebase" width="40" height="40"/>&nbsp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg" title="Material UI" alt="Material UI" width="40" height="40"/>&nbsp;
-  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2FIndexedDB.png?alt=media&token=7a6c33fd-50d3-44a0-9ded-9ba335f2668e&_gl=1*1jx1hrs*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjI1NjguNTcuMC4w" title="IndexedDb" alt="IndexedDb" width="40" height="40"/>&nbsp;
-  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2Frecharts-wide.png?alt=media&token=1705c17d-1f94-4a38-ae46-829aa4a7739b&_gl=1*1cvotfk*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjM3MDUuNDcuMC4w" title="Recharts" alt="Recharts" width="40" height="40"/>&nbsp;
+  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2FIndexedDB.png?alt=media&token=7a6c33fd-50d3-44a0-9ded-9ba335f2668e&_gl=1*1jx1hrs*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjI1NjguNTcuMC4w" title="IndexedDb" alt="IndexedDb" width="60" height="40"/>&nbsp;
+  <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2Frecharts-wide.png?alt=media&token=1705c17d-1f94-4a38-ae46-829aa4a7739b&_gl=1*1cvotfk*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjM3MDUuNDcuMC4w" title="Recharts" alt="Recharts" width="60" height="40"/>&nbsp;
 </div>
 
 ## App Overview
@@ -27,6 +27,7 @@ In terms of stack, I relied on tools I discovered while studying through the Odi
 
 ### Login:
 - Account Creation & Authentication: Users begin by creating an account and securely logging in. For that I'm using Firebase Authentication.
+![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/login-test.gif)
 
 ### Adding Workouts
 Accessing the Exercise Library: 
@@ -77,7 +78,7 @@ This is going to be a long list, but I'll try to summarize it and also break it 
 - React: Using React taught me a lot of how I shouldn't use React. For example, I needed a third refactor of the app to cut the usage of useEffect to 10% of what it originally was - and can probably be improved even further I guess. Transitioning from a prop drilling anti-pattern to using a context variable felt like a brilliant realization. Writing my first custom hook had me leave out a sigh of relief.
 - Responsive Design: I created fitPowerUp following a mobile-first design mentality, but I still needed to have it not break on desktop.
 - Material UI: Working with Material UI felt a bit like a cheat. Copying components from their documentation and quickly polish them up really helped me with the speed of development. Still, once I started to want to customize my components I realized the trade-offs of a UI library.
-- Switching libraries: I initially started working with react-chartjs-2, but it felt very complicated for what I was trying to achieve. By the time I realized I wasn't happy with it I had already built my visualization functionality. 
+- Switching libraries: I initially started working with react-chartjs-2, but it felt very complicated for what I was trying to achieve. By the time I realized I wasn't happy with it, I had already built my visualization functionality. Rewriting all my code for a new library was an experience I hadn't planned for, and I really understood the importance of choosing the right tool for the job.
   
 ## Backend
 - NoSQL data structure: I enjoyed the process of designing the backend of my app. Working with a NoSQL database for the first time was very interesting from an app architecture standpoint. I also realized that I cannot predict how my initial data structure will evolve, and the best I could do is to avoid obvious errors.
