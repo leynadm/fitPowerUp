@@ -23,6 +23,6 @@ In terms of stack, I relied on tools I discovered while going through the Odin P
 ## App Features
 The app benefits of various features, 
 
-<div>
+
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/add-exercises.gif)
-</div>
+
