@@ -1,7 +1,7 @@
 # Introduction
 As part of the Odin Project curriculum, fitPowerUp represents my first successful attempt at building a full-stack web application. My goal was to create a Progressive Web App focused on fitness. After a few months of work, I managed to build an app that's both fully functional and engaging. Here's a summary of what I achieved.
 
-![body-tracker](https://github.com/leynadm/files/blob/main/landing-page-2.gif)
+![body-tracker](https://github.com/leynadm/files/blob/main/landing-page-overview.gif)
 
 ## The Stack
 In terms of stack, I relied on tools I discovered while studying through the Odin Project curriculum, as well as technologies I researched based on my needs.
@@ -70,6 +70,26 @@ The Calendar is a QoL feature meant to help users easily navigate through their 
 ![analysis](https://github.com/leynadm/files/blob/main/miscelaneous.gif)
 
 # Things I learned
+This is going to be a long list, but I'll try to summarize it and also break it down per topics.
 
+## Front-End Development:
+- Development Process: Building fitPowerUp really gave me a glimpse of what web-develoment can look like. There were numerous instances where I envisioned specific functionalities or designs, only to realize afterwards the complexity behind implementing them. This process really help me deepend my understanding of HTML, CSS, and JavaScript and specifically React. A specific example is virtualization. Only after rendering the entire library of exercises at once and have my app crash I realized the need for it...
+- React: Using React taught me a lot of how I shouldn't use React. For example, I needed a third refactor of the app to cut the usage of useEffect to 10% of what it originally was - and can probably be improved even further I guess. Transitioning from a prop drilling anti-pattern to using a context variable felt like a brilliant realization. Writing my first custom hook had me leave out a sigh of relief.
+- Responsive Design: I created fitPowerUp following a mobile-first design mentality, but I still needed to have it not break on desktop.
+- Material UI: Working with Material UI felt a bit like a cheat. Copying components from their documentation and quickly polish them up really helped me with the speed of development. Still, once I started to want to customize my components I realized the trade-offs of a UI library.
+- Switching libraries: I initially started working with react-chartjs-2, but it felt very complicated for what I was trying to achieve. By the time I realized I wasn't happy with it I had already built my visualization functionality. 
+  
+## Backend
+- NoSQL data structure: I enjoyed the process of designing the backend of my app. Working with a NoSQL database for the first time was very interesting from an app architecture standpoint. I also realized that I cannot predict how my initial data structure will evolve, and the best I could do is to avoid obvious errors.
 
+## Firebase
+- Optimizing costs: Firebase's firestore database is made of documents and Firebase charges for the following: document reads, document writes, document delets. They offer a generous free tier with 50000 free document reads per day. Now, based on my implementation of firebase, current features and a hypothetical average user behaviour, the app could support around ~3000-4000 DAU users within the free tier alone.
+
+## Problem-Solving and Time Management
+- Scope Creep: I built this app purely in my free time, mainly weekends, thus the initial design of the app was much simpler and the features list much more limited. I experienced the joy of suddenly coming up with a new feature, and the realization that I would need to modify an integral part of the app to accomodate for it. I learned how "just one more feature" is not a good mantra for trying to release a project. 
+ 
+# Things that could still be done better
+Needless to say, I'm very proud of the app and I also realized how it could be much, much better. A few things that come to my mind:
+- React: looking at my code, plenty of my components could be rewritten with better reusability in mind.
+- Firebase Firestore: The ease of development with Firebase is great, but the temptation to try and keep your reads as low as possible is very high. In my case the issue was that it came at the cost of obviously better development practices. In the end I let my common sense prevail, even though that meant 2-3 reads more.
 
