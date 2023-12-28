@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import Button from "@mui/material/Button";
 import { UserPresetWorkoutsDataContext } from "../../context/UserPresetWorkouts";
 import { Container } from "@mui/material";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -59,6 +60,7 @@ function AddNewPresetWorkoutModal({
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const isOnline = useOnlineStatus()
   const { refetchPresetWorkoutsData } = useContext(
     UserPresetWorkoutsDataContext
   );
@@ -251,8 +253,9 @@ function AddNewPresetWorkoutModal({
                 variant="dbz_save"
                 sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
                 onClick={handleCompleteNewPresetWorkout}
+                disabled={!isOnline}
               >
-                Save
+                {isOnline ? "Save" : "Reconecting..."}
               </Button>
               <Button
                 variant="dbz_clear"

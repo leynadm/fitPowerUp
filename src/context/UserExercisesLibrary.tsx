@@ -1,10 +1,9 @@
 import React, { createContext, ReactNode, useMemo } from "react";
-
 import { useUserExercisesLibrary } from "../hooks/useUserExercisesLibrary";
 interface UserExercisesLibraryProviderProps {
   children: ReactNode;
 }
-
+ 
 // Create the context to hold the data and share it among all components
 export const UserExercisesLibraryContext = createContext<any>({
   userExercisesLibrary: [],
@@ -31,7 +30,6 @@ export const UserExercisesLibraryDataProvider = ({
     }),
     [userExercisesLibrary]
   );
-
   return (
     <UserExercisesLibraryContext.Provider value={contextValue}>
       {children}

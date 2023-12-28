@@ -79,7 +79,7 @@ export default function SignIn() {
     navigate("/forgot-password");
   };
 
-  function SignInWithGoogle() {
+  async function SignInWithGoogle() {
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -110,18 +110,6 @@ export default function SignIn() {
         const credential = GoogleAuthProvider.credentialFromError(error);
         toast.error("Oops, we couldn't log you in. Try again later", errorCode);
         // ...
-      });
-  }
-
-  function signInAsGuest() {
-    signInAnonymously(auth)
-      .then(() => {
-        // Signed in..
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        toast.error("Oops, we couldn't log you in. Try again later", errorCode);
       });
   }
 

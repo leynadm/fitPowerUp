@@ -16,6 +16,7 @@ import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import RoutineCard from "./RoutineCard";
 import { useEffect } from "react";
 import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
+import { UserExercisesLibraryContext } from "../../../context/UserExercisesLibrary";
 import { Button } from "@mui/material";
 // This is the type for the accumulator
 interface IPresetWorkoutAccumulator {
@@ -40,7 +41,18 @@ function PresetWorkoutsOverview() {
 
 
   const { presetWorkoutsData,refetchPresetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
-  
+  const {userExercisesLibrary} = useContext(UserExercisesLibraryContext)
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (presetWorkoutsData.length===0) {
+        await refetchPresetWorkoutsData();
+      }
+    };
+
+    fetchData().catch(console.error); // Handle errors
+  },[presetWorkoutsData])
+
   const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
 
   const blob = new Blob([jsonString], { type: "application/json" });
@@ -58,18 +70,6 @@ function PresetWorkoutsOverview() {
 
   const isRoutineEmptyCheck = isRoutineEmpty(routines);
 
-  /* 
-  useEffect(() => {
-    const fetchData = async () => {
-
-      if (presetWorkoutsData.length === 0) {
-        await refetchPresetWorkoutsData();
-        console.log('actually fetching the preset workout data +1 read')
-      }
-    };
-    fetchData().catch(console.error); // Handle errors
-  }, []);
- */
   function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
     if (routines) {
       return Object.keys(obj).length === 0;

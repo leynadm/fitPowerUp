@@ -13,6 +13,7 @@ export const useUserExercisesLibrary = () => {
 
   const fetchUserExercisesLibrary = async () => {
     if (!currentUser) return;
+ 
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userCollectionRef = collection(usersDocRef, "userCollection");
 
@@ -20,13 +21,15 @@ export const useUserExercisesLibrary = () => {
       userCollectionRef,
       "userSelectedExercises"
     );
-
+ 
     try {
+      
       const preselectedExercisesDocSnap = await getDoc(
         preselectedExercisesDocRef
       );
 
       if (preselectedExercisesDocSnap.exists()) {
+
         const UserExercisesLibraryData =
           preselectedExercisesDocSnap.data() as IUserExercisesLibrary;
         setUserExercisesLibrary([UserExercisesLibraryData]);
@@ -37,9 +40,18 @@ export const useUserExercisesLibrary = () => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      if(currentUser){
+        await fetchUserExercisesLibrary();
+      }
+    };
+    fetchData();
+  }, [currentUser]);
+  /* 
+  useEffect(() => {
     fetchUserExercisesLibrary();
   }, [currentUser]);
-
+ */
   return {
     userExercisesLibrary,
     setUserExercisesLibrary,

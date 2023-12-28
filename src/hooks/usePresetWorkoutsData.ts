@@ -4,6 +4,7 @@ import { doc, getDoc, collection } from "firebase/firestore";
 import { AuthContext } from "../context/Auth";
 import toast from "react-hot-toast";
 import IPresetWorkoutData from "../utils/interfaces/IPresetWorkoutsData";
+
 export const usePresetWorkoutsData = () => {
   const { currentUser } = useContext(AuthContext);
 
@@ -18,20 +19,29 @@ export const usePresetWorkoutsData = () => {
 
     try {
       const presetWorkoutsDataDocSnap = await getDoc(userPresetWorkoutsDataDocRef);
-
       if (presetWorkoutsDataDocSnap.exists()) {
         const queriedUserPresetWorkoutsData = presetWorkoutsDataDocSnap.data();
         setPresetWorkoutsData(queriedUserPresetWorkoutsData.presetWorkouts);
       }
+
     } catch (error) {
       toast.error("fetchPresetWorkoutsData had an error!");
     }
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      if(currentUser){
+        await fetchPresetWorkoutsData();
+      }
+    };
+    fetchData();
+  }, [currentUser]);
+  /* 
+  useEffect(() => {
     fetchPresetWorkoutsData();
   }, [currentUser]);
-
+ */
   return {
     presetWorkoutsData,
     setPresetWorkoutsData,

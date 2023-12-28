@@ -23,18 +23,13 @@ import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Dialog from "@mui/material/Dialog";
-import InfoIcon from "@mui/icons-material/Info";
-import formatTime from "../../utils/formatTime";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import Divider from "@mui/material/Divider";
-import CommentIcon from "@mui/icons-material/Comment";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { getApp } from "firebase/app";
 import toast from "react-hot-toast";
-import Paper from "@mui/material/Paper";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { filterUserTrainingsPerDay } from "../Workout/CompletedWorkouts";
 import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 import {
   collection,
   setDoc,
@@ -97,7 +92,7 @@ function AddContentModal({
   const [addWorkout, setAddWorkout] = useState(false);
   const [limitInfo, setLimitInfo] = useState("");
   const [saving, setSaving] = useState(false);
-
+  const isOnline = useOnlineStatus()
   const navigate = useNavigate();
   const firebaseApp = getApp();
   const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
@@ -460,8 +455,9 @@ function AddContentModal({
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
               onClick={addPost}
+              disabled={!isOnline}
             >
-              POST
+              {isOnline?'POST':'Reconnecting...'}
             </Button>
             <Button
               variant="dbz_clear"

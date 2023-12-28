@@ -3,7 +3,8 @@ import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
-
+import { getFormattedDate } from "../getFormattedDate";
+import { serverTimestamp } from "firebase/firestore";
 async function createUserDoc(userID: string, fullname: string | null) {
   let firstName = "";
   let lastName = "";
@@ -25,31 +26,35 @@ async function createUserDoc(userID: string, fullname: string | null) {
   }
 
   const batch = writeBatch(db);
+  const currentDate = getFormattedDate();
 
   const featsRef = ref(storage, "assets/files/featsJSONString.json");
-  const url = await getDownloadURL(featsRef);
-  const response = await fetch(url);
-  const featsParsedJSON = await response.json();
-
-  const preselectedExercisesRef = ref(
-    storage,
-    "assets/files/preselectedExercisesJSON.json"
-  );
-  const preselectedExercisesURL = await getDownloadURL(preselectedExercisesRef);
-  const preselectedExercisesResponse = await fetch(preselectedExercisesURL);
-  const preselectedExercisesParsedJSON =
-    await preselectedExercisesResponse.json();
-
   const preselectedWorkoutsRef = ref(
     storage,
     "assets/files/presetWorkoutsData.json"
   );
-  const preselectedWorkoutsUrl = await getDownloadURL(preselectedWorkoutsRef);
-  const preselectedWorkoutsResponse = await fetch(preselectedWorkoutsUrl);
-  const preselectedWorkoutsParsedJSON =
-    await preselectedWorkoutsResponse.json();
+  const preselectedExercisesRef = ref(
+    storage,
+    "assets/files/preselectedExercisesJSON.json"
+  );
 
   try {
+    const url = await getDownloadURL(featsRef);
+    const response = await fetch(url);
+    const featsParsedJSON = await response.json();
+
+    const preselectedExercisesURL = await getDownloadURL(
+      preselectedExercisesRef
+    );
+    const preselectedExercisesResponse = await fetch(preselectedExercisesURL);
+    const preselectedExercisesParsedJSON =
+      await preselectedExercisesResponse.json();
+
+    const preselectedWorkoutsUrl = await getDownloadURL(preselectedWorkoutsRef);
+    const preselectedWorkoutsResponse = await fetch(preselectedWorkoutsUrl);
+    const preselectedWorkoutsParsedJSON =
+      await preselectedWorkoutsResponse.json();
+
     const userDoc = await getDoc(doc(db, "users", userID));
 
     if (!userDoc.exists()) {
@@ -83,6 +88,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
         unitsSystem: "metric",
         defaultWeightIncrement: 2.5,
         appVersion: 2.0,
+        lastUpdateTimestamp: serverTimestamp(),
       });
 
       // Create a subcollection "workouts" within the "users" document
@@ -130,7 +136,27 @@ async function createUserDoc(userID: string, fullname: string | null) {
       );
 
       batch.set(userBodyTrackerDocRef, {
-        bodyTrackerData: [],
+        bodyTrackerData: [
+          {
+            date: currentDate,
+            weight: 70,
+            bodyFat: 0,
+            caloricIntake: 0,
+            neck: 0,
+            shoulders: 0,
+            chest: 0,
+            leftBicep: 0,
+            rightBicep: 0,
+            leftForearm: 0,
+            rightForearm: 0,
+            waist: 0,
+            hips: 0,
+            leftThigh: 0,
+            rightThigh: 0,
+            leftCalf: 0,
+            rightCalf: 0,
+          },
+        ],
         weight: 70,
       });
 

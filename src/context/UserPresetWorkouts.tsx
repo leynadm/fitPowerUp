@@ -6,7 +6,7 @@ interface PresetWorkoutsDataProviderProps {
 
 // Create the context to hold the data and share it among all components
 export const UserPresetWorkoutsDataContext = createContext<any>({
-  presetWorkoutsData: null,
+  presetWorkoutsData: [],
   setPresetWorkoutsData: null,
   refetchPresetWorkoutsData: null,
 });

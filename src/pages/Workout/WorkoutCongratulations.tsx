@@ -217,7 +217,7 @@ function WorkoutCongratulations() {
         alignItems: "center",
       }}
     >
-      <h1 style={{ fontSize: "2rem" }}>Workout completed!</h1>
+      <h1 style={{ fontSize: "2rem" }}>Workout complete!</h1>
       <div
         style={{
           display: "flex",
@@ -256,8 +256,14 @@ function WorkoutCongratulations() {
         sx={{ paddingBottom: "8px", color: "#FFA500" }}
       />
 
-      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1,
-    width:"100%" }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 1,
+          width: "100%",
+        }}
+      >
         <ExerciseCompletedStatTile
           statName="Session Power Level"
           statValue={workoutData.power}
@@ -285,7 +291,7 @@ function WorkoutCongratulations() {
         <ExerciseCompletedStatTile
           statName="Workout Volume"
           statValue={workoutData.stats.vol}
-          statDetail={currentUserData.unitsSystem==="metric"?"kg":"lbs"}
+          statDetail={currentUserData.unitsSystem === "metric" ? "kg" : "lbs"}
           statColor="#520975"
           statTextColor="white"
           statIcon={null}
@@ -325,8 +331,9 @@ function WorkoutCongratulations() {
           checked={workoutData.wEval.feelPain}
         />
       </Box>
-
+      {/* 
         <Button variant="dbz_mini">Share workout on your profile</Button>
+     */}
     </Container>
   );
 }

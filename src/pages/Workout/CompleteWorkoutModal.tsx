@@ -71,7 +71,6 @@ function CompleteWorkoutModal({
     useContext(UserFeatsDataContext);
   const navigate = useNavigate();
 
-
   useEffect(()=>{
 
     if(userBodyTrackerData.length===0 && userFeatsData.length===0){
@@ -84,7 +83,7 @@ function CompleteWorkoutModal({
       fetchData();
     }
 
-  },[])
+  },[userBodyTrackerData])
 
   
   let userBodyWeight = 0;
@@ -100,7 +99,6 @@ function CompleteWorkoutModal({
     return(
       <LoadingScreenCircle text="Please wait, Yamcha needs a band-aid..."/>
     )
-
   }
   const userTrainingDataSize = userTrainingData.length;
 

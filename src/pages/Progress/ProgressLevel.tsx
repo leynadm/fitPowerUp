@@ -32,9 +32,11 @@ import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 function ProgressLevel() {
+
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
+
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
@@ -45,10 +47,14 @@ function ProgressLevel() {
 
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
+    
+    const todayTimestamp = new Date();
 
-  const firebaseTimestamp = new Date(
-    currentUserData.lastUpdateTimestamp.toMillis()
-  );
+    const firebaseTimestamp = currentUserData 
+        ? new Date(currentUserData.lastUpdateTimestamp.toMillis()) 
+        : todayTimestamp;
+    
+
   const currentDate = new Date();
 
   const [calculatedMaximumPowerLevel, setCalculatedMaximumPowerLevel] =
@@ -59,6 +65,7 @@ function ProgressLevel() {
     calculatedMaximumExperienceLevel,
     setCalculatedMaximumExperienceLevel,
   ] = useState(0);
+
   const isToday = isSameDay(firebaseTimestamp, currentDate);
 
   function isSameDay(d1: Date, d2: Date) {
@@ -169,8 +176,8 @@ function ProgressLevel() {
   const data = [
     {
       name: "PL",
-      Strength: currentUserData.strengthLevel,
-      Experience: currentUserData.experienceLevel,
+      Strength: currentUserData? currentUserData.strengthLevel : 0,
+      Experience: currentUserData? currentUserData.experienceLevel : 0,
     },
   ];
 

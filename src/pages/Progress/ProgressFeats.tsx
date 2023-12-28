@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -14,15 +14,26 @@ import { VariableSizeList } from "react-window";
 import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
 import { AuthContext } from "../../context/Auth";
-import NoAvailableDataBox from "../../components/ui/NoAvailableDataBox";
 import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 function ProgressGraph() {
-  const { userFeatsData } = useContext(UserFeatsDataContext);
+  const { userFeatsData,refetchUserFeatsData } = useContext(UserFeatsDataContext);
   const { currentUserData } = useContext(AuthContext);
   const [filterSelection, setFilterSelection] = useState("All");
-
+  
   const userFeatsDataArr = getFilteredUserFeatsArr();
+  const {userExercisesLibrary} = useContext(UserExercisesLibraryContext)
+  useEffect(()=>{
+
+    const fetchData = async () => {
+      if (userFeatsData.length===0) {
+        await refetchUserFeatsData();
+      }
+    };
+
+    fetchData().catch(console.error); // Handle errors
+  },[userFeatsData])
 
   function getFilteredUserFeatsArr() {
     const userFeatsDataArr = userFeatsData;

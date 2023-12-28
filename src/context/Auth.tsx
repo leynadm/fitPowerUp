@@ -13,7 +13,7 @@ import User from "../utils/interfaces/User";
 import toast from "react-hot-toast";
 import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
 import enablePersistentData from "../utils/enablePersistentData";
-import { serverTimestamp } from "firebase/firestore";
+
 import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (user) {
         enablePersistentData();
 
-        createInitialDbTables(user.uid, currentUserData?.appVersion)
+        createInitialDbTables(user.uid)
           .then(() => {
             //console.log("Tables are inside the database.");
           })
@@ -49,21 +49,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             //console.log("IndexedDb tables creation completed.");
           });
 
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data() as User;
-          setCurrentUserData(userData);
-        }
+          if(!currentUserData){
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+    
+            if (docSnap.exists()) {
+              const userData = docSnap.data() as User;
+              setCurrentUserData(userData);
+            }
+          }
       }
       setLoginFetchTrigger(true);
     });
 
     return unsubscribe;
-  }, []);
+  }, [currentUserData]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     const handleOffline = () => {
       setLoginFetchTrigger(true); // Set the trigger to false when offline
     };
@@ -79,16 +81,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  }, []); */
 
   useEffect(() => {
-    if (!currentUserData) {
+
+    if (!currentUserData && currentUser) {
+    
       const fetchData = async () => {
         const tempCurrentUserData = await fetchCurrentUserData(
           currentUser,
           setCurrentUserData
         );
-
         if (
           tempCurrentUserData &&
           currentUser !== null &&
@@ -123,12 +126,10 @@ export async function fetchCurrentUserData(
   if (currentUser === null) {
     return;
   }
-
-  if (currentUser.isAnonymous === false) {
+  
     try {
       const docRef = doc(db, "users", currentUser.uid);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         const userData = docSnap.data() as User;
         setCurrentUserData(userData);
@@ -137,6 +138,5 @@ export async function fetchCurrentUserData(
     } catch (error) {
       toast.error("We couldn't fetch the data...");
       console.error("Error while fetching user data:", error);
-    }
-  }
+    }  
 }

@@ -32,13 +32,13 @@ function Home({
 
   return (
     <UserTrainingDataProvider>
-      <UserExercisesLibraryDataProvider>
-        <BodyTrackerDataProvider>
-          <UserFeatsDataProvider>
-            <LogDataProvider>
-              <FriendsSummaryProvider>
-                <SocialDataProvider>
-                  <PresetWorkoutsDataProvider>
+      <PresetWorkoutsDataProvider>
+        <UserFeatsDataProvider>
+          <UserExercisesLibraryDataProvider>
+            <BodyTrackerDataProvider>
+              <LogDataProvider>
+                <FriendsSummaryProvider>
+                  <SocialDataProvider>
                     <VerifyEmailDialog
                       verifyEmailModalOpen={verifyEmailModalOpen}
                       setVerifyEmailModalOpen={setVerifyEmailModalOpen}
@@ -60,22 +60,17 @@ function Home({
                         }
                       />
 
-                      <Route
-                        path="friends/*"
-                        element={
-                          <Friends/>
-                        }
-                      />
+                      <Route path="friends/*" element={<Friends />} />
 
                       <Route path="progress/*" element={<Progress />} />
                     </Routes>
-                  </PresetWorkoutsDataProvider>
-                </SocialDataProvider>
-              </FriendsSummaryProvider>
-            </LogDataProvider>
-          </UserFeatsDataProvider>
-        </BodyTrackerDataProvider>
-      </UserExercisesLibraryDataProvider>
+                  </SocialDataProvider>
+                </FriendsSummaryProvider>
+              </LogDataProvider>
+            </BodyTrackerDataProvider>
+          </UserExercisesLibraryDataProvider>
+        </UserFeatsDataProvider>
+      </PresetWorkoutsDataProvider>
     </UserTrainingDataProvider>
   );
 }

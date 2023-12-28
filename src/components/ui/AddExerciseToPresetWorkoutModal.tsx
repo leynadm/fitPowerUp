@@ -14,6 +14,7 @@ import { storage } from "../../config/firebase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",

@@ -21,6 +21,7 @@ import Switch from "@mui/material/Switch";
 import { AuthContext } from "../../context/Auth";
 import createNewExercise from "../../utils/firebaseDataFunctions/createNewExercise";
 import { Typography } from "@mui/material";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 interface ParentProps {
   openAddNewExerciseModal: boolean;
   setOpenAddNewExerciseModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,7 +65,7 @@ function AddNewExerciseModal({
 }: ParentProps) {
   const [exerciseName, setExerciseName] = useState("");
   const [muscleGroup, setMuscleGroup] = useState("");
-
+  const isOnline = useOnlineStatus()
   const { currentUser, currentUserData } = useContext(AuthContext);
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
@@ -451,10 +452,11 @@ function AddNewExerciseModal({
               variant="dbz_save"
               color="success"
               sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              disabled={!isFormValid}
+              disabled={!isOnline}
               onClick={handleCreateNewExercise}
+
             >
-              Save
+              {isOnline?'Save':'Reconnecting...'}
             </Button>
             <Button
               variant="dbz_clear"

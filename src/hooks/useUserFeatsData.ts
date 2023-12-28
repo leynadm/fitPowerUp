@@ -11,13 +11,13 @@ export const useUserFeatsData = () => {
 
   const fetchUserFeatsData = async () => {
     if (!currentUser) return;
+    
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userCollectionRef = collection(usersDocRef, "userCollection");
     const userFeatsDataDocRef = doc(userCollectionRef, "userFeats");
-
+ 
     try {
       const userFeatsDataDocSnap = await getDoc(userFeatsDataDocRef);
-
       if (userFeatsDataDocSnap.exists()) {
         const queriedUserFeatsData = userFeatsDataDocSnap.data();
         setUserFeatsData(queriedUserFeatsData.userFeatsData);
@@ -28,9 +28,18 @@ export const useUserFeatsData = () => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      if(currentUser){
+        await fetchUserFeatsData();
+      }
+    };
+    fetchData();
+  }, [currentUser]);
+/* 
+  useEffect(() => {
     fetchUserFeatsData();
   }, [currentUser]);
-
+ */
   return {
     userFeatsData,
     setUserFeatsData,

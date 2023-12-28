@@ -16,11 +16,14 @@ import saveBodyTrackerEntry from "../../utils/firebaseDataFunctions/saveBodyTrac
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import toast from "react-hot-toast";
 import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 function BodyTrackerTrack() {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
   const { userBodyTrackerData, refetchUserBodyTrackerData } =
     useContext(BodyTrackerDataContext);
+
+    const isOnline = useOnlineStatus()
 
   const userBodyTrackerDataSize = userBodyTrackerData.length 
   const [saveButtonText, setSaveButtonText] = useState("save");
@@ -577,8 +580,9 @@ function BodyTrackerTrack() {
           variant="dbz_save"
           sx={{ width: "75%", margin: "0.25rem", fontWeight: "bold" }}
           onClick={handleSaveBodyTrackerEntry}
+          disabled={!isOnline}
         >
-          {saveButtonText}
+                        {isOnline ? saveButtonText : "Reconecting..."}
         </Button>
 
         <Button

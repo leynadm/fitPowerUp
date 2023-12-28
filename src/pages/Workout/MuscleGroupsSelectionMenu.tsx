@@ -208,7 +208,7 @@ function MuscleGroupsSelectionMenu() {
         style={{
           top: 0,
           background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+            "radial-gradifetchent(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <AddNewExerciseModal

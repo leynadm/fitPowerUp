@@ -18,7 +18,6 @@ export const useUserTrainingData = () => {
     );
     try {
       const querySnapshot = await getDocs(userTrainingCollectionRef);
-
       const sessions: IUserTrainingData[] = [];
       querySnapshot.forEach((doc) => {
         // Assuming each document in the collection represents a training session
@@ -44,9 +43,19 @@ export const useUserTrainingData = () => {
   };
 
   useEffect(() => {
-    fetchUserTrainingData();
+    const fetchData = async () => {
+      if(currentUser){
+        await fetchUserTrainingData();
+      }
+    };
+    fetchData();
   }, [currentUser]);
 
+  /* 
+  useEffect(() => {
+    fetchUserTrainingData();
+  }, [currentUser]);
+ */
   return {
     userTrainingData,
     setUserTrainingData,

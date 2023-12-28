@@ -15,12 +15,11 @@ export const useBodyTrackerData = () => {
 
     const usersDocRef = doc(db, "users", currentUser.uid);
     const userBodyTrackerCollectionRef = collection(usersDocRef, "userBodyTrackerCollection");
-
+  
     try {
       const querySnapshot = await getDocs(userBodyTrackerCollectionRef);
 
       let onlyData: IUserBodyTrackerDataEntry[] = [];
-  
       querySnapshot.forEach((doc) => {
         const data = doc.data() as IUserBodyTrackerData;
         onlyData = onlyData.concat(data.bodyTrackerData);
@@ -30,10 +29,20 @@ export const useBodyTrackerData = () => {
       toast.error("fetchUserBodyTrackerData had an error!");
     }
   };
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      if(currentUser){
+        await fetchUserBodyTrackerData();
+      }
+    };
+    fetchData();
+  }, [currentUser]);
 
+  /*
   useEffect(() => {
     fetchUserBodyTrackerData();
   }, [currentUser]);
-
+  */
   return { userBodyTrackerData, setUserBodyTrackerData,refetchUserBodyTrackerData:fetchUserBodyTrackerData };
 };

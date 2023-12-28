@@ -10,9 +10,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import createFollowersFeedDoc from "../../utils/socialFunctions/createFollowersFeedDoc";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
-import { auth, db } from "../../config/firebase";
+import { auth} from "../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
