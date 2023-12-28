@@ -2,7 +2,7 @@
 As part of the Odin Project curriculum, fitPowerUp represents my first successful attempt at building a full-stack web application. My goal was to create a Progressive Web App focused on fitness. After a few months of work, I managed to build an app that's both fully functional and engaging. Here's a summary of what I achieved.
 
 ## The Stack
-In terms of stack, I relied on tools I discovered while going through the Odin Project curriculum, as well as technologies that I discovered through exploration.
+In terms of stack, I relied on tools I discovered while going through the Odin Project curriculum, as well as technologies I researched based on my needs.
 - HTML & CSS: I guess it's self-explanatory.
 - TypeScript: Adopting TypeScript was a decision made after receiving mentorship from outside of my Odin Project studies. Although I had no prior experience with TypeScript, I'm very thankful for this advice.
 - Firebase: Using Firebase as a BaaS was a recommendation from the Odin Project curriculum.
@@ -15,7 +15,7 @@ In terms of stack, I relied on tools I discovered while going through the Odin P
   <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-plain.svg" title="Typescript" alt="Typescript" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/firebase/firebase-plain.svg" title="Firebase" alt="Firebase" width="40" height="40"/>&nbsp;
-    <img src="https://github.com/devicons/devicon/blob/master/icons/firebase/firebase-plain.svg](https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg" title="Material UI" alt="Material UI" width="40" height="40"/>&nbsp;
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg" title="Material UI" alt="Material UI" width="40" height="40"/>&nbsp;
     <img src="https://github.com/devicons/devicon/blob/master/icons/firebase/firebase-plain.svg" title="Firebase" alt="Firebase" width="40" height="40"/>&nbsp;
   <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2FIndexedDB.png?alt=media&token=7a6c33fd-50d3-44a0-9ded-9ba335f2668e&_gl=1*1jx1hrs*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjI1NjguNTcuMC4w" title="IndexedDb" alt="IndexedDb" width="40" height="40"/>&nbsp;
   <img src="https://firebasestorage.googleapis.com/v0/b/matei-daniel-website.appspot.com/o/icons%2FIndexedDB.png?alt=media&token=7a6c33fd-50d3-44a0-9ded-9ba335f2668e&_gl=1*1jx1hrs*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5Njk2MjQzNS4zNS4xLjE2OTY5NjI1NjguNTcuMC4w" title="Recharts" alt="Recharts" width="40" height="40"/>&nbsp;
@@ -23,4 +23,4 @@ In terms of stack, I relied on tools I discovered while going through the Odin P
 
 ## App Features
 The app benefits of various features, 
-![adding-exercises]([link](https://raw.githubusercontent.com/leynadm/files/main/ezgif.com-video-to-gif-converter.gif)https://raw.githubusercontent.com/leynadm/files/main/ezgif.com-video-to-gif-converter.gif)
+![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/ezgif.com-video-to-gif-converter.gif)
