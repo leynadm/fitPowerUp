@@ -48,7 +48,7 @@ function LandingPage() {
   const totalCards = visibleCards.length;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallButton, setShowInstallButton] = useState(false);
+  const [showInstallButton, setShowInstallButton] = useState(true);
   const [openInstallInstructionsModal, setOpenInstallInstructionsModal] =
     useState(false);
 
@@ -91,7 +91,7 @@ function LandingPage() {
     // Start showing cards
     timeoutId = setTimeout(showNextCard, 5000);
 
-    setShowInstallButton(!isAppInstalled());
+    setShowInstallButton(isAppInstalled());
 
     return () => {
       if (timeoutId) {
