@@ -1,8 +1,6 @@
 import { FixedSizeList } from "react-window";
 import Typography from "@mui/material/Typography";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import { AuthContext } from "../../context/Auth";
 import { useContext } from "react";
 import Box from "@mui/material/Box";
@@ -10,6 +8,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import pathPoints from "../../utils/pathPoints";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
+
 function ProgressPath() {
   const { currentUserData } = useContext(AuthContext);
 
@@ -37,7 +36,6 @@ function ProgressPath() {
     const subsequentPathPointsEntry =
       index < 120 ? pathPoints[index + 1] : pathPoints[120];
 
-
     const MIN = pathPointsEntry;
     const MAX = subsequentPathPointsEntry;
     const normalise = (value: number) =>
@@ -49,12 +47,11 @@ function ProgressPath() {
       currentUserData.powerLevel >= MIN.bracket &&
       currentUserData.powerLevel <= MAX.bracket;
 
-    function handleNavigateScreen(){
-      navigate(`hero/${pathPointsEntry.id}`,{
-        state:pathPointsEntry.quote
-      })
-
-    }    
+    function handleNavigateScreen() {
+      navigate(`hero/${pathPointsEntry.id}`, {
+        state: pathPointsEntry.quote,
+      });
+    }
 
     return (
       <Box style={rowStyle} boxShadow={2} borderRadius="4px">
@@ -118,7 +115,6 @@ function ProgressPath() {
             </Box>
           )}
 
-
           <button
             style={{
               width: "142px",
@@ -132,9 +128,8 @@ function ProgressPath() {
               transition: ".3s",
               cursor: "pointer",
               boxShadow: "0 0 0 1px #666",
-              
             }}
-            onClick={isUnlocked?handleNavigateScreen:undefined}
+            onClick={isUnlocked ? handleNavigateScreen : undefined}
           >
             <img
               src={pathPointsEntry.img}
@@ -150,7 +145,7 @@ function ProgressPath() {
                 filter: isUnlocked ? "none" : "blur(6px)", // Apply blur effect if not within range
               }}
             />
-            
+
             <span
               style={{
                 position: "absolute",
@@ -165,11 +160,9 @@ function ProgressPath() {
                 maskComposite: "intersect",
                 transition: ".5s, 99999s 99999s transform",
                 transform: "rotate(36000deg)",
-                zIndex:-1
+                zIndex: -1,
               }}
-
             ></span>
-            
           </button>
         </Box>
       </Box>
@@ -177,9 +170,7 @@ function ProgressPath() {
   };
 
   return (
-    <Box paddingLeft="8px" paddingRight="8px"
-    
-    >
+    <Box paddingLeft="8px" paddingRight="8px">
       <FixedSizeList
         height={window.innerHeight - 150}
         itemCount={pathPoints.length}

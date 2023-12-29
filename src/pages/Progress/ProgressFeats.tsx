@@ -18,22 +18,22 @@ import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 function ProgressGraph() {
-  const { userFeatsData,refetchUserFeatsData } = useContext(UserFeatsDataContext);
+  const { userFeatsData, refetchUserFeatsData } =
+    useContext(UserFeatsDataContext);
   const { currentUserData } = useContext(AuthContext);
   const [filterSelection, setFilterSelection] = useState("All");
-  
-  const userFeatsDataArr = getFilteredUserFeatsArr();
-  const {userExercisesLibrary} = useContext(UserExercisesLibraryContext)
-  useEffect(()=>{
 
+  const userFeatsDataArr = getFilteredUserFeatsArr();
+  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
+  useEffect(() => {
     const fetchData = async () => {
-      if (userFeatsData.length===0) {
+      if (userFeatsData.length === 0) {
         await refetchUserFeatsData();
       }
     };
 
     fetchData().catch(console.error); // Handle errors
-  },[userFeatsData])
+  }, [userFeatsData]);
 
   function getFilteredUserFeatsArr() {
     const userFeatsDataArr = userFeatsData;
@@ -120,6 +120,7 @@ function ProgressGraph() {
               InputProps={{
                 readOnly: true,
               }}
+              maxRows={3}
               defaultValue={featEntry.description}
               sx={{
                 width: "100%",
@@ -207,7 +208,7 @@ function ProgressGraph() {
       </FormControl>
 
       {userFeatsData.length === 0 ? (
-        <LoadingScreenCircle text="Waiting for Piccolo to finish his dramatic entrance..."/>
+        <LoadingScreenCircle text="Waiting for Piccolo to finish his dramatic entrance..." />
       ) : (
         <VariableSizeList
           height={window.innerHeight - 200}

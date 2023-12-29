@@ -10,18 +10,16 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
 import toast from "react-hot-toast";
-import FacebookIcon from '@mui/icons-material/Facebook';
+import FacebookIcon from "@mui/icons-material/Facebook";
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   getAdditionalUserInfo,
-  signInAnonymously,
 } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import GoogleIcon from "@mui/icons-material/Google";
-import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
 
 function Copyright(props: any) {
@@ -93,11 +91,6 @@ export default function SignIn() {
           if (newUserCheck?.isNewUser) {
             createUserDoc(user.uid, user.displayName);
           }
-
-          // Query the users collection to retrieve the document with the given userID
-
-          // IdP data available using getAdditionalUserInfo(result)
-          // ...
         }
       })
       .catch((error) => {
@@ -204,7 +197,6 @@ export default function SignIn() {
               justifyContent: "center",
               alignItems: "center",
             }}
-            
           >
             <LoginIcon sx={{ marginRight: "8px" }} />
             Sign In

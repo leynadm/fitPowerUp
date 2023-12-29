@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
 import ExerciseSearchingBar from "./ExerciseSearchingBar";
 import { FixedSizeList } from "react-window";
 import { useEffect, useMemo } from "react";
@@ -14,7 +13,6 @@ import { storage } from "../../config/firebase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -32,13 +30,13 @@ const style = {
 interface ParentComponentProps {
   openAddExerciseToPresetWorkoutModal: boolean;
   setOpenAddExerciseToPresetWorkoutModal: Dispatch<SetStateAction<boolean>>;
-  searchParams:any
+  searchParams: any;
 }
 
 function AddExerciseToPresetWorkoutModal({
   openAddExerciseToPresetWorkoutModal,
   setOpenAddExerciseToPresetWorkoutModal,
-  searchParams
+  searchParams,
 }: ParentComponentProps) {
   const [query, setQuery] = useState("");
 

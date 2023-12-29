@@ -1,13 +1,11 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
 import ChromeIcon from "../../assets/chrome-48.png";
 import FirefoxIcon from "../../assets/firefox-48.png";
 import SafariIcon from "../../assets/safari-48.png";
 import EdgeIcon from "../../assets/edge-48.png";
 import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
 
 const mobileStyle = {
   display: "flex",
@@ -58,6 +56,7 @@ function InstallInstructionsModal({
   const boxShadowStyle = {
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
     borderRadius: "10px",
+    minHeight: "256px",
   };
 
   return (

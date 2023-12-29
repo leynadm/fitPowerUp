@@ -39,7 +39,12 @@ function LandingPage() {
     containerRefs.map(() => false)
   );
 
-  const [visibleCards, setVisibleCards] = useState([false, false, false, false]);
+  const [visibleCards, setVisibleCards] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const totalCards = visibleCards.length;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -67,13 +72,18 @@ function LandingPage() {
     let timeoutId: number | NodeJS.Timeout | null = null;
 
     const showNextCard = () => {
-      setVisibleCards(visible => visible.map((_, index) => index <= currentCard));
+      setVisibleCards((visible) =>
+        visible.map((_, index) => index <= currentCard)
+      );
       currentCard++;
 
       if (currentCard < totalCards) {
         timeoutId = setTimeout(showNextCard, 5000); // Show next card after 1 second
       } else {
-        timeoutId = setTimeout(() => setVisibleCards([false, false, false, false]), 3000); // Reset after 3 seconds
+        timeoutId = setTimeout(
+          () => setVisibleCards([false, false, false, false]),
+          3000
+        ); // Reset after 3 seconds
         currentCard = 0; // Reset the current card index
       }
     };
@@ -81,9 +91,10 @@ function LandingPage() {
     // Start showing cards
     timeoutId = setTimeout(showNextCard, 5000);
 
+    setShowInstallButton(!isAppInstalled());
+
     return () => {
-      
-       if (timeoutId) {
+      if (timeoutId) {
         clearTimeout(timeoutId as number);
       }
 
@@ -97,8 +108,6 @@ function LandingPage() {
         }
       });
     };
-
-
   }, []);
 
   const callbackFunction: IntersectionObserverCallback = (entries) => {
@@ -151,6 +160,10 @@ function LandingPage() {
     }
   }
 
+  const isAppInstalled = () => {
+    return window.matchMedia("(display-mode: standalone)").matches;
+  };
+
   function getStartedClick() {
     navigate("/login");
   }
@@ -187,18 +200,20 @@ function LandingPage() {
               fit<span style={{ color: "white" }}>PowerUp</span>
             </Typography>
 
-            <Button
-              variant="dbz"
-              sx={{
-                fontSize: "0.75rem",
-                padding: 0,
-                boxShadow: 0,
-                lineHeight: "25px",
-              }}
-              onClick={handleInstallClick}
-            >
-              Install
-            </Button>
+            {!showInstallButton && (
+              <Button
+                variant="dbz"
+                sx={{
+                  boxShadow: 0,
+                  paddingTop: 0,
+                  margin: 0,
+                  lineHeight: 2.5,
+                }}
+                onClick={handleInstallClick}
+              >
+                Install
+              </Button>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
@@ -217,17 +232,17 @@ function LandingPage() {
           setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
         />
 
-        {/* 
-  <Box
+        <Box
           height="calc(100svh - 56px)"
           display="grid"
           alignItems="center"
-          gridTemplateRows="4.5fr 1fr 4.5fr 1fr"
+          gridTemplateRows="4fr 0.75fr 4fr 1.25fr"
           width="100%"
           position="relative"
         >
-           
-<Box
+          {/* FIRST BOX */}
+
+          <Box
             width="100%"
             display="flex"
             flexDirection="column"
@@ -256,111 +271,22 @@ function LandingPage() {
             />
           </Box>
 
-          <Box
-            width="100%"
-            sx={{
-              maxWidth: "100%", // Limit the width of the box
-              overflow: "hidden",
-              textAlign: "center", // Centers text horizontally in the box
-              maxHeight: "100%",
-            }}
-          >
-            <span className="type" style={spanStyle}>
-              The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
-            </span>
-          </Box>
-
-          <Box
-            sx={{
-              backgroundImage:
-                'URL("https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431")',
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              overflow:"hidden",
-              "& img": {
-                maxWidth: {
-                  xs: "256px", // Full width on extra-small devices
-                  sm: "384px", // Max width of 256px on small devices and above
-                  md: "384px", // Max width of 256px on small devices and above
-                  lg: "384px", // Max width of 256px on small devices and above
-                },
-              },
-            }}
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            position="relative"
-            height="100%"
-          ></Box>
-          <Box width="100%" display="flex" justifyContent="center">
-            <Button onClick={getStartedClick} variant="dbz_mini">
-              Get Started
-            </Button>
-          </Box>
-           
-        </Box>
-*/}
-
-        <Box
-          height="calc(100svh - 56px)"
-          display="grid"
-          alignItems="center"
-          gridTemplateRows="4fr 0.75fr 4fr 1.25fr"
-          width="100%"
-          position="relative"
-        >
-          {/* FIRST BOX */}
-
+          {/* */}
+          <Box sx={{ position: "relative" }}>
             <Box
-              width="100%"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              overflow="hidden"
               sx={{
-                "& img": {
-                  maxWidth: {
-                    xs: "256px", // Full width on extra-small devices
-                    sm: "256px", // Max width of 256px on small devices and above
-                    md: "384px", // Max width of 256px on small devices and above
-                    lg: "384px", // Max width of 256px on small devices and above
-                  },
-                },
+                maxWidth: "100%", // Limit the width of the box
+                overflow: "hidden",
+                textAlign: "center", // Centers text horizontally in the box
+                maxHeight: "100%",
+                padding: 1,
               }}
             >
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
-                alt=""
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-                loading="lazy"
-              />
+              <span className="type" style={spanStyle}>
+                The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
+              </span>
             </Box>
-
-
-          {/* */}
-          <Box sx={{ position: "relative" }} >
-            
-
-             <Box
-
-             sx={{
-               maxWidth: "100%", // Limit the width of the box
-               overflow: "hidden",
-               textAlign: "center", // Centers text horizontally in the box
-               maxHeight: "100%",
-               padding: 1,
-             }}
-           >
-             <span className="type" style={spanStyle}>
-               The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
-             </span>
-           </Box>
-{/* 
+            {/* 
 
             {visibleCards[3] && (
               <Box
@@ -474,14 +400,9 @@ function LandingPage() {
             height="100%"
           ></Box>
           <Box display="flex" justifyContent="center">
-          <Button
-              onClick={getStartedClick}
-              variant="dbz"
-              
-            >
+            <Button onClick={getStartedClick} variant="dbz">
               Get Started
             </Button>
-
           </Box>
         </Box>
 

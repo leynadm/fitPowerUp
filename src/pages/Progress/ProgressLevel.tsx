@@ -50,7 +50,7 @@ function ProgressLevel() {
     
     const todayTimestamp = new Date();
 
-    const firebaseTimestamp = currentUserData 
+    const firebaseTimestamp = currentUserData && currentUserData.lastUpdateTimestamp!==null 
         ? new Date(currentUserData.lastUpdateTimestamp.toMillis()) 
         : todayTimestamp;
     
@@ -334,30 +334,6 @@ function ProgressLevel() {
 
     return maxRM;
   }
-
-  /* 
-  function calculateScaledImageSize(
-    containerWidth: number,
-    containerHeight: number,
-    imageOriginalWidth: number,
-    imageOriginalHeight: number
-  ) {
-    const imageAspectRatio = imageOriginalWidth / imageOriginalHeight;
-    const containerAspectRatio = containerWidth / containerHeight;
-    let scaledWidth, scaledHeight;
-
-    if (containerAspectRatio > imageAspectRatio) {
-      // Container is wider in proportion to the image
-      scaledHeight = containerHeight;
-      scaledWidth = containerHeight * imageAspectRatio;
-    } else {
-      // Container is taller in proportion to the image
-      scaledWidth = containerWidth;
-      scaledHeight = containerWidth / imageAspectRatio;
-    }
-
-    return { scaledWidth, scaledHeight };
-  } */
 
   if (userExercisesLibrary.length === 0) {
     return (

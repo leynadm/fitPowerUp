@@ -11,30 +11,19 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
-import { auth} from "../../config/firebase";
+import { auth } from "../../config/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
 import toast from "react-hot-toast";
-import { setDoc, doc, arrayUnion } from "firebase/firestore";
 
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
+interface ValidationErrors {
+  name?: string;
+  surname?: string;
+  email?: string;
+  password?: string;
+  terms?: string;
 }
 
 export default function SignUp() {
@@ -43,31 +32,94 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const navigate = useNavigate();
+  const [agreeTermsAndConditions, setAgreeTermsAndConditions] = useState(false);
+  const fullName = name + " "+ surname;
 
-  const fullName = name + surname;
+
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    {}
+  );
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateLettersAndNumbers = (input: string) => {
+    const regex = /^[A-Za-z0-9]+$/;
+    return regex.test(input);
+  };
+
+  const validate = (): boolean => {
+    const errors: ValidationErrors = {};
+    if (!name.trim()) errors.name = "First Name is required";
+    if (!surname.trim()) errors.surname = "Last Name is required";
+    if (!email.trim()) {
+      errors.email = "Email is required";
+    } else if (!validateEmail(email)) {
+      errors.email = "Invalid email format";
+    }
+    if (!password) errors.password = "Password is required";
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleLoginClick = () => {
     navigate("/login");
   };
 
   const handleSignUp = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validate()) return;
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-
       const user = userCredential.user;
       await createUserDoc(user.uid, fullName);
-
       await sendEmailVerification(user);
     } catch (error) {
-      toast.error("Oops, handleSignUp has an error!");
       if (isFirebaseError(error)) {
         const errorCode = error.code;
-        const errorMessage = error.message;
-        toast.error("Oops, handleSignUp has an error!");
+        switch (errorCode) {
+          case "auth/email-already-in-use":
+            toast.error("This email is already in use.");
+            break;
+          case "auth/invalid-email":
+            toast.error("The email address is not valid.");
+            break;
+          case "auth/operation-not-allowed":
+            toast.error("Email/password accounts are not enabled.");
+            break;
+          case "auth/weak-password":
+            toast.error("The password is not strong enough.");
+            break;
+          case "auth/network-request-failed":
+            toast.error("Network error occurred. Please try again.");
+            break;
+          case "auth/too-many-requests":
+            toast.error("Too many requests. Please try again later.");
+            break;
+          case "auth/user-disabled":
+            toast.error("This user account has been disabled.");
+            break;
+          case "auth/user-not-found":
+            toast.error("User not found.");
+            break;
+          case "auth/wrong-password":
+            toast.error("Wrong password. Please try again.");
+            break;
+          case "auth/internal-error":
+            toast.error("An internal error occurred. Please try again.");
+            break;
+          default:
+            toast.error("An unknown error occurred. Please try again.");
+            break;
+        }
       } else {
         toast.error("An unknown error occurred");
       }
@@ -87,6 +139,9 @@ export default function SignUp() {
     );
   }
 
+  function handleTermsAndConditionsClick() {
+    setAgreeTermsAndConditions(!agreeTermsAndConditions);
+  }
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -125,6 +180,8 @@ export default function SignUp() {
                 label="First Name"
                 autoFocus
                 onChange={(e) => setName(e.target.value)}
+                error={name !== '' && !validateLettersAndNumbers(name)}
+                helperText={name !== '' && !validateLettersAndNumbers(name) ? "Only letters and numbers are allowed." : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -136,6 +193,8 @@ export default function SignUp() {
                 name="lastName"
                 autoComplete="family-name"
                 onChange={(e) => setSurname(e.target.value)}
+                error={surname !== '' && !validateLettersAndNumbers(surname)}
+        helperText={surname !== '' && !validateLettersAndNumbers(surname) ? "Only letters and numbers are allowed." : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -143,10 +202,13 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="email"
+                type="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
                 onChange={(e) => setEmail(e.target.value)}
+                error={!!validationErrors.email}
+                helperText={validationErrors.email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -159,16 +221,41 @@ export default function SignUp() {
                 id="password"
                 autoComplete="new-password"
                 onChange={(e) => setPassword(e.target.value)}
+                error={!!validationErrors.password}
+                helperText={validationErrors.password}
               />
             </Grid>
             <Grid item xs={12}>
+              <Typography
+                onClick={() => navigate("/terms-and-conditions")}
+                sx={{
+                  textDecoration: "underline",
+                }}
+              >
+                Click here to read the Terms and Conditions
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                control={
+                  <Checkbox
+                    checked={agreeTermsAndConditions}
+                    value="allowExtraEmails"
+                    color="primary"
+                  />
+                }
                 label="Agree with the terms and conditions."
+                onClick={handleTermsAndConditionsClick}
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="dbz" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="dbz"
+            sx={{ mt: 3, mb: 2 }}
+            disabled={!agreeTermsAndConditions}
+          >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
@@ -180,9 +267,6 @@ export default function SignUp() {
           </Grid>
         </Box>
       </Box>
-      {/* 
-        <Copyright sx={{ mt: 5 }} />
-         */}
     </Container>
   );
 }

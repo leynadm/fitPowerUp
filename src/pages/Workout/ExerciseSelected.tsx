@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import TimerIcon from "@mui/icons-material/Timer";
 import ExerciseSelectedTrack from "./ExerciseSelectedTrack";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import { useNavigate, useParams, Routes, Route } from "react-router-dom";
@@ -17,7 +16,6 @@ import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 import HelpIcon from '@mui/icons-material/Help';
 import ExerciseInfoModal from "../../components/ui/ExerciseInfoModal";
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 function ExerciseSelected() {
   const [countdownValue, setCountdownValue] = useState(120);
   const { showRestTimer, setShowRestTimer,time,countdown } = useContext(LogDataContext);

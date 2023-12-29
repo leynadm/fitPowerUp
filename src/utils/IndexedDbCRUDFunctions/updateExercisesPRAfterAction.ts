@@ -252,7 +252,7 @@ function updateExerciseInStore(cursor: IDBCursorWithValue, isPR: boolean) {
   const updateRequest = cursor.update(updatedExercise);
 
   updateRequest.onsuccess = function () {
-    console.log(`Record with ID ${cursor.primaryKey} updated successfully.`);
+    //console.log(`Record with ID ${cursor.primaryKey} updated successfully.`);
   };
 }
 

@@ -13,8 +13,9 @@ import User from "../utils/interfaces/User";
 import toast from "react-hot-toast";
 import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
 import enablePersistentData from "../utils/enablePersistentData";
-
+import useOnlineStatus from "../hooks/useOnlineStatus";
 import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
+import { useUserDataFetch } from "../hooks/useUserDataFetch";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
   const [currentUserData, setCurrentUserData] = useState<User>();
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
@@ -49,44 +51,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             //console.log("IndexedDb tables creation completed.");
           });
 
-          if(!currentUserData){
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-    
-            if (docSnap.exists()) {
-              const userData = docSnap.data() as User;
-              setCurrentUserData(userData);
-            }
-          }
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data() as User;
+          setCurrentUserData(userData);
+        }
+      } else {
+        setLoginFetchTrigger(true);
       }
-      setLoginFetchTrigger(true);
     });
 
     return unsubscribe;
-  }, [currentUserData]);
-
-/*   useEffect(() => {
-    const handleOffline = () => {
-      setLoginFetchTrigger(true); // Set the trigger to false when offline
-    };
-
-    const handleOnline = () => {
-      setLoginFetchTrigger(true); // Set the trigger to true when online
-    };
-
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-
-    return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-    };
-  }, []); */
+  }, []);
 
   useEffect(() => {
-
     if (!currentUserData && currentUser) {
-    
+      setLoginFetchTrigger(false);
+
       const fetchData = async () => {
         const tempCurrentUserData = await fetchCurrentUserData(
           currentUser,
@@ -101,7 +84,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       };
 
-      fetchData().catch(console.error);
+      const timeoutId = setTimeout(() => {
+        fetchData().catch(console.error);
+        setLoginFetchTrigger(true);
+      }, 1750);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [currentUser]);
 
@@ -126,17 +114,17 @@ export async function fetchCurrentUserData(
   if (currentUser === null) {
     return;
   }
-  
-    try {
-      const docRef = doc(db, "users", currentUser.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const userData = docSnap.data() as User;
-        setCurrentUserData(userData);
-        return userData;
-      }
-    } catch (error) {
-      toast.error("We couldn't fetch the data...");
-      console.error("Error while fetching user data:", error);
-    }  
+
+  try {
+    const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const userData = docSnap.data() as User;
+      setCurrentUserData(userData);
+      return userData;
+    }
+  } catch (error) {
+    toast.error("We couldn't fetch the data...");
+    console.error("Error while fetching user data:", error);
+  }
 }
