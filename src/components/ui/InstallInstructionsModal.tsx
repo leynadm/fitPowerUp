@@ -1,62 +1,75 @@
-import React from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import Container from "@mui/material/Container";
+import BrowserTile from "./BrowserTile";
 import ChromeIcon from "../../assets/chrome-48.png";
 import FirefoxIcon from "../../assets/firefox-48.png";
 import SafariIcon from "../../assets/safari-48.png";
 import EdgeIcon from "../../assets/edge-48.png";
 import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+interface BrowserInstructionUrls {
+  firstImageLink: string;
+  secondImageLink: string;
+  thirdImageLink: string;
+}
 
-const mobileStyle = {
-  display: "flex",
-  flexDirection: "column",
-  margin: "3%",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 2,
-  borderRadius: 1,
-  gap: 5,
-  maxHeight: "80vh", // Limit max height to 70% of the viewport height
-};
-
-const desktopStyle = {
-  display: "flex",
-  flexDirection: "column",
-  margin: "3%",
-  bgcolor: "background.paper",
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
-  borderRadius: "10px",
-  p: 2,
-  gap: 5,
-  maxWidth: "800px",
-  position: "absolute", // Add position absolute
-  top: "50%", // Center vertically
-  left: "50%", // Center horizontally
-  transform: "translate(-50%, -50%)", // Center both horizontally and vertically
-  maxHeight: "80vh", // Limit max height to 70% of the viewport height
+const browserInstructions: Record<string, BrowserInstructionUrls> = {
+  Chrome: {
+    firstImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fchrome-1.jpg?alt=media&token=b823edc5-c9c9-4d9f-8e55-1a6d106103f5",
+    secondImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fchrome-2.jpg?alt=media&token=a7831d82-3cac-415f-8952-51f36e163da3",
+    thirdImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fchrome-3.jpg?alt=media&token=1af644a9-9672-4167-8ed1-9b4fed93cf03"
+  },
+  Safari: {
+    firstImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fsafari-1.jpg?alt=media&token=a984c8cb-a9fe-4e66-8c3f-33bbf07292fb",
+    secondImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fsafari-2.jpg?alt=media&token=528c4be2-9722-49f0-8bd2-6f2649daa6e9",
+    thirdImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fsafari-3.jpg?alt=media&token=a2fc4e5a-eefb-4efe-84c9-199f878eb495"
+  },
+  Firefox: {
+    firstImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Ffirefox-1.jpg?alt=media&token=7dd93ccc-3360-4a4b-a6a4-11129b021d65",
+    secondImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Ffirefox-2.jpg?alt=media&token=ada192c8-2e47-419c-a5a6-caf2977ba912",
+    thirdImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Ffirefox-3.jpg?alt=media&token=b0330361-a85e-4b79-acc6-9737b28f7794"
+  },
+  Edge: {
+    firstImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fedge-1.jpg?alt=media&token=30b668a6-0b50-42be-af49-1ba42a5285bc",
+    secondImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fedge-2.jpg?alt=media&token=0e916581-b0fe-49ab-811d-16d58ee5492f",
+    thirdImageLink: "https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Finstallation-instructions%2Fedge-3.jpg?alt=media&token=235fb9dc-ddf7-4c3a-af12-e06ff1e6c91a"
+  }
 };
 
 interface ParentComponentProps {
   openInstallInstructionsModal: boolean;
-  setOpenInstallInstructionsModal: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  setOpenInstallInstructionsModal: Dispatch<SetStateAction<boolean>>;
 }
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "95%",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 1,
+  borderRadius: 1,
+  display:"flex",
+  flexDirection:"column"
+};
 
 function InstallInstructionsModal({
   openInstallInstructionsModal,
   setOpenInstallInstructionsModal,
 }: ParentComponentProps) {
+  const [selectedBrowser, setSelectedBrowser] = useState<string>("Chrome");
+
   const handleClose = () => setOpenInstallInstructionsModal(false);
 
-  const isMobile = window.innerWidth < 600;
-
-  const style = isMobile ? mobileStyle : desktopStyle;
-
-  const boxShadowStyle = {
-    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", // Adjust the values as per your preference
-    borderRadius: "10px",
-    minHeight: "256px",
+  const handleBrowserSelection = (browser: string) => {
+    setSelectedBrowser(browser);
   };
 
   return (
@@ -68,197 +81,38 @@ function InstallInstructionsModal({
         aria-describedby="modal-modal-description"
         sx={{ overflow: "scroll" }}
       >
-        <Box sx={{ ...style, overflowY: "auto" }}>
-          <Typography sx={{ textAlign: "center" }}>
-            In case the installation didn't start automatically, you can install
-            the app manually:
+        <Container sx={style} >
+        <IconButton aria-label="close-modal" sx={{alignSelf:"flex-end"}} onClick={handleClose}>
+        <CloseIcon />
+      </IconButton>
+          <ButtonGroup variant="contained" aria-label="outlined primary button group" fullWidth>
+            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Chrome")}>
+              <img src={ChromeIcon} alt="Chrome" />
+            </Button>
+            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Safari")}>
+              <img src={SafariIcon} alt="Safari" />
+            </Button>
+            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Firefox")}>
+              <img src={FirefoxIcon} alt="Firefox" />
+            </Button>
+            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Edge")}>
+              <img src={EdgeIcon} alt="Edge" />
+            </Button>
+          </ButtonGroup>
+
+          <Typography align="center">
+            If the installation didn't start automatically, follow these steps to install the app:
           </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              boxShadow:
-                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom: "15px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                marginTop: "15px",
-              }}
-            >
-              <img
-                src={ChromeIcon}
-                alt="chrome browser"
-                width="24px"
-                height="24px"
-              ></img>
-              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
-                Google Chrome
-              </Typography>
-            </Box>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FChrome_01_1024x1024.jpg?alt=media&token=40006ee6-33d1-422e-8bcc-43d0801aaeee"
-              alt="step 1 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FChrome_02_1024x1024.jpg?alt=media&token=61638f2f-e4c4-4ee8-af7c-3d3b6ec1c8db"
-              alt="step 2 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              boxShadow:
-                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom: "15px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                marginTop: "15px",
-              }}
-            >
-              <img
-                src={FirefoxIcon}
-                alt="chrome browser"
-                width="24px"
-                height="24px"
-              ></img>
-              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
-                Mozilla Firefox
-              </Typography>
-            </Box>
-
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FFirefox_01_1024x1024.jpg?alt=media&token=314a9326-e839-4319-be74-4238b6dba704"
-              alt="step 1 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FFirefox_02_1024x1024.jpg?alt=media&token=c8fa9cee-4a9d-42c1-90ef-3aea779c346d"
-              alt="step 2 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              boxShadow:
-                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom: "15px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                marginTop: "15px",
-              }}
-            >
-              <img
-                src={EdgeIcon}
-                alt="chrome browser"
-                width="24px"
-                height="24px"
-              ></img>
-              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
-                Microsoft Edge
-              </Typography>
-            </Box>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FEdge_01_1024x1024.jpg?alt=media&token=d12b4928-b0d3-4ed9-9da6-795066d526ae"
-              alt="step 1 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FEdge_02_1024x1024.jpg?alt=media&token=59ba3897-4399-45e8-a035-7ef0392fba9b"
-              alt="step 2 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              boxShadow:
-                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-              paddingBottom: "15px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                marginTop: "15px",
-              }}
-            >
-              <img
-                src={SafariIcon}
-                alt="chrome browser"
-                width="24px"
-                height="24px"
-              ></img>
-              <Typography sx={{ fontWeight: "bold", fontSize: "larger" }}>
-                Safari
-              </Typography>
-            </Box>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FSafari_01_1024x1024.jpg?alt=media&token=cbb15bbf-9921-4d7c-890b-4490b28ee567"
-              alt="step 1 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2FSafari_02_1024x1024.jpg?alt=media&token=f98bf4b8-ab7a-4d1f-8d7b-aa94ba46b808"
-              alt="step 2 Google Chrome"
-              width="90%"
-              style={boxShadowStyle}
-              loading="lazy"
-            ></img>
-          </Box>
-        </Box>
+          {selectedBrowser && browserInstructions[selectedBrowser] && (
+            <BrowserTile
+              firstImageLink={browserInstructions[selectedBrowser].firstImageLink}
+              secondImageLink={browserInstructions[selectedBrowser].secondImageLink}
+              thirdImageLink={browserInstructions[selectedBrowser].thirdImageLink}
+              browser={selectedBrowser}
+            />
+          )}
+        </Container>
       </Modal>
     </div>
   );

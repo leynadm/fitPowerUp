@@ -48,7 +48,7 @@ function LandingPage() {
   const totalCards = visibleCards.length;
 
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallButton, setShowInstallButton] = useState(true);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const [openInstallInstructionsModal, setOpenInstallInstructionsModal] =
     useState(false);
 
@@ -91,7 +91,7 @@ function LandingPage() {
     // Start showing cards
     timeoutId = setTimeout(showNextCard, 5000);
 
-    setShowInstallButton(isAppInstalled());
+    setShowInstallButton(!isAppInstalled());
 
     return () => {
       if (timeoutId) {
@@ -161,6 +161,8 @@ function LandingPage() {
   }
 
   const isAppInstalled = () => {
+    console.log('CHECKING IF APP IS INSTALLED')
+    console.log(window.matchMedia("(display-mode: standalone)").matches)
     return window.matchMedia("(display-mode: standalone)").matches;
   };
 
@@ -200,7 +202,7 @@ function LandingPage() {
               fit<span style={{ color: "white" }}>PowerUp</span>
             </Typography>
 
-            {!showInstallButton && (
+            {showInstallButton && (
               <Button
                 variant="dbz"
                 sx={{
