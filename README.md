@@ -29,6 +29,7 @@ In terms of stack, I relied on tools I discovered while studying through the Odi
 
 ### Login:
 - Account Creation & Authentication: Users begin by creating an account and securely logging in. For that I'm using Firebase Authentication.
+  
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/login-test.gif)
 
 ### Adding Workouts
@@ -37,6 +38,7 @@ Accessing the Exercise Library:
 
 Workout Customization:
 - Users can then create their own workouts by selecting exercises from the library. They have the option to customize these workouts by adding personal notes, specifying sets and reps, flag more advanced techniques, like dropsets or AMRAP.
+  
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/add-exercises.gif)
 ![adding-exercises](https://raw.githubusercontent.com/leynadm/files/main/complete-workout.gif)
 
