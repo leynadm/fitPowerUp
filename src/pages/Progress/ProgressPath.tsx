@@ -2,16 +2,32 @@ import { FixedSizeList } from "react-window";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
 import { AuthContext } from "../../context/Auth";
-import { useContext } from "react";
+import { useContext, useState,useEffect,useRef } from "react";
 import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import pathPoints from "../../utils/pathPoints";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 function ProgressPath() {
   const { currentUserData } = useContext(AuthContext);
+  
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  const heroId = searchParams.get('heroId') || '1';
+
+  const listRef = useRef<FixedSizeList>(null);
+
+  useEffect(() => {
+    // Parse heroId to a number for numeric operations
+    const heroIndex = parseInt(heroId, 10) - 1;
+
+    if (listRef.current && listRef.current.scrollToItem) {
+      listRef.current.scrollToItem(heroIndex, 'start');
+    }
+  }, [heroId]);
+  
   const navigate = useNavigate();
 
   const Row = ({
@@ -31,6 +47,7 @@ function ProgressPath() {
       paddingRight: "16px",
       paddingTop: "16px",
     };
+
     const pathPointsEntry = pathPoints[index];
 
     const subsequentPathPointsEntry =
@@ -47,11 +64,14 @@ function ProgressPath() {
       currentUserData.powerLevel >= MIN.bracket &&
       currentUserData.powerLevel <= MAX.bracket;
 
-    function handleNavigateScreen() {
-      navigate(`hero/${pathPointsEntry.id}`, {
-        state: pathPointsEntry.quote,
-      });
-    }
+      function handleNavigateScreen() {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set("heroId", `${pathPointsEntry.id}`);
+        setSearchParams(newSearchParams);
+        navigate(`hero/${pathPointsEntry.id}`, {
+          state: pathPointsEntry.quote,
+        });
+      }
 
     return (
       <Box style={rowStyle} boxShadow={2} borderRadius="4px">
@@ -172,6 +192,7 @@ function ProgressPath() {
   return (
     <Box paddingLeft="8px" paddingRight="8px">
       <FixedSizeList
+       ref={listRef}
         height={window.innerHeight - 150}
         itemCount={pathPoints.length}
         itemSize={180}

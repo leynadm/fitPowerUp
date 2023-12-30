@@ -49,11 +49,8 @@ export default function DeletePostModal({
           >
             <WarningIcon /> Warning
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            You are about to delete your post, which is an irreversible
-            action.<br></br> Once the post is deleted, it cannot be recovered.<br></br> Please
-            ensure that you want to proceed with deleting your comment before
-            taking this action!
+          <Typography id="modal-modal-description">
+            Are you sure you want to delete this post?
           </Typography>
           <Box
             sx={{

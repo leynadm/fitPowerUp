@@ -29,6 +29,7 @@ import getUserWeight from "../../utils/getUserWeight";
 import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import CircularProgressWithText from "../../components/ui/CircularProgressWithText";
 interface fitNotesExercise {
   date: string;
   exercise: string;
@@ -56,7 +57,7 @@ function ImportData() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importedFileRows, setImportedFileRows] = useState<string[][]>([]);
   const [missingExercises, setMissingExercises] = useState<string[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false)
   if(userBodyTrackerData.length===0){
     return(
       <LoadingScreenCircle text="Waiting for Shenron to grant my wish..."/>
@@ -73,6 +74,9 @@ function ImportData() {
   }
 
   async function handleImportSelectedData(importedFileRows: string[][]) {
+    
+    setIsLoading(true)
+    
     try {
       const rowsArrOfObjects = importedFileRows.map((row) => {
         // Destructure the row with a fallback for comment
@@ -150,6 +154,7 @@ function ImportData() {
         workoutDataArr.push(individualSessionWorkoutData);
       }
 
+
       await uploadImportedData(
         currentUser.uid,
         workoutDataArr,
@@ -164,6 +169,9 @@ function ImportData() {
 
       setImportedFileRows([]);
       setMissingExercises([]);
+      
+      setIsLoading(false)
+
     } catch (error) {
       console.log(error);
       toast.error("Oops, handleImportSelectedData had an error!");
@@ -399,7 +407,7 @@ function ImportData() {
         )}
       </Box>
 
-      {importedFileRows.length !== 0 && (
+      {importedFileRows.length !== 0 && isLoading===false && (
         <Box pt={2} display="flex" flexDirection="column" gap={1}>
           <Button
             variant="dbz_mini"
@@ -410,7 +418,7 @@ function ImportData() {
         </Box>
       )}
 
-      {missingExercises.length !== 0 && (
+      {missingExercises.length !== 0 && isLoading===false && (
         <Box pt={2}>
           {missingExercises.map(
             (missingExerciseItem: string, index: number) => (
@@ -443,6 +451,11 @@ function ImportData() {
           </Box>
         </Box>
       )}
+
+      {isLoading&&
+        <CircularProgressWithText text="Please wait, data is being imported..."/>
+      }
+
     </Container>
   );
 }

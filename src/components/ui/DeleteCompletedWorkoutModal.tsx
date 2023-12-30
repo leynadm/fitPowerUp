@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Container from "@mui/material/Container";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import deleteCompletedWorkout from "../../utils/firebaseDataFunctions/deleteCompletedWorkout";
 import toast from "react-hot-toast";
-
+import CircularProgressWithText from "./CircularProgressWithText";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -39,19 +39,27 @@ function DeleteCompletedWorkout({
     UserTrainingDataContext
   );
 
-  const handleClose = () => setOpenDeleteCompletedWorkout(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleClose() {
+    setIsLoading(false);
+    setOpenDeleteCompletedWorkout(false);
+  }
 
   async function handleDeleteCompletedWorkout() {
     try {
       if (workoutId) {
+        setIsLoading(true);
+
         await deleteCompletedWorkout(
           currentUser.uid,
           userTrainingData,
           workoutId
         );
         refetchUserTrainingData();
-        handleClose()
-        toast.success('The workout was successfully deleted!')
+        setIsLoading(false);
+        handleClose();
+        toast.success("The workout was successfully deleted!");
       } else {
         toast.error("No workout could be found!");
       }
@@ -69,31 +77,37 @@ function DeleteCompletedWorkout({
         aria-describedby="modal-modal-description"
       >
         <Container sx={style}>
-          <Typography align="center">
-            {`Are you sure you want to delete this workout?`}
-          </Typography>
+          {isLoading ? (
+            <CircularProgressWithText text="Please wait, workout is being deleted..." />
+          ) : (
+            <Box>
+              <Typography align="center">
+                {`Are you sure you want to delete this workout?`}
+              </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <Button
-              variant="dbz_save"
-              color="success"
-              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={handleDeleteCompletedWorkout}
-            >
-              DELETE
-            </Button>
-            <Button
-              variant="dbz_clear"
-              sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                }}
+              >
+                <Button
+                  variant="dbz_save"
+                  color="success"
+                  sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                  onClick={handleDeleteCompletedWorkout}
+                >
+                  DELETE
+                </Button>
+                <Button
+                  variant="dbz_clear"
+                  sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Container>
       </Modal>
     </div>

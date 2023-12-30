@@ -57,17 +57,6 @@ function NewPresetWorkout() {
     searchParams.get("workoutRoutineCheck") === "true" ? true : false
   );
 
-  /* 
-  
-      if(routineTypeCheck==='existing' &&
-      
-      workoutState.routineName!==''&&
-      
-      ){
-
-      }
-
-  */
   const isDataValidated = () => {
     if (
       workoutRoutineCheck &&

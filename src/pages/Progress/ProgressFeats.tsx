@@ -116,18 +116,24 @@ function ProgressGraph() {
           {featEntry.state ? (
             <TextField
               id="filled-basic"
-              variant="filled"
+              variant="outlined"
               InputProps={{
                 readOnly: true,
+                sx: {
+                  // Apply styles to the input element
+                  input: {
+                    paddingTop: 0,
+                    margin:0
+                     // Example padding value, adjust as needed
+                  }
+                }
               }}
-              maxRows={3}
+              maxRows={4}
+              size="small"
+              
               defaultValue={featEntry.description}
               sx={{
-                width: "100%",
-                verticalAlign: "center",
-                alignContent: "center",
-                textAlign: "center",
-                // Other styles...
+                width: "100%"
               }}
               multiline
             />

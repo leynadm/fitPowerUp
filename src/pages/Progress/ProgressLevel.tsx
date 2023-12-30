@@ -27,10 +27,16 @@ import toast from "react-hot-toast";
 import getUserWeight from "../../utils/getUserWeight";
 import capitalizeWords from "../../utils/capitalizeWords";
 import { useEffect } from "react";
-import { Paper } from "@mui/material";
+import { IconButton, Paper } from "@mui/material";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
+import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
+import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
+
 function ProgressLevel() {
 
   const { userTrainingData, refetchUserTrainingData } = useContext(
@@ -49,10 +55,12 @@ function ProgressLevel() {
     useContext(AuthContext);
     
     const todayTimestamp = new Date();
+    const yesterdayTimestamp = new Date(todayTimestamp.getTime() - (24 * 60 * 60 * 1000));
+    
 
     const firebaseTimestamp = currentUserData && currentUserData.lastUpdateTimestamp!==null 
         ? new Date(currentUserData.lastUpdateTimestamp.toMillis()) 
-        : todayTimestamp;
+        : yesterdayTimestamp;
     
 
   const currentDate = new Date();
@@ -246,11 +254,11 @@ function ProgressLevel() {
     experiencePoints += pendingWorkouts * pendingMultiplier;
 
     const maximumPowerLevel = strengthLevel + experiencePoints;
-
+/* 
     toast.success(`These exercises give you a PL of ${maximumPowerLevel}`, {
       duration: 5000,
     });
-
+ */
     setCalculatedMaximumPowerLevel(maximumPowerLevel);
     setCalculatedMaximumStrengthLevel(strengthLevel);
     setCalculatedMaximumExperienceLevel(experiencePoints);
@@ -484,6 +492,68 @@ function ProgressLevel() {
           </Box>
         )}
 
+{calculatedMaximumPowerLevel !== 0 && (
+          <Paper sx={{ width: "100%", height: "100%",mt:1 }}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              flexDirection="column"
+            padding={1}
+            >
+              <Box display="flex" justifyContent="space-evenly" width="100%" flexDirection="column">
+              <Typography variant="caption" align="left" width="100%">New Power Level</Typography>
+              
+              <Box display="flex" width="100%" justifyContent="space-evenly">
+                <Typography>
+                  <PowerLevelIcon width="1rem" height="1rem"/> <strong>{calculatedMaximumPowerLevel}</strong>
+                </Typography>
+                <Typography>
+                  <StrengthIcon width="1rem" height="1rem"/><strong>{calculatedMaximumStrengthLevel}</strong>
+                </Typography>
+                <Typography>
+                  <ExperienceIcon width="1rem" height="1rem"/><strong>{calculatedMaximumExperienceLevel}</strong>
+                </Typography>
+                </Box>
+              </Box>
+
+              {isToday ? (
+                <Typography align="center">
+                  You already updated your Power Level today.
+                </Typography>
+              ) : (
+                <Box display="flex" justifyContent="space-around" width="100%">
+                  
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    sx={{p:0,display:"flex", flexDirection:"column"}}
+                    
+                  >
+                    <SaveAsIcon sx={{p:0,m:0}} />
+                    <Typography variant="caption">Save New PL</Typography>
+                  </IconButton>
+                  
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    sx={{p:0,display:"flex", flexDirection:"column"}}
+                  >
+                    <DeleteIcon sx={{p:0,m:0}} />
+                    <Typography variant="caption">Discard New PL</Typography>
+                  </IconButton>
+                </Box>
+              )}
+            </Box>
+          </Paper>
+        )}
+
         <Box
           sx={{
             width: "100%",
@@ -501,7 +571,7 @@ function ProgressLevel() {
               width: "75%",
               margin: "0.25rem",
               fontWeight: "bold",
-              fontSize: "1.25rem",
+              fontSize: "1rem",
             }}
             onClick={handleCalculatePowerLevel}
           >
@@ -509,44 +579,6 @@ function ProgressLevel() {
           </Button>
         </Box>
       </Box>
-
-      {calculatedMaximumPowerLevel !== 0 && (
-        <Paper sx={{ width: "100%", height: "100%", padding: "8px" }}>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            flexDirection="column"
-            gap={1}
-          >
-            <Box display="flex" justifyContent="space-evenly" width="100%">
-              <Typography>
-                New PL: <strong>{calculatedMaximumPowerLevel}</strong>
-              </Typography>
-              <Typography>
-                New Str: <strong>{calculatedMaximumStrengthLevel}</strong>
-              </Typography>
-              <Typography>
-                New Exp: <strong>{calculatedMaximumExperienceLevel}</strong>
-              </Typography>
-            </Box>
-
-            {isToday ? (
-              <Typography align="center">
-                You already updated your Power Level today.
-              </Typography>
-            ) : (
-              <Button
-                variant="dbz_mini"
-                sx={{ borderRadius: "25px" }}
-                onClick={handlePublishPowerLevel}
-              >
-                Save New Power Level
-              </Button>
-            )}
-          </Box>
-        </Paper>
-      )}
     </Box>
   );
 }

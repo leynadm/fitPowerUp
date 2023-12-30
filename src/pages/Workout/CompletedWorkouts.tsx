@@ -1,4 +1,12 @@
-import React, { useContext, useEffect, useState, useRef, Dispatch, SetStateAction,MouseEvent } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  MouseEvent,
+} from "react";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
@@ -37,8 +45,8 @@ import StarsIcon from "@mui/icons-material/Stars";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DataBadge from "../../components/ui/DataBadge";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
@@ -46,7 +54,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteCompletedWorkout from "../../components/ui/DeleteCompletedWorkoutModal";
 import { fetchCurrentUserData } from "../../context/Auth";
 function CompletedWorkouts() {
@@ -57,7 +65,7 @@ function CompletedWorkouts() {
   const { userTrainingData, dateForWorkout, setDateForWorkout } = useContext(
     UserTrainingDataContext
   );
-  
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -77,7 +85,6 @@ function CompletedWorkouts() {
   >([]);
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
-
 
   const [swipe, setSwipe] = useState<any>({
     moved: false,
@@ -116,23 +123,26 @@ function CompletedWorkouts() {
   }
 
   useEffect(() => {
-    filterUserTrainingsPerDay(dateForWorkout,userTrainingData,setFilteredUserTrainingData);
+    filterUserTrainingsPerDay(
+      dateForWorkout,
+      userTrainingData,
+      setFilteredUserTrainingData
+    );
   }, [userTrainingData, dateForWorkout]);
 
   const containerRef = useRef<HTMLElement>(null);
-  
-  const workoutId = ()=>{
 
-    if(filteredUserTrainingData.length>0){
-      return filteredUserTrainingData[0].id
+  const workoutId = () => {
+    if (filteredUserTrainingData.length > 0) {
+      return filteredUserTrainingData[0].id;
     } else {
-      return null
+      return null;
     }
-  }
+  };
 
-  function handleOpenDeleteCompletedWorkout(){
-    handleClose()
-    setOpenDeleteCompletedWorkout(!openDeleteCompletedWorkout)
+  function handleOpenDeleteCompletedWorkout() {
+    handleClose();
+    setOpenDeleteCompletedWorkout(!openDeleteCompletedWorkout);
   }
 
   const handleLeftArrowClick = () => {
@@ -141,7 +151,11 @@ function CompletedWorkouts() {
     const convertedDate = formatDateForTextField(newDate);
     setDateForWorkout(convertedDate);
 
-    filterUserTrainingsPerDay(convertedDate,userTrainingData,setFilteredUserTrainingData);
+    filterUserTrainingsPerDay(
+      convertedDate,
+      userTrainingData,
+      setFilteredUserTrainingData
+    );
   };
 
   const handleRightArrowClick = () => {
@@ -149,7 +163,11 @@ function CompletedWorkouts() {
     newDate.setDate(newDate.getDate() + 1);
     const convertedDate = formatDateForTextField(newDate);
     setDateForWorkout(convertedDate);
-    filterUserTrainingsPerDay(convertedDate,userTrainingData,setFilteredUserTrainingData);
+    filterUserTrainingsPerDay(
+      convertedDate,
+      userTrainingData,
+      setFilteredUserTrainingData
+    );
   };
 
   function convertStringToDate(dateString: string) {
@@ -159,7 +177,7 @@ function CompletedWorkouts() {
 
   const pages = [
     "Analysis",
-    "Preset Workouts", 
+    "Preset Workouts",
     "Body Tracker",
     "Settings",
     "Sign Out",
@@ -247,9 +265,9 @@ function CompletedWorkouts() {
       />
 
       <DeleteCompletedWorkout
-      setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
-      openDeleteCompletedWorkout={openDeleteCompletedWorkout}
-      workoutId={workoutId()}
+        setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
+        openDeleteCompletedWorkout={openDeleteCompletedWorkout}
+        workoutId={workoutId()}
       />
       <AppBar
         elevation={2}
@@ -557,7 +575,7 @@ function CompletedWorkouts() {
                       aria-controls="menu-appbar"
                       aria-haspopup="true"
                       onClick={handleClick}
-                      sx={{p:0}}
+                      sx={{ p: 0 }}
                     >
                       <MoreHorizIcon
                         sx={{ alignSelf: "flex-end" }}
@@ -574,14 +592,13 @@ function CompletedWorkouts() {
                         "aria-labelledby": "basic-button",
                       }}
                     >
-                      <MenuItem
-                      >
+                      <MenuItem>
                         <IconButton
                           size="large"
                           aria-label="account of current user"
                           aria-controls="menu-appbar"
                           aria-haspopup="true"
-                          sx={{p:0,m:0}}
+                          sx={{ p: 0, m: 0 }}
                           onClick={handleOpenDeleteCompletedWorkout}
                         >
                           <DeleteForeverIcon
@@ -589,7 +606,7 @@ function CompletedWorkouts() {
                               zIndex: 0,
                             }}
                           />
-                          <ListItemText>Delete Workout</ListItemText>
+                          <ListItemText>Delete workout</ListItemText>
                         </IconButton>
                       </MenuItem>
                     </Menu>
@@ -724,7 +741,10 @@ function CompletedWorkouts() {
                             )}
 
                             {exercise.reps !== 0 && (
-                              <Typography>{exercise.reps}{exercise.amrap&&"+"} reps</Typography>
+                              <Typography>
+                                {exercise.reps}
+                                {exercise.amrap && "+"} reps
+                              </Typography>
                             )}
 
                             {exercise.distance !== 0 && (
@@ -773,7 +793,11 @@ function CompletedWorkouts() {
 
 export default CompletedWorkouts;
 
-export function filterUserTrainingsPerDay(convertedDate: string,userTrainingData:IWorkoutData[],setFilteredUserTrainingData:Dispatch<SetStateAction<IWorkoutData[]>>) {
+export function filterUserTrainingsPerDay(
+  convertedDate: string,
+  userTrainingData: IWorkoutData[],
+  setFilteredUserTrainingData: Dispatch<SetStateAction<IWorkoutData[]>>
+) {
   if (userTrainingData) {
     const filteredUserTrainingDataArr = userTrainingData.filter(
       (entry: IWorkoutData, index: number) => entry.date === convertedDate

@@ -28,19 +28,20 @@ function WorkoutDetails() {
   const [openDeleteRoutineOrWorkoutModal, setOpenDeleteRoutineOrWorkoutModal] =
     useState(false);
 
-    const individualWorkout = routineName 
-  ? getIndividualWorkoutInRoutine() 
-  : getIndividualWorkout();
-  
-  
-  const individualRoutineIsEmptyCheck = isRoutineEmpty(individualWorkout);
+  const individualWorkout = routineName
+    ? getIndividualWorkoutInRoutine()
+    : getIndividualWorkout();
 
+  console.log({ individualWorkout });
+
+  const individualRoutineIsEmptyCheck = isRoutineEmpty(individualWorkout);
 
   function isRoutineEmpty(obj: IPresetWorkoutGroup) {
     if (individualWorkout) {
       return Object.keys(obj).length === 0;
     }
   }
+
   function getIndividualWorkoutInRoutine() {
     if (presetWorkoutsData.length > 0) {
       for (let index = 0; index < presetWorkoutsData.length; index++) {
@@ -55,12 +56,12 @@ function WorkoutDetails() {
     }
   }
 
-  function getIndividualWorkout(){
+  function getIndividualWorkout() {
     if (presetWorkoutsData.length > 0) {
       for (let index = 0; index < presetWorkoutsData.length; index++) {
         const workoutElement = presetWorkoutsData[index];
         if (
-          workoutElement.routineName === ''&&
+          workoutElement.routineName === "" &&
           workoutElement.workoutName === workoutName
         ) {
           return workoutElement;
@@ -110,7 +111,7 @@ function WorkoutDetails() {
               reps: exerciseEntry.reps,
               time: exerciseEntry.time,
               weight: exerciseEntry.weight,
-              amrap:exerciseEntry.amrap
+              amrap: exerciseEntry.amrap,
             };
             userEntryTransactionStore.add(newEntryToSave);
           }
@@ -141,15 +142,19 @@ function WorkoutDetails() {
         display: "flex",
         flexDirection: "column",
       }}
-    > 
-      <DeleteRoutineOrWorkoutModal
-        openDeleteRoutineOrWorkoutModal={openDeleteRoutineOrWorkoutModal}
-        setOpenDeleteRoutineOrWorkoutModal={setOpenDeleteRoutineOrWorkoutModal}
-        routineOrWorkout="workout"
-        presetWorkoutData={presetWorkoutsData}
-        routineOrWorkoutName={individualWorkout.id}
-        isValid={!individualRoutineIsEmptyCheck}
-      />
+    >
+      {individualWorkout && (
+        <DeleteRoutineOrWorkoutModal
+          openDeleteRoutineOrWorkoutModal={openDeleteRoutineOrWorkoutModal}
+          setOpenDeleteRoutineOrWorkoutModal={
+            setOpenDeleteRoutineOrWorkoutModal
+          }
+          routineOrWorkout="workout"
+          presetWorkoutData={presetWorkoutsData}
+          routineOrWorkoutName={individualWorkout.id}
+          isValid={!individualRoutineIsEmptyCheck}
+        />
+      )}
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
@@ -202,21 +207,19 @@ function WorkoutDetails() {
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
-                
-                {individualWorkout.delete&&
+                {individualWorkout && individualWorkout.delete && (
                   <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                onClick={handleDeleteRoutineOrWorkoutModal}
-                      >
-                        <DeleteForeverIcon sx={{ color: "white" }} />
-                      </IconButton>
-             
-                }
-                 
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={handleDeleteRoutineOrWorkoutModal}
+                  >
+                    <DeleteForeverIcon sx={{ color: "white" }} />
+                  </IconButton>
+                )}
+
                 <Box sx={{ marginLeft: "auto" }}>
                   <IconButton
                     size="large"

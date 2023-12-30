@@ -1,4 +1,10 @@
-import React, { useState, Dispatch, SetStateAction, useContext, useEffect } from "react";
+import React, {
+  useState,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -26,7 +32,7 @@ import useOnlineStatus from "../../hooks/useOnlineStatus";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { Container } from "@mui/material";
-
+import CircularProgressWithText from "../../components/ui/CircularProgressWithText";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -65,44 +71,43 @@ function CompleteWorkoutModal({
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
-  const { userBodyTrackerData,refetchUserBodyTrackerData } = useContext(BodyTrackerDataContext);
+  const { userBodyTrackerData, refetchUserBodyTrackerData } = useContext(
+    BodyTrackerDataContext
+  );
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userFeatsData, refetchUserFeatsData } =
     useContext(UserFeatsDataContext);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-
-    if(userBodyTrackerData.length===0 && userFeatsData.length===0){
+  useEffect(() => {
+    if (userBodyTrackerData.length === 0 && userFeatsData.length === 0) {
       const fetchData = async () => {
         await refetchUserBodyTrackerData();
         await refetchUserTrainingData();
-        await refetchUserFeatsData()
+        await refetchUserFeatsData();
       };
-  
+
       fetchData();
     }
+  }, [userBodyTrackerData]);
 
-  },[userBodyTrackerData])
-
-  
   let userBodyWeight = 0;
 
-  if(userBodyTrackerData.length>0){
-    userBodyWeight =getUserWeight(userBodyTrackerData);
-
+  if (userBodyTrackerData.length > 0) {
+    userBodyWeight = getUserWeight(userBodyTrackerData);
   }
 
-
-
-  if(userBodyTrackerData.length===0){
-    return(
-      <LoadingScreenCircle text="Please wait, Yamcha needs a band-aid..."/>
-    )
+  if (userBodyTrackerData.length === 0) {
+    return (
+      <LoadingScreenCircle text="Please wait, Yamcha needs a band-aid..." />
+    );
   }
   const userTrainingDataSize = userTrainingData.length;
 
   function handleClose() {
+    setIsLoading(false);
     setOpenCompleteWorkoutModal(false);
   }
 
@@ -147,6 +152,7 @@ function CompleteWorkoutModal({
       wExercises: existingExercisesArr,
     };
     try {
+      setIsLoading(true);
       await completeWorkout(currentUser.uid, workoutData, userTrainingDataSize);
       await updateUserFeats(currentUser.uid, userFeatsData, userBodyWeight);
 
@@ -184,104 +190,109 @@ function CompleteWorkoutModal({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-
         <Container sx={style}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6" component="legend">
-              Rate and save your workout
-            </Typography>
-            <Rating
-              max={7}
-              size="large"
-              name="simple-controlled"
-              sx={{ color: "#FFA500", paddingBottom: "8px" }}
-              value={workoutValue}
-              onChange={(event, newValue) => {
-                if (newValue !== null) {
-                  setWorkoutValue(newValue);
-                }
-              }}
-              icon={<StarsIcon fontSize="inherit" />}
-              emptyIcon={<StarBorderIcon fontSize="inherit" />}
-            />
-          </Box>
+          {isLoading ? (
+            <CircularProgressWithText text="Please wait, workout is being saved..." />
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" component="legend">
+                  Rate and save your workout
+                </Typography>
+                <Rating
+                  max={7}
+                  size="large"
+                  name="simple-controlled"
+                  sx={{ color: "#FFA500", paddingBottom: "8px" }}
+                  value={workoutValue}
+                  onChange={(event, newValue) => {
+                    if (newValue !== null) {
+                      setWorkoutValue(newValue);
+                    }
+                  }}
+                  icon={<StarsIcon fontSize="inherit" />}
+                  emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                />
+              </Box>
 
-          <TextField
-            label="Choose the workout date"
-            type="date"
-            required
-            sx={{ width: "100%", paddingBottom: "8px" }}
-            onChange={handleWorkoutDateChange}
-            value={workoutDate}
-            variant="filled"
-          />
+              <TextField
+                label="Choose the workout date"
+                type="date"
+                required
+                sx={{ width: "100%", paddingBottom: "8px" }}
+                onChange={handleWorkoutDateChange}
+                value={workoutDate}
+                variant="filled"
+              />
 
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Add a workout comment"
-            multiline
-            maxRows={6}
-            minRows={2}
-            inputProps={{ maxLength: 512 }}
-            variant="filled"
-            sx={{
-              width: "100%",
-            }}
-            value={workoutCommentValue}
-            onChange={(e) => setworkoutCommentValue(e.target.value)}
-          />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Add a workout comment"
+                multiline
+                maxRows={6}
+                minRows={2}
+                inputProps={{ maxLength: 512 }}
+                variant="filled"
+                sx={{
+                  width: "100%",
+                }}
+                value={workoutCommentValue}
+                onChange={(e) => setworkoutCommentValue(e.target.value)}
+              />
 
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <FormControlLabel
-              control={<Switch />}
-              label="Did you train better than the last time?"
-              checked={trainHarderCheck}
-              onChange={markTrainHarderCheck}
-            />
-            <FormControlLabel
-              control={<Switch />}
-              label="Did you warm up/stretch properly?"
-              checked={warmStretchCheck}
-              onChange={markWarmStretchCheck}
-            />
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Did you train better than the last time?"
+                  checked={trainHarderCheck}
+                  onChange={markTrainHarderCheck}
+                />
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Did you warm up/stretch properly?"
+                  checked={warmStretchCheck}
+                  onChange={markWarmStretchCheck}
+                />
 
-            <FormControlLabel
-              control={<Switch />}
-              checked={feelPainCheck}
-              onChange={markfeelPainCheck}
-              label="Did you exerience any discomfort?"
-            />
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              variant="dbz_save"
-              color="success"
-              sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-              onClick={handleCompleteWorkout}
-              disabled={!isOnline}
-            >
-              {isOnline ? "Complete" : "Reconecting..."}
-            </Button>
-            <Button
-              variant="dbz_clear"
-              sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </Box>
+                <FormControlLabel
+                  control={<Switch />}
+                  checked={feelPainCheck}
+                  onChange={markfeelPainCheck}
+                  label="Did you exerience any discomfort?"
+                />
+              </Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  variant="dbz_save"
+                  color="success"
+                  sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                  onClick={handleCompleteWorkout}
+                  disabled={!isOnline}
+                >
+                  {isOnline ? "Complete" : "Reconecting..."}
+                </Button>
+                <Button
+                  variant="dbz_clear"
+                  sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </>
+          )}
         </Container>
       </Modal>
     </div>

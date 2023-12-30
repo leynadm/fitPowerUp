@@ -1,4 +1,4 @@
-import { doc, collection, writeBatch, deleteDoc,getDocs } from "firebase/firestore";
+import { doc, collection, writeBatch, deleteDoc,getDocs, updateDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
@@ -25,8 +25,9 @@ async function resetTrainingData(userId:string){
       const userTrainingsQuerySnapshot = await getDocs(userTrainingCollectionRef);
 
       for (const docSnapshot of userTrainingsQuerySnapshot.docs) {
-        await deleteDoc(doc(db, `${userDocRef.path}/userTrainingCollection`, docSnapshot.id));
-      }
+        const docRef = doc(db, `${userDocRef.path}/userTrainingCollection`, docSnapshot.id);
+        batch.update(docRef, { workoutSessions: [] });
+    }
 
       const userBodyTrackerCollectionRef = collection(
         userDocRef,
@@ -36,7 +37,30 @@ async function resetTrainingData(userId:string){
       const userBodytrackerQuerySnapshot = await getDocs(userBodyTrackerCollectionRef);
 
       for (const docSnapshot of userBodytrackerQuerySnapshot.docs) {
-        await deleteDoc(doc(db, `${userDocRef.path}/userBodyTrackerCollection`, docSnapshot.id));
+        
+        const docRef = doc(db, `${userDocRef.path}/userBodyTrackerCollection`, docSnapshot.id);
+        batch.update(docRef, { bodyTrackerData: [
+          {
+            date: currentDate,
+            weight: 70,
+            bodyFat: 0,
+            caloricIntake: 0,
+            neck: 0,
+            shoulders: 0,
+            chest: 0,
+            leftBicep: 0,
+            rightBicep: 0,
+            leftForearm: 0,
+            rightForearm: 0,
+            waist: 0,
+            hips: 0,
+            leftThigh: 0,
+            rightThigh: 0,
+            leftCalf: 0,
+            rightCalf: 0,
+          },
+        ],
+        weight: 70 });
       }
 
       const featsRef = ref(storage, "assets/files/featsJSONString.json");
@@ -66,16 +90,6 @@ async function resetTrainingData(userId:string){
         thirdPowerExercise:"barbell squat"      
       });
   
-      // Create a document within the "userTrainingCollection" subcollection
-      const userTrainingDoc = doc(
-        userTrainingCollectionRef,
-        "userTrainingData_1"
-      );
-  
-      batch.set(userTrainingDoc, {
-        workoutSessions: [],
-        // Add data for the workout document
-      });
   
       // Create the userSelectedExercises document within the "user-training-data" subcollection
       const preselectedExercisesDocRef = doc(
@@ -85,37 +99,6 @@ async function resetTrainingData(userId:string){
   
       batch.set(preselectedExercisesDocRef, {
         exercises: preselectedExercisesParsedJSON,
-      });
-  
-      // Create the body tracker document within the "user-training-data" subcollection
-      const userBodyTrackerDocRef = doc(
-        userBodyTrackerCollectionRef,
-        "userBodyTrackerData_1"
-      );
-  
-      batch.set(userBodyTrackerDocRef, {
-        bodyTrackerData: [
-          {
-            date: currentDate,
-            weight: 70,
-            bodyFat: 0,
-            caloricIntake: 0,
-            neck: 0,
-            shoulders: 0,
-            chest: 0,
-            leftBicep: 0,
-            rightBicep: 0,
-            leftForearm: 0,
-            rightForearm: 0,
-            waist: 0,
-            hips: 0,
-            leftThigh: 0,
-            rightThigh: 0,
-            leftCalf: 0,
-            rightCalf: 0,
-          },
-        ],
-        weight: 70,
       });
   
       // Create the body tracker document within the "user-training-data" subcollection

@@ -349,10 +349,13 @@ export default function UserWorkoutCard({
     await deleteFollowersFeedEntry();
 
     try {
+      console.log(postId)
       const postRef = doc(db, "posts", postId);
       await deleteDoc(postRef);
       setPostDeleteTrigger((prevTrigger) => prevTrigger + 1);
-      navigate("/home/friends");
+      
+      //navigate("/home/friends");
+      setDeletePostModalOpen(false)
       toast.success("Your post was successfully deleted!")
     } catch (error) {
       toast.error("There was an error deleting the post...")
