@@ -25,11 +25,12 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Dialog from "@mui/material/Dialog";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { storage } from "../../config/firebase";
-import toast from "react-hot-toast";
+import { resizeImage } from "../../utils/miscelaneous/resizeImage";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { filterUserTrainingsPerDay } from "../Workout/CompletedWorkouts";
 import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import { useEffect } from "react";
 import {
   collection,
   setDoc,
@@ -37,8 +38,6 @@ import {
   Timestamp,
   serverTimestamp,
   arrayUnion,
-  updateDoc,
-  getDoc,
   getDocs,
   where,
   query,
@@ -92,8 +91,12 @@ function AddContentModal({
   const [addWorkout, setAddWorkout] = useState(false);
   const [limitInfo, setLimitInfo] = useState("");
   const [saving, setSaving] = useState(false);
-  const isOnline = useOnlineStatus()
+  const isOnline = useOnlineStatus();
   const navigate = useNavigate();
+  const imgRef = useRef<HTMLImageElement>(null);
+  const resizedImgRef = useRef<HTMLImageElement>(null);
+  const imgCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [resizedImageDataUrl, setResizedImageDataUrl] = useState("");
 
   const { currentUser, currentUserData } = useContext(AuthContext);
 
@@ -109,6 +112,42 @@ function AddContentModal({
 
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    if (fileSource && imgRef.current) {
+      imgRef.current.src = fileSource;
+
+      imgRef.current.onload = () => {
+        if (imgRef.current === null) {
+          return;
+        }
+
+        if (imgCanvasRef.current) {
+          const ctx = imgCanvasRef.current.getContext("2d");
+          if (ctx) {
+            let ratio = 800 / imgRef.current.width;
+            imgCanvasRef.current.width = 800;
+            imgCanvasRef.current.height = imgRef.current.height * ratio;
+
+            ctx.drawImage(
+              imgRef.current,
+              0,
+              0,
+              imgCanvasRef.current.width,
+              imgCanvasRef.current.height
+            );
+
+            let new_image_url = ctx.canvas.toDataURL("image/jpeg", 0.8);
+            setResizedImageDataUrl(new_image_url);
+
+            if (resizedImgRef.current) {
+              resizedImgRef.current.src = new_image_url;
+            }
+          }
+        }
+      };
+    }
+  }, [fileSource]); // Only re-run the effect if fileSource chang
+
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
@@ -117,11 +156,39 @@ function AddContentModal({
 
       const reader = new FileReader();
       reader.readAsDataURL(file);
+
       reader.onload = (e) => {
+        // Just set the file source state here
         const fileSource = e.target?.result as string;
         setFileSource(fileSource);
       };
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+      };
     }
+  }
+
+  function dataURLtoBlob(dataurl: string): Blob | null {
+    const arr = dataurl.split(",");
+    const mimeMatch = arr[0].match(/:(.*?);/);
+
+    if (!mimeMatch) {
+      // No MIME type match found in the data URL
+      console.error("Invalid data URL");
+      return null;
+    }
+
+    const mime = mimeMatch[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
   }
 
   async function checkUserPosts() {
@@ -157,38 +224,42 @@ function AddContentModal({
       setExpanded(true);
     } else {
       setExpanded(false);
-      setFilteredUserTrainingData([])
+      setFilteredUserTrainingData([]);
     }
   };
 
   async function addPost() {
-    const hasThreePosts = await checkUserPosts();
-    if (hasThreePosts) {
-      setLimitInfo(
-        "You've reach the current daily limit of 3 new posts a day. "
-      );
-      return;
-    }
-
-    if (postText !== "" || fileSource !== "") {
+    if (postText !== "" || resizedImageDataUrl !== "") {
       setSaving(true);
-      let imageUrl = null;
-      let imageRef = null;
-      let imageUrlResized = null;
-      const uniqueImageId = uuid();
-      if (selectedFile) {
-        imageRef = ref(
-          storage,
-          `posts/images/${currentUser.uid}/${currentUser.uid}_${uniqueImageId}`
-        );
-        await uploadBytes(imageRef, selectedFile);
 
+      let uniqueImageId = null;
+
+      if (resizedImageDataUrl) {
+        // Convert resized image data URL to a blob
+        const resizedImageBlob = dataURLtoBlob(resizedImageDataUrl);
+
+        if (resizedImageBlob) {
+          uniqueImageId = uuid(); // Ensure you have a UUID function
+
+          // Define the reference to your storage location
+          const imageRef = ref(
+            storage,
+            `posts/images/${currentUser.uid}/${currentUser.uid}_${uniqueImageId}`
+          );
+
+          // Upload the blob to Firebase Storage
+          await uploadBytes(imageRef, resizedImageBlob);
+        } else {
+          console.error("No resized image data URL available.");
+        }
+      }
+
+      // Create a new document reference for your post
       const newPostRef = doc(collection(db, "posts"));
-
       const serverTimestampObj = serverTimestamp();
       const timestamp = Timestamp.fromMillis(Date.now());
 
-      
+      // Set the document with your post data
       await setDoc(newPostRef, {
         createdAt: serverTimestampObj,
         postText: postText,
@@ -197,27 +268,41 @@ function AddContentModal({
         timestamp: timestamp,
         commentsCount: 0,
         showWorkout: addWorkout,
-        workoutData: filteredUserTrainingData.length>0?filteredUserTrainingData[0].wExercises:[] ,
+        workoutData:
+          filteredUserTrainingData.length > 0
+            ? filteredUserTrainingData[0].wExercises
+            : [],
         unitsSystem: currentUserData.unitsSystem,
         documentId: newPostRef.id,
         postAppreciation: [],
       });
 
-      const newFollowersFeedRef = doc(collection(db, "followers-feed"), currentUser.uid);
+      // Update the followers feed with the new post
+      const newFollowersFeedRef = doc(
+        collection(db, "followers-feed"),
+        currentUser.uid
+      );
       const recentPosts = {
         postId: newPostRef.id,
         published: timestamp,
         postText: postText,
       };
-      
-      await setDoc(newFollowersFeedRef, {
-        lastPost: serverTimestampObj,
-        recentPosts: arrayUnion(recentPosts),
-      }, { merge: true });      
+
+      await setDoc(
+        newFollowersFeedRef,
+        {
+          lastPost: serverTimestampObj,
+          recentPosts: arrayUnion(recentPosts),
+        },
+        { merge: true }
+      );
     }
-    }
+    setPostText("");
+    setSelectedFile(null);
+    setFileSource(null);
+    setSaving(false);
     handleClose();
-    navigate("profile");
+    navigate("profile"); // Ensure your route is correctly specified
   }
 
   function removeFile() {
@@ -354,48 +439,57 @@ function AddContentModal({
                   />
                 </Box>
               </Box>
-
             </Button>
           </Box>
 
+          <Box>
+            <img
+              ref={imgRef}
+              height="100%"
+              width="100%"
+              alt=""
+              style={{ display: "none" }}
+            />
+            <canvas ref={imgCanvasRef} style={{ display: "none" }} />
+          </Box>
           <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "8fr 2fr",
-                  width: "100%",
-                  pl: 1,
-                  pr: 1,
-                  border: "1px black solid",
-                }}
-              >
-                <TextField
-                  size="small"
-                  type="date"
-                  required
-                  onChange={handleChangeTrainingDate}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        border: "none",
-                      },
-                      "&:hover fieldset": {
-                        border: "none",
-                      },
-                      "&.Mui-focused fieldset": {
-                        border: "none",
-                      },
-                    },
-                  }}
-                />
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-evenly"
-                  flexGrow={1}
-                >
-                  <FitnessCenterIcon fontSize="medium" />
-                </Box>
-              </Box>
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "8fr 2fr",
+              width: "100%",
+              pl: 1,
+              pr: 1,
+              border: "1px black solid",
+            }}
+          >
+            <TextField
+              size="small"
+              type="date"
+              required
+              onChange={handleChangeTrainingDate}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    border: "none",
+                  },
+                  "&:hover fieldset": {
+                    border: "none",
+                  },
+                  "&.Mui-focused fieldset": {
+                    border: "none",
+                  },
+                },
+              }}
+            />
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-evenly"
+              flexGrow={1}
+            >
+              <FitnessCenterIcon fontSize="medium" />
+            </Box>
+          </Box>
 
           <Box sx={{ display: "flex" }}>
             <Button
@@ -405,7 +499,7 @@ function AddContentModal({
               onClick={addPost}
               disabled={!isOnline}
             >
-              {isOnline?'POST':'Reconnecting...'}
+              {isOnline ? "POST" : "Reconnecting..."}
             </Button>
             <Button
               variant="dbz_clear"
@@ -415,16 +509,17 @@ function AddContentModal({
               Cancel
             </Button>
           </Box>
-          {saving &&
-          <Box
-                sx={{
-                  padding: 1,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                 <LinearWithValueLabel />
-              </Box>}
+          {saving && (
+            <Box
+              sx={{
+                padding: 1,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <LinearWithValueLabel />
+            </Box>
+          )}
 
           <ExpandMore
             expand={expanded}

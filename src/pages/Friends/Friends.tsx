@@ -26,7 +26,8 @@ import Notifications from "./Notifications";
 import SearchPost from "./SearchPost";
 import { AuthContext } from "../../context/Auth";
 import BlockedUsers from "./BlockedUsers";
-
+import CreateFitWorldGoal from "./CreateFitWorlGoal";
+import FitWorldBoard from "./FitWorldBoard";
 function Friends() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -191,7 +192,7 @@ function Friends() {
             </Typography>
 
             <SocialSearchBar />
-
+{/* 
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
@@ -200,6 +201,7 @@ function Friends() {
             >
               <AddIcon />
             </IconButton>
+     */}
             <Box sx={{ flexGrow: 1 }} />
 
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -260,7 +262,8 @@ function Friends() {
       {/* This is the container that I might have to check if it reached to bottom */}
       <Box sx={{ height: "100%" }}>
         <Routes>
-          <Route path="" element={<Newsfeed />} />
+          <Route path="" element={<FitWorldBoard />} />
+          <Route path="new-z-fighter-challenge" element={<CreateFitWorldGoal />} />
           <Route path="results/*" element={<SocialSearchResults />} />
           <Route path="profile/*" element={<UserProfile />} />
           <Route path="results/u/:id/*" element={<SearchUserProfile />} />

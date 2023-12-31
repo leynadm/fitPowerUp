@@ -28,7 +28,7 @@ import getExistingComment from "../../utils/IndexedDbCRUDFunctions/selectedExerc
 import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExercise/getExistingExercises";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { validateIndexedDbEntry } from "../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
@@ -74,8 +74,8 @@ function ExerciseSelectedTrack() {
   const [idExerciseUpdate, setIdExerciseUpdate] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [isDropset, setIsDropset] = useState<boolean>(false);
-  const [isAMRAP, setIsAMRAP] = useState(false)
-  
+  const [isAMRAP, setIsAMRAP] = useState(false);
+
   const [alertTimeoutId, setAlertTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
@@ -118,7 +118,7 @@ function ExerciseSelectedTrack() {
     time: timeValue,
     is_pr: false,
     dropset: false,
-    amrap:false
+    amrap: false,
   };
 
   function getLastCompletedExerciseEntry() {
@@ -163,19 +163,26 @@ function ExerciseSelectedTrack() {
     }
   }
 
-  function handleUpdateExerciseSelection(exerciseId: number,exerciseReps:number,exerciseWeight:number,exerciseDistance:number,exerciseTime:number,exerciseDistanceUnit:string) {
-    setRepsValue(exerciseReps)
-    setTimeValue(exerciseTime)
-    setDistanceValue(exerciseDistance)
-    setDistanceUnit(exerciseDistanceUnit)
-    setWeightValue(exerciseWeight.toString())
+  function handleUpdateExerciseSelection(
+    exerciseId: number,
+    exerciseReps: number,
+    exerciseWeight: number,
+    exerciseDistance: number,
+    exerciseTime: number,
+    exerciseDistanceUnit: string
+  ) {
+    setRepsValue(exerciseReps);
+    setTimeValue(exerciseTime);
+    setDistanceValue(exerciseDistance);
+    setDistanceUnit(exerciseDistanceUnit);
+    setWeightValue(exerciseWeight.toString());
     setEditingExercise(true);
     setIdExerciseUpdate(exerciseId);
   }
 
   function handleModalVisibility(exerciseId: number) {
     setIdExerciseUpdate(exerciseId);
-    getExistingComment(exerciseId, setCommentValue, setIsDropset,setIsAMRAP);
+    getExistingComment(exerciseId, setCommentValue, setIsDropset, setIsAMRAP);
     setOpenCommentModal(!openCommentModal);
   }
 
@@ -300,7 +307,7 @@ function ExerciseSelectedTrack() {
 
   function safelyParseFloat(value: string | number): number {
     let numberValue: number;
-  
+
     if (typeof value === "string") {
       numberValue = parseFloat(value);
     } else if (typeof value === "number") {
@@ -309,7 +316,7 @@ function ExerciseSelectedTrack() {
       console.error("Unsupported type");
       return 0;
     }
-  
+
     // Check for NaN or negative value
     return isNaN(numberValue) || numberValue < 0 ? 0 : numberValue;
   }
@@ -323,9 +330,7 @@ function ExerciseSelectedTrack() {
     }
   }
 
-
   async function saveExerciseEntry() {
-    
     const checkEntriesValidity = exerciseFieldValidation();
 
     if (checkEntriesValidity) {
@@ -345,12 +350,9 @@ function ExerciseSelectedTrack() {
     }
 
     let weightValueFloat = safelyParseFloat(entryToSave.weight);
-    let repsValueFloat = safelyParseFloat(entryToSave.reps)
-    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
-    let timeValueFloat = safelyParseFloat(entryToSave.time)
-    
-
-
+    let repsValueFloat = safelyParseFloat(entryToSave.reps);
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance);
+    let timeValueFloat = safelyParseFloat(entryToSave.time);
 
     const updatedEntryToSave = {
       date: entryToSave.date,
@@ -363,7 +365,7 @@ function ExerciseSelectedTrack() {
       is_pr: entryToSave.is_pr,
       dropset: entryToSave.dropset,
       weight: 0,
-      amrap:entryToSave.amrap
+      amrap: entryToSave.amrap,
     };
 
     updatedEntryToSave.weight = weightValueFloat;
@@ -371,13 +373,19 @@ function ExerciseSelectedTrack() {
     updatedEntryToSave.distance = distanceValueFloat;
     updatedEntryToSave.time = timeValueFloat;
 
-    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
-    
+    let secondEntryValidation = validateIndexedDbEntry(
+      exerciseSelected.measurement,
+      repsValueFloat,
+      weightValueFloat,
+      distanceValueFloat,
+      timeValueFloat
+    );
+
     if (secondEntryValidation) {
-      toast.error('You can only use positive numbers!')
+      toast.error("You can only use positive numbers!");
       return;
     }
-    
+
     try {
       const request = indexedDB.open("fitPowerUpDb", 2);
 
@@ -436,19 +444,24 @@ function ExerciseSelectedTrack() {
       return;
     }
 
-    let weightValueFloat = safelyParseFloat(entryToSave.weight);    
-    let repsValueFloat = safelyParseFloat(entryToSave.reps)
-    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
-    let timeValueFloat = safelyParseFloat(entryToSave.time)
-    
+    let weightValueFloat = safelyParseFloat(entryToSave.weight);
+    let repsValueFloat = safelyParseFloat(entryToSave.reps);
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance);
+    let timeValueFloat = safelyParseFloat(entryToSave.time);
 
-    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
-    
+    let secondEntryValidation = validateIndexedDbEntry(
+      exerciseSelected.measurement,
+      repsValueFloat,
+      weightValueFloat,
+      distanceValueFloat,
+      timeValueFloat
+    );
+
     if (secondEntryValidation) {
-      toast.error('You can only use positive numbers!')
+      toast.error("You can only use positive numbers!");
       return;
     }
-    
+
     try {
       const request = indexedDB.open("fitPowerUpDb", 2);
 
@@ -500,7 +513,7 @@ function ExerciseSelectedTrack() {
               toast.error("Oops, there was an error updating the record.");
               console.error("Error updating record");
             };
-          } 
+          }
         };
 
         userEntryTransaction.oncomplete = function () {
@@ -584,7 +597,6 @@ function ExerciseSelectedTrack() {
   }
 
   const handleAddButtonClick = (measurement: string) => {
-
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
         if (weightValue === "" || weightValue === null) {
@@ -1068,7 +1080,16 @@ function ExerciseSelectedTrack() {
                   ? "5px solid red"
                   : "5px solid transparent",
               }}
-              onClick={() => handleUpdateExerciseSelection(exercise.id,exercise.reps,exercise.weight,exercise.distance,exercise.time,exercise.distance_unit)}
+              onClick={() =>
+                handleUpdateExerciseSelection(
+                  exercise.id,
+                  exercise.reps,
+                  exercise.weight,
+                  exercise.distance,
+                  exercise.time,
+                  exercise.distance_unit
+                )
+              }
             >
               {exercise.weight !== 0 && (
                 <Typography
@@ -1091,7 +1112,8 @@ function ExerciseSelectedTrack() {
                       : "normal"
                   }
                 >
-                  {exercise.reps}{exercise.amrap && "+"} reps
+                  {exercise.reps}
+                  {exercise.amrap && "+"} reps
                 </Typography>
               )}
 
