@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction, Dispatch } from "react";
+import React, { useState, SetStateAction, Dispatch, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../../components/ui/Navbar";
 import Progress from "../Progress/Progress";
@@ -15,6 +15,8 @@ import { UserFeatsDataProvider } from "../../context/UserFeatsData";
 import { FriendsSummaryProvider } from "../../context/FriendsSummary";
 import { SocialDataProvider } from "../../context/SocialData";
 import { PresetWorkoutsDataProvider } from "../../context/UserPresetWorkouts";
+import { AuthContext } from "../../context/Auth";
+import { auth } from "../../config/firebase";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
@@ -28,7 +30,9 @@ function Home({
     { name: string; exercises: Exercise[] }[]
   >([]);
 
-  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(false);
+  const {currentUser} = useContext(AuthContext)
+  console.log(currentUser.emailVerified)
+  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(currentUser.emailVerified?false:true);
 
   return (
     <UserTrainingDataProvider>

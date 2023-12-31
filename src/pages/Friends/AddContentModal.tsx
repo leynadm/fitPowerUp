@@ -24,7 +24,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Dialog from "@mui/material/Dialog";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
-import { getApp } from "firebase/app";
+import { storage } from "../../config/firebase";
 import toast from "react-hot-toast";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { filterUserTrainingsPerDay } from "../Workout/CompletedWorkouts";
@@ -45,7 +45,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import uuid from "react-uuid";
-import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import GroupedWorkout from "../../components/ui/GroupedWorkout";
 
@@ -94,8 +94,7 @@ function AddContentModal({
   const [saving, setSaving] = useState(false);
   const isOnline = useOnlineStatus()
   const navigate = useNavigate();
-  const firebaseApp = getApp();
-  const postsStorage = getStorage(firebaseApp, "gs://fitpowerup-2bbc8-posts");
+
   const { currentUser, currentUserData } = useContext(AuthContext);
 
   const { userTrainingData } = useContext(UserTrainingDataContext);
@@ -179,44 +178,10 @@ function AddContentModal({
       const uniqueImageId = uuid();
       if (selectedFile) {
         imageRef = ref(
-          postsStorage,
-          `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}`
+          storage,
+          `posts/images/${currentUser.uid}/${currentUser.uid}_${uniqueImageId}`
         );
         await uploadBytes(imageRef, selectedFile);
-
-        imageUrl = await getDownloadURL(imageRef);
-
-        const imageRefResized = ref(
-          postsStorage,
-          `images/${currentUser.uid}/preview/${currentUser.uid}_${uniqueImageId}_1024x1024`
-        );
-
-        try {
-          imageUrlResized = await getDownloadURL(imageRefResized);
-        } catch (error) {
-          console.error("Error fetching resized image:", error);
-          // Retry logic
-          let retryAttempts = 9;
-
-          while (retryAttempts > 0) {
-            await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
-
-            try {
-              imageUrlResized = await getDownloadURL(imageRefResized);
-              break; // If successful, break out of the loop
-            } catch (error) {
-              console.error("Error fetching resized image after retry:", error);
-              retryAttempts--;
-            }
-          }
-
-          if (retryAttempts === 0) {
-            toast.error("Oops, we encountered an error! Try again later!");
-            console.error("Retries exhausted. Unable to fetch resized image.");
-            // Handle the error and display an error message to the user
-          }
-        }
-      }
 
       const newPostRef = doc(collection(db, "posts"));
 
@@ -228,7 +193,7 @@ function AddContentModal({
         createdAt: serverTimestampObj,
         postText: postText,
         userId: currentUser.uid,
-        postImage: imageUrlResized,
+        postImage: uniqueImageId,
         timestamp: timestamp,
         commentsCount: 0,
         showWorkout: addWorkout,
@@ -238,37 +203,19 @@ function AddContentModal({
         postAppreciation: [],
       });
 
-   const newFollowersFeedRef = doc(
-        collection(db, "followers-feed"),
-        currentUser.uid
-      );
-
-      const followersFeedDoc = await getDoc(newFollowersFeedRef);
-
+      const newFollowersFeedRef = doc(collection(db, "followers-feed"), currentUser.uid);
       const recentPosts = {
         postId: newPostRef.id,
         published: timestamp,
         postText: postText,
       };
-
-      if (!followersFeedDoc.exists()) {
-        // create the document if it doesn't exist
-        await setDoc(newFollowersFeedRef, {
-          lastPost: serverTimestampObj,
-          recentPosts: arrayUnion(recentPosts),
-          users: [],
-        });
-      } else {
-        await updateDoc(newFollowersFeedRef, {
-          lastPost: serverTimestampObj,
-          recentPosts: arrayUnion(recentPosts),
-        });
-      }
+      
+      await setDoc(newFollowersFeedRef, {
+        lastPost: serverTimestampObj,
+        recentPosts: arrayUnion(recentPosts),
+      }, { merge: true });      
     }
-    setPostText("");
-    setSelectedFile(null);
-    setFileSource(null);
-    setSaving(false);
+    }
     handleClose();
     navigate("profile");
   }
@@ -408,7 +355,10 @@ function AddContentModal({
                 </Box>
               </Box>
 
-              <Box
+            </Button>
+          </Box>
+
+          <Box
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "8fr 2fr",
@@ -446,8 +396,6 @@ function AddContentModal({
                   <FitnessCenterIcon fontSize="medium" />
                 </Box>
               </Box>
-            </Button>
-          </Box>
 
           <Box sx={{ display: "flex" }}>
             <Button

@@ -14,9 +14,9 @@ async function completeWorkout(
 
     // Calculate the document suffix based on userTrainingDataSize
     const docSuffix =
-      Math.ceil(userTrainingDataSize / 650) === 0
+      Math.ceil(userTrainingDataSize / 350) === 0
         ? 1
-        : Math.ceil(userTrainingDataSize / 650);
+        : Math.ceil(userTrainingDataSize / 350);
 
     const userTrainingDataDocRef = doc(
       userDocRef,

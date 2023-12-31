@@ -28,18 +28,22 @@ export default function VerifyEmailDialog({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Please verify your email"}
+          {"Email Verification"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Hey, you should have received an email with a verification link.{" "}
+            Greetings! 
             <br></br>
-            <br></br>Please click the link to verify your email and unlock the
-            full app experience. If you haven't received the email, please check
-            your spam folder or request a new verification email through your
-            account settings. <br></br>
-            <br></br>Once your email is verified, you'll have access to all the
-            app's features and benefits. Thank you!
+            <br></br>
+            Ready to go Super Saiyan? 
+
+            <br></br>Well too bad, because before you can do that you need to verify your email. That's the rule.
+            <br></br><br></br>
+            If you can't find it, check your spam folder. Or you can request another from your account settings.
+            <br></br>
+            <br></br>
+            OK, thanks! Bye!
+            
           </DialogContentText>
         </DialogContent>
         <DialogActions>

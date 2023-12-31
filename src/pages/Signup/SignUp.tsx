@@ -160,7 +160,7 @@ export default function SignUp() {
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fvegeta_sign_up_512%20(1).jpg?alt=media&token=dd6eb535-adb9-4b78-b3b1-31fb4b4e51ae"
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fvegeta_signup_512.jpg?alt=media&token=950addab-6acb-426f-a591-8897be81169d"
             alt=""
             loading="lazy"
           ></img>

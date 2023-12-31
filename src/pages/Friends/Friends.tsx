@@ -1,7 +1,4 @@
-import React, {
-  useState,
-  useContext
-} from "react";
+import React, { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,7 +17,6 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Newsfeed from "./Newsfeed";
 import Container from "@mui/material/Container";
-import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 import SocialSearchBar from "./SocialSearchBar";
 import SocialSearchResults from "./SocialSearchResults";
 import SearchUserProfile from "./SearchUserProfile";
@@ -29,11 +25,7 @@ import Account from "./Account";
 import Notifications from "./Notifications";
 import SearchPost from "./SearchPost";
 import { AuthContext } from "../../context/Auth";
-import { Toaster } from "react-hot-toast";
 import BlockedUsers from "./BlockedUsers";
-import SpottingBoard from "./SpottingBoard";
-import { FriendsSummaryProvider } from "../../context/FriendsSummary";
-
 
 function Friends() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -176,7 +168,6 @@ function Friends() {
 
   return (
     <Container maxWidth="sm">
-
       <AppBar
         position="fixed"
         elevation={2}
@@ -188,71 +179,71 @@ function Friends() {
         }}
       >
         <Container maxWidth="md">
-        <Toolbar>
-          <Typography
-            variant="h4"
-            sx={{
-              color: "#FF8C00",
-              display: { xs: "none", sm: "block" },
-            }}
-          >
-            fit<span style={{ color: "white" }}>PowerUp!</span>
-          </Typography>
+          <Toolbar>
+            <Typography
+              variant="h4"
+              sx={{
+                color: "#FF8C00",
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              fit<span style={{ color: "white" }}>PowerUp!</span>
+            </Typography>
 
-          <SocialSearchBar />
+            <SocialSearchBar />
 
-          <IconButton
-            size="large"
-            aria-label="show 17 new notifications"
-            color="inherit"
-            onClick={handleAddContentModal}
-          >
-            <AddIcon />
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              onClick={handleNotifications}
+              onClick={handleAddContentModal}
             >
-              <NotificationsIcon />
-              {/* 
+              <AddIcon />
+            </IconButton>
+            <Box sx={{ flexGrow: 1 }} />
+
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={handleNotifications}
+              >
+                <NotificationsIcon />
+                {/* 
               <Badge badgeContent={17} color="error">
               
               
               </Badge>
                */}
-            </IconButton>
+              </IconButton>
 
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Box>
 
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
+          </Toolbar>
         </Container>
       </AppBar>
 

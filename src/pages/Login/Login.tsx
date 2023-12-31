@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import createUserDoc from "../../utils/accountSetupFunctions/createUserDoc";
 import toast from "react-hot-toast";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import PersonIcon from '@mui/icons-material/Person';
 import {
   getAuth,
   signInWithPopup,
@@ -22,7 +23,7 @@ import { auth } from "../../config/firebase";
 import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
 
-function Copyright(props: any) {
+function Copyright() {
   const navigate = useNavigate();
   function TermsAndConditionsClick() {
     navigate("/terms-and-conditions");
@@ -33,19 +34,23 @@ function Copyright(props: any) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "cemter",
+        justifyContent: "center",
         alignItems: "center",
+        pt:5,
+        pb:2
       }}
+
     >
       <Typography
         variant="body2"
-        color="text.secondary"
+        color="text.primary"
         align="center"
-        {...props}
+        
       >
-        <Link color="inherit" href="https://mateidaniel.com" target="_blank">
+        <Link href="https://mateidaniel.com" target="_blank">
           Developed by Daniel Matei {new Date().getFullYear()}
         </Link>
+
       </Typography>
 
       <Typography
@@ -56,7 +61,7 @@ function Copyright(props: any) {
           textDecoration: "underline",
         }}
       >
-        Terms and Conditions
+        Terms and Conditions Apply
       </Typography>
     </Box>
   );
@@ -154,8 +159,9 @@ export default function SignIn() {
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fgoku_login_512.jpg?alt=media&token=c384b0d4-fb68-4369-864f-bf591277c9d2"
+            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fgoku_login_512.jpg?alt=media&token=393c2a1a-5bcd-45ae-b09b-5023cd837de7"
             alt=""
+            onClick={()=>navigate("/")}
             loading="lazy"
           ></img>
         </div>
@@ -224,6 +230,17 @@ export default function SignIn() {
             LOG IN WITH FACEBOOK
           </Button>
 
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2, gap: 1 }}
+            onClick={SignInWithGoogle}
+          >
+            <PersonIcon />
+            LOG IN As Guest
+          </Button>
+
           <Grid container>
             <Grid item xs>
               <Link variant="body2" onClick={handleForgotPasswordClick}>
@@ -238,7 +255,7 @@ export default function SignIn() {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <Copyright />
     </Container>
   );
 }

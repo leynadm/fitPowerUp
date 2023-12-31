@@ -29,11 +29,11 @@ import getFlattenedExercisesForExport from "../../utils/progressFunctions/getFla
 import getFlattenedWorkoutsForExport from "../../utils/progressFunctions/getFlattenedWorkoutsForExport";
 import ResetTrainingDataModal from "../../components/ui/ResetTrainingDataModal";
 function Settings() {
-  const { userTrainingData, fetchUserTrainingData } = useContext(
+  const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
 
-  const { userBodyTrackerData, fetchUserBodyTrackerData } = useContext(
+  const { userBodyTrackerData, refetchUserBodyTrackerData } = useContext(
     BodyTrackerDataContext
   );
 
@@ -87,8 +87,8 @@ function Settings() {
       currentUser.uid
     );
     await fetchCurrentUserData(currentUser, setCurrentUserData);
-    await fetchUserBodyTrackerData();
-    await fetchUserTrainingData();
+    await refetchUserBodyTrackerData();
+    await refetchUserTrainingData();
   }
 
   const flattenedExerciseData =

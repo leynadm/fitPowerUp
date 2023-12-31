@@ -77,16 +77,13 @@ function DevelopmentLog() {
         - Added a loading spinner when completing a new workout, deleting a completed workout, importing or reseting data
       </Typography>
       <Typography variant="body2">
-        - Fixed a bug that wouldn't allow newly created accounts to save their power level the same they the account was created
+        - Fixed a bug that wouldn't allow newly created accounts to save their power level the same day the account was created
       </Typography>
       <Typography variant="body2">
         - Fixed a bug that would log out the user upon changing their privacy account settings
       </Typography>
       <Typography variant="body2">
-        - Fixed a bug that would still show deleted posts after they were deleted (despite the fact that they were actually deleted, weird, I know) 
-      </Typography>
-      <Typography variant="body2">
-        - Fix a UI bug on the landing page where images would overlap the 'Get Started button' 
+        - Fix a UI bug on the landing page where images would overlap with the 'Get Started' button
       </Typography>
       <Typography variant="body2">
         - Improve the layout in the Feats menu switching the achievement boxes to an 'outlined' style 

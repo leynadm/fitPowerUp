@@ -13,7 +13,7 @@ function CircularProgressWithText({ text }: { text: string }) {
       p={2}
     >
       <CircularProgress />
-      <Typography>{text}</Typography>
+      <Typography align="center" variant="caption">{text}</Typography>
     </Box>
   );
 }

@@ -3,11 +3,9 @@ import { AppBar, Divider, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Box from "@mui/material/Box";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import { useNavigate } from "react-router-dom";
 import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExercisesMuscleGroups";
@@ -23,10 +21,9 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import { useSearchParams } from "react-router-dom";
 function MuscleGroupsSelectionMenu() {
-  
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [query, setQuery] = useState(searchParams.get('query') || '');
+  const [query, setQuery] = useState(searchParams.get("query") || "");
 
   const [openAddNewExerciseModal, setOpenAddNewExerciseModal] = useState(false);
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
@@ -53,7 +50,6 @@ function MuscleGroupsSelectionMenu() {
     return [];
   });
 
-  
   useEffect(() => {
     const fetchData = async () => {
       if (userExercisesLibrary.length === 0) {
@@ -106,9 +102,8 @@ function MuscleGroupsSelectionMenu() {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    setSearchParams({ query: newQuery || '' });
+    setSearchParams({ query: newQuery || "" });
   };
-
 
   const Row = ({
     index,

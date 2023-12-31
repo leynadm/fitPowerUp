@@ -161,8 +161,6 @@ function LandingPage() {
   }
 
   const isAppInstalled = () => {
-    console.log('CHECKING IF APP IS INSTALLED')
-    console.log(window.matchMedia("(display-mode: standalone)").matches)
     return window.matchMedia("(display-mode: standalone)").matches;
   };
 
@@ -240,6 +238,7 @@ function LandingPage() {
           alignItems="center"
           gridTemplateRows="4fr 0.75fr 4fr 1.25fr"
           width="100%"
+          maxHeight="100%"
           position="relative"
         >
           {/* FIRST BOX */}
@@ -263,6 +262,7 @@ function LandingPage() {
             }}
           >
             <img
+            
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
               alt=""
               style={{
@@ -288,89 +288,6 @@ function LandingPage() {
                 The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
               </span>
             </Box>
-            {/* 
-
-            {visibleCards[3] && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top:"50%",
-                  left:"50%",
-                  zIndex: 4,
-                  transform: "translate(8%, 10%)",
-                  rotate: "-5deg",
-                  maxWidth:"100%"
-                }}
-              >
-                <FakeUserReviewCard
-                  fakeUser="Bald Warrior"
-                  starsRating={5}
-                  avatarInitials="K"
-                  reviewText="5 stars! With this app, I can track my workouts, my power level, and, yes, even my dea... I mean unexpected vacations!"
-                />
-              </Box>
-            )}
-
-            {visibleCards[2] && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top:"50%",
-                  left:"50%",
-                  zIndex: 3,
-                  transform: "translate(5%, 5%)",
-                  rotate: "-5deg",
-                }}
-              >
-                <FakeUserReviewCard
-                  fakeUser="Galactic Tyrant"
-                  starsRating={4}
-                  avatarInitials="F"
-                  reviewText="Not bad, but a feature to track the downfall of enemies would be a nice addition..."
-                />
-              </Box>
-            )}
-
-            {visibleCards[1] && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top:"50%",
-                  left:"50%",
-                  zIndex: 2,
-                  transform: "translate(5%, 40%)",
-                  rotate: "0deg",
-                }}
-              >
-                <FakeUserReviewCard
-                  fakeUser="Prince of All Gym Lifters"
-                  starsRating={3}
-                  avatarInitials="V"
-                  reviewText="I don't usually review, but this one is OK."
-                />
-              </Box>
-            )}
-
-            {visibleCards[0] && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top:"50%",
-                  left:"50%",
-                  zIndex: 1,
-                  transform: "translate(5%, 40%)",
-                  rotate: "4deg",
-                }}
-              >
-                <FakeUserReviewCard
-                  fakeUser="Time-Traveling Fighter"
-                  starsRating={5}
-                  avatarInitials="T"
-                  reviewText="I've seen the future and, and this app is still the best out there!"
-                />
-              </Box>
-            )}
-             */}
           </Box>
 
           {/* THIRD BOX */}
@@ -402,7 +319,7 @@ function LandingPage() {
             height="100%"
           ></Box>
           <Box display="flex" justifyContent="center">
-            <Button onClick={getStartedClick} variant="dbz">
+            <Button onClick={getStartedClick} variant="dbz" >
               Get Started
             </Button>
           </Box>
@@ -411,6 +328,7 @@ function LandingPage() {
         <Box
           height="100svh"
           width="100%"
+          maxWidth="100%"
           display="flex"
           alignItems="center"
           justifyContent="space-around"

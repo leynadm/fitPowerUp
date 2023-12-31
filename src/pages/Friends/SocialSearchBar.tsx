@@ -24,13 +24,12 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
+    padding: theme.spacing(0, 0, 0, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: `calc(0em + ${theme.spacing(0)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
@@ -43,13 +42,11 @@ function SocialSearchBar() {
   const navigate = useNavigate();
   const [userToSearch, setUserToSearch] = useState("");
   const [usersFound, setUsersFound] = useState<any>({});
-  const {currentUser,currentUserData} = useContext(AuthContext)
+  const { currentUser, currentUserData } = useContext(AuthContext);
   async function getUsers() {
-
     let q;
 
     if (userToSearch !== "") {
-
       q = query(
         collection(db, "users"),
         where("fullname", "array-contains", userToSearch),
@@ -66,14 +63,16 @@ function SocialSearchBar() {
 
     const querySnapshot = await getDocs(q);
 
-
     const userResults: any = [];
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data();
       user.id = doc.id; // Add this line to set the 'id' property
-      if(user.id !== currentUser.uid && !currentUserData.blocked.includes(user.id)){
+      if (
+        user.id !== currentUser.uid &&
+        !currentUserData.blocked.includes(user.id)
+      ) {
         userResults.push(user);
       }
     });
@@ -88,22 +87,23 @@ function SocialSearchBar() {
     // Perform any necessary operations with the value
   };
 
-
   return (
     <Box>
-      <Search sx={{ display: "flex",padding:"0",margin:"0" }}>
-        <IconButton onClick={getUsers} sx={{display:"flex", justifyContent:"center"}}>
+      <Search sx={{ display: "flex", padding: "0", margin: "0" }}>
+        <IconButton
+          onClick={getUsers}
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
           <SearchIcon sx={{ color: "white" }} />
         </IconButton>
-        
+
         <StyledInputBase
-          placeholder="Search for someone…"
+          placeholder="Search by name..."
           onChange={onChange}
           value={userToSearch}
-          sx={{p:0,m:0}}
+          sx={{ p: 0, m: 0 }}
           inputProps={{ "aria-label": "search" }}
         />
-
       </Search>
     </Box>
   );

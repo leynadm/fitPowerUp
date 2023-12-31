@@ -22,11 +22,10 @@ function UserProfilePosts() {
   const [loading, setLoading] = useState(false);
   const [hasPosts, setHasPosts] = useState(false);
   const [loadButtonStatus, setLoadButtonStatus] = useState(false)
+  
   useEffect(() => {
     getUserPosts();
-
   }, []);
-
 
   async function getUserPosts() {
     try {

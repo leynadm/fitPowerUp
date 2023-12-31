@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { UserPresetWorkoutsDataContext } from "../../context/UserPresetWorkouts";
 import { Container } from "@mui/material";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import CircularProgressWithText from "./CircularProgressWithText";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -65,6 +66,7 @@ function AddNewPresetWorkoutModal({
     UserPresetWorkoutsDataContext
   );
 
+  const [isLoading, setIsLoading] = useState(false)
   const workoutDate = formatDateForTextField(new Date());
 
   function handleClose() {
@@ -93,18 +95,19 @@ function AddNewPresetWorkoutModal({
       routineBy: workoutState.routineBy,
       exercisesinRoutine: tempExercisesInRoutine,
       routineLinkReference: workoutState.routineLinkReference,
-      delete: true,
+      delete: false,
       workoutBy: workoutState.workoutBy,
       workoutLinkReference: workoutState.workoutLinkReference,
     };
 
     try {
+      setIsLoading(true)
       await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData);
 
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");
-
+      setIsLoading(false)
       navigate("/home/workout/preset-workouts");
     } catch (error) {
       console.log(error);
@@ -120,7 +123,11 @@ function AddNewPresetWorkoutModal({
         aria-describedby="modal-modal-description"
       >
         <Container maxWidth="md" sx={style}>
-          <Box
+
+          {isLoading?(
+            <CircularProgressWithText text="Please wait, your preset workout is being saved..."/>
+          ):(
+<Box
             display="flex"
             flexDirection="column"
             gap={1}
@@ -266,6 +273,9 @@ function AddNewPresetWorkoutModal({
               </Button>
             </Box>
           </Box>
+          )}
+
+          
         </Container>
       </Modal>
     </div>

@@ -34,7 +34,7 @@ async function updateUnitSystemPreference(
     );
 
     // Splitting userTrainingData into different documents
-    const dataSize = 650; // Define the size limit for each document
+    const dataSize = 350; // Define the size limit for each document
     const convertedUserTrainingDataLength = convertedUserTrainingData.length;
     let trainingDataDocCount = 0; // To keep track of the number of documents created
 

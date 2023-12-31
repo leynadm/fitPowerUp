@@ -56,7 +56,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteCompletedWorkout from "../../components/ui/DeleteCompletedWorkoutModal";
-import { fetchCurrentUserData } from "../../context/Auth";
 function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

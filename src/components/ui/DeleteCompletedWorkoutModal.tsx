@@ -5,8 +5,6 @@ import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../context/Auth";
-import { UserPresetWorkoutsDataContext } from "../../context/UserPresetWorkouts";
-import { useNavigate } from "react-router-dom";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import deleteCompletedWorkout from "../../utils/firebaseDataFunctions/deleteCompletedWorkout";
 import toast from "react-hot-toast";

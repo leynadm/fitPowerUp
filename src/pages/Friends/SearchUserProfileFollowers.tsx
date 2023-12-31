@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import Box from "@mui/material/Box";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import User from "../../utils/interfaces/User";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Button from "@mui/material/Button";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { Link } from "react-router-dom";
-import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
-import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
-import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import toast from "react-hot-toast";
 import UserProfileBar from "../../components/ui/UserProfileBar";
@@ -137,8 +128,7 @@ function SearchUserProfileFollowers({ queriedUser }: SearchProfileProps) {
               }}
             >
               <Typography sx={{ textAlign: "center" }}>
-                {queriedUser.name} {queriedUser.surname} has decided to keep its
-                followers private.
+                {queriedUser.name} {queriedUser.surname} has decided to keep private the list of spotters.
               </Typography>
             </Box>
           ) : (

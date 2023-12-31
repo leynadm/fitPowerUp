@@ -27,6 +27,7 @@ import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 import NoConnection from "../../components/ui/NoConnection";
 import UserViewCharacterProgressModal from "../../components/ui/UserViewCharacterProgressModal";
 import toast from "react-hot-toast";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 function UserProfile() {
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
@@ -36,7 +37,7 @@ function UserProfile() {
   const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
   const [userFollowing, setUserFollowing] = useState<number>(0);
   const [updateCount, setUpdateCount] = useState(0);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+ 
   const [
     openUserViewCharacterProgressModal,
     setOpenUserViewCharacterProgressModal,
@@ -47,18 +48,7 @@ function UserProfile() {
   const [isSpottersHovered, setIsSpottersHovered] = useState(false);
   const [isSpottingHovered, setIsSpottingHovered] = useState(false);
 
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     if (isOnline) {

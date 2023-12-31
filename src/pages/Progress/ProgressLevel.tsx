@@ -254,15 +254,16 @@ function ProgressLevel() {
     experiencePoints += pendingWorkouts * pendingMultiplier;
 
     const maximumPowerLevel = strengthLevel + experiencePoints;
-/* 
+
     toast.success(`These exercises give you a PL of ${maximumPowerLevel}`, {
       duration: 5000,
     });
- */
+
     setCalculatedMaximumPowerLevel(maximumPowerLevel);
     setCalculatedMaximumStrengthLevel(strengthLevel);
     setCalculatedMaximumExperienceLevel(experiencePoints);
   }
+  
 
   async function handlePublishPowerLevel() {
     if (isToday) {
@@ -281,13 +282,18 @@ function ProgressLevel() {
         calculatedMaximumExperienceLevel
       );
       await fetchCurrentUserData(currentUser, setCurrentUserData);
-      toast.error("Your power level was updated!");
+      toast.success("Your power level was updated!");
     } catch (error) {
       console.error(error);
       toast.error("Oops, we could save your new power level!");
     }
   }
 
+  function handleDiscardNewPL(){
+    setCalculatedMaximumExperienceLevel(0)
+    setCalculatedMaximumPowerLevel(0)
+    setCalculatedMaximumStrengthLevel(0)
+  }
   function calculatePowerLevel() {
     const flattenedFirstExercise = getFlattenedExerciseData(
       userTrainingData,
@@ -505,13 +511,13 @@ function ProgressLevel() {
               <Typography variant="caption" align="left" width="100%">New Power Level</Typography>
               
               <Box display="flex" width="100%" justifyContent="space-evenly">
-                <Typography>
+                <Typography display="flex" gap={1} alignItems="center">
                   <PowerLevelIcon width="1rem" height="1rem"/> <strong>{calculatedMaximumPowerLevel}</strong>
                 </Typography>
-                <Typography>
+                <Typography display="flex" gap={1} alignItems="center">
                   <StrengthIcon width="1rem" height="1rem"/><strong>{calculatedMaximumStrengthLevel}</strong>
                 </Typography>
-                <Typography>
+                <Typography display="flex" gap={1} alignItems="center">
                   <ExperienceIcon width="1rem" height="1rem"/><strong>{calculatedMaximumExperienceLevel}</strong>
                 </Typography>
                 </Box>
@@ -531,7 +537,7 @@ function ProgressLevel() {
                     aria-haspopup="true"
                     color="inherit"
                     sx={{p:0,display:"flex", flexDirection:"column"}}
-                    
+                    onClick={handlePublishPowerLevel}
                   >
                     <SaveAsIcon sx={{p:0,m:0}} />
                     <Typography variant="caption">Save New PL</Typography>
@@ -544,6 +550,7 @@ function ProgressLevel() {
                     aria-haspopup="true"
                     color="inherit"
                     sx={{p:0,display:"flex", flexDirection:"column"}}
+                    onClick={handleDiscardNewPL}
                   >
                     <DeleteIcon sx={{p:0,m:0}} />
                     <Typography variant="caption">Discard New PL</Typography>

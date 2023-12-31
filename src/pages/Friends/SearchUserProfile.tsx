@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { SocialDataContext } from "../../context/SocialData";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   doc,
   getDoc,

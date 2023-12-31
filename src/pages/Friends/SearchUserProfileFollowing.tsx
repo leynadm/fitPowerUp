@@ -131,12 +131,11 @@ function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
                 width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
-                boxShadow: 1,
+                padding:1
               }}
             >
               <Typography sx={{ textAlign: "center" }}>
-                {queriedUser.name} {queriedUser.surname} has decided to keep its
-                followed users private.
+                {queriedUser.name} {queriedUser.surname} has decided to keep private the list of spotted the users.
               </Typography>
             </Box>
           ) : (
@@ -167,7 +166,7 @@ function SearchUserProfileFollowing({ queriedUser }: SearchProfileProps) {
           }}
         >
           <Typography sx={{ height: "100%" }}>
-            You aren't spotting anyone currently.
+            No users being spotted currently.
           </Typography>
         </Box>
       )}

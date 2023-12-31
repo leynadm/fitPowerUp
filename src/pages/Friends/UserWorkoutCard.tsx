@@ -1,4 +1,4 @@
-import React, { useState,  useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -22,16 +22,18 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ReplyIcon from "@mui/icons-material/Reply";
 import PostComment from "./PostComment";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import uuid from "react-uuid";
 import DeletePostModal from "../../components/ui/DeletePostModal";
-import { useNavigate } from "react-router-dom";
 import GuestProfileModal from "../../components/ui/GuestProfileModal";
 import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import addNotificationEntry from "../../utils/socialFunctions/addNotificationEntry";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import toast from "react-hot-toast";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../config/firebase";
+import CircularProgress from "@mui/material/CircularProgress";
+import Skeleton from '@mui/material/Skeleton';
 import {
   collection,
   setDoc,
@@ -40,7 +42,6 @@ import {
   updateDoc,
   getDoc,
   deleteDoc,
-  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
@@ -115,39 +116,54 @@ export default function UserWorkoutCard({
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<any>([]);
-  const [checkCommentsExist, setCheckCommentsExist] = useState("")
+  const [checkCommentsExist, setCheckCommentsExist] = useState("");
   const [deletePostModalOpen, setDeletePostModalOpen] = useState(false);
   const [postDeleteTrigger, setPostDeleteTrigger] = useState(0);
   const [guestProfileModalOpen, setGuestProfileModalOpen] = useState(false);
-  const [postAppreciations,setPostAppreciations]=useState<any>([])
-  const [postAppreciationsNumber, setPostAppreciationsNumber] = useState(0)
-
+  const [postAppreciations, setPostAppreciations] = useState<any>([]);
+  const [postAppreciationsNumber, setPostAppreciationsNumber] = useState(0);
+  const [imageURL, setImageURL] = useState("");
   const [postAppreciationStatus, setPostAppreciationStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const navigate = useNavigate();
- 
+  useEffect(() => {
+    getPostAppreciations();
+    checkIfPostHasComments();
 
-  useEffect(()=>{
-    
-    getPostAppreciations()
-    checkIfPostHasComments()
+    const fetchImageURL = async () => {
+      if (postImage !== null) {
+        const exerciseImageRef = ref(
+          storage,
+          `posts/images/${postUserId}/${postUserId}_${postImage}`
+        );
 
-  },[])
+        try {
+          const url = await getDownloadURL(exerciseImageRef);
+          setImageURL(url);
+        } catch (error) {
+          //toast.error("Oops, there was an error fetching the image!");
+          console.error("Error fetching image:", error);
+        } finally {
+          setIsLoading(false); // Stop loading whether there was an error or not
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
 
-  useEffect(()=>{
-    
-  },[postAppreciationsNumber])
+    fetchImageURL();
+  }, []);
 
   async function checkIfPostHasComments() {
     const postRef = doc(db, "posts", postId);
     const commentsDocRef = doc(collection(postRef, "comments"), "commentDoc");
-  
+
     try {
       const commentsSnapshot = await getDoc(commentsDocRef);
-  
+
       if (commentsSnapshot.exists()) {
         const commentsData = commentsSnapshot.data();
-  
+
         if (commentsData && Object.keys(commentsData).length > 0) {
           setCheckCommentsExist("See comments...");
         } else {
@@ -161,49 +177,48 @@ export default function UserWorkoutCard({
       console.error("Error checking for comments:", error);
     }
   }
-  
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-
-  function getPostAppreciations(){
-
+  function getPostAppreciations() {
     const postRef = doc(db, "posts", postId);
-    const appreciationsDocRef = doc(collection(postRef, "appreciations"), "appreciationsDoc");
+    const appreciationsDocRef = doc(
+      collection(postRef, "appreciations"),
+      "appreciationsDoc"
+    );
 
     getDoc(appreciationsDocRef)
-    .then((docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const appreciationsData = [];
-        let appreciationsCounter = 0
-        const appreciationData = docSnapshot.data();
-        
-        for (const field in appreciationData) {
-          const fieldValue = appreciationData[field];
-          appreciationsData.push(fieldValue);
-          appreciationsCounter=+1
+      .then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const appreciationsData = [];
+          let appreciationsCounter = 0;
+          const appreciationData = docSnapshot.data();
 
-          if(field===currentUser.uid){
-            setPostAppreciationStatus(true)
+          for (const field in appreciationData) {
+            const fieldValue = appreciationData[field];
+            appreciationsData.push(fieldValue);
+            appreciationsCounter = +1;
+
+            if (field === currentUser.uid) {
+              setPostAppreciationStatus(true);
+            }
           }
+          appreciationsData.sort(
+            (a, b) => a.timestamp.toMillis() - b.timestamp.toMillis()
+          );
+          setPostAppreciationsNumber(appreciationsCounter);
+          setPostAppreciations(appreciationsData);
+        } else {
+          setPostAppreciations([]);
         }
-        appreciationsData.sort(
-          (a, b) => a.timestamp.toMillis() - b.timestamp.toMillis()
-        );
-        setPostAppreciationsNumber(appreciationsCounter)
-        setPostAppreciations(appreciationsData);
-
-      } else {
+      })
+      .catch((error) => {
+        toast.error("There was an error getting the appreciations...");
+        console.error("Error getting appreciations document:", error);
         setPostAppreciations([]);
-      }
-    })
-    .catch((error) => {
-      toast.error("There was an error getting the appreciations...")
-      console.error("Error getting appreciations document:", error);
-      setPostAppreciations([]);
-    });
+      });
   }
 
   const handleCommentExpandClick = () => {
@@ -235,29 +250,26 @@ export default function UserWorkoutCard({
 
           setComments(commentsData);
         } else {
-
           setComments([]);
         }
       })
       .catch((error) => {
-        toast.error("There was an error getting the comments...")
+        toast.error("There was an error getting the comments...");
         console.error("Error getting comments document:", error);
         setComments([]);
       });
   }
 
   function addComment() {
-
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
     }
 
     if (currentUser.emailVerified === false) {
-      toast("You need to verify your email first!")
+      toast("You need to verify your email first!");
       return;
     }
-
 
     if (commentText !== "") {
       const postRef = doc(db, "posts", postId);
@@ -293,15 +305,14 @@ export default function UserWorkoutCard({
               [commentId]: commentData, // Use the comment ID as the field name within the document
             });
           }
-        }) 
+        })
         .then(() => {
-
           setCommentText(""); // Clear the comment text
           getPostComments();
-          if(postUserId!==currentUser.uid){
+          if (postUserId !== currentUser.uid) {
             addNotificationEntry(
               postUserId,
-              action, 
+              action,
               currentUser.uid,
               currentUserData.name,
               currentUserData.surname,
@@ -309,11 +320,10 @@ export default function UserWorkoutCard({
               currentUserData.profileImage
             );
           }
-     
         })
         .catch((error) => {
           // Error occurred while adding comment
-          toast.error("There was an error adding your comment...")
+          toast.error("There was an error adding your comment...");
           console.error("Error adding comment:", error);
         });
     }
@@ -327,7 +337,7 @@ export default function UserWorkoutCard({
       if (followersDoc.exists()) {
         const followersData = followersDoc.data();
         const recentPosts = followersData.recentPosts;
-  
+
         // Filter out the object with the matching postId
         const updatedPosts = recentPosts.filter(
           (post: any) => post.postId !== postId
@@ -336,29 +346,28 @@ export default function UserWorkoutCard({
         await updateDoc(followersRef, { recentPosts: updatedPosts });
       }
     } catch (error) {
-      toast.error("Oops, deleteFollowersFeedEntry has an error!")
+      toast.error("Oops, deleteFollowersFeedEntry has an error!");
       // Handle the error here
       console.error("Error deleting followers feed entry:", error);
       // You can also show a user-friendly error message to the user
       // For example: setErrorState("Failed to delete entry. Please try again later.");
     }
   }
-  
- 
+
   async function deletePost() {
     await deleteFollowersFeedEntry();
 
     try {
-      console.log(postId)
+
       const postRef = doc(db, "posts", postId);
       await deleteDoc(postRef);
       setPostDeleteTrigger((prevTrigger) => prevTrigger + 1);
-      
+
       //navigate("/home/friends");
-      setDeletePostModalOpen(false)
-      toast.success("Your post was successfully deleted!")
+      setDeletePostModalOpen(false);
+      toast.success("Your post was successfully deleted!");
     } catch (error) {
-      toast.error("There was an error deleting the post...")
+      toast.error("There was an error deleting the post...");
       console.error("Error deleting post:", error);
     }
   }
@@ -367,23 +376,25 @@ export default function UserWorkoutCard({
     setDeletePostModalOpen(!deletePostModalOpen);
   }
 
-
   function removePostAppreciation() {
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
     }
-  
+
     const postRef = doc(db, "posts", postId);
     const apprecationsCollectionRef = collection(postRef, "appreciations");
-  
+
     const serverTimestampObj = serverTimestamp();
     const timestamp = Timestamp.fromMillis(Date.now());
-  
+
     const appreciationId = currentUser.uid; // Generate a unique identifier for the appreciation
-  
-    const appreciationsDocRef = doc(apprecationsCollectionRef, "appreciationsDoc"); // Provide the desired ID for the appreciation document
-  
+
+    const appreciationsDocRef = doc(
+      apprecationsCollectionRef,
+      "appreciationsDoc"
+    ); // Provide the desired ID for the appreciation document
+
     updateDoc(appreciationsDocRef, {
       [appreciationId]: deleteField(),
     })
@@ -399,24 +410,21 @@ export default function UserWorkoutCard({
         // For example: setErrorState("Failed to remove appreciation. Please try again later.");
       });
   }
-  
 
   function appreciatePost() {
-
     if (currentUser.isAnonymous === true) {
       setGuestProfileModalOpen(true);
       return;
     }
 
-
     if (currentUser.emailVerified === false) {
-      toast("You need to verify your email first!")
+      toast("You need to verify your email first!");
       return;
     }
-    
+
     const postRef = doc(db, "posts", postId);
     const apprecationsCollectionRef = collection(postRef, "appreciations");
-  
+
     const serverTimestampObj = serverTimestamp();
     const timestamp = Timestamp.fromMillis(Date.now());
 
@@ -429,22 +437,24 @@ export default function UserWorkoutCard({
       surname: currentUserData.surname,
       profileImage: currentUserData.profileImage,
     };
-    
-    const appreciationsDocRef = doc(apprecationsCollectionRef, "appreciationsDoc"); // Provide the desired ID for the comment document
+
+    const appreciationsDocRef = doc(
+      apprecationsCollectionRef,
+      "appreciationsDoc"
+    ); // Provide the desired ID for the comment document
 
     getDoc(appreciationsDocRef)
       .then((doc) => {
         if (doc.exists()) {
           // Comment document already exists, update the document
-          setPostAppreciationsNumber(postAppreciationsNumber+1)
-          setPostAppreciationStatus(true)
+          setPostAppreciationsNumber(postAppreciationsNumber + 1);
+          setPostAppreciationStatus(true);
           return updateDoc(appreciationsDocRef, {
             [appreciationId]: appreciationData, // Use the comment ID as the field name within the document
           });
-
         } else {
-          setPostAppreciationsNumber(postAppreciationsNumber+1)
-          setPostAppreciationStatus(true)
+          setPostAppreciationsNumber(postAppreciationsNumber + 1);
+          setPostAppreciationStatus(true);
           // Comment document doesn't exist, create a new document
           return setDoc(appreciationsDocRef, {
             [appreciationId]: appreciationData, // Use the comment ID as the field name within the document
@@ -453,20 +463,17 @@ export default function UserWorkoutCard({
       })
       .catch((error) => {
         // Error occurred while adding comment
-        toast.error("There was an error adding your comment...")
+        toast.error("There was an error adding your comment...");
         console.error("Error adding comment:", error);
       });
   }
 
-
-  function handlePostAppreciation(){
-
-    if(postAppreciationStatus){
-      removePostAppreciation()
-    } else{
-      appreciatePost()
+  function handlePostAppreciation() {
+    if (postAppreciationStatus) {
+      removePostAppreciation();
+    } else {
+      appreciatePost();
     }
-
   }
   return (
     <div>
@@ -515,17 +522,22 @@ export default function UserWorkoutCard({
           }
           subheader={getTimeDifference(postCreatedAt)}
         />
-
-        {postImage !== null && (
-          <LazyLoadImage
-            src={postImage}
-            alt="post image"
-            effect="blur" // optional blur effect, you can remove it if not needed
+        <Box >
+          {postImage !== null && isLoading  ? (
+              <Stack spacing={1} height="100%" width="100%">
+              <Skeleton variant="rounded" width="auto" height="350px" />
+            </Stack>
+          
+          ) : postImage !== null && isLoading === false ? (
+          <Box height="100%" width="100%" minHeight="350px">
+          <img
+            src={imageURL}
+            alt=""
             style={{ width: "100%", height: "100%" }}
-            wrapperProps={{ style: { width: "100%", height: "100%" } }}
           />
-        )}
-
+        </Box>
+          ) : null}
+        </Box>
         <CardContent>
           <Typography
             variant="body2"
@@ -750,9 +762,7 @@ export default function UserWorkoutCard({
                 label="Write a comment"
                 className="dbz-subvariant"
                 size="small"
-                sx={{ width: "100%"
-              }}
-
+                sx={{ width: "100%" }}
                 onChange={(e) => setCommentText(e.target.value)}
                 value={commentText}
               />

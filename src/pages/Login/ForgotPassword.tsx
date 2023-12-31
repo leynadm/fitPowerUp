@@ -64,7 +64,7 @@ export default function ForgotPassword() {
                   WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                   maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                 }}
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fvegeta_register_512x512.png?alt=media&token=0ff23098-7abc-4160-8683-a25b6fbc73f0&_gl=1*1f4jiyl*_ga*NjYzMzI3MTUwLjE2OTM5MzIzMjM.*_ga_CW55HF8NVT*MTY5ODMyNjQyNC45My4xLjE2OTgzMjg0ODAuMzMuMC4w"
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fnew-password.jpeg?alt=media&token=087a1366-1cb3-4f35-b650-a43be043d429"
                 alt=""
                 loading="lazy"
               ></img>
@@ -109,7 +109,7 @@ export default function ForgotPassword() {
                   WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                   maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                 }}
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8-posts/o/assets%2Fapp-images%2Fnew-password.jpeg?alt=media&token=82a007d6-1a60-49da-9bfd-3fcf22f92acb"
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fnew-password.jpeg?alt=media&token=087a1366-1cb3-4f35-b650-a43be043d429"
                 alt=""
                 loading="lazy"
               ></img>

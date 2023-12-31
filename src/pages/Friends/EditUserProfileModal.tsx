@@ -22,6 +22,8 @@ import Switch from "@mui/material/Switch";
 import toast from "react-hot-toast";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import capitalizeWords from "../../utils/capitalizeWords";
+import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
+
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -240,14 +242,7 @@ function EditUserProfileModal({
       });
     }
 
-    // If hide options changed, show the note and log out the user
-    if (hideOptionsChanged) {
-
-      auth.signOut();
-
-      return;
-    }
-
+    await fetchCurrentUserData(currentUser,setCurrentUserData)
     getUserData().then(() => {
       handleClose();
     });

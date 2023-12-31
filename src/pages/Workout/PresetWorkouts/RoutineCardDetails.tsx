@@ -183,6 +183,7 @@ function RoutineCardDetails() {
                   size="small"
                   fullWidth
                   multiline
+                  
                   defaultValue={
                     routineDetails && routineDetails.routineDescription
                   }
@@ -191,11 +192,11 @@ function RoutineCardDetails() {
             )}
 
             {routineDetails && routineDetails.routineLinkReference !== "" && (
-              <Typography variant="subtitle2" align="center">
+              <Typography variant="subtitle2" align="center" width="100%" sx={{wordWrap:"break-word"}}>
                 <a
                   href={routineDetails.routineLinkReference}
                   target="_blank"
-                  rel="noopener noreferrer"
+                                    rel="noopener noreferrer"
                 >
                   {routineDetails.routineLinkReference}
                 </a>
