@@ -17,21 +17,24 @@ import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import toast from "react-hot-toast";
 import { IUserBodyTrackerDataEntry } from "../../utils/interfaces/IBodyTracker";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import HotelIcon from "@mui/icons-material/Hotel";
 function BodyTrackerTrack() {
   const { currentUser, currentUserData } = useContext(AuthContext);
 
-  const { userBodyTrackerData, refetchUserBodyTrackerData } =
-    useContext(BodyTrackerDataContext);
+  const { userBodyTrackerData, refetchUserBodyTrackerData } = useContext(
+    BodyTrackerDataContext
+  );
 
-    const isOnline = useOnlineStatus()
+  const isOnline = useOnlineStatus();
 
-  const userBodyTrackerDataSize = userBodyTrackerData.length 
+  const userBodyTrackerDataSize = userBodyTrackerData.length;
   const [saveButtonText, setSaveButtonText] = useState("save");
   const [bodyKPIDataObj, setBodyKPIDataObj] = useState({
     date: "",
     weight: "",
     bodyFat: "",
     caloricIntake: "",
+    hoursOfSleep: "",
     neck: "",
     shoulders: "",
     chest: "",
@@ -51,29 +54,33 @@ function BodyTrackerTrack() {
     const inputValue = event.target.value;
     const elementId = event.target.id;
 
-      // Check if the input value is an empty string
-  if (inputValue === "") {
-    setBodyKPIDataObj((prevState) => ({
-      ...prevState,
-      [elementId]: "", // Set the value to an empty string to avoid a NaN
-    }));
-  } else if (/^\d*\.?\d*$/.test(inputValue)) {
-    // If it's a valid number, update the state with the parsed float value
-    setBodyKPIDataObj((prevState) => ({
-      ...prevState,
-      [elementId]: parseFloat(inputValue),
-    }));
-  }
+    // Check if the input value is an empty string
+    if (inputValue === "") {
+      setBodyKPIDataObj((prevState) => ({
+        ...prevState,
+        [elementId]: "", // Set the value to an empty string to avoid a NaN
+      }));
+    } else if (/^\d*\.?\d*$/.test(inputValue)) {
+      // If it's a valid number, update the state with the parsed float value
+      setBodyKPIDataObj((prevState) => ({
+        ...prevState,
+        [elementId]: parseFloat(inputValue),
+      }));
+    }
   };
-
 
   async function handleSaveBodyTrackerEntry() {
     let checkIfAtLeastOneValueIsAdded = false;
-    
+
     for (const [key, value] of Object.entries(bodyKPIDataObj)) {
       if (parseFloat(value) !== 0 && value !== "" && key !== "date") {
         checkIfAtLeastOneValueIsAdded = true;
       }
+    }
+
+    if (bodyKPIDataObj.date.trim() === "") {
+      toast.error("Date is required!");
+      return; // Exit the function if the date is not provided
     }
 
     if (checkIfAtLeastOneValueIsAdded) {
@@ -100,38 +107,36 @@ function BodyTrackerTrack() {
     const matchedEntry = userBodyTrackerDataArr.find(
       (item: IUserBodyTrackerDataEntry) => item.date === newDate
     );
-  
+
     if (matchedEntry) {
       setSaveButtonText("Update");
-        setBodyKPIDataObj({
-          date: matchedEntry.date,
-          weight: String(matchedEntry.weight),
-          bodyFat: String(matchedEntry.bodyFat),
-          caloricIntake: String(matchedEntry.caloricIntake),
-          neck: String(matchedEntry.neck),
-          shoulders: String(matchedEntry.shoulders),
-          chest: String(matchedEntry.chest),
-          leftBicep: String(matchedEntry.leftBicep),
-          rightBicep: String(matchedEntry.rightBicep),
-          leftForearm: String(matchedEntry.leftForearm),
-          rightForearm: String(matchedEntry.rightForearm),
-          waist: String(matchedEntry.waist),
-          hips: String(matchedEntry.hips),
-          leftThigh: String(matchedEntry.leftThigh),
-          rightThigh: String(matchedEntry.rightThigh),
-          leftCalf: String(matchedEntry.leftCalf),
-          rightCalf: String(matchedEntry.rightCalf),
-        });
-
-      } else {
-      
-
-        
+      setBodyKPIDataObj({
+        date: matchedEntry.date,
+        weight: String(matchedEntry.weight),
+        bodyFat: String(matchedEntry.bodyFat),
+        caloricIntake: String(matchedEntry.caloricIntake),
+        hoursOfSleep: String(matchedEntry.hoursOfSleep),
+        neck: String(matchedEntry.neck),
+        shoulders: String(matchedEntry.shoulders),
+        chest: String(matchedEntry.chest),
+        leftBicep: String(matchedEntry.leftBicep),
+        rightBicep: String(matchedEntry.rightBicep),
+        leftForearm: String(matchedEntry.leftForearm),
+        rightForearm: String(matchedEntry.rightForearm),
+        waist: String(matchedEntry.waist),
+        hips: String(matchedEntry.hips),
+        leftThigh: String(matchedEntry.leftThigh),
+        rightThigh: String(matchedEntry.rightThigh),
+        leftCalf: String(matchedEntry.leftCalf),
+        rightCalf: String(matchedEntry.rightCalf),
+      });
+    } else {
       setBodyKPIDataObj({
         date: event.target.value,
         weight: "",
         bodyFat: "",
         caloricIntake: "",
+        hoursOfSleep: "",
         neck: "",
         shoulders: "",
         chest: "",
@@ -145,12 +150,11 @@ function BodyTrackerTrack() {
         rightThigh: "",
         leftCalf: "",
         rightCalf: "",
-      });  
+      });
 
       setSaveButtonText("Save");
-
     }
-/* 
+    /* 
     setBodyKPIDataObj((prevState) => ({
       ...prevState,
       date: event.target.value,
@@ -199,7 +203,6 @@ function BodyTrackerTrack() {
             type="date"
             fullWidth
             onChange={(event) => handleOnChangeForDate(event)}
-
           />
           {saveButtonText === "Update" && (
             <Typography>You've already added data for this date.</Typography>
@@ -231,7 +234,7 @@ function BodyTrackerTrack() {
           value={bodyKPIDataObj.weight}
         />
       </Box>
-      <Box 
+      <Box
         display="flex"
         paddingTop="0.5rem"
         justifyContent="center"
@@ -269,6 +272,27 @@ function BodyTrackerTrack() {
           type="number"
           onChange={handleKPIChange}
           value={bodyKPIDataObj.caloricIntake}
+        />
+      </Box>
+
+      <Box
+        display="flex"
+        paddingTop="0.5rem"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        width="100%"
+      >
+        <HotelIcon fontSize="large" />
+        <TextField
+          id="hoursOfSleep"
+          label="Hours of sleep"
+          size="small"
+          variant="filled"
+          fullWidth
+          type="number"
+          onChange={handleKPIChange}
+          value={bodyKPIDataObj.hoursOfSleep}
         />
       </Box>
 
@@ -582,7 +606,7 @@ function BodyTrackerTrack() {
           onClick={handleSaveBodyTrackerEntry}
           disabled={!isOnline}
         >
-                        {isOnline ? saveButtonText : "Reconecting..."}
+          {isOnline ? saveButtonText : "Reconecting..."}
         </Button>
 
         <Button

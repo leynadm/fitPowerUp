@@ -350,7 +350,9 @@ function SearchUserProfile() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {/* 
             <PersonIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+             */}
             <Typography
               variant="h6"
               noWrap
@@ -367,9 +369,9 @@ function SearchUserProfile() {
             >
               {queriedUser && `${queriedUser.name} ${queriedUser.surname}`}
             </Typography>
-
+            {/* 
             <PersonIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-
+            */}
             <Box>
               <Typography
                 variant="h5"

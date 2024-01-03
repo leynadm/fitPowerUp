@@ -5,19 +5,14 @@ import Container from "@mui/material/Container";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import fitImageLogo from "../../assets/fitPowerUpLogoV3.jpg";
 import { useNavigate } from "react-router-dom";
 import InstallInstructionsModal from "../../components/ui/InstallInstructionsModal";
-import Zoom from "@mui/material/Zoom";
-import Fade from "@mui/material/Fade";
-import { Translate } from "@mui/icons-material";
-import StarsIcon from "@mui/icons-material/Stars";
 import InfoIcon from "@mui/icons-material/Info";
 import "../Home/styles/animation.css";
 import RedditIcon from "@mui/icons-material/Reddit";
 import EmailIcon from "@mui/icons-material/Email";
 import Link from "@mui/material/Link";
-import FakeUserReviewCard from "../../components/ui/UserReviewCard";
+
 function LandingPage() {
   const navigate = useNavigate();
   function useContainerRefs() {
@@ -235,45 +230,22 @@ function LandingPage() {
         <Box
           height="calc(100svh - 56px)"
           display="grid"
-          alignItems="center"
-          gridTemplateRows="4fr 0.75fr 4fr 1.25fr"
-          width="100%"
-          maxHeight="100%"
+          gridTemplateRows="4fr 1fr 4fr 1fr"
           position="relative"
         >
-          {/* FIRST BOX */}
-
-          <Box
-            width="100%"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            overflow="hidden"
-            sx={{
-              "& img": {
-                maxWidth: {
-                  xs: "256px", // Full width on extra-small devices
-                  sm: "256px", // Max width of 256px on small devices and above
-                  md: "384px", // Max width of 256px on small devices and above
-                  lg: "384px", // Max width of 256px on small devices and above
-                },
-              },
-            }}
-          >
+          <Box overflow="hidden" height="100%">
             <img
-            
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
               alt=""
               style={{
+                objectFit: "contain",
+                maxWidth: "100%",
                 width: "100%",
                 height: "100%",
               }}
-              loading="lazy"
-            />
+            ></img>
           </Box>
 
-          {/* */}
           <Box sx={{ position: "relative" }}>
             <Box
               sx={{
@@ -291,48 +263,27 @@ function LandingPage() {
           </Box>
 
           {/* THIRD BOX */}
-          <Box
-            sx={{
-              backgroundImage:
-                'URL("https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431")',
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              overflow: "hidden",
-              /* 
-              filter: "blur(2px)",
-               */
-              "& img": {
-                maxWidth: {
-                  xs: "256px", // Full width on extra-small devices
-                  sm: "384px", // Max width of 256px on small devices and above
-                  md: "384px", // Max width of 256px on small devices and above
-                  lg: "384px", // Max width of 256px on small devices and above
-                },
-              },
-              position: "relative",
-            }}
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            position="relative"
-            height="100%"
-          ></Box>
-          <Box display="flex" justifyContent="center">
-            <Button onClick={getStartedClick} variant="dbz" >
+          <Box overflow="hidden" height="100%">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431"
+              alt=""
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
+              }}
+            ></img>
+          </Box>
+          <Box display="flex" justifyContent="center" alignItems="center" p={1}>
+            <Button onClick={getStartedClick} variant="dbz">
               Get Started
             </Button>
           </Box>
         </Box>
 
         <Box
-          height="100svh"
           width="100%"
-          maxWidth="100%"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-around"
-          flexDirection="column"
           sx={{
             backgroundColor: "#18c2e6",
             background:
@@ -340,134 +291,89 @@ function LandingPage() {
           }}
         >
           <Box
+            height="100svh"
+            paddingTop={2}
+            paddingBottom={2}
+            display="grid"
+            gridTemplateRows="4.5fr 1fr 4.5fr"
             ref={containerRefs[0]}
             className={`${
               isVisible[0] ? "visible slide-in-left" : "initial-position"
             }`}
           >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
+            <Box display="grid" gridTemplateColumns="1fr 1fr" overflow="hidden">
               <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
                 overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
-                }}
+                width="100%"
+                justifyContent="flex-end"
+                alignItems="flex-end"
+                display="flex"
               >
                 <img
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.webp?alt=media&token=49e609b6-56e6-4268-8b59-d74fbb087b13"
                   alt=""
                   style={{
-                    width: "100%",
+                    objectFit: "contain",
+                    maxWidth: "100%",
+
                     height: "100%",
                   }}
-                  loading="lazy"
-                />
-
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="flex-start"
-                  justifyContent="center"
-                  color="white"
-                >
-                  <Typography
-                    align="center"
-                    fontWeight="bold"
-                    height="100%"
-                    ref={containerRefs[1]}
-                    className={`${
-                      isVisible[1] ? "visible counter-library-exercises" : ""
-                    }`}
-                    minHeight="40px"
-                  ></Typography>
-                  <Typography
-                    align="center"
-                    fontWeight="bold"
-                    fontSize="1.25rem"
-                  >
-                    EXERCISES
-                  </Typography>
-                </Box>
+                ></img>
               </Box>
-            </Box>
 
-            <Box display="flex" justifyContent="center" width="100%">
-              <Typography
-                fontWeight="bold"
-                fontSize="1.25rem"
-                align="center"
-                padding={1.5}
-                color="white"
-              >
-                fitPowerUp offers you a library of more than one thousand
-                exercises! <br />
-                And you can add your own too!
-              </Typography>
-            </Box>
-
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-              padding={2}
-            >
               <Box
-                width="100%"
                 display="flex"
-                justifyContent="center"
+                flexDirection="column"
                 alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
-                }}
+                justifyContent="center"
+                color="white"
+                justifySelf="flex-start"
               >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.webp?alt=media&token=3e8b16c8-39a7-4865-9535-4b4743404c45"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
+                <Typography
+                  align="center"
+                  fontWeight="bold"
+                  ref={containerRefs[1]}
+                  className={`${
+                    isVisible[1] ? "visible counter-library-exercises" : ""
+                  }`}
+                  minHeight="40px"
+                ></Typography>
+                <Typography align="center" fontWeight="bold" fontSize="1.25rem">
+                  EXERCISES
+                </Typography>
               </Box>
+            </Box>
+
+            <Typography
+              fontWeight="bold"
+              fontSize="1.25rem"
+              align="center"
+              padding={1.5}
+              color="white"
+            >
+              fitPowerUp offers you a library of more than one thousand
+              exercises! <br />
+              And you can add your own too!
+            </Typography>
+
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.webp?alt=media&token=3e8b16c8-39a7-4865-9535-4b4743404c45"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></img>
             </Box>
           </Box>
         </Box>
 
         <Box
-          height="100svh"
-          width="100%"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-around"
-          flexDirection="column"
           sx={{
+            width: "100%",
             backgroundColor: "#f3b932",
             background:
               "radial-gradient(circle, rgba(243,185,50,1) 0%, rgba(149,109,17,1) 100%)",
@@ -478,309 +384,166 @@ function LandingPage() {
             className={`${
               isVisible[2] ? "visible fade-in" : "initial-position"
             }`}
+            height="100svh"
+            width="100%"
+            display="grid"
+            gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.webp?alt=media&token=2a79984a-6f4c-403e-88c1-ded808d5556f"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.webp?alt=media&token=2a79984a-6f4c-403e-88c1-ded808d5556f"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
 
-            <Box display="flex" justifyContent="center" width="100%">
-              <Typography
-                fontWeight="bold"
-                fontSize="1.25rem"
-                align="center"
-                padding={1.5}
-              >
-                You can instantly access an in-depth breakdown analysis for
-                every exercise!
-              </Typography>
-            </Box>
-
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-              padding={2}
+            <Typography
+              fontWeight="bold"
+              fontSize="1.25rem"
+              align="center"
+              padding={1.5}
+              sx={{ verticalAlign: "center" }}
             >
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+              You can instantly access an in-depth breakdown analysis for every
+              exercise!
+            </Typography>
+
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-1.webp?alt=media&token=81fc5f04-417c-40a6-beb9-5f19c6074ac4"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-1.webp?alt=media&token=81fc5f04-417c-40a6-beb9-5f19c6074ac4"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
           </Box>
         </Box>
 
         <Box
-          height="100svh"
           width="100%"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
           sx={{
             backgroundColor: "#520975",
             background:
               "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(40,5,56,1) 100%)",
           }}
-          justifyContent="space-around"
         >
           <Box
             ref={containerRefs[3]}
             className={`${
               isVisible[3] ? "visible slide-in-left" : "initial-position"
             }`}
+            height="100svh"
+            width="100%"
+            display="grid"
+            gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.webp?alt=media&token=511d72a1-1723-4304-9126-56574a142b69"
+                alt=""
+                width="auto"
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.webp?alt=media&token=511d72a1-1723-4304-9126-56574a142b69"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
 
-            <Box
-              display="flex"
-              justifyContent="center"
+            <Typography
+              fontWeight="bold"
+              fontSize="1.25rem"
+              align="center"
+              padding={1.5}
               color="white"
-              width="100%"
             >
-              <Typography
-                fontWeight="bold"
-                fontSize="1.25rem"
-                align="center"
-                padding={1.5}
-              >
-                You get a complete analysis, with breakdowns on your muscle
-                groups, aggregated data and more!
-              </Typography>
-            </Box>
+              You get a complete analysis, with breakdowns on your muscle
+              groups, aggregated data and more!
+            </Typography>
 
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-              padding={2}
-            >
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-1.webp?alt=media&token=88107327-146b-43b6-902f-38290795d1e0"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-1.webp?alt=media&token=88107327-146b-43b6-902f-38290795d1e0"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
           </Box>
         </Box>
 
         <Box
-          height="100svh"
           width="100%"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
           sx={{
             backgroundColor: "#000000",
             background:
               "radial-gradient(circle, rgba(102,128,134,1) 0%, rgba(0,0,0,1) 100%)",
           }}
-          justifyContent="space-around"
         >
           <Box
             ref={containerRefs[4]}
             className={`${isVisible[4] ? "visible grow" : "initial-position"}`}
+            height="100svh"
+            display="grid"
+            gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.webp?alt=media&token=179a5b29-a2ee-47b7-b0e5-2e5a0abd599a"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.webp?alt=media&token=179a5b29-a2ee-47b7-b0e5-2e5a0abd599a"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
 
-            <Box
-              display="flex"
-              justifyContent="center"
+            <Typography
+              fontWeight="bold"
+              fontSize="1.25rem"
+              align="center"
+              padding={1.5}
               color="white"
-              width="100%"
             >
-              <Typography
-                fontWeight="bold"
-                fontSize="1.25rem"
-                align="center"
-                padding={1.5}
-              >
-                Every workout you complete gives you a chance to increase your
-                power level. <br />
-                Why not getting stronger while having fun?
-              </Typography>
-            </Box>
+              Every workout you complete gives you a chance to increase your
+              power level. <br />
+              Why not getting stronger while having fun?
+            </Typography>
 
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-              padding={2}
-            >
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-1.webp?alt=media&token=9bf050f9-a151-4dc7-b816-c096b2411b80"
+                alt=""
+                width="auto"
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-1.webp?alt=media&token=9bf050f9-a151-4dc7-b816-c096b2411b80"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
           </Box>
         </Box>
 
         <Box
-          height="100svh"
           width="100%"
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
           sx={{
             backgroundColor: "red",
             background:
@@ -792,101 +555,54 @@ function LandingPage() {
             className={`${
               isVisible[5] ? "visible fade-in" : "initial-position"
             }`}
+            height="100svh"
+            display="grid"
+            gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6.webp?alt=media&token=f3aa35d0-c797-44b8-bc74-899187f6411f"
+                alt=""
+                width="auto"
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6.webp?alt=media&token=f3aa35d0-c797-44b8-bc74-899187f6411f"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
 
-            <Box
-              display="flex"
-              justifyContent="center"
+            <Typography
+              fontWeight="bold"
+              fontSize="1.25rem"
+              align="center"
+              padding={1.5}
               color="white"
-              width="100%"
             >
-              <Typography
-                fontWeight="bold"
-                fontSize="1.25rem"
-                align="center"
-                padding={1.5}
-              >
-                Unlock DBZ heroes with the Path feature and reach new gym
-                milestones in the Feats menu!
-              </Typography>
-            </Box>
+              Unlock DBZ heroes with the Path feature and reach new gym
+              milestones in the Feats menu!
+            </Typography>
 
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-            >
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="100%"
-                height="100%"
-                overflow="hidden"
-                sx={{
-                  "& img": {
-                    maxWidth: {
-                      xs: "256px", // Full width on extra-small devices
-                      sm: "384px", // Max width of 256px on small devices and above
-                      md: "384px", // Max width of 256px on small devices and above
-                      lg: "384px", // Max width of 256px on small devices and above
-                    },
-                  },
+            <Box overflow="hidden" height="100%">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.webp?alt=media&token=67df5913-9ee9-4f22-94f4-ffaefee9a973"
+                alt=""
+                width="auto"
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
                 }}
-              >
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.webp?alt=media&token=67df5913-9ee9-4f22-94f4-ffaefee9a973"
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  loading="lazy"
-                />
-              </Box>
+              ></img>
             </Box>
           </Box>
         </Box>
       </Box>
 
       <Box
-        height="100svh"
         width="100%"
-        display="flex"
-        justifyContent="center"
-        flexDirection="column"
         sx={{
           backgroundColor: "red",
           background:
@@ -894,97 +610,66 @@ function LandingPage() {
         }}
       >
         <Box
+          height="100svh"
+          display="grid"
+          gridTemplateRows="4.5fr 1fr 4.5fr"
           ref={containerRefs[6]}
           className={`${
             isVisible[6] ? "visible slide-in-left" : "initial-position"
           }`}
         >
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <Box
-              width="100%"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight="100%"
-              height="100%"
-              overflow="hidden"
-              sx={{
-                "& img": {
-                  maxWidth: {
-                    xs: "256px", // Full width on extra-small devices
-                    sm: "384px", // Max width of 256px on small devices and above
-                    md: "384px", // Max width of 256px on small devices and above
-                    lg: "384px", // Max width of 256px on small devices and above
-                  },
-                },
+          <Box overflow="hidden" height="100%">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7.webp?alt=media&token=83c35143-14c2-4683-ad01-504c3316d264"
+              alt=""
+              width="auto"
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
               }}
-            >
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7.webp?alt=media&token=83c35143-14c2-4683-ad01-504c3316d264"
-                alt=""
-                loading="lazy"
-              />
-            </Box>
+            ></img>
           </Box>
 
-          <Box
-            display="flex"
-            justifyContent="center"
+          <Typography
             color="white"
-            width="100%"
+            fontWeight="bold"
+            fontSize="1.25rem"
+            align="center"
+            padding={1.5}
           >
-            <Typography
-              fontWeight="bold"
-              fontSize="1.25rem"
-              align="center"
-              padding={1.5}
-            >
-              Easy install & runs everywhere! fitPowerUp uses the PWA
-              technology, <br />
-              meaning it works seamlessly across all devices just like a native
-              app!
-            </Typography>
-          </Box>
+            Easy install & runs everywhere! fitPowerUp uses the PWA technology,{" "}
+            <br />
+            meaning it works seamlessly across all devices just like a native
+            app!
+          </Typography>
 
-          <Box display="flex" justifyContent="space-around" alignItems="center">
-            <Box
-              width="100%"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight="100%"
-              height="100%"
-              overflow="hidden"
-              sx={{
-                "& img": {
-                  maxWidth: {
-                    xs: "256px", // Full width on extra-small devices
-                    sm: "384px", // Max width of 256px on small devices and above
-                    md: "384px", // Max width of 256px on small devices and above
-                    lg: "384px", // Max width of 256px on small devices and above
-                  },
-                },
+          <Box overflow="hidden" height="100%">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
+              alt=""
+              width="auto"
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
               }}
-            >
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
-                alt=""
-                loading="lazy"
-              />
-            </Box>
+            ></img>
           </Box>
         </Box>
       </Box>
 
       <Box
-        height="calc(100svh - 56px)"
+        height="100%"
         width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
+        display="grid"
+        gridTemplateRows="8.5fr 1.5fr"
         sx={{
           backgroundColor: "black",
+          placeItems: "center",
+          alignItems: "center",
         }}
         gap={1}
       >
@@ -1001,14 +686,6 @@ function LandingPage() {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            gap={1}
-            sx={{
-              fontSize: {
-                sm: "1rem", // Max width of 256px on small devices and above
-                md: "1rem", // Max width of 256px on small devices and above
-                lg: "1.25rem", // Max width of 256px on small devices and above
-              },
-            }}
           >
             Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
           </Typography>
@@ -1017,14 +694,8 @@ function LandingPage() {
             color="white"
             variant="caption"
             align="center"
-            padding={1.5}
-            sx={{
-              fontSize: {
-                sm: "1rem", // Max width of 256px on small devices and above
-                md: "1rem", // Max width of 256px on small devices and above
-                lg: "1.25rem", // Max width of 256px on small devices and above
-              },
-            }}
+            padding={1}
+            fontSize="100%"
           >
             This app is a fan-made creation, inspired by the Dragon Ball Z
             series, which is a property of FUNimation, Toei Animation, Fuji TV,
@@ -1049,51 +720,59 @@ function LandingPage() {
           </Typography>
         </Container>
 
-        <Typography
-          color="white"
+        <Box
           display="flex"
+          height="100%"
+          flexDirection="column"
           alignItems="center"
-          gap={1}
-          variant="overline"
+          justifyContent="flex-start"
         >
-          <RedditIcon />
-          Join the
-          <a
-            href="https://reddit.com/r/fitpowerup"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "white" }}
+          <Typography
+            color="white"
+            display="flex"
+            alignItems="center"
+            gap={1}
+            variant="overline"
           >
-            r/fitPowerUp
-          </a>
-          community!
-        </Typography>
+            <RedditIcon />
+            Join the
+            <a
+              href="https://reddit.com/r/fitpowerup"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white" }}
+            >
+              r/fitPowerUp
+            </a>
+            community!
+          </Typography>
 
-        <Typography
-          color="white"
-          display="flex"
-          alignItems="center"
-          gap={1}
-          variant="overline"
-        >
-          <EmailIcon />
-          Click
-          <a
-            href={`mailto:${myEmailName}@${emailClient}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "white" }}
+          <Typography
+            color="white"
+            display="flex"
+            alignItems="center"
+            gap={1}
+            variant="overline"
           >
-            here
-          </a>
-          to contact me via email.
-        </Typography>
+            <EmailIcon />
+            Click
+            <a
+              href={`mailto:${myEmailName}@${emailClient}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white" }}
+            >
+              here
+            </a>
+            to contact me via email.
+          </Typography>
 
-        <Typography variant="body2" color="white" align="center">
-          <Link color="inherit" href={myWebsite} target="_blank">
-            Developed by Daniel Matei {new Date().getFullYear()}
-          </Link>
-        </Typography>
+          <Typography variant="body2" color="white" align="center">
+            <Link color="inherit" href={myWebsite} target="_blank">
+              Developed by Daniel Matei {new Date().getFullYear()}
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

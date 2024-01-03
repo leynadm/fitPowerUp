@@ -25,11 +25,11 @@ function ExerciseSelectionMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const muscleGroup: string = useLocation().state.muscleGroup;
-  
+
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
-  const [query, setQuery] = useState(searchParams.get('query') || '');
+  const [query, setQuery] = useState(searchParams.get("query") || "");
 
   const navigate = useNavigate();
   const isMale = currentUserData.sex === "male" ? true : false;
@@ -113,14 +113,13 @@ function ExerciseSelectionMenu() {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-  
+
     // Update only the query parameter without affecting the path
     const newSearchParams = new URLSearchParams();
     if (newQuery) {
-      newSearchParams.set('query', newQuery);
+      newSearchParams.set("query", newQuery);
     }
     setSearchParams(newSearchParams);
-  
   };
 
   const Row = ({
@@ -219,7 +218,6 @@ function ExerciseSelectionMenu() {
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>
-
       </Box>
     );
   };
@@ -238,9 +236,10 @@ function ExerciseSelectionMenu() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <FitnessCenterIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
               <Typography
                 variant="h6"
                 noWrap
@@ -256,10 +255,10 @@ function ExerciseSelectionMenu() {
               >
                 {capitalizeWords(muscleGroup)}
               </Typography>
-
+              {/* 
               <FitnessCenterIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"

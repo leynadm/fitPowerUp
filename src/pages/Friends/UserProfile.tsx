@@ -28,6 +28,8 @@ import NoConnection from "../../components/ui/NoConnection";
 import UserViewCharacterProgressModal from "../../components/ui/UserViewCharacterProgressModal";
 import toast from "react-hot-toast";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import { TextField } from "@mui/material";
+import AddContentModal from "./AddContentModal";
 function UserProfile() {
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
@@ -47,6 +49,11 @@ function UserProfile() {
   const [isNewsfeedHovered, setIsNewsfeedHovered] = useState(false);
   const [isSpottersHovered, setIsSpottersHovered] = useState(false);
   const [isSpottingHovered, setIsSpottingHovered] = useState(false);
+  const [addContentModalOpen, setAddContentModalOpen] = useState(false);
+
+  function handleAddContentModal() {
+    setAddContentModalOpen(true);
+  }
 
   const isOnline = useOnlineStatus()
 
@@ -115,11 +122,18 @@ function UserProfile() {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
+              {currentUserData.name !== undefined && (
+        <AddContentModal
+          addContentModalOpen={addContentModalOpen}
+          setAddContentModalOpen={setAddContentModalOpen}
+        />
+      )}
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <AccountBoxIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -136,10 +150,10 @@ function UserProfile() {
             >
               Guest User
             </Typography>
-
+            {/* 
             <AccountBoxIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"
@@ -465,6 +479,19 @@ function UserProfile() {
         setEditProfileModalOpen={setEditProfileModalOpen}
         setUpdateCount={setUpdateCount}
       />
+
+        <TextField
+    onClick={handleAddContentModal}
+value="What's on your mind?"
+          variant="outlined"
+          size="small"
+          InputProps={{
+            style: { borderRadius: 30, textAlign: "center" },
+            readOnly: true,
+          }}
+          sx={{ textAlign: "center",padding:1 }}
+          fullWidth
+        ></TextField>
 
       <Routes>
         <Route path="" element={<UserProfilePosts />} />

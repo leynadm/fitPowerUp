@@ -230,7 +230,7 @@ export default function SignIn() {
             LOG IN WITH FACEBOOK
           </Button>
 
-          <Button
+{/*           <Button
             type="button"
             fullWidth
             variant="outlined"
@@ -239,7 +239,7 @@ export default function SignIn() {
           >
             <PersonIcon />
             LOG IN As Guest
-          </Button>
+          </Button> */}
 
           <Grid container>
             <Grid item xs>

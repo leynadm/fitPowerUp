@@ -82,9 +82,10 @@ function RoutineCardDetails() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h6"
@@ -99,10 +100,10 @@ function RoutineCardDetails() {
               >
                 Routine Details
               </Typography>
-
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"
@@ -177,22 +178,17 @@ function RoutineCardDetails() {
             {routineDetails && routineDetails.routineLinkReference !== "" && (
               <Box>
                 <Typography variant="caption">Routine Description</Typography>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  multiline
+                  <Typography variant="body2">
+                  {routineDetails.routineDescription}
                   
-                  defaultValue={
-                    routineDetails && routineDetails.routineDescription
-                  }
-                />
+                </Typography>
               </Box>
             )}
 
             {routineDetails && routineDetails.routineLinkReference !== "" && (
-              <Typography variant="subtitle2" align="center" width="100%" sx={{wordWrap:"break-word"}}>
+            <Box>
+            <Typography variant="caption">Link Reference</Typography>
+<Typography variant="subtitle2" align="center" width="100%" sx={{wordWrap:"break-word"}}>
                 <a
                   href={routineDetails.routineLinkReference}
                   target="_blank"
@@ -201,8 +197,11 @@ function RoutineCardDetails() {
                   {routineDetails.routineLinkReference}
                 </a>
               </Typography>
+              </Box>
             )}
+            
           </Box>
+          
         </Box>
       )}
     </Box>

@@ -169,9 +169,10 @@ function WorkoutDetails() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h6"
@@ -187,9 +188,10 @@ function WorkoutDetails() {
                 Workout Details
               </Typography>
 
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"
@@ -248,34 +250,15 @@ function WorkoutDetails() {
           {individualWorkout && capitalizeWords(individualWorkout.workoutName)}
         </Typography>
 
-        <Typography variant="caption" align="left">
-          Workout Description
-        </Typography>
-        <TextField
-          id="outlined-basic"
-          variant="outlined"
-          size="small"
-          fullWidth
-          multiline
-          defaultValue={
-            individualWorkout && individualWorkout.workoutDescription
-          }
-          InputProps={{
-            readOnly: true,
-          }}
-          sx={{
-            "& .MuiInputBase-input": {
-              // Target the input element inside the TextField
-              fontSize: "1rem", // Set the font size
-              fontWeight: "400", // Set the font weight
-            },
-          }}
-        />
         <Box pt={1}>
           {presetWorkoutsData.length > 0 && (
             <GroupedWorkout workoutExercises={individualWorkout.wExercises} />
           )}
         </Box>
+        <Typography variant="caption" align="left">
+          Workout Description
+        </Typography>
+        <Typography variant="body2">{individualWorkout.workoutDescription}</Typography>
       </Box>
     </Box>
   );

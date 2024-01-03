@@ -1100,7 +1100,7 @@ function ExerciseSelectedTrack() {
                   }
                 >
                   {`${exercise.weight.toFixed(2)} ${
-                    currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                    currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                   }`}
                 </Typography>
               )}

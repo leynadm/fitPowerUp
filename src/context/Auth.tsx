@@ -15,7 +15,7 @@ import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitial
 import enablePersistentData from "../utils/enablePersistentData";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
-import { useUserDataFetch } from "../hooks/useUserDataFetch";
+import updateAppVersionToV3 from "../utils/accountSetupFunctions/updateAppVersionToV3";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -78,9 +78,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (
           tempCurrentUserData &&
           currentUser !== null &&
-          tempCurrentUserData.appVersion !== 2
+          tempCurrentUserData.appVersion === undefined
         ) {
-          updateAppVersionWithNewDocs(currentUser.uid);
+          await updateAppVersionWithNewDocs(currentUser.uid);
+          await updateAppVersionToV3(currentUser.uid);
+        } else if (
+          tempCurrentUserData &&
+          currentUser !== null &&
+          tempCurrentUserData.appVersion === 2
+        ) {
+          await updateAppVersionToV3(currentUser.uid);
         }
       };
 

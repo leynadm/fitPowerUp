@@ -13,15 +13,15 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
-import HelpIcon from '@mui/icons-material/Help';
+import HelpIcon from "@mui/icons-material/Help";
 import ExerciseInfoModal from "../../components/ui/ExerciseInfoModal";
 
 function ExerciseSelected() {
   const [countdownValue, setCountdownValue] = useState(120);
-  const { showRestTimer, setShowRestTimer,time,countdown } = useContext(LogDataContext);
-  const [openExerciseInfoModal,setOpenExerciseInfoModal]= useState(false)
+  const { showRestTimer, setShowRestTimer, time, countdown } =
+    useContext(LogDataContext);
+  const [openExerciseInfoModal, setOpenExerciseInfoModal] = useState(false);
   const { exerciseName } = useParams();
-
 
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
@@ -40,8 +40,8 @@ function ExerciseSelected() {
     setShowRestTimer(!showRestTimer);
   }
 
-  function handleExerciseInfoModal(){
-    setOpenExerciseInfoModal(true)
+  function handleExerciseInfoModal() {
+    setOpenExerciseInfoModal(true);
   }
 
   const handleNewWorkout = () => {
@@ -62,7 +62,9 @@ function ExerciseSelected() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <EditNoteIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+             */}
             <Typography
               variant="h6"
               noWrap
@@ -76,11 +78,11 @@ function ExerciseSelected() {
                 textDecoration: "none",
               }}
             >
-              Add
+              Add Entries
             </Typography>
-
+            {/* 
             <EditNoteIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-
+ */}
             <Typography
               variant="h5"
               noWrap
@@ -95,7 +97,7 @@ function ExerciseSelected() {
                 textDecoration: "none",
               }}
             >
-              Add
+              Add Entries
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>

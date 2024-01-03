@@ -95,7 +95,7 @@ function AddNewPresetWorkoutModal({
       routineBy: workoutState.routineBy,
       exercisesinRoutine: tempExercisesInRoutine,
       routineLinkReference: workoutState.routineLinkReference,
-      delete: false,
+      delete: true,
       workoutBy: workoutState.workoutBy,
       workoutLinkReference: workoutState.workoutLinkReference,
     };

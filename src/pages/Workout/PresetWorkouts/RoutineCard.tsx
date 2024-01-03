@@ -15,6 +15,7 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
   const encodedParameter = encodeURIComponent(routineName);
   const navigate = useNavigate();
   
+
   return (
     <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
       <CardContent sx={{ pt: 0 }}>
@@ -35,11 +36,12 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
         >
           by {groupData.details.routineBy}
         </Typography>
-
+ 
         <TextField
           id="outlined-read-only-input"
           label="Description"
           defaultValue={groupData.details.routineDescription}
+          
           multiline
           maxRows={5}
           size="small"
@@ -49,7 +51,8 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
           }}
           variant="standard"
         />
-      </CardContent>
+
+        </CardContent>
       <CardActions
         sx={{
           paddingTop: 0,
@@ -63,7 +66,8 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
         >
           Go To Routine
         </Button>
-        {groupData.details.routineLinkReference !== "" && (
+        
+        {groupData.details.routineLinkReference !== "" && groupData.details.routineLinkReference !== "" &&groupData.details.routineLinkReference !== undefined  && (
           <Button
             size="small"
             component="a"
@@ -73,6 +77,7 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
             Go To Source
           </Button>
         )}
+
       </CardActions>
     </Card>
   );

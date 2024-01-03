@@ -98,7 +98,7 @@ function SocialSearchBar() {
         </IconButton>
 
         <StyledInputBase
-          placeholder="Search by name..."
+          placeholder="Search by name or surname..."
           onChange={onChange}
           value={userToSearch}
           sx={{ p: 0, m: 0 }}

@@ -212,9 +212,10 @@ function MuscleGroupsSelectionMenu() {
         />
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <FitnessCenterIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -230,10 +231,10 @@ function MuscleGroupsSelectionMenu() {
             >
               Muscle Groups
             </Typography>
-
+            {/* 
             <FitnessCenterIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"

@@ -22,7 +22,7 @@ import { AuthContext } from "../../../context/Auth";
 import { AppBar, Toolbar } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddHomeIcon from "@mui/icons-material/AddHome";
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useNavigate } from "react-router-dom";
 import {
   IWorkoutData,
@@ -36,11 +36,10 @@ import getExistingPresetExercises from "../../../utils/IndexedDbCRUDFunctions/pr
 import { useSearchParams } from "react-router-dom";
 import { validateIndexedDbEntry } from "../../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 function PresetWorkoutExercise() {
-
   const { exerciseName } = useParams();
-  const navigate = useNavigate()
-  
-  const [searchParams] = useSearchParams()
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
 
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
@@ -50,7 +49,7 @@ function PresetWorkoutExercise() {
   );
 
   const { currentUserData } = useContext(AuthContext);
-  const [isAMRAP, setIsAMRAP] = useState(false)
+  const [isAMRAP, setIsAMRAP] = useState(false);
   const [existingExercises, setExistingExercises] = useState<Exercise[]>([]);
   const lastExercise = getLastCompletedExerciseEntry();
   const [editingExercise, setEditingExercise] = useState(false);
@@ -105,10 +104,12 @@ function PresetWorkoutExercise() {
       }
     };
 
-
     const fetchLocalExerciseData = async () => {
       if (exerciseSelected) {
-        await getExistingPresetExercises(exerciseSelected.name, setExistingExercises);
+        await getExistingPresetExercises(
+          exerciseSelected.name,
+          setExistingExercises
+        );
       }
     };
 
@@ -127,7 +128,7 @@ function PresetWorkoutExercise() {
     time: timeValue,
     is_pr: false,
     dropset: false,
-    amrap:false
+    amrap: false,
   };
 
   function getLastCompletedExerciseEntry() {
@@ -191,7 +192,12 @@ function PresetWorkoutExercise() {
 
   function handleModalVisibility(exerciseId: number) {
     setIdExerciseUpdate(exerciseId);
-    getExistingPresetExerciseComment(exerciseId, setCommentValue, setIsDropset,setIsAMRAP);
+    getExistingPresetExerciseComment(
+      exerciseId,
+      setCommentValue,
+      setIsDropset,
+      setIsAMRAP
+    );
     setOpenCommentModal(!openCommentModal);
   }
 
@@ -316,7 +322,7 @@ function PresetWorkoutExercise() {
 
   function safelyParseFloat(value: string | number): number {
     let numberValue: number;
-  
+
     if (typeof value === "string") {
       numberValue = parseFloat(value);
     } else if (typeof value === "number") {
@@ -325,7 +331,7 @@ function PresetWorkoutExercise() {
       console.error("Unsupported type");
       return 0;
     }
-  
+
     // Check for NaN or negative value
     return isNaN(numberValue) || numberValue < 0 ? 0 : numberValue;
   }
@@ -359,10 +365,10 @@ function PresetWorkoutExercise() {
     }
 
     let weightValueFloat = safelyParseFloat(entryToSave.weight);
-    let repsValueFloat = safelyParseFloat(entryToSave.reps)
-    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
-    let timeValueFloat = safelyParseFloat(entryToSave.time)
-    
+    let repsValueFloat = safelyParseFloat(entryToSave.reps);
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance);
+    let timeValueFloat = safelyParseFloat(entryToSave.time);
+
     const updatedEntryToSave = {
       date: entryToSave.date,
       exercise: entryToSave.exercise,
@@ -374,7 +380,7 @@ function PresetWorkoutExercise() {
       is_pr: entryToSave.is_pr,
       dropset: entryToSave.dropset,
       weight: 0,
-      amrap:entryToSave.amrap
+      amrap: entryToSave.amrap,
     };
 
     updatedEntryToSave.weight = weightValueFloat;
@@ -382,10 +388,16 @@ function PresetWorkoutExercise() {
     updatedEntryToSave.distance = distanceValueFloat;
     updatedEntryToSave.time = timeValueFloat;
 
-    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
-    
+    let secondEntryValidation = validateIndexedDbEntry(
+      exerciseSelected.measurement,
+      repsValueFloat,
+      weightValueFloat,
+      distanceValueFloat,
+      timeValueFloat
+    );
+
     if (secondEntryValidation) {
-      toast.error('You can only use positive numbers!')
+      toast.error("You can only use positive numbers!");
       return;
     }
 
@@ -447,19 +459,24 @@ function PresetWorkoutExercise() {
       return;
     }
 
-    let weightValueFloat = safelyParseFloat(entryToSave.weight);    
-    let repsValueFloat = safelyParseFloat(entryToSave.reps)
-    let distanceValueFloat = safelyParseFloat(entryToSave.distance)
-    let timeValueFloat = safelyParseFloat(entryToSave.time)
-    
+    let weightValueFloat = safelyParseFloat(entryToSave.weight);
+    let repsValueFloat = safelyParseFloat(entryToSave.reps);
+    let distanceValueFloat = safelyParseFloat(entryToSave.distance);
+    let timeValueFloat = safelyParseFloat(entryToSave.time);
 
-    let secondEntryValidation = validateIndexedDbEntry(exerciseSelected.measurement,repsValueFloat,weightValueFloat,distanceValueFloat,timeValueFloat)
-    
+    let secondEntryValidation = validateIndexedDbEntry(
+      exerciseSelected.measurement,
+      repsValueFloat,
+      weightValueFloat,
+      distanceValueFloat,
+      timeValueFloat
+    );
+
     if (secondEntryValidation) {
-      toast.error('You can only use positive numbers!')
+      toast.error("You can only use positive numbers!");
       return;
     }
-    
+
     try {
       const request = indexedDB.open("fitPowerUpDb", 2);
 
@@ -505,7 +522,6 @@ function PresetWorkoutExercise() {
                 exerciseSelected.name,
                 setExistingExercises
               );
-
             };
 
             updateRequest.onerror = function () {
@@ -529,7 +545,7 @@ function PresetWorkoutExercise() {
 
   async function deleteEntry(id: number, exerciseName: string) {
     try {
-      const request = indexedDB.open("fitPowerUpDb",2);
+      const request = indexedDB.open("fitPowerUpDb", 2);
 
       request.onsuccess = function (event) {
         const db = (event.target as IDBRequest).result;
@@ -583,7 +599,7 @@ function PresetWorkoutExercise() {
 
   function handleTextFieldChange(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
-   
+
     if (/^-?\d*[\.,]?\d*$/.test(value) || value === "" || value === null) {
       if (id === "reps") {
         setRepsValue(parseInt(value, 10));
@@ -598,7 +614,6 @@ function PresetWorkoutExercise() {
   }
 
   const handleAddButtonClick = (measurement: string) => {
-
     switch (measurement.toLocaleLowerCase()) {
       case "weight":
         if (weightValue === "" || weightValue === null) {
@@ -710,17 +725,14 @@ function PresetWorkoutExercise() {
     );
   }
 
-
   const handleNewWorkout = () => {
-  
     const searchParamsString = searchParams.toString();
-    
+
     // Create the navigation URL, appending the search parameters
     const navigationUrl = `/home/workout/preset-workouts/new-preset-workout?${searchParamsString}`;
-    
+
     // Navigate to the new URL with the search parameters
     navigate(navigationUrl);
-  
   };
 
   return (
@@ -776,7 +788,9 @@ function PresetWorkoutExercise() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <EditNoteIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+             */}
             <Typography
               variant="h6"
               noWrap
@@ -792,9 +806,9 @@ function PresetWorkoutExercise() {
             >
               Add Preset Exercise
             </Typography>
-
+            {/*  
             <EditNoteIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-
+              */}
             <Typography
               variant="h5"
               noWrap
@@ -814,7 +828,6 @@ function PresetWorkoutExercise() {
 
             <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Box sx={{ marginLeft: "auto" }}>
-
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -1194,7 +1207,8 @@ function PresetWorkoutExercise() {
                       : "normal"
                   }
                 >
-                  {exercise.reps}{exercise.amrap&&"+"} reps
+                  {exercise.reps}
+                  {exercise.amrap && "+"} reps
                 </Typography>
               )}
 

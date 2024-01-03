@@ -26,9 +26,12 @@ import { AuthContext } from "../../context/Auth";
 import Grow from "@mui/material/Grow";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
 function WorkoutCalendar() {
-  const { dateForWorkout, userTrainingData, setDateForWorkout,refetchUserTrainingData } = useContext(
-    UserTrainingDataContext
-  );
+  const {
+    dateForWorkout,
+    userTrainingData,
+    setDateForWorkout,
+    refetchUserTrainingData,
+  } = useContext(UserTrainingDataContext);
   const [uniqueDates, setUniqueDates] = useState<string[]>([]);
   const [calendarDateValue, setCalendarDateValue] = useState(
     dayjs(dateForWorkout)
@@ -62,9 +65,7 @@ function WorkoutCalendar() {
   }, [userTrainingData]);
 
   if (!userTrainingData || !dateForWorkout) {
-    return(
-<p>No Data</p>
-    ) 
+    return <p>No Data</p>;
   }
 
   function ServerDay(props: PickersDayProps<Dayjs>) {
@@ -193,9 +194,10 @@ function WorkoutCalendar() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <CalendarMonthIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -211,10 +213,10 @@ function WorkoutCalendar() {
             >
               Calendar
             </Typography>
-
+            {/* 
             <CalendarMonthIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"

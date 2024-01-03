@@ -27,6 +27,7 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import { Button } from "@mui/material";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -62,8 +63,13 @@ function NewWorkout({
     navigate("workout_categories");
   };
 
-  const handleSelectWorkoutExercise = (exerciseName: string,exerciseGroup:string) => {
-    navigate(`workout_categories/exercises/${exerciseGroup}/selected/${exerciseName}`);
+  const handleSelectWorkoutExercise = (
+    exerciseName: string,
+    exerciseGroup: string
+  ) => {
+    navigate(
+      `workout_categories/exercises/${exerciseGroup}/selected/${exerciseName}`
+    );
   };
 
   function CompleteWorkoutModalVisibility() {
@@ -94,7 +100,6 @@ function NewWorkout({
         exerciseComment={exerciseComment}
       />
 
-
       <CompleteWorkoutModal
         openCompleteWorkoutModal={openCompleteWorkoutModal}
         setOpenCompleteWorkoutModal={setOpenCompleteWorkoutModal}
@@ -114,9 +119,10 @@ function NewWorkout({
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <PostAddIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h6"
@@ -132,9 +138,10 @@ function NewWorkout({
                 New Workout
               </Typography>
 
+              {/* 
               <PostAddIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"
@@ -177,7 +184,6 @@ function NewWorkout({
                     <AddOutlinedIcon sx={{ color: "white" }} />
                   </IconButton>
                 </Box>
-                
               </Box>
             </Toolbar>
           </Container>
@@ -238,7 +244,6 @@ function NewWorkout({
               <FormatListNumberedIcon fontSize="medium" />
               <Typography fontSize="1rem">Copy preset workout</Typography>
             </IconButton>
-
           </Box>
         ) : (
           <Box
@@ -256,21 +261,27 @@ function NewWorkout({
                   marginBottom: "8px",
                 }}
               >
-                <Typography
-                  variant="h6"
+                <Button
+
                   sx={{
                     textAlign: "center",
-                    fontSize: "large",
+                    fontSize:"large",
                     background:
                       "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
-                    boxShadow: 2,
-                    borderRadius: "4px",
-                    color: "white",
+                    padding:0,
+                    color:"white",
+                    width:"100%"
                   }}
-                  onClick={() => handleSelectWorkoutExercise(group.name,group.exercises[0].group)}
+                  onClick={() =>
+                    handleSelectWorkoutExercise(
+                      group.name,
+                      group.exercises[0].group
+                    )
+                  }
                 >
                   {group.name.toLocaleUpperCase()}
-                </Typography>
+                </Button>
+
 
                 <Divider sx={{ backgroundColor: "aliceblue" }} />
                 {group.exercises.map((exercise, exerciseIndex) => (
@@ -364,7 +375,10 @@ function NewWorkout({
                       )}
 
                       {exercise.reps !== 0 && (
-                        <Typography>{exercise.reps}{exercise.amrap&&"+"} reps</Typography>
+                        <Typography>
+                          {exercise.reps}
+                          {exercise.amrap && "+"} reps
+                        </Typography>
                       )}
 
                       {exercise.distance !== 0 && (

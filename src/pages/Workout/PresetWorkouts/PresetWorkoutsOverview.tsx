@@ -33,35 +33,35 @@ interface IPresetWorkoutDetails {
   routineLinkReference?: string;
   routineBy?: string;
   delete?: boolean;
-  workoutBy?:string
-  workoutLinkReference?:string
+  workoutBy?: string;
+  workoutLinkReference?: string;
 }
 
 function PresetWorkoutsOverview() {
+  const { presetWorkoutsData, refetchPresetWorkoutsData } = useContext(
+    UserPresetWorkoutsDataContext
+  );
+  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
 
-
-  const { presetWorkoutsData,refetchPresetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
-  const {userExercisesLibrary} = useContext(UserExercisesLibraryContext)
-
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
-      if (presetWorkoutsData.length===0) {
+      if (presetWorkoutsData.length === 0) {
         await refetchPresetWorkoutsData();
       }
     };
 
     fetchData().catch(console.error); // Handle errors
-  },[presetWorkoutsData])
+  }, [presetWorkoutsData]);
 
   const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
 
   const blob = new Blob([jsonString], { type: "application/json" });
 
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
   link.download = "myData.json"; // Filename for the downloaded file
-  
+
   const [selectedCategory, setSelectedCategory] = useState("routines"); // default value
 
   const routines = getRoutines(presetWorkoutsData);
@@ -101,7 +101,7 @@ function PresetWorkoutsOverview() {
         flexDirection: "column",
       }}
     >
-      <Box position="fixed" sx={{ width: "100%",zIndex:1 }}>
+      <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
           elevation={2}
           style={{
@@ -114,9 +114,10 @@ function PresetWorkoutsOverview() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h6"
@@ -131,10 +132,10 @@ function PresetWorkoutsOverview() {
               >
                 Preset Workouts
               </Typography>
-
+              {/* 
               <FormatListNumberedIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"
@@ -170,8 +171,6 @@ function PresetWorkoutsOverview() {
         </AppBar>
       </Box>
 
-
-      
       <ToggleButtonGroup
         value={selectedCategory}
         onChange={handleAlignment}
@@ -338,8 +337,12 @@ export function getIndividualRoutine(
         if (currentObject.workoutBy && currentObject.workoutBy.trim() !== "") {
           accumulator[routineName].details.workoutBy = currentObject.workoutBy;
         }
-        if (currentObject.workoutLinkReference && currentObject.workoutLinkReference.trim() !== "") {
-          accumulator[routineName].details.workoutLinkReference = currentObject.workoutLinkReference;
+        if (
+          currentObject.workoutLinkReference &&
+          currentObject.workoutLinkReference.trim() !== ""
+        ) {
+          accumulator[routineName].details.workoutLinkReference =
+            currentObject.workoutLinkReference;
         }
 
         accumulator[routineName].details.delete = currentObject.delete;

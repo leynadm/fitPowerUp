@@ -16,7 +16,7 @@ import { FriendsSummaryProvider } from "../../context/FriendsSummary";
 import { SocialDataProvider } from "../../context/SocialData";
 import { PresetWorkoutsDataProvider } from "../../context/UserPresetWorkouts";
 import { AuthContext } from "../../context/Auth";
-import { auth } from "../../config/firebase";
+import { UserChallengesDataProvider } from "../../context/UserChallenges";
 interface AppProps {
   sessionVerificationEmailCheck: boolean;
   setSessionVerificationEmailCheck: Dispatch<SetStateAction<boolean>>;
@@ -30,9 +30,11 @@ function Home({
     { name: string; exercises: Exercise[] }[]
   >([]);
 
-  const {currentUser} = useContext(AuthContext)
-  console.log(currentUser.emailVerified)
-  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(currentUser.emailVerified?false:true);
+  const { currentUser } = useContext(AuthContext);
+  console.log(currentUser.emailVerified);
+  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(
+    currentUser.emailVerified ? false : true
+  );
 
   return (
     <UserTrainingDataProvider>
@@ -43,31 +45,33 @@ function Home({
               <LogDataProvider>
                 <FriendsSummaryProvider>
                   <SocialDataProvider>
-                    <VerifyEmailDialog
-                      verifyEmailModalOpen={verifyEmailModalOpen}
-                      setVerifyEmailModalOpen={setVerifyEmailModalOpen}
-                    />
-
-                    <RestTimer />
-
-                    <Navbar />
-
-                    <Routes>
-                      <Route
-                        path="workout/*"
-                        index
-                        element={
-                          <Workout
-                            existingExercises={existingExercises}
-                            setExistingExercises={setExistingExercises}
-                          />
-                        }
+                    <UserChallengesDataProvider>
+                      <VerifyEmailDialog
+                        verifyEmailModalOpen={verifyEmailModalOpen}
+                        setVerifyEmailModalOpen={setVerifyEmailModalOpen}
                       />
 
-                      <Route path="friends/*" element={<Friends />} />
+                      <RestTimer />
 
-                      <Route path="progress/*" element={<Progress />} />
-                    </Routes>
+                      <Navbar />
+
+                      <Routes>
+                        <Route
+                          path="workout/*"
+                          index
+                          element={
+                            <Workout
+                              existingExercises={existingExercises}
+                              setExistingExercises={setExistingExercises}
+                            />
+                          }
+                        />
+
+                        <Route path="friends/*" element={<Friends />} />
+
+                        <Route path="progress/*" element={<Progress />} />
+                      </Routes>
+                    </UserChallengesDataProvider>
                   </SocialDataProvider>
                 </FriendsSummaryProvider>
               </LogDataProvider>

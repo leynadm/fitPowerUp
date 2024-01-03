@@ -168,7 +168,7 @@ function Friends() {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <AppBar
         position="fixed"
         elevation={2}

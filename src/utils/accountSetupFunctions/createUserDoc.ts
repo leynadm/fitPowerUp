@@ -142,6 +142,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
             weight: 70,
             bodyFat: 0,
             caloricIntake: 0,
+            hoursOfSleep:0,
             neck: 0,
             shoulders: 0,
             chest: 0,
@@ -168,6 +169,16 @@ async function createUserDoc(userID: string, fullname: string | null) {
 
       batch.set(userPresetWorkoutsDocRef, {
         presetWorkouts: preselectedWorkoutsParsedJSON,
+      });
+
+      // Create the body tracker document within the "user-training-data" subcollection
+      const userChallengesDocRef = doc(
+        userCollectionRef,
+        "userChallenges"
+      );
+
+      batch.set(userChallengesDocRef, {
+        challenges: [],
       });
 
       const followersFeedDocRef = doc(db, "followers-feed", userID);

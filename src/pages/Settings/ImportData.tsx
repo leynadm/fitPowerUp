@@ -282,9 +282,10 @@ function ImportData() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <UploadFileIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -300,10 +301,10 @@ function ImportData() {
             >
               Import Data
             </Typography>
-
+            {/* 
             <UploadFileIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"

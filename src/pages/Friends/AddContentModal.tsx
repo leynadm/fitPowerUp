@@ -25,7 +25,6 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Dialog from "@mui/material/Dialog";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import { storage } from "../../config/firebase";
-import { resizeImage } from "../../utils/miscelaneous/resizeImage";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { filterUserTrainingsPerDay } from "../Workout/CompletedWorkouts";
 import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
@@ -302,7 +301,7 @@ function AddContentModal({
     setFileSource(null);
     setSaving(false);
     handleClose();
-    navigate("profile"); // Ensure your route is correctly specified
+    navigate("/home/friends")
   }
 
   function removeFile() {

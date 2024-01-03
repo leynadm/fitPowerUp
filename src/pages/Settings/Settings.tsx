@@ -154,7 +154,9 @@ function Settings() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <SettingsIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+             */}
             <Typography
               variant="h6"
               noWrap
@@ -170,9 +172,9 @@ function Settings() {
             >
               Settings
             </Typography>
-
+            {/* 
             <SettingsIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-
+ */}
             <Typography
               variant="h5"
               noWrap

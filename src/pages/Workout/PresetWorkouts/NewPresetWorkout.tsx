@@ -237,7 +237,6 @@ function NewPresetWorkout() {
     event: React.SyntheticEvent,
     checked: boolean
   ) => {
-
     if (!checked) {
       setWorkoutRoutineCheck(false);
       setWorkoutState((prevState) => ({
@@ -321,9 +320,10 @@ function NewPresetWorkout() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
+              {/* 
               <ChecklistRtlIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h6"
@@ -338,10 +338,10 @@ function NewPresetWorkout() {
               >
                 Add Preset Workout
               </Typography>
-
+              {/* 
               <ChecklistRtlIcon
                 sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              />
+              /> */}
 
               <Typography
                 variant="h5"
@@ -697,7 +697,10 @@ function NewPresetWorkout() {
                       )}
 
                       {exercise.reps !== 0 && (
-                        <Typography>{exercise.reps}{exercise.amrap&&"+"} reps</Typography>
+                        <Typography>
+                          {exercise.reps}
+                          {exercise.amrap && "+"} reps
+                        </Typography>
                       )}
 
                       {exercise.distance !== 0 && (

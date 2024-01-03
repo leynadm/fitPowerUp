@@ -48,9 +48,10 @@ function Progress() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <QueryStatsIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -66,10 +67,10 @@ function Progress() {
             >
               Progress
             </Typography>
-
+            {/* 
             <QueryStatsIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"

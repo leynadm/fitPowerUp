@@ -280,9 +280,9 @@ function CompletedWorkouts() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
-            <FitnessCenterIcon
+            {/* <FitnessCenterIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h6"
@@ -297,10 +297,10 @@ function CompletedWorkouts() {
             >
               Workouts
             </Typography>
-
+            {/* 
             <FitnessCenterIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"
@@ -625,15 +625,15 @@ function CompletedWorkouts() {
                       boxShadow: 1,
                     }}
                   >
-                    <Typography
-                      variant="h6"
+                    <Button
+
                       sx={{
                         textAlign: "center",
-                        fontSize: "large",
+                        fontSize:"large",
                         background:
                           "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                        boxShadow: 2,
-                        borderRadius: "4px",
+                        width:"100%",
+                        padding:0
                       }}
                       onClick={() =>
                         handleSelectCompletedExercise(
@@ -642,7 +642,7 @@ function CompletedWorkouts() {
                       }
                     >
                       {exercise.name.toLocaleUpperCase()}
-                    </Typography>
+                    </Button>
 
                     <Divider sx={{ backgroundColor: "aliceblue" }} />
                     {exercise.exercises.map(

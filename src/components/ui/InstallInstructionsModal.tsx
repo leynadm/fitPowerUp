@@ -51,13 +51,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "95%",
   bgcolor: "background.paper",
   boxShadow: 24,
-  p: 1,
-  borderRadius: 1,
-  display:"flex",
-  flexDirection:"column"
 };
 
 function InstallInstructionsModal({
@@ -81,7 +76,7 @@ function InstallInstructionsModal({
         aria-describedby="modal-modal-description"
         sx={{ overflow: "scroll" }}
       >
-        <Container sx={style} >
+        <Container sx={style}  maxWidth="md">
         <IconButton aria-label="close-modal" sx={{alignSelf:"flex-end"}} onClick={handleClose}>
         <CloseIcon />
       </IconButton>

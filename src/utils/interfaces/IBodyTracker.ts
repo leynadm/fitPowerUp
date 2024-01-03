@@ -3,6 +3,7 @@ export interface IUserBodyTrackerDataEntry {
   weight: number;
   bodyFat: number;
   caloricIntake: number;
+  hoursOfSleep:number;
   neck: number;
   shoulders: number;
   chest: number;

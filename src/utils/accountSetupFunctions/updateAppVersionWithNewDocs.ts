@@ -1,4 +1,10 @@
-import { doc, collection, writeBatch, getDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  writeBatch,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
@@ -29,12 +35,14 @@ async function updateAppVersionWithNewDocs(userID: string) {
     const response = await fetch(url);
     const featsParsedJSON = await response.json();
 
-
-    const preselectedWorkoutsRef = ref(storage, "assets/files/presetWorkoutsData.json");
+    const preselectedWorkoutsRef = ref(
+      storage,
+      "assets/files/presetWorkoutsData.json"
+    );
     const preselectedWorkoutsUrl = await getDownloadURL(preselectedWorkoutsRef);
     const preselectedWorkoutsResponse = await fetch(preselectedWorkoutsUrl);
-    const preselectedWorkoutsParsedJSON = await preselectedWorkoutsResponse.json();
-
+    const preselectedWorkoutsParsedJSON =
+      await preselectedWorkoutsResponse.json();
 
     const preselectedExercisesRef = ref(
       storage,
@@ -57,12 +65,12 @@ async function updateAppVersionWithNewDocs(userID: string) {
 
     batch.update(userDocRef, {
       appVersion: 2.0,
-      unitsSystem:"metric",
-      defaultWeightIncrement:1.25,
-      lastUpdateTimestamp:serverTimestamp(),
-      firstPowerExercise:"barbell deadlift",
-      secondPowerExercise:"flat barbell bench press",
-      thirdPowerExercise:"barbell squat"      
+      unitsSystem: "metric",
+      defaultWeightIncrement: 1.25,
+      lastUpdateTimestamp: serverTimestamp(),
+      firstPowerExercise: "barbell deadlift",
+      secondPowerExercise: "flat barbell bench press",
+      thirdPowerExercise: "barbell squat",
     });
 
     // Create a document within the "userTrainingCollection" subcollection
@@ -99,6 +107,7 @@ async function updateAppVersionWithNewDocs(userID: string) {
           weight: 70,
           bodyFat: 0,
           caloricIntake: 0,
+          hoursOfSleep:0,
           neck: 0,
           shoulders: 0,
           chest: 0,
@@ -124,12 +133,14 @@ async function updateAppVersionWithNewDocs(userID: string) {
     });
 
     // Create the body tracker document within the "user-training-data" subcollection
-    const userPresetWorkoutsDocRef = doc(userCollectionRef, "userPresetWorkouts");
+    const userPresetWorkoutsDocRef = doc(
+      userCollectionRef,
+      "userPresetWorkouts"
+    );
 
-    batch.set(userPresetWorkoutsDocRef,{
-      presetWorkouts:preselectedWorkoutsParsedJSON
-    }) 
-
+    batch.set(userPresetWorkoutsDocRef, {
+      presetWorkouts: preselectedWorkoutsParsedJSON,
+    });
 
     // Commit the batch to create all the documents simultaneously
     await batch.commit();

@@ -42,9 +42,10 @@ function Analysis() {
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
+            {/* 
             <InsertChartIcon
               sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            />
+            /> */}
             <Typography
               variant="h6"
               noWrap
@@ -59,10 +60,10 @@ function Analysis() {
             >
               Analysis
             </Typography>
-
+            {/* 
             <InsertChartIcon
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
+            /> */}
 
             <Typography
               variant="h5"

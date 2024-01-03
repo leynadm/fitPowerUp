@@ -56,15 +56,17 @@ async function saveBodyTrackerEntry(
       // Skip the conversion for the "date" key
       if (key === "date") {
         newObj[key] = value;
-      } else {
+      } else if (key !== "date" && value === "") {
         // Attempt to convert to a number, if it fails, set it to null
-        newObj[key] = typeof value === 'string' ? parseFloat(value) : value;
-
+        newObj[key] = 0;
+      } else if (key !== "date" && value !== "") {
+        newObj[key] =
+          typeof value === "string" && value !== "" ? parseFloat(value) : value;
       }
       return newObj;
     },
     {} as IBodyTrackerObj
-  ); // Cast to IBodyTrackerObj since it's the expected output type
+  );
 
   if (saveButtonText === "save") {
     await updateDoc(userBodyTrackerDocRef, {
