@@ -30,6 +30,9 @@ import toast from "react-hot-toast";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import { TextField } from "@mui/material";
 import AddContentModal from "./AddContentModal";
+import { storage } from "../../config/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+
 function UserProfile() {
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [uploadCount, setUploadCount] = useState(0);
@@ -38,8 +41,8 @@ function UserProfile() {
   const [userFollowers, setUserFollowers] = useState<number>(0);
   const [userIndividualFollowing, setUserIndividualFollowing] = useState([]);
   const [userFollowing, setUserFollowing] = useState<number>(0);
-  const [updateCount, setUpdateCount] = useState(0);
- 
+  const [profileImageURL, setProfileImageURL] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [
     openUserViewCharacterProgressModal,
     setOpenUserViewCharacterProgressModal,
@@ -55,13 +58,39 @@ function UserProfile() {
     setAddContentModalOpen(true);
   }
 
-  const isOnline = useOnlineStatus()
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     if (isOnline) {
       getProfileFollowers();
     }
-  }, [uploadCount, updateCount]);
+
+    const fetchImageURL = async () => {
+      if (
+        currentUserData.profileImage !== "" ||
+        currentUserData.profileImage !== null
+      ) {
+        const exerciseImageRef = ref(
+          storage,
+          `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
+        );
+
+        try {
+          const url = await getDownloadURL(exerciseImageRef);
+          setProfileImageURL(url);
+        } catch (error) {
+          //toast.error("Oops, there was an error fetching the image!");
+          console.error("Error fetching image:", error);
+        } finally {
+          setIsLoading(false); // Stop loading whether there was an error or not
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    fetchImageURL();
+  }, [uploadCount]);
 
   function handleUserProfilePostsBtn() {
     navigate("");
@@ -122,12 +151,12 @@ function UserProfile() {
             "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
-              {currentUserData.name !== undefined && (
-        <AddContentModal
-          addContentModalOpen={addContentModalOpen}
-          setAddContentModalOpen={setAddContentModalOpen}
-        />
-      )}
+        {currentUserData.name !== undefined && (
+          <AddContentModal
+            addContentModalOpen={addContentModalOpen}
+            setAddContentModalOpen={setAddContentModalOpen}
+          />
+        )}
         <Container maxWidth="md">
           <Toolbar disableGutters>
             {/* 
@@ -214,7 +243,7 @@ function UserProfile() {
             >
               <Avatar
                 alt="user profile"
-                src={currentUserData.profileImage}
+                src={profileImageURL}
                 sx={{ width: 64, height: 64, alignSelf: "center" }}
               />
             </Stack>
@@ -477,21 +506,20 @@ function UserProfile() {
       <EditUserProfileModal
         editProfileModalOpen={editProfileModalOpen}
         setEditProfileModalOpen={setEditProfileModalOpen}
-        setUpdateCount={setUpdateCount}
       />
 
-        <TextField
-    onClick={handleAddContentModal}
-value="What's on your mind?"
-          variant="outlined"
-          size="small"
-          InputProps={{
-            style: { borderRadius: 30, textAlign: "center" },
-            readOnly: true,
-          }}
-          sx={{ textAlign: "center",padding:1 }}
-          fullWidth
-        ></TextField>
+      <TextField
+        onClick={handleAddContentModal}
+        value="What's on your mind?"
+        variant="outlined"
+        size="small"
+        InputProps={{
+          style: { borderRadius: 30, textAlign: "center" },
+          readOnly: true,
+        }}
+        sx={{ textAlign: "center", padding: 1 }}
+        fullWidth
+      ></TextField>
 
       <Routes>
         <Route path="" element={<UserProfilePosts />} />

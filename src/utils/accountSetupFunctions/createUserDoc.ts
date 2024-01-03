@@ -57,6 +57,11 @@ async function createUserDoc(userID: string, fullname: string | null) {
 
     const userDoc = await getDoc(doc(db, "users", userID));
 
+    const todayTimestamp = new Date();
+    const yesterdayTimestamp = new Date(
+      todayTimestamp.getTime() - 24 * 60 * 60 * 1000
+    );
+
     if (!userDoc.exists()) {
       // Create the user document in users
 
@@ -87,8 +92,8 @@ async function createUserDoc(userID: string, fullname: string | null) {
         thirdPowerExercise: "barbell squat",
         unitsSystem: "metric",
         defaultWeightIncrement: 2.5,
-        appVersion: 2.0,
-        lastUpdateTimestamp: serverTimestamp(),
+        appVersion: 3.0,
+        lastUpdateTimestamp: yesterdayTimestamp,
       });
 
       // Create a subcollection "workouts" within the "users" document
@@ -142,7 +147,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
             weight: 70,
             bodyFat: 0,
             caloricIntake: 0,
-            hoursOfSleep:0,
+            hoursOfSleep: 0,
             neck: 0,
             shoulders: 0,
             chest: 0,
@@ -172,10 +177,7 @@ async function createUserDoc(userID: string, fullname: string | null) {
       });
 
       // Create the body tracker document within the "user-training-data" subcollection
-      const userChallengesDocRef = doc(
-        userCollectionRef,
-        "userChallenges"
-      );
+      const userChallengesDocRef = doc(userCollectionRef, "userChallenges");
 
       batch.set(userChallengesDocRef, {
         challenges: [],

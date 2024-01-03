@@ -31,11 +31,9 @@ function Home({
   >([]);
 
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser.emailVerified);
   const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(
     currentUser.emailVerified ? false : true
   );
-
   return (
     <UserTrainingDataProvider>
       <PresetWorkoutsDataProvider>

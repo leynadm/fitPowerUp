@@ -301,7 +301,7 @@ function AddContentModal({
     setFileSource(null);
     setSaving(false);
     handleClose();
-    navigate("/home/friends")
+    navigate("/home/friends");
   }
 
   function removeFile() {

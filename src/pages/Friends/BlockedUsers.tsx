@@ -39,7 +39,7 @@ function BlockedUsers() {
 
       // Update the blocked users data after unblocking
       getBlockedUsers(currentUserUid, setBlockedUsersData);
-      fetchCurrentUserData(currentUser, setCurrentUserData);
+      //fetchCurrentUserData(currentUser, setCurrentUserData);
       toast.success("User succesfully unblocked!");
     } catch (error) {
       toast.error("Oops, unblockUser has encountered an error!");

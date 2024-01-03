@@ -159,13 +159,7 @@ function Friends() {
     setAddContentModalOpen(true);
   }
 
-  if (currentUserData === undefined) {
-    return (
-      <div>
-        We couldn't connect right now, please refresh the app or try later.
-      </div>
-    );
-  }
+
 
   return (
     <Container maxWidth="md">
@@ -252,12 +246,6 @@ function Friends() {
       {renderMobileMenu}
       {renderMenu}
 
-      {currentUserData.name !== undefined && (
-        <AddContentModal
-          addContentModalOpen={addContentModalOpen}
-          setAddContentModalOpen={setAddContentModalOpen}
-        />
-      )}
 
       {/* This is the container that I might have to check if it reached to bottom */}
       <Box sx={{ height: "100%" }}>

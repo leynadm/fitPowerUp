@@ -75,7 +75,7 @@ function Settings() {
       currentUser.uid,
       updatedDefaultWeightIncrement
     );
-    await fetchCurrentUserData(currentUser, setCurrentUserData);
+    //await fetchCurrentUserData(currentUser, setCurrentUserData);
   }
 
   async function handleUpdateUnitsSystemChange() {
@@ -86,7 +86,7 @@ function Settings() {
       currentUserData.unitsSystem,
       currentUser.uid
     );
-    await fetchCurrentUserData(currentUser, setCurrentUserData);
+    //await fetchCurrentUserData(currentUser, setCurrentUserData);
     await refetchUserBodyTrackerData();
     await refetchUserTrainingData();
   }

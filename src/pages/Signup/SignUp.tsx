@@ -33,8 +33,7 @@ export default function SignUp() {
   const [surname, setSurname] = useState("");
   const navigate = useNavigate();
   const [agreeTermsAndConditions, setAgreeTermsAndConditions] = useState(false);
-  const fullName = name + " "+ surname;
-
+  const fullName = name + " " + surname;
 
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
@@ -80,6 +79,7 @@ export default function SignUp() {
         password
       );
       const user = userCredential.user;
+
       await createUserDoc(user.uid, fullName);
       await sendEmailVerification(user);
     } catch (error) {
@@ -180,8 +180,12 @@ export default function SignUp() {
                 label="First Name"
                 autoFocus
                 onChange={(e) => setName(e.target.value)}
-                error={name !== '' && !validateLettersAndNumbers(name)}
-                helperText={name !== '' && !validateLettersAndNumbers(name) ? "Only letters and numbers are allowed." : ""}
+                error={name !== "" && !validateLettersAndNumbers(name)}
+                helperText={
+                  name !== "" && !validateLettersAndNumbers(name)
+                    ? "Only letters and numbers are allowed."
+                    : ""
+                }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -193,8 +197,12 @@ export default function SignUp() {
                 name="lastName"
                 autoComplete="family-name"
                 onChange={(e) => setSurname(e.target.value)}
-                error={surname !== '' && !validateLettersAndNumbers(surname)}
-        helperText={surname !== '' && !validateLettersAndNumbers(surname) ? "Only letters and numbers are allowed." : ""}
+                error={surname !== "" && !validateLettersAndNumbers(surname)}
+                helperText={
+                  surname !== "" && !validateLettersAndNumbers(surname)
+                    ? "Only letters and numbers are allowed."
+                    : ""
+                }
               />
             </Grid>
             <Grid item xs={12}>

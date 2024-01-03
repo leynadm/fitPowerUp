@@ -24,8 +24,13 @@ function ExerciseSelectionMenu() {
   const { selectedMuscleGroup } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const muscleGroup: string = useLocation().state.muscleGroup;
+  /* const muscleGroup: string = useLocation().state.muscleGroup;
+   */
+  
+  const location = useLocation();
+  const muscleGroup = location.state?.muscleGroup;
 
+  console.log(muscleGroup)
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
@@ -55,7 +60,7 @@ function ExerciseSelectionMenu() {
     setMuscleGroupExercises(tempMuscleGroupExercises);
 
     fetchData().catch(console.error); // Handle errors
-  }, [userExercisesLibrary, muscleGroup, selectedMuscleGroup]);
+  }, []);
 
   function updateMuscleGroupExercises() {
     // Ensure that userExercisesLibrary is not empty and contains exercises
@@ -253,7 +258,7 @@ function ExerciseSelectionMenu() {
                   textDecoration: "none",
                 }}
               >
-                {capitalizeWords(muscleGroup)}
+                {muscleGroup ? capitalizeWords(muscleGroup):selectedMuscleGroup&&capitalizeWords(selectedMuscleGroup)}
               </Typography>
               {/* 
               <FitnessCenterIcon
@@ -274,7 +279,7 @@ function ExerciseSelectionMenu() {
                   textDecoration: "none",
                 }}
               >
-                {capitalizeWords(muscleGroup)}
+                {muscleGroup ? capitalizeWords(muscleGroup):selectedMuscleGroup&&capitalizeWords(selectedMuscleGroup)}
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>

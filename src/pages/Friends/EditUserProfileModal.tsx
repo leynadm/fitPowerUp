@@ -12,22 +12,20 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { AuthContext } from "../../context/Auth";
 import { auth } from "../../config/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
-import User from "../../utils/interfaces/User";
 import Switch from "@mui/material/Switch";
 import toast from "react-hot-toast";
 import LinearWithValueLabel from "../../components/ui/LinearWithValueLabel";
 import capitalizeWords from "../../utils/capitalizeWords";
-import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
+import { useEffect } from "react";
 
 interface UserProfilePosts {
   editProfileModalOpen: boolean;
   setEditProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setUpdateCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const style = {
@@ -45,10 +43,8 @@ const style = {
 function EditUserProfileModal({
   editProfileModalOpen,
   setEditProfileModalOpen,
-  setUpdateCount,
 }: UserProfilePosts) {
-  const { currentUser, currentUserData, setCurrentUserData } =
-    useContext(AuthContext);
+  const { currentUser, currentUserData } = useContext(AuthContext);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileSource, setFileSource] = useState<string | null>(null);
@@ -56,21 +52,77 @@ function EditUserProfileModal({
   const [firstName, setFirstName] = useState(currentUserData.name);
   const [lastName, setLastName] = useState(currentUserData.surname);
   const [sex, setSex] = useState(currentUserData.sex);
-  /* 
-    const [powerLevel,setPowerLevel] = useState(currentUserData.powerLevel)
-    const [strengthLevel, setStrengthLevel] = useState(currentUserData.strengthLevel)
-    const [experienceLevel, setExperienceLevel] = useState(currentUserData.experienceLevel)
-    const [firstPowerExercise, setFirstPowerExercise] = useState(currentUserData.firstPowerExercise)
-    const [secondPowerExercise, setSecondPowerExercise] = useState(currentUserData.secondPowerExercise)
-    const [thirdPowerExercise, setThirdPowerExercise] = useState(currentUserData.thirdPowerExercise)
-    const [weight,setWeight] = useState(currentUserData.weight)
-  */
+  const imgRef = useRef<HTMLImageElement>(null);
+  const resizedImgRef = useRef<HTMLImageElement>(null);
+  const imgCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [resizedImageDataUrl, setResizedImageDataUrl] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (fileSource && imgRef.current) {
+      imgRef.current.src = fileSource;
+
+      imgRef.current.onload = () => {
+        if (imgRef.current === null) {
+          return;
+        }
+
+        if (imgCanvasRef.current) {
+          const ctx = imgCanvasRef.current.getContext("2d");
+          if (ctx) {
+            let ratio = 128 / imgRef.current.width;
+            imgCanvasRef.current.width = 128;
+            imgCanvasRef.current.height = imgRef.current.height * ratio;
+
+            ctx.drawImage(
+              imgRef.current,
+              0,
+              0,
+              imgCanvasRef.current.width,
+              imgCanvasRef.current.height
+            );
+
+            let new_image_url = ctx.canvas.toDataURL("image/jpeg", 0.8);
+            setResizedImageDataUrl(new_image_url);
+
+            if (resizedImgRef.current) {
+              resizedImgRef.current.src = new_image_url;
+            }
+          }
+        }
+      };
+    }
+
+    const fetchImageURL = async () => {
+      if (
+        currentUserData.profileImage !== "" ||
+        currentUserData.profileImage !== null
+      ) {
+        const exerciseImageRef = ref(
+          storage,
+          `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
+        );
+
+        try {
+          const url = await getDownloadURL(exerciseImageRef);
+          setProfileImageURL(url);
+        } catch (error) {
+          //toast.error("Oops, there was an error fetching the image!");
+          console.error("Error fetching image:", error);
+        } finally {
+          setIsLoading(false); // Stop loading whether there was an error or not
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    fetchImageURL();
+  }, [fileSource]); // Only re-run the effect if fileSource chang
+
   const [saving, setSaving] = useState(false);
 
-  const [profileImage, setProfileImage] = useState(
-    currentUserData.profileImage
-  );
   const [hideProfile, setHideProfile] = useState<boolean>(
     currentUserData.hideProfile
   );
@@ -84,48 +136,6 @@ function EditUserProfileModal({
     currentUserData.hideFollowing
   );
 
-  async function getUserData() {
-    const docRef = doc(db, "users", currentUser.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const userData = docSnap.data() as User;
-      setFirstName(userData.name);
-      setLastName(userData.surname);
-      setSex(userData.sex);
-      setProfileImage(userData.profileImage);
-
-      currentUserData.name = userData.name;
-      currentUserData.surname = userData.surname;
-      currentUserData.profileImage = userData.profileImage;
-      currentUserData.sex = userData.sex;
-      currentUserData.fullname = userData.fullname;
-      currentUserData.powerLevel = userData.powerLevel;
-      currentUserData.strengthLevel = userData.strengthLevel;
-      currentUserData.experienceLevel = userData.experienceLevel;
-      currentUserData.firstPowerExercise = userData.firstPowerExercise;
-      currentUserData.secondPowerExercise = userData.secondPowerExercise;
-      currentUserData.thirdPowerExercise = userData.thirdPowerExercise;
-      currentUserData.weight = userData.weight;
-
-      const profileImageRef = ref(
-        storage,
-        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
-      );
-
-      try {
-        const retrievedProfileImageURL = await getDownloadURL(profileImageRef);
-        setProfileImageURL(retrievedProfileImageURL);
-      } catch (error) {
-        toast.error("Oops, getUserData has an error!")
-        console.error("Error fetching profile image:", error);
-        if (userData.profileImage) {
-          setProfileImageURL(userData.profileImage);
-        }
-      }
-    }
-  }
-
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
@@ -134,11 +144,39 @@ function EditUserProfileModal({
 
       const reader = new FileReader();
       reader.readAsDataURL(file);
+
       reader.onload = (e) => {
+        // Just set the file source state here
         const fileSource = e.target?.result as string;
         setFileSource(fileSource);
       };
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+      };
     }
+  }
+
+  function dataURLtoBlob(dataurl: string): Blob | null {
+    const arr = dataurl.split(",");
+    const mimeMatch = arr[0].match(/:(.*?);/);
+
+    if (!mimeMatch) {
+      // No MIME type match found in the data URL
+      console.error("Invalid data URL");
+      return null;
+    }
+
+    const mime = mimeMatch[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
   }
 
   function handleProfilePhotoChange() {
@@ -150,61 +188,29 @@ function EditUserProfileModal({
   };
 
   async function updateUserData() {
-    let imageUrl: string | null = null;
-    let imageRef = null;
-    let imageUrlResized: string | null = null;
-
     if (selectedFile) {
       setSaving(true);
-      imageRef = ref(
-        storage,
-        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
-      );
 
-      await uploadBytes(imageRef, selectedFile);
-      imageUrl = await getDownloadURL(imageRef);
+      if (resizedImageDataUrl) {
+        // Convert resized image data URL to a blob
+        const resizedImageBlob = dataURLtoBlob(resizedImageDataUrl);
 
-      const imageRefResized = ref(
-        storage,
-        `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image_128x128`
-      );
-      try {
-        imageUrlResized = await getDownloadURL(imageRefResized);
-        setCurrentUserData((prevData: any) => ({
-          ...prevData,
-          profileImage: imageUrlResized,
-        }));
-      } catch (error) {
-        console.error("Error fetching resized image:", error);
-
-        // Retry logic
-        let retryAttempts = 9;
-        while (retryAttempts > 0) {
-          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
-
-          try {
-            imageUrlResized = await getDownloadURL(imageRefResized);
-            break; // If successful, break out of the loop
-          } catch (error) {
-            console.error("Error fetching resized image after retry:", error);
-            retryAttempts--;
-          }
-        }
-
-        if (retryAttempts === 0) {
-          console.error("Retries exhausted. Unable to fetch resized image.");
-          // Handle the error and display an error message to the user
+        if (resizedImageBlob) {
+          // Define the reference to your storage location
+          const imageRef = ref(
+            storage,
+            `profile-images/${currentUser.uid}/preview/${currentUser.uid}_profile_image`
+          );
+          console.log("inside resized image blob");
+          // Upload the blob to Firebase Storage
+          await uploadBytes(imageRef, resizedImageBlob);
+        } else {
+          console.error("No resized image data URL available.");
         }
       }
     }
 
-    // Check if any of the hide options have been changed
-    const hideOptionsChanged =
-      hideProfile !== currentUserData.hideProfile ||
-      hidePowerLevel !== currentUserData.hidePowerLevel ||
-      hideFollowers !== currentUserData.hideFollowers ||
-      hideFollowing !== currentUserData.hideFollowing;
-
+    console.log(`${currentUser.uid}_profile_image`);
     const docRef = doc(db, "users", currentUser.uid);
 
     if (selectedFile) {
@@ -217,14 +223,13 @@ function EditUserProfileModal({
           lastName.toLocaleLowerCase(),
           `${firstName.toLocaleLowerCase()} ${lastName.toLocaleLowerCase()}`,
         ],
-
-        profileImage: imageUrlResized,
-
+        profileImage: `${currentUser.uid}_profile_image`,
         hideProfile: hideProfile,
         hidePowerLevel: hidePowerLevel,
         hideFollowers: hideFollowers,
         hideFollowing: hideFollowing,
       });
+      toast.success("document updated successfully!");
     } else {
       await updateDoc(docRef, {
         name: firstName,
@@ -242,32 +247,21 @@ function EditUserProfileModal({
       });
     }
 
-    await fetchCurrentUserData(currentUser,setCurrentUserData)
-    getUserData().then(() => {
-      handleClose();
-    });
-
-    setUpdateCount((prevCount) => prevCount + 1);
-
     setSaving(false);
   }
 
   function hideProfileToggle() {
     setHideProfile((prevHideProfile) => !prevHideProfile);
-
   }
 
   function hidePowerLevelToggle() {
     setHidePowerLevel((prevHidePowerLevel) => !prevHidePowerLevel);
-
   }
   function hideFollowersToggle() {
     setHideFollowers((prevHideFollowers) => !prevHideFollowers);
-
   }
   function hideFollowingToggle() {
     setHideFollowing((prevHideFollowing) => !prevHideFollowing);
-
   }
 
   function handleClose() {
@@ -294,7 +288,7 @@ function EditUserProfileModal({
                 <Stack direction="row" spacing={2}>
                   <Avatar
                     alt="Remy Sharp"
-                    src={fileSource || currentUserData.profileImage}
+                    src={fileSource || profileImageURL}
                     sx={{ width: 56, height: 56, alignSelf: "center" }}
                   />
                 </Stack>
@@ -341,6 +335,16 @@ function EditUserProfileModal({
                   hidden
                   onChange={handleFileChange}
                 />
+              </Box>
+              <Box>
+                <img
+                  ref={imgRef}
+                  height="100%"
+                  width="100%"
+                  alt=""
+                  style={{ display: "none" }}
+                />
+                <canvas ref={imgCanvasRef} style={{ display: "none" }} />
               </Box>
             </Box>
             <Box>

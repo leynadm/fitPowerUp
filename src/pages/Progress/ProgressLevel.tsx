@@ -281,7 +281,7 @@ function ProgressLevel() {
         calculatedMaximumStrengthLevel,
         calculatedMaximumExperienceLevel
       );
-      await fetchCurrentUserData(currentUser, setCurrentUserData);
+      //await fetchCurrentUserData(currentUser, setCurrentUserData);
       toast.success("Your power level was updated!");
     } catch (error) {
       console.error(error);

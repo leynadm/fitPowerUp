@@ -16,6 +16,7 @@ import enablePersistentData from "../utils/enablePersistentData";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
 import updateAppVersionToV3 from "../utils/accountSetupFunctions/updateAppVersionToV3";
+import { onSnapshot } from "firebase/firestore";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
   children: ReactNode;
@@ -38,7 +39,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setCurrentUser(user);
 
       if (user) {
+        setLoginFetchTrigger(true);
         enablePersistentData();
+
+        const docRef = doc(db, "users", user.uid);
+
+        const unsubscribeSnapshot = onSnapshot(docRef, (doc) => {
+          if (doc.exists()) {
+            const userData = doc.data() as User;
+            setCurrentUserData(userData);
+          }
+        });
 
         createInitialDbTables(user.uid)
           .then(() => {
@@ -51,13 +62,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             //console.log("IndexedDb tables creation completed.");
           });
 
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
+        /* const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const userData = docSnap.data() as User;
           setCurrentUserData(userData);
-        }
+        } */
+        return () => unsubscribeSnapshot();
       } else {
         setLoginFetchTrigger(true);
       }
@@ -66,10 +77,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
+  /*   useEffect(() => {
+    console.log('currentuserdata effect, not fetching')
     if (!currentUserData && currentUser) {
       setLoginFetchTrigger(false);
-
+      console.log('currentuserdata effect, actually fetching')
       const fetchData = async () => {
         const tempCurrentUserData = await fetchCurrentUserData(
           currentUser,
@@ -98,7 +110,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       return () => clearTimeout(timeoutId);
     }
-  }, [currentUser]);
+
+  }, [currentUser,currentUserData]); */
 
   return (
     <AuthContext.Provider
