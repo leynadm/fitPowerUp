@@ -17,6 +17,7 @@ import TermsAndConditions from "../Login/TermsAndConditions";
 import ImportData from "../Settings/ImportData";
 import DevelopmentLog from "../Settings/DevelopmentLog";
 import PresetWorkouts from "./PresetWorkouts/PresetWorkouts";
+import Favorites from "./Favorites";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -57,11 +58,16 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
         path="/new/workout_categories/*"
         element={<MuscleGroupsSelectionMenu />}
       />
+            <Route
+        path="/new/workout_categories/favorites/"
+        element={<Favorites />}
+      />
 
       <Route
         path="/new/workout_categories/exercises/:selectedMuscleGroup/*"
         element={<ExerciseSelectionMenu />}
       />
+      
 
       <Route path="settings" element={<Settings />} />
       <Route
@@ -76,7 +82,7 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
       <Route path="analysis/*" element={<Analysis />} />
 
       <Route path="bodytracker/*" element={<BodyTracker />} />
-
+      
       <Route path="new/congratulations" element={<WorkoutCongratulations />} />
       <Route path="preset-workouts/*" element={<PresetWorkouts />} />
 

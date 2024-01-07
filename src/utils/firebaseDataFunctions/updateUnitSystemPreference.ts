@@ -4,6 +4,7 @@ import { db } from "../../config/firebase";
 import toast from "react-hot-toast";
 
 import { IUserBodyTrackerData } from "../interfaces/IBodyTracker";
+
 async function updateUnitSystemPreference(
   userTrainingData: IWorkoutData[],
   userBodyTrackerData: IUserBodyTrackerData,
@@ -32,7 +33,7 @@ async function updateUnitSystemPreference(
       userDocRef,
       "userTrainingCollection"
     );
-
+ 
     // Splitting userTrainingData into different documents
     const dataSize = 350; // Define the size limit for each document
     const convertedUserTrainingDataLength = convertedUserTrainingData.length;
@@ -84,7 +85,7 @@ async function updateUnitSystemPreference(
     });
 
     batch.commit();
- 
+    console.log('finally committed')
     toast.success(`Unit System updated to ${updatedUnitsSystem}!`);
   } catch (error) {
     toast.error("Oops, updateUnitSystemPreference has an error!");

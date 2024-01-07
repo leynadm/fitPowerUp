@@ -33,6 +33,8 @@ import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { Container } from "@mui/material";
 import CircularProgressWithText from "../../components/ui/CircularProgressWithText";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -247,6 +249,37 @@ function CompleteWorkoutModal({
               />
 
               <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={trainHarderCheck}
+                        onChange={markTrainHarderCheck}
+                      />
+                    }
+                    label="I trained harder than last time"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={warmStretchCheck}
+                        onChange={markWarmStretchCheck}
+                      />
+                    }
+                    label="I stretched and warmed up properly"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={feelPainCheck}
+                        onChange={markfeelPainCheck}
+                      />
+                    }
+                    label="I didn't feel unusual or unwanted pain"
+                  />
+                </FormGroup>
+
+                {/* 
                 <FormControlLabel
                   control={<Switch />}
                   label="Did you train better than the last time?"
@@ -266,7 +299,9 @@ function CompleteWorkoutModal({
                   onChange={markfeelPainCheck}
                   label="Did you exerience any discomfort?"
                 />
+                 */}
               </Box>
+
               <Box
                 sx={{
                   width: "100%",

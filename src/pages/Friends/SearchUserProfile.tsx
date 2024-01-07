@@ -85,6 +85,9 @@ function SearchUserProfile() {
       getRelationshipStatus();
       getSearchProfileFollowers();
     }
+
+    
+
   }, [id]);
 
   const navigate = useNavigate();

@@ -20,6 +20,9 @@ import getMuscleGroupExercises from "../../utils/firebaseDataFunctions/getMuscle
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import { useSearchParams } from "react-router-dom";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 function MuscleGroupsSelectionMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -186,8 +189,8 @@ function MuscleGroupsSelectionMenu() {
           </Box>
         )}
 
-        <Box display="flex" justifyContent="center" gap={1}>
-          <Typography variant="caption">
+        <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+          <Typography variant="subtitle2">
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>
@@ -202,8 +205,9 @@ function MuscleGroupsSelectionMenu() {
         position="fixed"
         style={{
           top: 0,
+          height: "56px",
           background:
-            "radial-gradifetchent(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <AddNewExerciseModal
@@ -254,22 +258,20 @@ function MuscleGroupsSelectionMenu() {
             </Typography>
 
             <Box sx={{ marginLeft: "auto" }} display="flex">
-              {/* 
+               
               <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
-                //onClick={getOnlyFavorites}
+                onClick={()=>navigate('favorites')}
               >
                 <BookmarkIcon
-                  sx={{
-                    color: true ? "orange" : "white",
-                  }}
+                  sx={{color:"orange"}}
                 />
               </IconButton>
-              */}
+              
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -315,13 +317,13 @@ function MuscleGroupsSelectionMenu() {
                   <Typography>{muscleGroup.toLocaleUpperCase()}</Typography>
                 </IconButton>
 
-                <IconButton
+{/*                 <IconButton
                   size="large"
                   aria-label="muscle-group-button-submenu"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
-                  /* 
+                  
                   onClick={(event) =>
                     handleOptionsClick(
                       event,
@@ -329,10 +331,10 @@ function MuscleGroupsSelectionMenu() {
                       exercise.category,
                       exercise.id
                     )
-                  } */
+                  } 
                 >
                   <MoreVertIcon sx={{ zIndex: 0 }} />
-                </IconButton>
+                </IconButton> */}
               </Box>
               <Divider sx={{ width: "100%" }} />
             </Box>

@@ -29,6 +29,9 @@ import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExe
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { validateIndexedDbEntry } from "../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
@@ -1031,6 +1034,7 @@ function ExerciseSelectedTrack() {
                 display: "flex",
               }}
             >
+
               <IconButton
                 size="large"
                 aria-label="account of current user"

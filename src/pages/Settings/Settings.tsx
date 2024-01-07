@@ -20,7 +20,6 @@ import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { AuthContext } from "../../context/Auth";
-import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { useNavigate } from "react-router-dom";
 import updateDefaultWeightIncrement from "../../utils/firebaseDataFunctions/updateDefaultWeightIncrement";
@@ -37,7 +36,7 @@ function Settings() {
     BodyTrackerDataContext
   );
 
-  const { currentUser, currentUserData, setCurrentUserData } =
+  const { currentUser, currentUserData} =
     useContext(AuthContext);
 
   const [updatedDefaultWeightIncrement, setUpdatedDefaultWeightIncrement] =
@@ -45,6 +44,7 @@ function Settings() {
   const [updatedUnitsSystem, setUpdatedUnitsSystem] = useState(
     currentUserData.unitsSystem
   );
+  const [updateStatus, setUpdateStatus] = useState('');
 
   const [openResetTrainingData, setOpenResetTrainingData] = useState(false);
 
@@ -52,13 +52,6 @@ function Settings() {
   const emailClient = "gmail.com";
 
   const navigate = useNavigate();
-
-  const [shouldDownload, setShouldDownload] = useState(false);
-
-  // Function to handle button click
-  const handleDownloadClick = () => {
-    setShouldDownload(true);
-  };
 
   const handleDefaultWeightIncrementChange = (event: SelectChangeEvent) => {
     setUpdatedDefaultWeightIncrement(event.target.value);
@@ -75,6 +68,8 @@ function Settings() {
       currentUser.uid,
       updatedDefaultWeightIncrement
     );
+    
+
     //await fetchCurrentUserData(currentUser, setCurrentUserData);
   }
 
@@ -89,6 +84,12 @@ function Settings() {
     //await fetchCurrentUserData(currentUser, setCurrentUserData);
     await refetchUserBodyTrackerData();
     await refetchUserTrainingData();
+    setUpdateStatus('Updating...');
+
+    // Start a timer to reset the update status
+    setTimeout(() => {
+      setUpdateStatus('');
+    }, 10000); // Adjust time as needed
   }
 
   const flattenedExerciseData =
@@ -233,8 +234,11 @@ function Settings() {
               converted to pounds, and length data to inches.
             </Typography>
             <Box pt="8px" height="2rem">
-              {updatedUnitsSystem === "imperial" &&
-              currentUserData.unitsSystem === "metric" ? (
+              {updateStatus==='Updating...'?(
+                <Typography>Refreshing data, give it a moment...</Typography>
+              ):              
+              updatedUnitsSystem === "imperial" &&
+              currentUserData.unitsSystem === "metric" && updateStatus==='' ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
@@ -242,7 +246,7 @@ function Settings() {
                   Convert To Imperial
                 </Button>
               ) : updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "imperial" ? (
+                currentUserData.unitsSystem === "imperial"&& updateStatus==='' ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
@@ -250,10 +254,10 @@ function Settings() {
                   Convert To Metric
                 </Button>
               ) : updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "metric" ? (
+                currentUserData.unitsSystem === "metric" && updateStatus==='' ? (
                 <Typography>You're using the metric system.</Typography>
               ) : updatedUnitsSystem === "imperial" &&
-                currentUserData.unitsSystem === "imperial" ? (
+                currentUserData.unitsSystem === "imperial"&& updateStatus==='' ? (
                 <Typography>You're using the imperial system.</Typography>
               ) : null}
             </Box>

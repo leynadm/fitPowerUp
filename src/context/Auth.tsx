@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
   const [currentUserData, setCurrentUserData] = useState<User>();
   const [loginFetchTrigger, setLoginFetchTrigger] = useState(false);
-  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {

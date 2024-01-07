@@ -56,6 +56,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DeleteCompletedWorkout from "../../components/ui/DeleteCompletedWorkoutModal";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+
 function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -535,6 +538,22 @@ function CompletedWorkouts() {
                 <AccordionDetails sx={{ pb: 0, pt: 0 }}>
                   <Typography>"{entry.wEval.comment}"</Typography>
                   <Box>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox checked={entry.wEval.trainHarder} />}
+                        label="I trained harder than last time"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox checked={entry.wEval.warmStretch} />}
+                        label="I stretched and warmed up properly"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox checked={entry.wEval.feelPain} />}
+                        label="I didn't feel unusual or unwanted pain"
+                      />
+                    </FormGroup>
+
+                    {/* 
                     <FormControlLabel
                       control={<Switch />}
                       label="Trained better than the last time?"
@@ -549,7 +568,7 @@ function CompletedWorkouts() {
                       control={<Switch />}
                       label="Any discomfort/pain?"
                       checked={entry.wEval.feelPain}
-                    />
+                    /> */}
                   </Box>
                   <Box display="flex" justifyContent="space-around">
                     <DataBadge dataValue={entry.power} dataLabel="PL" />
@@ -626,14 +645,13 @@ function CompletedWorkouts() {
                     }}
                   >
                     <Button
-
                       sx={{
                         textAlign: "center",
-                        fontSize:"large",
+                        fontSize: "large",
                         background:
                           "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                        width:"100%",
-                        padding:0
+                        width: "100%",
+                        padding: 0,
                       }}
                       onClick={() =>
                         handleSelectCompletedExercise(

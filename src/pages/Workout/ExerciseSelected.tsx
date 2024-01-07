@@ -15,13 +15,33 @@ import AddHomeIcon from "@mui/icons-material/AddHome";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
 import HelpIcon from "@mui/icons-material/Help";
 import ExerciseInfoModal from "../../components/ui/ExerciseInfoModal";
-
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
+import { AuthContext } from "../../context/Auth";
+import addExerciseToFavorite from "../../utils/firebaseDataFunctions/addExerciseToFavorite";
+import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
+import toast from "react-hot-toast";
 function ExerciseSelected() {
-  const [countdownValue, setCountdownValue] = useState(120);
+  const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
+    UserExercisesLibraryContext
+  );
+  const { currentUser } = useContext(AuthContext);
+
   const { showRestTimer, setShowRestTimer, time, countdown } =
     useContext(LogDataContext);
   const [openExerciseInfoModal, setOpenExerciseInfoModal] = useState(false);
   const { exerciseName } = useParams();
+
+  const exerciseSelected =
+    userExercisesLibrary.length > 0
+      ? userExercisesLibrary[0].exercises.find(
+          (exercise: IUserExercisesLibrary) => exercise.name === exerciseName
+        )
+      : null;
+
+  console.log({ exerciseSelected });
 
   const navigate = useNavigate();
   const handleNavigateTrack = () => {
@@ -48,6 +68,15 @@ function ExerciseSelected() {
     navigate("/home/workout/new");
   };
 
+  async function handleAddExerciseToFavorite() {
+    await addExerciseToFavorite(
+      currentUser.uid,
+      userExercisesLibrary,
+      exerciseName
+    );
+    await refetchUserExercisesLibrary();
+    toast.success("Exercise was updated!");
+  }
   return (
     <>
       <AppBar
@@ -113,6 +142,25 @@ function ExerciseSelected() {
                 <DeleteForeverIcon />
                 </IconButton>
  */}
+                <IconButton
+                  size="small"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={handleAddExerciseToFavorite}
+                >
+                  {exerciseSelected && exerciseSelected.favorite ? (
+                    <BookmarkIcon
+                      sx={{
+                        color: "orange",
+                      }}
+                    />
+                  ) : (
+                    <BookmarkAddIcon />
+                  )}
+                </IconButton>
+
                 <IconButton
                   size="large"
                   aria-label="account of current user"

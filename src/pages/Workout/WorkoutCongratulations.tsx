@@ -10,6 +10,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import ExerciseCompletedStatTile from "../../components/ui/ExerciseCompletedStatTile";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+
 interface IEndOfWorkoutQuotes {
   quote: string;
   imageURL: string;
@@ -210,9 +213,8 @@ function WorkoutCongratulations() {
         paddingBottom: "72px",
         top: 0,
         left: 0,
-
         gap: 1,
-        overflow: "scroll",
+
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -315,7 +317,21 @@ function WorkoutCongratulations() {
       />
 
       <Box>
-        <FormControlLabel
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={workoutData.wEval.trainHarder} />}
+            label="I trained harder than last time"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={workoutData.wEval.warmStretch} />}
+            label="I stretched and warmed up properly"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={workoutData.wEval.feelPain} />}
+            label="I didn't feel unusual or unwanted pain"
+          />
+        </FormGroup>
+        {/*         <FormControlLabel
           control={<Switch />}
           label="Did you train better than the last time?"
           checked={workoutData.wEval.trainHarder}
@@ -330,6 +346,7 @@ function WorkoutCongratulations() {
           label="Did you exerience any discomfort?"
           checked={workoutData.wEval.feelPain}
         />
+ */}{" "}
       </Box>
       {/* 
         <Button variant="dbz_mini">Share workout on your profile</Button>

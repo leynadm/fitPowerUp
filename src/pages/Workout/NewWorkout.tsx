@@ -106,7 +106,7 @@ function NewWorkout({
         existingExercises={existingExercises}
       />
 
-      <Box position="fixed" sx={{ width: "100%" }}>
+      <Box position="fixed" sx={{ width: "100%" }} zIndex={1}>
         <AppBar
           elevation={2}
           style={{
@@ -115,7 +115,8 @@ function NewWorkout({
             height: "56px",
             background:
               "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
-          }}
+
+            }}
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
@@ -270,7 +271,7 @@ function NewWorkout({
                       "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
                     padding:0,
                     color:"white",
-                    width:"100%"
+                    width:"100%",
                   }}
                   onClick={() =>
                     handleSelectWorkoutExercise(
