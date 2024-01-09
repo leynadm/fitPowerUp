@@ -69,6 +69,13 @@ function ExerciseBreakdownAnalysis() {
     | undefined
   >([]);
 
+  const itemSize =()=>{
+    if(window.innerWidth<=600){
+      return "mobile"
+    } else {
+      return "desktop"
+    }
+  } 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -298,7 +305,7 @@ function ExerciseBreakdownAnalysis() {
           </MenuItem>
         </Select>
 
-        <Typography variant="subtitle1">Select timeframe</Typography>
+        <Typography variant="subtitle1">Select timeframe ({selectedTimeframe})</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -320,12 +327,14 @@ function ExerciseBreakdownAnalysis() {
           <TextField
             type="date"
             fullWidth
+            label={itemSize()==="mobile"?"Start Date":null}
             value={startDate}
             onChange={handleStartDateChange}
           ></TextField>
           <TextField
             type="date"
             fullWidth
+            label={itemSize()==="mobile"?"Start Date":null}
             value={endDate}
             onChange={handleEndDateChange}
           ></TextField>
@@ -346,9 +355,9 @@ function ExerciseBreakdownAnalysis() {
         <ResponsiveContainer minHeight="500px">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
             <PolarGrid />
-            <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={15} />
+            <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={12} />
             <PolarRadiusAxis
-              fontSize={20}
+              fontSize={14}
               tickFormatter={(value) =>
                 new Intl.NumberFormat("en-US", {
                   notation: "compact",

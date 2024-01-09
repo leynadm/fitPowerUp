@@ -6,22 +6,24 @@ import Typography from "@mui/material/Typography";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import { FixedSizeList } from "react-window";
 import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExercisesMuscleGroups";
-import { Theme, useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase";
 import { AuthContext } from "../../context/Auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
-import Autocomplete from "@mui/material/Autocomplete";
-import capitalizeWords from "../../utils/capitalizeWords";
-import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 function Favorites() {
   const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
+
   const { currentUserData } = useContext(AuthContext);
+
   const navigate = useNavigate();
+
   const isMale = currentUserData.sex === "male" ? true : false;
+
   const [muscleGroup, setMuscleGroup] = useState("");
 
   const [exercisesMuscleGroupsArr, setExercisesMuscleGroupsArr] = useState(
@@ -35,7 +37,8 @@ function Favorites() {
   );
 
   const filteredExercises = useMemo(() => {
-    return userExercisesLibrary[0].exercises.length > 0 && userExercisesLibrary[0].exercises
+    return (userExercisesLibrary[0].exercises.length > 0 &&
+      userExercisesLibrary)
       ? userExercisesLibrary[0].exercises.filter(
           (exercise: IUserExercisesLibrary) => {
             return (
@@ -48,12 +51,10 @@ function Favorites() {
       : [];
   }, [muscleGroup]);
 
-  console.log(filteredExercises);
-
-  function handleTileClick(exerciseName: string,exerciseGroup:string) {
-
-
-    navigate(`/home/workout/new/workout_categories/exercises/${exerciseGroup}/selected/${exerciseName}`);
+  function handleTileClick(exerciseName: string, exerciseGroup: string) {
+    navigate(
+      `/home/workout/new/workout_categories/exercises/${exerciseGroup}/selected/${exerciseName}`
+    );
   }
 
   const Row = ({
@@ -110,7 +111,7 @@ function Favorites() {
         boxShadow={2}
         borderRadius="4px"
         style={rowStyle}
-        onClick={() => handleTileClick(userExercise.name,userExercise.group)}
+        onClick={() => handleTileClick(userExercise.name, userExercise.group)}
         pt={2}
       >
         <Typography align="center" overflow="hidden">
@@ -154,6 +155,10 @@ function Favorites() {
         </Box>
       </Box>
     );
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    setMuscleGroup(event.target.value.toLocaleLowerCase() as string);
   };
 
   return (
@@ -213,48 +218,59 @@ function Favorites() {
         sx={{
           height: "calc(100svh - 112px)",
           pt: "12px",
-          display:"flex",
-          flexDirection:"column"
-          ,gap:1
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
         }}
       >
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={exercisesMuscleGroupsArr}
-          sx={{ width: "100%" }}
-          value={capitalizeWords(muscleGroup)}
-          onChange={(event, newValue: string | null) =>
-            setMuscleGroup(newValue || "")
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={muscleGroup !== "" ? "Muscle Group" : "Muscle Group"}
-              required={muscleGroup !== ""}
-            />
-          )}
-        />
+        <Select
+          sx={{
+            width: "100%",
+            marginTop: "8px",
+          }}
+          onChange={handleSelectChange}
+          value={muscleGroup}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 400, // Set the maximum height here (in pixels)
+              },
+            },
+          }}
+        >
+          {userExercisesLibrary &&
+            exercisesMuscleGroupsArr.length > 0 &&
+            exercisesMuscleGroupsArr.map((option: string) => (
+              <MenuItem key={option} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
+              </MenuItem>
+            ))}
+        </Select>
 
-        {
-            filteredExercises.length>0?(
-                <Box>
-          <FixedSizeList
-            height={window.innerHeight - 190}
-            itemCount={filteredExercises.length}
-            itemSize={225}
-            width="100%"
+        {userExercisesLibrary && filteredExercises.length > 0 ? (
+          <Box>
+            <FixedSizeList
+              height={window.innerHeight - 190}
+              itemCount={filteredExercises.length}
+              itemSize={225}
+              width="100%"
+            >
+              {Row}
+            </FixedSizeList>
+          </Box>
+        ) : (
+          <Box
+            height="100%"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
           >
-            {Row}
-          </FixedSizeList>
-        </Box>
-            ):(
-                <Box height="100%" display="flex" flexDirection="column" justifyContent="center" alignItems="center">  
-                    <Typography align="center">No favorite exercises found for this group.</Typography>
-                </Box>
-            )
-        }
-        
+            <Typography align="center">
+              No favorite exercises found for this group.
+            </Typography>
+          </Box>
+        )}
       </Container>
     </>
   );

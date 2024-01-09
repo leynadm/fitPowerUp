@@ -52,6 +52,7 @@ function MuscleGroupsAnalysis() {
 
     if(userExercisesLibrary.length>0){
       const tempExercisesMuscleGroupsArr = getExercisesMuscleGroups(userExercisesLibrary)
+      tempExercisesMuscleGroupsArr.push("Total")
       setExercisesMuscleGroupsArr(tempExercisesMuscleGroupsArr)
       setSelectedMuscleGroup(tempExercisesMuscleGroupsArr[0])
     } else {
@@ -166,6 +167,13 @@ function MuscleGroupsAnalysis() {
           }}
           onChange={handleMuscleGroupSelectChange}
           value={selectedMuscleGroup}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 450, // Set the maximum height here
+              },
+            },
+          }}
         >
           {exercisesMuscleGroupsArr.length>0 &&
             exercisesMuscleGroupsArr.map((option: string) => (
@@ -191,7 +199,7 @@ function MuscleGroupsAnalysis() {
             ))}
         </Select>
 
-        <Typography variant="subtitle1">Select timeframe</Typography>
+        <Typography variant="subtitle1">Select timeframe ({selectedTimeframe})</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -209,7 +217,7 @@ function MuscleGroupsAnalysis() {
           ))}
         </ButtonGroup>
 
-        <Typography variant="subtitle1">Interval grouped data</Typography>
+        <Typography variant="subtitle1">Interval grouped data ({selectedDataGroup}) </Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined secondary button group"
@@ -237,7 +245,7 @@ function MuscleGroupsAnalysis() {
             margin={{
               top: 10,
               right: 10,
-              left: 10,
+              left: 15,
               bottom: 1,
             }}
           >

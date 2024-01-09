@@ -77,7 +77,7 @@ function ExerciseSearchingBar({query,onChange}:ParentsProps) {
           placeholder="Search for an exercise..."
           inputProps={{ "aria-label": "search" }}
           sx={{ width: "100%" }}
-          type="search"
+          type="text"
           onChange={onChange}
           fullWidth
           value={query}

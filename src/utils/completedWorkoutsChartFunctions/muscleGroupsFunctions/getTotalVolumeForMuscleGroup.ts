@@ -25,7 +25,9 @@ function getTotalVolumeForMuscleGroup(
       const exerciseDate = exercise.date;
 
       if (sumReps > 0 && sumWeight > 0) {
-        const value = parseFloat((sumReps*sumWeight).toFixed(1));
+        const value = parseFloat(
+          ((sumWeight * sumReps) / exercise.count).toFixed(1)
+        );
         muscleGroupData.push({ exerciseDate, value });
       }
     }
