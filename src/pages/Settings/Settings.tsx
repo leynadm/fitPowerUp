@@ -74,6 +74,8 @@ function Settings() {
   }
 
   async function handleUpdateUnitsSystemChange() {
+    setUpdateStatus('Updating...');
+
     await updateUnitSystemPreference(
       userTrainingData,
       userBodyTrackerData,
@@ -84,8 +86,7 @@ function Settings() {
     //await fetchCurrentUserData(currentUser, setCurrentUserData);
     await refetchUserBodyTrackerData();
     await refetchUserTrainingData();
-    setUpdateStatus('Updating...');
-
+    
     // Start a timer to reset the update status
     setTimeout(() => {
       setUpdateStatus('');
@@ -237,27 +238,27 @@ function Settings() {
               {updateStatus==='Updating...'?(
                 <Typography>Refreshing data, give it a moment...</Typography>
               ):              
-              updatedUnitsSystem === "imperial" &&
-              currentUserData.unitsSystem === "metric" && updateStatus==='' ? (
+              updateStatus==='' &&  (updatedUnitsSystem === "imperial" &&
+              currentUserData.unitsSystem === "metric") ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
                 >
                   Convert To Imperial
                 </Button>
-              ) : updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "imperial"&& updateStatus==='' ? (
+              ) : updateStatus===''&&(updatedUnitsSystem === "metric" &&
+                currentUserData.unitsSystem === "imperial") ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
                 >
                   Convert To Metric
                 </Button>
-              ) : updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "metric" && updateStatus==='' ? (
+              ) : updateStatus==='' && (updatedUnitsSystem === "metric" &&
+                currentUserData.unitsSystem === "metric")  ? (
                 <Typography>You're using the metric system.</Typography>
-              ) : updatedUnitsSystem === "imperial" &&
-                currentUserData.unitsSystem === "imperial"&& updateStatus==='' ? (
+              ) : updateStatus==='' && (updatedUnitsSystem === "imperial" &&
+                currentUserData.unitsSystem === "imperial") ? (
                 <Typography>You're using the imperial system.</Typography>
               ) : null}
             </Box>

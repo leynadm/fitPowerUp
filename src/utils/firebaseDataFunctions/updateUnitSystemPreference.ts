@@ -36,6 +36,7 @@ async function updateUnitSystemPreference(
  
     // Splitting userTrainingData into different documents
     const dataSize = 350; // Define the size limit for each document
+    const bodyTrackerDataSize = 650
     const convertedUserTrainingDataLength = convertedUserTrainingData.length;
     let trainingDataDocCount = 0; // To keep track of the number of documents created
 
@@ -64,7 +65,7 @@ async function updateUnitSystemPreference(
       convertedUserBodyTrackerData.length;
       let bodyTrackerDataDocCount = 0; // To keep track of the number of documents created
     
-      for (let i = 0; i < convertedUserBodyTrackerDataLength; i += dataSize) {
+      for (let i = 0; i < convertedUserBodyTrackerDataLength; i += bodyTrackerDataSize) {
         bodyTrackerDataDocCount++; // Increment trainingDataDocCount for each new document
 
       const userBodyTrackerDoc = doc(
@@ -73,7 +74,7 @@ async function updateUnitSystemPreference(
       );
 
       // Get a slice of the training data array for this document
-      const dataSlice = convertedUserBodyTrackerData.slice(i, i + dataSize);
+      const dataSlice = convertedUserBodyTrackerData.slice(i, i + bodyTrackerDataSize);
 
       batch.set(userBodyTrackerDoc, {
         bodyTrackerData: dataSlice,

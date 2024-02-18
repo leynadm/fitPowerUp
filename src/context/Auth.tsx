@@ -13,9 +13,6 @@ import User from "../utils/interfaces/User";
 import toast from "react-hot-toast";
 import createInitialDbTables from "../utils/IndexedDbCRUDFunctions/createInitialDbTables";
 import enablePersistentData from "../utils/enablePersistentData";
-import useOnlineStatus from "../hooks/useOnlineStatus";
-import updateAppVersionWithNewDocs from "../utils/accountSetupFunctions/updateAppVersionWithNewDocs";
-import updateAppVersionToV3 from "../utils/accountSetupFunctions/updateAppVersionToV3";
 import { onSnapshot } from "firebase/firestore";
 // Create the context to hold the data and share it among all components
 interface AuthProviderProps {
