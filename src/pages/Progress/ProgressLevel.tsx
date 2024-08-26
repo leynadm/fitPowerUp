@@ -255,9 +255,15 @@ function ProgressLevel() {
 
     const maximumPowerLevel = strengthLevel + experiencePoints;
 
-    toast.success(`These exercises give you a PL of ${maximumPowerLevel}`, {
+    toast.success(`Your power level is ${maximumPowerLevel}`, {
       duration: 5000,
-    });
+      style:{
+        fontFamily:"LuckiestGuy",
+      }
+    },
+    
+  
+  );
 
     setCalculatedMaximumPowerLevel(maximumPowerLevel);
     setCalculatedMaximumStrengthLevel(strengthLevel);
@@ -577,7 +583,6 @@ function ProgressLevel() {
             sx={{
               width: "75%",
               margin: "0.25rem",
-              fontWeight: "bold",
               fontSize: "1rem",
             }}
             onClick={handleCalculatePowerLevel}

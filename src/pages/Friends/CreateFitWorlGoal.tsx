@@ -353,7 +353,7 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >
@@ -397,12 +397,12 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >
         <Box display="flex">
-          <Typography align="left" fontWeight="900">
+          <Typography align="left" fontSize="1.25rem">
             Saiyan Training Schedule
           </Typography>
 
@@ -418,7 +418,8 @@ function CreateFitWorldGoal() {
           </FormGroup>
         </Box>
         {saiyanTrainingScheduleCheck ? (
-          <Box display="flex" flexDirection="column" gap={1}>
+          <Box display="flex" flexDirection="column" gap={1}          
+          >
             <Typography width="100%" align="left" variant="body2">
               Choose your objective for how many workouts you want to complete
               throughout your challenge
@@ -457,12 +458,12 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >
         <Box display="flex">
-          <Typography align="left" fontWeight="900">
+          <Typography align="left" fontSize="1.25rem">
             Gravity Chamber Gains
           </Typography>
 
@@ -837,12 +838,12 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >
         <Box display="flex">
-          <Typography align="left" fontWeight="900">
+          <Typography align="left" fontSize="1.25rem">
             Majin Metabolism
           </Typography>
 
@@ -893,12 +894,12 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >
         <Box display="flex">
-          <Typography align="left" fontWeight="900">
+          <Typography align="left" fontSize="1.25rem">
             Namekian Night's Rest
           </Typography>
 
@@ -953,7 +954,7 @@ function CreateFitWorldGoal() {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          backgroundColor: "#fafafa",
+          backgroundColor: "orange",
         }}
         elevation={4}
       >

@@ -495,7 +495,7 @@ function ExerciseBreakdownAnalysis() {
           statTextColor="white"
         />
         <ExerciseCompletedStatTile
-          statName="NO. WORKOUTS"
+          statName="WORKOUTS"
           statIcon={<FitnessCenterIcon fontSize="small" />}
           statValue={overallStatsObj.summedWorkouts || 0}
           statDetail="WO"

@@ -179,7 +179,7 @@ function CompletedWorkouts() {
 
   const pages = [
     "Analysis",
-    "Preset Workouts",
+    "Workouts & Routines",
     "Body Tracker",
     "Settings",
     "Sign Out",
@@ -199,7 +199,7 @@ function CompletedWorkouts() {
     // Handle logic based on the clicked page
     if (page === "Analysis") {
       navigate("analysis");
-    } else if (page === "Preset Workouts") {
+    } else if (page === "Workouts & Routines") {
       navigate("preset-workouts");
     } else if (page === "Body Tracker") {
       navigate("bodytracker");
@@ -365,7 +365,7 @@ function CompletedWorkouts() {
                 <ListItemIcon>
                   <FormatListNumberedIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Preset Workouts</ListItemText>
+                <ListItemText>Workouts & Routines</ListItemText>
               </MenuItem>
 
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
@@ -797,9 +797,9 @@ function CompletedWorkouts() {
               alignItems: "center",
             }}
           >
-            <SearchIcon fontSize="large" />
-            <Typography textAlign="center" fontSize="1rem">
-              Workout log empty for this date.
+            <img src="/svg/goku.svg" alt="son goku" width={128} height={128} />
+            <Typography textAlign="center" fontSize="2rem" color="#1c4595">
+              Workout log is empty
             </Typography>
           </Box>
         )}

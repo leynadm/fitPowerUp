@@ -162,7 +162,7 @@ function BodyTrackerHistory() {
               <MonitorWeightIcon fontSize="medium" />
               <Typography>
                 {userBodyTrackerEntry.weight}{" "}
-                {currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"}
+                {currentUserData.unitsSystem === "metric" ? "kg" : "lbs"}
               </Typography>
             </div>
             <div

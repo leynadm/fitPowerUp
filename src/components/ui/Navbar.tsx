@@ -46,9 +46,9 @@ function Navbar() {
           onChange={(event, newValue) => {}}
         >
           <BottomNavigationAction
-            label="Workout Log"
+            label="Workouts"
             icon={<FitnessCenterIcon />}
-            onClick={handleWorkoutClick}
+            onClick={handleWorkoutClick}            
           />
           <BottomNavigationAction
             label="Fit World"

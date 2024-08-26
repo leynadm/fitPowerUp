@@ -95,7 +95,7 @@ function FitWorldBoard() {
             gap: 1,
           }}
         >
-          <Typography align="center">
+          <Typography align="center" fontSize="1.25rem">
             Here you can create your own unique<br></br> Zenkai Challenges!
           </Typography>
           <IconButton
@@ -103,12 +103,12 @@ function FitWorldBoard() {
             sx={{
               mb: 2,
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "column"
             }}
             onClick={() => navigate("new-z-fighter-challenge")}
           >
             <AddCircleIcon fontSize="medium" />
-            <Typography fontSize="1rem">Create Zenkai challenge</Typography>
+            <Typography fontSize="1.25rem">Create Zenkai challenge</Typography>
           </IconButton>
         </Box>
       ) : null}

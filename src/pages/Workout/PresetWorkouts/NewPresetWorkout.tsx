@@ -298,7 +298,7 @@ function NewPresetWorkout() {
         setOpenAddNewPresetWorkoutModal={setOpenAddNewPresetWorkoutModal}
         existingExercises={existingExercises}
         workoutState={workoutState}
-        workoutRoutineCheck={workoutRoutineCheck}
+        
         routineTypeCheck={routineTypeCheck}
       />
       <ViewCommentModal
@@ -320,11 +320,6 @@ function NewPresetWorkout() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
-              {/* 
-              <ChecklistRtlIcon
-                sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              /> */}
-
               <Typography
                 variant="h6"
                 noWrap
@@ -338,11 +333,6 @@ function NewPresetWorkout() {
               >
                 Add Preset Workout
               </Typography>
-              {/* 
-              <ChecklistRtlIcon
-                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              /> */}
-
               <Typography
                 variant="h5"
                 noWrap
@@ -391,17 +381,9 @@ function NewPresetWorkout() {
         alignItems="center"
         width="100%"
         gap={2}
+        pt={2}
       >
-        <FormControlLabel
-          control={<Switch />}
-          checked={isWorkoutRoutineChecked()}
-          onChange={handleRoutineCheck} // Passing additional value
-          label={
-            workoutRoutineCheck
-              ? "This workout is part of a routine"
-              : "This is a standalone workout"
-          }
-        />
+
         {workoutRoutineCheck && (
           <ButtonGroup
             variant="contained"
@@ -690,7 +672,7 @@ function NewPresetWorkout() {
                         <Typography>
                           {`${exercise.weight.toFixed(2)} ${
                             currentUserData.unitsSystem === "metric"
-                              ? "kgs"
+                              ? "kg"
                               : "lbs"
                           }`}
                         </Typography>

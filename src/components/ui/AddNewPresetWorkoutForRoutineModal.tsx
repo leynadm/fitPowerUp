@@ -18,6 +18,7 @@ import { UserPresetWorkoutsDataContext } from "../../context/UserPresetWorkouts"
 import { Container } from "@mui/material";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import CircularProgressWithText from "./CircularProgressWithText";
+import addWorkoutToRoutine from "../../utils/firebaseDataFunctions/AddWorkoutToRoutine";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -33,28 +34,23 @@ const style = {
 };
 
 interface ParentComponentProps {
-  openAddNewPresetWorkoutModal: boolean;
-  setOpenAddNewPresetWorkoutModal: Dispatch<SetStateAction<boolean>>;
+  openAddNewPresetWorkoutForRoutineModal: boolean;
+  setOpenAddNewPresetWorkoutForRoutineModal: Dispatch<SetStateAction<boolean>>;
   existingExercises: { name: string; exercises: Exercise[] }[];
   workoutState: {
-    routineName: string;
     workoutName: string;
     workoutDescription: string;
-    routineDescription: string;
-    routineBy: string;
-    routineLinkReference: string;
-    workoutBy: string;
     workoutLinkReference: string;
+    routineName:string;
+    weekInterval:string;
   };
-  routineTypeCheck: string;
 }
 
-function AddNewPresetWorkoutModal({
-  openAddNewPresetWorkoutModal,
-  setOpenAddNewPresetWorkoutModal,
+function AddNewPresetWorkoutForRoutineModal({
+  openAddNewPresetWorkoutForRoutineModal,
+  setOpenAddNewPresetWorkoutForRoutineModal,
   existingExercises,
   workoutState,
-  routineTypeCheck,
 }: ParentComponentProps) {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -68,7 +64,7 @@ function AddNewPresetWorkoutModal({
   const workoutDate = formatDateForTextField(new Date());
 
   function handleClose() {
-    setOpenAddNewPresetWorkoutModal(false);
+    setOpenAddNewPresetWorkoutForRoutineModal(false);
   }
 
   async function handleCompleteNewPresetWorkout() {
@@ -90,13 +86,11 @@ function AddNewPresetWorkoutModal({
       workoutDescription: workoutState.workoutDescription,
       exercisesinRoutine: tempExercisesInRoutine,
       delete: true,
-      workoutBy: workoutState.workoutBy,
-      workoutLinkReference: workoutState.workoutLinkReference,
     };
 
     try {
       setIsLoading(true)
-      await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData);
+      await addWorkoutToRoutine(currentUser.uid, presetWorkoutData,workoutState.routineName);
 
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
@@ -111,7 +105,7 @@ function AddNewPresetWorkoutModal({
   return (
     <div>
       <Modal
-        open={openAddNewPresetWorkoutModal}
+        open={openAddNewPresetWorkoutForRoutineModal}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -164,18 +158,6 @@ function AddNewPresetWorkoutModal({
 
 
               <Box display="flex" flexDirection="column" width="100%" gap={1}>
-                <TextField
-                  id="outlined-basic"
-                  required
-                  label="Workout By"
-                  variant="filled"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  multiline
-                  maxRows={3}
-                  value={workoutState.workoutBy}
-                />
 
                 <TextField
                   id="outlined-basic"
@@ -187,6 +169,18 @@ function AddNewPresetWorkoutModal({
                   multiline
                   maxRows={3}
                   value={workoutState.workoutLinkReference}
+                />
+
+<TextField
+                  id="outlined-basic"
+                  label="Week Interval"
+                  variant="filled"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  multiline
+                  maxRows={3}
+                  value={workoutState.weekInterval}
                 />
               </Box>
 
@@ -221,4 +215,4 @@ function AddNewPresetWorkoutModal({
   );
 }
 
-export default AddNewPresetWorkoutModal;
+export default AddNewPresetWorkoutForRoutineModal;

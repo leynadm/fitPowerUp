@@ -12,7 +12,7 @@ import "../Home/styles/animation.css";
 import RedditIcon from "@mui/icons-material/Reddit";
 import EmailIcon from "@mui/icons-material/Email";
 import Link from "@mui/material/Link";
-
+import Hero from "./LandingPage/Hero";
 function LandingPage() {
   const navigate = useNavigate();
   function useContainerRefs() {
@@ -191,7 +191,7 @@ function LandingPage() {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="h4" sx={{ color: "#FF8C00" }}>
+            <Typography variant="h4" sx={{ color: "#FF8C00",fontFamily:"Saiyan" }}>
               fit<span style={{ color: "white" }}>PowerUp</span>
             </Typography>
 
@@ -202,7 +202,7 @@ function LandingPage() {
                   boxShadow: 0,
                   paddingTop: 0,
                   margin: 0,
-                  lineHeight: 2.5,
+                  lineHeight: 1.75,
                 }}
                 onClick={handleInstallClick}
               >
@@ -212,7 +212,7 @@ function LandingPage() {
           </Toolbar>
         </Container>
       </AppBar>
-
+        <Hero/>
       <Box
         component="main"
         sx={{
@@ -227,60 +227,7 @@ function LandingPage() {
           setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
         />
 
-        <Box
-          height="calc(100svh - 56px)"
-          display="grid"
-          gridTemplateRows="4fr 1fr 4fr 1fr"
-          position="relative"
-        >
-          <Box overflow="hidden" height="100%">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-1.webp?alt=media&token=1afb003c-c99f-429c-82a8-dd554ec25234"
-              alt=""
-              style={{
-                objectFit: "contain",
-                maxWidth: "100%",
-                width: "100%",
-                height: "100%",
-              }}
-            ></img>
-          </Box>
-
-          <Box sx={{ position: "relative" }}>
-            <Box
-              sx={{
-                maxWidth: "100%", // Limit the width of the box
-                overflow: "hidden",
-                textAlign: "center", // Centers text horizontally in the box
-                maxHeight: "100%",
-                padding: 1,
-              }}
-            >
-              <span className="type" style={spanStyle}>
-                The #1 DBZ-inspired fan-made fitness app. And 100% FREE!
-              </span>
-            </Box>
-          </Box>
-
-          {/* THIRD BOX */}
-          <Box overflow="hidden" height="100%">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Fsplash-picture.webp?alt=media&token=fa44f1c1-a3f0-4aa8-91a0-ccb5a4330431"
-              alt=""
-              style={{
-                objectFit: "contain",
-                maxWidth: "100%",
-                width: "100%",
-                height: "100%",
-              }}
-            ></img>
-          </Box>
-          <Box display="flex" justifyContent="center" alignItems="center" p={1}>
-            <Button onClick={getStartedClick} variant="dbz">
-              Get Started
-            </Button>
-          </Box>
-        </Box>
+        
 
         <Box
           width="100%"
@@ -331,21 +278,21 @@ function LandingPage() {
               >
                 <Typography
                   align="center"
-                  fontWeight="bold"
+                  
                   ref={containerRefs[1]}
                   className={`${
                     isVisible[1] ? "visible counter-library-exercises" : ""
                   }`}
                   minHeight="40px"
                 ></Typography>
-                <Typography align="center" fontWeight="bold" fontSize="1.25rem">
+                <Typography align="center"  fontSize="1.25rem">
                   EXERCISES
                 </Typography>
               </Box>
             </Box>
 
             <Typography
-              fontWeight="bold"
+              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -403,7 +350,7 @@ function LandingPage() {
             </Box>
 
             <Typography
-              fontWeight="bold"
+              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -461,7 +408,7 @@ function LandingPage() {
             </Box>
 
             <Typography
-              fontWeight="bold"
+              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -515,7 +462,7 @@ function LandingPage() {
             </Box>
 
             <Typography
-              fontWeight="bold"
+              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -574,7 +521,7 @@ function LandingPage() {
             </Box>
 
             <Typography
-              fontWeight="bold"
+              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -634,7 +581,7 @@ function LandingPage() {
 
           <Typography
             color="white"
-            fontWeight="bold"
+            
             fontSize="1.25rem"
             align="center"
             padding={1.5}
@@ -690,31 +637,39 @@ function LandingPage() {
             Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
           </Typography>
 
+
           <Typography
             color="white"
             variant="caption"
             align="center"
             padding={1}
-            fontSize="100%"
+          lineHeight={1.25}
+            fontSize="1.5rem"
           >
             This app is a fan-made creation, inspired by the Dragon Ball Z
             series, which is a property of FUNimation, Toei Animation, Fuji TV,
-            and Akira Toriyama. All intellectual property rights for Dragon Ball
+            and Akira Toriyama. 
+            <br /><br/>
+            All intellectual property rights for Dragon Ball
             Z are owned by their respective holders, and I, as an independent
             developer, claim no affiliation with or endorsement by them.
-            <br />
+            <br /><br/>
             Some content within this app is generated using AI technology and is
             inspired by the themes, characters, and universe of Dragon Ball Z.
+            <br /><br/>
             This app is purely a passion project, created by a fan for fans,
             with the dual purpose of celebrating the series and promoting
-            physical fitness and a healthy lifestyle. I encourage users to get
+            physical fitness and a healthy lifestyle. 
+            <br /><br/>
+            I encourage users to get
             active and visit the gym through engaging, DBZ-themed challenges and
             content.
-            <br />
+            <br /><br/>
             There is no commercial intent or gain behind this project; it is
             entirely a labor of love dedicated to the Dragon Ball Z community.
-            My aim is not only to celebrate the iconic Dragon Ball Z series but
-            also to inspire fans to explore a healthier lifestyle and share
+            <br /><br/>
+            My aim is not only to celebrate the iconic Dragon Ball Z series and
+            to inspire fans to pursue a healthier lifestyle, sharing
             their fitness journeys within this interactive and supportive
             community.
           </Typography>

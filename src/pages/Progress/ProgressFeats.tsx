@@ -87,7 +87,7 @@ function ProgressGraph() {
 
     return (
       <Box sx={{ width: "100%" }} style={customStyle} key={index}>
-        <Typography sx={{ fontWeight: "bold", paddingTop: "8px" }}>
+        <Typography sx={{  paddingTop: "8px",fontSize:"1.25rem" }}>
           {featEntry.name}
         </Typography>
         <Box display="flex" gap={1} alignItems="center">
@@ -99,7 +99,7 @@ function ProgressGraph() {
           )}
         </Box>
 
-        <Box display="flex" alignItems="center" sx={{ marginBottom: 1 }}>
+        <Box display="flex" alignItems="center" sx={{ marginBottom: 0 }}>
           <Typography variant="subtitle2">Difficulty: </Typography>
           <Rating
             icon={<StarsIcon fontSize="inherit" />}
@@ -125,7 +125,7 @@ function ProgressGraph() {
                     paddingTop: 0,
                     margin:0
                      // Example padding value, adjust as needed
-                  }
+                  },
                 }
               }}
               maxRows={4}
@@ -133,7 +133,8 @@ function ProgressGraph() {
               
               defaultValue={featEntry.description}
               sx={{
-                width: "100%"
+                width: "100%",
+                background:"orange",
               }}
               multiline
             />

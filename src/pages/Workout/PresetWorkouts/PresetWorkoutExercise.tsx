@@ -20,7 +20,6 @@ import { UserTrainingDataContext } from "../../../context/UserTrainingData";
 import { UserExercisesLibraryContext } from "../../../context/UserExercisesLibrary";
 import { AuthContext } from "../../../context/Auth";
 import { AppBar, Toolbar } from "@mui/material";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useNavigate } from "react-router-dom";

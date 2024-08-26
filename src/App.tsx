@@ -42,13 +42,12 @@ function App() {
               border: "2px solid #422800",
               borderRadius: "30px",
               boxShadow: "4px 4px 0 0 #422800",
-              color: "#422800",
+              color: "#000",
               cursor: "pointer",
               display: "inline-block",
-              fontWeight: 600,
-              fontSize: "1rem",
-              padding: "0 18px",
-              lineHeight: "50px",
+
+              fontSize: "1.5rem",
+              padding: "0 8px",
               textAlign: "center",
               textDecoration: "none",
               userSelect: "none",
@@ -134,7 +133,6 @@ function App() {
               boxShadow: "4px 4px 0 0 #422800",
               color: "black",
               cursor: "pointer",
-              fontWeight: 600,
               fontSize: "1rem",
               padding: "0 16px 0 16px",
               textAlign: "center",
@@ -275,7 +273,7 @@ function App() {
 
     palette: {
       primary: {
-        main: "#000000",
+        main: "#01080a",
       },
       secondary: {
         main: "#808080",
@@ -289,9 +287,11 @@ function App() {
     typography: {
       button: {
         // Here is where you can customise the button
-        fontWeight: "bold",
+      fontWeight:'lighter'  
       },
-      fontFamily: "Outfit",
+      
+      fontFamily: "LuckiestGuy",
+      
     },
 
     shape: {},

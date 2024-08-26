@@ -3,54 +3,29 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import {
-  IPresetWorkoutGroup,
-  getIndividualRoutine,
-} from "./PresetWorkoutsOverview";
-import { useParams } from "react-router-dom";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
 import { useContext, useState } from "react";
-import { getIndividualPresetWorkouts } from "./PresetWorkoutsOverview";
 import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import WorkoutCard from "./WorkoutCard";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import IconButton from "@mui/material/IconButton";
 import DeleteRoutineOrWorkoutModal from "../../../components/ui/DeleteRoutineOrWorkoutModal";
-import TextField from "@mui/material/TextField";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { useLocation, useNavigate } from "react-router-dom";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { TextField } from "@mui/material";
+
 function RoutineCardDetails() {
-  const { routineName } = useParams();
+  const location = useLocation();
+
+  const routine = location.state.routine;
+
+  const navigate = useNavigate();
 
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
+
   const [openDeleteRoutineOrWorkoutModal, setOpenDeleteRoutineOrWorkoutModal] =
     useState(false);
-  const workouts = getIndividualPresetWorkouts(presetWorkoutsData, routineName);
-
-  const individualRoutineObj = getIndividualRoutine(
-    presetWorkoutsData,
-    routineName
-  );
-
-  const individualRoutineIsEmptyCheck = isRoutineEmpty(individualRoutineObj);
-
-  function isRoutineEmpty(obj: IPresetWorkoutGroup) {
-    if (individualRoutineObj) {
-      return Object.keys(obj).length === 0;
-    }
-  }
-
-  let routineDetails = null;
-
-  if (individualRoutineObj && typeof individualRoutineObj === "object") {
-    const firstKey = Object.keys(individualRoutineObj)[0]; // Get the first key (e.g., "5/3/1 Beginners")
-    if (firstKey && individualRoutineObj[firstKey].details) {
-      routineDetails = individualRoutineObj[firstKey].details;
-    }
-  }
-
-  function handleDeleteRoutineOrWorkoutModal() {
-    setOpenDeleteRoutineOrWorkoutModal(!openDeleteRoutineOrWorkoutModal);
-  }
 
   return (
     <Box
@@ -65,8 +40,8 @@ function RoutineCardDetails() {
         setOpenDeleteRoutineOrWorkoutModal={setOpenDeleteRoutineOrWorkoutModal}
         routineOrWorkout="routine"
         presetWorkoutData={presetWorkoutsData}
-        routineOrWorkoutName={routineName}
-        isValid={!individualRoutineIsEmptyCheck}
+        routineOrWorkoutName={routine.rName}
+        isValid={false}
       />
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
@@ -120,9 +95,9 @@ function RoutineCardDetails() {
                 Routine Details
               </Typography>
 
-              {!individualRoutineIsEmptyCheck &&
-                routineDetails &&
-                routineDetails.delete && (
+              {/* {!individualRoutineIsEmptyCheck &&
+                routineData.routineDetails &&
+                routineData.routineDetails.delete && (
                   <Box sx={{ flexGrow: 1, display: "flex" }}>
                     <Box sx={{ marginLeft: "auto" }}>
                       <IconButton
@@ -137,73 +112,100 @@ function RoutineCardDetails() {
                       </IconButton>
                     </Box>
                   </Box>
-                )}
+                )} */}
+
+              <Box sx={{ marginLeft: "auto" }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    navigate("new-preset-workout", { state: { routine } })
+                  }
+                >
+                  <AddOutlinedIcon sx={{ color: "white" }} />
+                </IconButton>
+              </Box>
             </Toolbar>
           </Container>
         </AppBar>
       </Box>
 
-      {individualRoutineIsEmptyCheck && (
-        <Box
-          height="calc(100svh - 112px)"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography>
-            We couldn't find the routine you're looking for!
-          </Typography>
-        </Box>
-      )}
-
-      {!individualRoutineIsEmptyCheck && (
+      <Typography fontSize={24} textAlign="center">
+        {routine.rName}
+      </Typography>
+      <Typography fontSize={18} textAlign="right">
+        {routine.rBy}
+      </Typography>
+      <TextField
+        variant="outlined"
+        disabled
+        value={routine.rDesc}
+        size="small"
+      />
+     {/*  {true && (
         <Box>
-          {routineDetails && (
-            <Box display="flex" flexDirection="column" gap={1}>
-              <Typography variant="h6" align="center">
-                {routineName?.toLocaleUpperCase()}
-              </Typography>
-              <Typography variant="body2" align="right">
-                by {routineDetails && routineDetails.routineBy}
-              </Typography>
-            </Box>
-          )}
+          <Box width="100%" display="flex" overflow="auto" p={1}>
+            <ToggleButtonGroup
+              value={true}
+              exclusive
+              onChange={() => console.log("yes")}
+              aria-label="text alignment"
+            >
+              <ToggleButton
+                fullWidth
+                value="left"
+                aria-label="left aligned"
+                size="small"
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                WeeK 12
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
           <Box display="flex" flexDirection="column" gap={1} pb="64px">
             {presetWorkoutsData.length > 0 &&
-              workouts.map((workout: IPresetWorkoutData, index: number) => (
-                <WorkoutCard key={index} workoutData={workout} />
-              ))}
+              routine.rWorkouts.map(
+                (workout: IPresetWorkoutData, index: number) => (
+                  <WorkoutCard key={index} workoutData={workout} />
+                )
+              )}
 
-            {routineDetails && routineDetails.routineLinkReference !== "" && (
+            {routine && routine.rLink !== "" && (
               <Box>
                 <Typography variant="caption">Routine Description</Typography>
-                  <Typography variant="body2">
-                  {routineDetails.routineDescription}
-                  
+                <Typography variant="body2">{routine.rDesc}</Typography>
+              </Box>
+            )}
+
+            {routine && routine.rLink !== "" && (
+              <Box>
+                <Typography variant="caption">Link Reference</Typography>
+                <Typography
+                  variant="subtitle2"
+                  align="center"
+                  width="100%"
+                  sx={{ wordWrap: "break-word" }}
+                >
+                  <a
+                    href={routine.rLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {routine.rLink}
+                  </a>
                 </Typography>
               </Box>
             )}
-
-            {routineDetails && routineDetails.routineLinkReference !== "" && (
-            <Box>
-            <Typography variant="caption">Link Reference</Typography>
-<Typography variant="subtitle2" align="center" width="100%" sx={{wordWrap:"break-word"}}>
-                <a
-                  href={routineDetails.routineLinkReference}
-                  target="_blank"
-                                    rel="noopener noreferrer"
-                >
-                  {routineDetails.routineLinkReference}
-                </a>
-              </Typography>
-              </Box>
-            )}
-            
           </Box>
-          
         </Box>
-      )}
+      )} */}
+
+
+      
     </Box>
   );
 }

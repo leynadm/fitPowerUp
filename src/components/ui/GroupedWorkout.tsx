@@ -132,7 +132,7 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
                 {exercise.weight !== 0 && (
                   <Typography>
                     {`${exercise.weight.toFixed(2)} ${
-                      currentUserData.unitsSystem === "metric" ? "kgs" : "lbs"
+                      currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                     }`}
                   </Typography>
                 )}

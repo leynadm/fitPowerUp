@@ -369,7 +369,7 @@ function NewWorkout({
                         <Typography>
                           {`${exercise.weight.toFixed(2)} ${
                             currentUserData.unitsSystem === "metric"
-                              ? "kgs"
+                              ? "kg"
                               : "lbs"
                           }`}
                         </Typography>

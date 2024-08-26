@@ -47,7 +47,7 @@ function ProgressHelp() {
         }}
       >
         <PowerLevelIcon width="1.5rem" height="1.5rem" />
-        <Typography sx={{ fontWeight: "bolder" }}>Power Level:</Typography>
+        <Typography >Power Level:</Typography>
       </Box>
       <Typography sx={{ textAlign: "center" }}>
         The sum of your experience level and pure strength level, showcasing
@@ -63,7 +63,7 @@ function ProgressHelp() {
         }}
       >
         <StrengthIcon width="1rem" height="1rem" />
-        <Typography sx={{ fontWeight: "bolder" }}>
+        <Typography >
           Pure Strength Level:
         </Typography>
       </Box>
@@ -81,7 +81,7 @@ function ProgressHelp() {
         }}
       >
         <ExperienceIcon width="1rem" height="1rem" />
-        <Typography sx={{ fontWeight: "bolder" }}>Experience Level:</Typography>
+        <Typography >Experience Level:</Typography>
       </Box>
       <Typography sx={{ textAlign: "center" }}>
         Tracks your dedication and consistency by counting the total logged

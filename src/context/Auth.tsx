@@ -58,12 +58,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             //console.log("IndexedDb tables creation completed.");
           });
 
-        /* const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data() as User;
-          setCurrentUserData(userData);
-        } */
         return () => unsubscribeSnapshot();
       } else {
         setLoginFetchTrigger(true);
@@ -72,42 +66,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return unsubscribe;
   }, []);
-
-  /*   useEffect(() => {
-    console.log('currentuserdata effect, not fetching')
-    if (!currentUserData && currentUser) {
-      setLoginFetchTrigger(false);
-      console.log('currentuserdata effect, actually fetching')
-      const fetchData = async () => {
-        const tempCurrentUserData = await fetchCurrentUserData(
-          currentUser,
-          setCurrentUserData
-        );
-        if (
-          tempCurrentUserData &&
-          currentUser !== null &&
-          tempCurrentUserData.appVersion === undefined
-        ) {
-          await updateAppVersionWithNewDocs(currentUser.uid);
-          await updateAppVersionToV3(currentUser.uid);
-        } else if (
-          tempCurrentUserData &&
-          currentUser !== null &&
-          tempCurrentUserData.appVersion === 2
-        ) {
-          await updateAppVersionToV3(currentUser.uid);
-        }
-      };
-
-      const timeoutId = setTimeout(() => {
-        fetchData().catch(console.error);
-        setLoginFetchTrigger(true);
-      }, 1750);
-
-      return () => clearTimeout(timeoutId);
-    }
-
-  }, [currentUser,currentUserData]); */
 
   return (
     <AuthContext.Provider

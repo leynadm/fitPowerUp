@@ -1,31 +1,64 @@
-import { IPresetWorkoutGroup } from "./PresetWorkoutsOverview";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-interface RoutineCardProps {
-  routineName: string;
-  groupData: IPresetWorkoutGroup;
-}
+import { useEffect, useState } from "react";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../config/firebase";
+import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
+import { Skeleton } from "@mui/material";
 
-function RoutineCard({ routineName, groupData }: RoutineCardProps) {
-  const encodedParameter = encodeURIComponent(routineName);
+function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
+  const [imageURL, setImageURL] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchImageURL = async () => {
+      let exerciseImageRef;
+
+      if (routine.rImg !== "") {
+        exerciseImageRef = ref(
+          storage,
+          `assets/workout-and-routines/preset-thumbnails/${routine.rImg}.webp`
+        );
+      } else {
+        exerciseImageRef = ref(
+          storage,
+          `assets/workout-and-routines/preset-thumbnails/r-def.webp`
+        );
+      }
+
+      try {
+        const url = await getDownloadURL(exerciseImageRef);
+        setImageURL(url);
+      } catch (error) {
+        //toast.error("Oops, there was an error fetching the image!");
+        console.error("Error fetching image:", error);
+      } finally {
+        setIsLoading(false); // Stop loading whether there was an error or not
+      }
+    };
+
+    fetchImageURL();
+  }, []); // Dependency array includes index and userExercise
+
+  const encodedParameter = encodeURIComponent(routine.rName);
+
   const navigate = useNavigate();
-  
 
   return (
     <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
-      <CardContent sx={{ pt: 0 }}>
+      <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Typography
           align="center"
           color="text.secondary"
           variant="h6"
           gutterBottom
         >
-          {routineName.toLocaleUpperCase()}
+          {routine.rName}
         </Typography>
         <Typography
           variant="subtitle2"
@@ -33,15 +66,43 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
           m={0}
           align="right"
           component="div"
+          color="#1c4595"
         >
-          by {groupData.details.routineBy}
+          by {routine.rBy}
         </Typography>
- 
+
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight={350}
+        >
+          {imageURL === "" ? (
+            <Skeleton height={350} width="100%" />
+          ) : (
+            <img
+              src={imageURL}
+              alt=""
+              loading="eager"
+              style={{
+                maxHeight: "512px",
+                maxWidth: "512px",
+                width: "100%",
+                height: "auto", // Maintain aspect ratio
+                minHeight: "100%",
+                boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+                border: "2px solid orange",
+              }}
+              width="512px" // Set the width explicitly
+              height="512px" // Set the height explicitly
+            />
+          )}
+        </Box>
+
         <TextField
           id="outlined-read-only-input"
           label="Description"
-          defaultValue={groupData.details.routineDescription}
-          
+          defaultValue={routine.rDesc}
           multiline
           maxRows={5}
           size="small"
@@ -51,8 +112,7 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
           }}
           variant="standard"
         />
-
-        </CardContent>
+      </CardContent>
       <CardActions
         sx={{
           paddingTop: 0,
@@ -62,22 +122,26 @@ function RoutineCard({ routineName, groupData }: RoutineCardProps) {
       >
         <Button
           size="small"
-          onClick={() => navigate(`preset-routine-details/${encodedParameter}`)}
+          onClick={() =>
+            navigate(`preset-routine-details/${encodedParameter}`, {
+              state: { routine },
+            })
+          }
+          sx={{ color: "#1c4595" }}
         >
           Go To Routine
         </Button>
-        
-        {groupData.details.routineLinkReference !== "" && groupData.details.routineLinkReference !== "" &&groupData.details.routineLinkReference !== undefined  && (
+
+        {routine.rLink && (
           <Button
             size="small"
             component="a"
             target="_blank"
-            href={groupData.details.routineLinkReference}
+            href={routine.rLink}
           >
             Go To Source
           </Button>
         )}
-
       </CardActions>
     </Card>
   );

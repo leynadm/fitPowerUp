@@ -6,8 +6,8 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import IconButton from "@mui/material/IconButton";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -16,11 +16,21 @@ import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import RoutineCard from "./RoutineCard";
 import { useEffect } from "react";
 import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
-import { UserExercisesLibraryContext } from "../../../context/UserExercisesLibrary";
-import { Button } from "@mui/material";
+import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
 // This is the type for the accumulator
 interface IPresetWorkoutAccumulator {
   [key: string]: IPresetWorkoutGroup;
+}
+
+export interface IPresetRoutine {
+  routineName: string;
+  routineDescription: string;
+  routineBy: string;
+  routineLinkReference: string;
+  delete: boolean;
+  id: string;
+  routineImg: string;
+  multiWeeks: boolean;
 }
 
 export interface IPresetWorkoutGroup {
@@ -38,11 +48,9 @@ interface IPresetWorkoutDetails {
 }
 
 function PresetWorkoutsOverview() {
-  const { presetWorkoutsData, refetchPresetWorkoutsData } = useContext(
+  const { presetWorkoutsData, presetRoutinesData, refetchPresetWorkoutsData } = useContext(
     UserPresetWorkoutsDataContext
   );
-  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
-
   useEffect(() => {
     const fetchData = async () => {
       if (presetWorkoutsData.length === 0) {
@@ -51,7 +59,7 @@ function PresetWorkoutsOverview() {
     };
 
     fetchData().catch(console.error); // Handle errors
-  }, [presetWorkoutsData]);
+  }, []);
 
   const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
 
@@ -66,16 +74,19 @@ function PresetWorkoutsOverview() {
 
   const routines = getRoutines(presetWorkoutsData);
 
+  console.log('logging presetRoutinesData:')
+  console.log(presetRoutinesData)
+
   const workouts = getWorkouts(presetWorkoutsData);
 
-  const isRoutineEmptyCheck = isRoutineEmpty(routines);
+  const isRoutineEmptyCheck = false /* isRoutineEmpty(routines); */
 
-  function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
+  /* function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
     if (routines) {
       return Object.keys(obj).length === 0;
     }
   }
-
+ */
   const handleAlignment = (
     event: MouseEvent<HTMLElement>,
     newCategory: string | null
@@ -89,6 +100,11 @@ function PresetWorkoutsOverview() {
   };
 
   const navigate = useNavigate();
+
+  function handleNewPresetRoutine() {
+    navigate("new-preset-routine");
+  }
+
   function handleNewPresetWorkout() {
     navigate("new-preset-workout");
   }
@@ -130,7 +146,7 @@ function PresetWorkoutsOverview() {
                   textDecoration: "none",
                 }}
               >
-                Preset Workouts
+                Routines & Workouts
               </Typography>
               {/* 
               <FormatListNumberedIcon
@@ -149,22 +165,37 @@ function PresetWorkoutsOverview() {
                   textDecoration: "none",
                 }}
               >
-                Preset Workouts
+                Routines & Workouts
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
-                <Box sx={{ marginLeft: "auto" }}>
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    onClick={handleNewPresetWorkout}
-                  >
-                    <AddOutlinedIcon sx={{ color: "white" }} />
-                  </IconButton>
-                </Box>
+                {selectedCategory === "routines" ? (
+                  <Box sx={{ marginLeft: "auto" }}>
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      color="inherit"
+                      onClick={handleNewPresetRoutine}
+                    >
+                      <AddBoxIcon sx={{ color: "white" }} />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  <Box sx={{ marginLeft: "auto" }}>
+                    <IconButton
+                      size="large"
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      color="inherit"
+                      onClick={handleNewPresetWorkout}
+                    >
+                      <AddOutlinedIcon sx={{ color: "white" }} />
+                    </IconButton>
+                  </Box>
+                )}
               </Box>
             </Toolbar>
           </Container>
@@ -193,18 +224,10 @@ function PresetWorkoutsOverview() {
 
       {selectedCategory === "routines" && !isRoutineEmptyCheck ? (
         <Box display="flex" flexDirection="column" gap={2} pb="64px">
-          {presetWorkoutsData.length > 0 &&
-            Object.entries(routines).map(([key, value]) => {
-              const groupData = value as IPresetWorkoutGroup; // Type assertion
-
-              return (
-                <RoutineCard
-                  key={key}
-                  routineName={key}
-                  groupData={groupData}
-                />
-              );
-            })}
+          {presetRoutinesData.length > 0 &&
+             presetRoutinesData.map((routine: IPresetRoutineData, index: number) => {
+              return <RoutineCard key={index} routine={routine} />;
+            })}  
         </Box>
       ) : selectedCategory === "routines" && isRoutineEmptyCheck ? (
         <Box
@@ -212,6 +235,7 @@ function PresetWorkoutsOverview() {
           height="calc(100svh - 112px)"
           justifyContent="center"
           alignItems="center"
+          flexDirection="column"
         >
           <Typography>We couldn't find any routines.</Typography>
         </Box>
@@ -230,7 +254,7 @@ function PresetWorkoutsOverview() {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography>We couldn't find any stand-alone workouts.</Typography>
+          <Typography textAlign="center" fontSize="1.25rem">We couldn't find any stand-alone workouts.</Typography>
         </Box>
       ) : null}
     </Box>
@@ -357,20 +381,38 @@ export function getIndividualRoutine(
 }
 
 function getRoutines(presetWorkoutsData: IPresetWorkoutData[]) {
-  const tempRoutinesArr: IPresetWorkoutData[] = [];
+
+console.log(presetWorkoutsData)
+
+
+
+return []
+
+
+  /*   const tempRoutinesArr: IPresetWorkoutData = presetWorkoutsData[0];
+
+  if(!presetWorkoutsData) return
 
   for (let index = 0; index < presetWorkoutsData.length; index++) {
     const workoutElement = presetWorkoutsData[index];
     if (workoutElement.routineName !== "") {
       tempRoutinesArr.push(workoutElement);
+      console.log('doesnt equal:')
+      console.log({workoutElement})
+      console.log(workoutElement.routineName)
+      
     }
   }
 
-  const groupedByRoutineName = tempRoutinesArr.reduce(
+
+  if(tempRoutinesArr.length<1) return {}
+
+  const groupedByRoutineName = tempRoutinesArr[0].reduce(
     (
       accumulator: IPresetWorkoutAccumulator,
       currentObject: IPresetWorkoutData
     ) => {
+
       const routineName = currentObject.routineName;
 
       if (!accumulator[routineName]) {
@@ -405,5 +447,6 @@ function getRoutines(presetWorkoutsData: IPresetWorkoutData[]) {
     {}
   );
 
-  return groupedByRoutineName;
+  console.log(groupedByRoutineName)
+  return groupedByRoutineName; */
 }

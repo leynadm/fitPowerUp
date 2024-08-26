@@ -52,9 +52,9 @@ function LoadingScreenDBZ() {
       width="100%"
     >
       <RotatingBox position="relative">
-        <StarsIcon sx={{ color: "#FFA500" }} fontSize="large" />
+        <StarsIcon sx={{ color: "#FFA500",height:"2rem", width:"2rem" }}   />
       </RotatingBox>
-      <Typography>Gathering the dragon balls...</Typography>
+      <Typography sx={{fontSize:"1.75rem",fontWeight:"normal",textAlign:"center"}}>Gathering the dragon balls...</Typography>
     </Box>
   );
 }

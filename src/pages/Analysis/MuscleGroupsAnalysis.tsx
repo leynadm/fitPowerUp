@@ -263,7 +263,7 @@ function MuscleGroupsAnalysis() {
               label={{
                 value: valueToDisplay(selectedKPI),
                 angle: -90,
-                position: "insideBottomLeft",
+                position: "insideBottomLeft",                
               }}
             />
             <Tooltip />

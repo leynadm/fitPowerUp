@@ -709,7 +709,7 @@ export default function UserWorkoutCard({
                               {exercise.weight !== 0 && (
                                 <Typography sx={{ fontSize: "small" }}>
                                   {`${exercise.weight.toFixed(2)} ${
-                                    unitsSystem === "metric" ? "kgs" : "lbs"
+                                    unitsSystem === "metric" ? "kg" : "lbs"
                                   }`}
                                 </Typography>
                               )}

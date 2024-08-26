@@ -2,19 +2,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;0,700;0,900;1,300;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;600;700&display=swap');
-*/
-
-
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;600;700&display=swap');
 
- 
+*/
+
+@font-face {
+  font-family: 'Saiyan';
+  src: local('Saiyan'), url(../src/assets/fonts/Saiyan-Sans.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'LuckiestGuy';
+  src: local('LuckiestGuy'), url(../src/assets/fonts/LuckiestGuy-Regular.ttf) format('truetype');
+}
+
+.secondary-font{
+  font-family: 'LuckiestGuy';
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Outfit', 'Arial', 'Oxygen',
+  font-family:  'Saiyan', 'Arial', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {

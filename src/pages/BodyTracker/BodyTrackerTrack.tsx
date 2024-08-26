@@ -223,7 +223,7 @@ function BodyTrackerTrack() {
           id="weight"
           label={`${
             currentUserData.unitsSystem === "metric"
-              ? "Weight (kgs)"
+              ? "Weight (kg)"
               : "Weight (lbs)"
           }`}
           size="small"

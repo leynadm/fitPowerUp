@@ -40,11 +40,11 @@ function ExerciseCompletedStatTile({
           gap: 3,
         }}
       >
-        <div>{statName}</div>
+        <div className="secondary-font">{statName}</div>
         <div>{statIcon}</div>
       </div>
 
-      <div style={{ fontSize: "1.25rem" }}>
+      <div className="secondary-font" style={{ fontSize: "1.25rem",color:"#FFA500" }}>
         {statValue} {statDetail}
       </div>
     </div>

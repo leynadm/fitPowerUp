@@ -219,7 +219,7 @@ export default function SignIn() {
             LOG IN WITH GOOGLE
           </Button>
 
-          <Button
+{/*           <Button
             type="button"
             fullWidth
             variant="outlined"
@@ -228,7 +228,7 @@ export default function SignIn() {
           >
             <FacebookIcon />
             LOG IN WITH FACEBOOK
-          </Button>
+          </Button> */}
 
 {/*           <Button
             type="button"
