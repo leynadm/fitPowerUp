@@ -287,11 +287,10 @@ function App() {
     typography: {
       button: {
         // Here is where you can customise the button
-      fontWeight:'lighter'  
+        fontWeight: "lighter",
       },
-      
+
       fontFamily: "LuckiestGuy",
-      
     },
 
     shape: {},
@@ -324,20 +323,7 @@ function App() {
 
               {/* If the user is signed in and tries to access login, reroute him to home */}
               <Route element={<AuthRoute type="home" />}>
-                <Route
-                  index
-                  path="/home/*"
-                  element={
-                    <Home
-                      sessionVerificationEmailCheck={
-                        sessionVerificationEmailCheck
-                      }
-                      setSessionVerificationEmailCheck={
-                        setSessionVerificationEmailCheck
-                      }
-                    />
-                  }
-                />
+                <Route index path="/home/*" element={<Home />} />
               </Route>
 
               <Route element={<AuthRoute type="/" />}>

@@ -29,7 +29,7 @@ interface ParentComponentProps {
   setOpenDeleteRoutineOrWorkoutModal: Dispatch<SetStateAction<boolean>>;
   routineOrWorkout: string;
   presetWorkoutData: IPresetWorkoutData[];
-  routineOrWorkoutName: string | undefined;
+  routineOrWorkoutId: string | undefined;
   isValid: boolean | undefined;
 }
 
@@ -38,7 +38,7 @@ function DeleteRoutineOrWorkoutModal({
   setOpenDeleteRoutineOrWorkoutModal,
   routineOrWorkout,
   presetWorkoutData,
-  routineOrWorkoutName,
+  routineOrWorkoutId,
   isValid,
 }: ParentComponentProps) {
   const { currentUser } = useContext(AuthContext);
@@ -55,7 +55,7 @@ function DeleteRoutineOrWorkoutModal({
         await deleteRoutine(
           currentUser.uid,
           presetWorkoutData,
-          routineOrWorkoutName
+          routineOrWorkoutId
         );
 
         await refetchPresetWorkoutsData();
@@ -69,7 +69,7 @@ function DeleteRoutineOrWorkoutModal({
         await deletePresetWorkout(
           currentUser.uid,
           presetWorkoutData,
-          routineOrWorkoutName
+          routineOrWorkoutId
         );
 
         await refetchPresetWorkoutsData();

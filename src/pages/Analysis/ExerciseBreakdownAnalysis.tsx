@@ -467,7 +467,7 @@ function ExerciseBreakdownAnalysis() {
         justifyContent="center"
         alignItems="center"
         width="100%"
-        height="100%"
+        pb="8px"
         gap={3}
       >
         <ExerciseCompletedStatTile

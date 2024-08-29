@@ -40,10 +40,10 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
 
       for (
         let index = 0;
-        index < workoutData.exercisesinRoutine.length;
+        index < workoutData.wOvr.length;
         index++
       ) {
-        const exerciseName = workoutData.exercisesinRoutine[index];
+        const exerciseName = workoutData.wOvr[index];
 
         exerciseImageRef = ref(
           storage,
@@ -77,7 +77,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
           variant="h6"
           gutterBottom
         >
-          {capitalizeWords(workoutData.workoutName)}
+          {capitalizeWords(workoutData.wName)}
         </Typography>
         <Typography
           variant="subtitle2"
@@ -86,11 +86,11 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
           align="right"
           component="div"
         >
-          by {workoutData.workoutBy}
+          by {workoutData.wBy}
         </Typography>
         <Typography variant="caption">Workout Description</Typography>
         <Typography style={styles.textOverflow as React.CSSProperties}>
-          {workoutData.workoutDescription}
+          {workoutData.wDesc}
         </Typography>
 
         <Box pt={1} display="flex" flexDirection="column">
@@ -123,7 +123,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
                   </Box>
                 ))
               : Array.from({
-                  length: workoutData.exercisesinRoutine.length,
+                  length: workoutData.wOvr.length,
                 }).map((_, index) => (
                   <Skeleton
                     key={index}
@@ -148,16 +148,16 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
       >
         <Button
           size="small"
-          onClick={() => navigate(`standalone-workout-details/${encodeURIComponent(workoutData.workoutName)}`)}
+          onClick={() => navigate(`standalone-workout-details/${encodeURIComponent(workoutData.wName)}`)}
         >
           Go To Workout
         </Button>
-        {workoutData.workoutLinkReference !== "" && (
+        {workoutData.wLink !== "" && (
           <Button
             size="small"
             component="a"
             target="_blank"
-            href={workoutData.workoutLinkReference}
+            href={workoutData.wLink}
           >
             Go To Source
           </Button>

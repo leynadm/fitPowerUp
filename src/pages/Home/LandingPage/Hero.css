@@ -93,16 +93,16 @@
   }
 
   #hero-1856 .cs-content-graphic {
-    height: 305%;
-    max-height: 81.25rem;
+    height: 205%;
+    max-height: 71.25rem;
     filter: brightness(60%);
     width: auto;
     position: absolute;
     top: 50%;
-    right: -4rem;
+    right: 0rem;
     left: auto;
     z-index: -1;
-    transform: translateY(-50%);
+    transform: translateY(-45%);
     z-index: -3;
   }
 
@@ -163,6 +163,23 @@
   #hero-1856 .cs-background::before {
     content: none;
   }
+
+
+  #hero-1856 .cs-content-graphic {
+    height: 305%;
+    max-height: 81.25rem;
+    filter: brightness(60%);
+    width: auto;
+    position: absolute;
+    top: 50%;
+    right: -4rem;
+    left: auto;
+    z-index: -1;
+    transform: translateY(-50%);
+    z-index: -3;
+  }
+
+
 }
 
 /* Desktop Parallax - 1300px */
@@ -178,6 +195,21 @@
 
   #hero-1856 .cs-background img {
     display: none;
+  }
+
+
+  #hero-1856 .cs-content-graphic {
+    height: 305%;
+    max-height: 81.25rem;
+    filter: brightness(60%);
+    width: auto;
+    position: absolute;
+    top: 50%;
+    right: -4rem;
+    left: auto;
+    z-index: -1;
+    transform: translateY(-50%);
+    z-index: -3;
   }
 }
 
@@ -206,7 +238,7 @@
 
 .cs-topper {
   color: white;
-  font-size: 2rem;
+  font-size: 2.5rem;
   border-radius: 30px;
   padding: 8px;
   text-align: center;

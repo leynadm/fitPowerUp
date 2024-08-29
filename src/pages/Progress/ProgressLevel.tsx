@@ -368,7 +368,7 @@ function ProgressLevel() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        paddingBottom: "64px",
+        pb:1,
         gap: 2,
       }}
       maxWidth="md"

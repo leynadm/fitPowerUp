@@ -192,7 +192,7 @@ function NewWorkout({
       </Box>
 
       <Container
-        sx={{ padding: 1, height: "calc(100dvh - 112px)" }}
+        sx={{ padding: 1 }}
         maxWidth="md"
         className="ThisIsTheFirstContainer"
       >
@@ -251,7 +251,6 @@ function NewWorkout({
             className="wrapperForTheExercisesGrouped"
             display="flex"
             flexDirection="column"
-            pb="56px"
           >
             {existingExercises.map((group, index) => (
               <Box

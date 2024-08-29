@@ -34,9 +34,18 @@ import getExistingPresetExerciseComment from "../../../utils/IndexedDbCRUDFuncti
 import getExistingPresetExercises from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExercises";
 import { useSearchParams } from "react-router-dom";
 import { validateIndexedDbEntry } from "../../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
+import { useLocation } from "react-router-dom";
+
 function PresetWorkoutExercise() {
   const { exerciseName } = useParams();
   const navigate = useNavigate();
+
+  const { routineName } = useParams();
+
+  const location = useLocation();
+  const routine = location.state.routine;
+
+  const encodedParameter = encodeURIComponent(routine.rName);
 
   const [searchParams] = useSearchParams();
 
@@ -725,13 +734,10 @@ function PresetWorkoutExercise() {
   }
 
   const handleNewWorkout = () => {
-    const searchParamsString = searchParams.toString();
-
-    // Create the navigation URL, appending the search parameters
-    const navigationUrl = `/home/workout/preset-workouts/new-preset-workout?${searchParamsString}`;
+    const navigationUrl = `/home/workout/preset-workouts/preset-routine-details/${encodedParameter}/new-preset-workout/`;
 
     // Navigate to the new URL with the search parameters
-    navigate(navigationUrl);
+    navigate(navigationUrl, { state: { routine } });
   };
 
   return (

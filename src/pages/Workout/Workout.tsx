@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import CompletedWorkoutsTabs from "./CompletedWorkoutsTabs";
 import { Routes, Route } from "react-router-dom";
 import NewWorkout from "./NewWorkout";
@@ -18,6 +18,7 @@ import ImportData from "../Settings/ImportData";
 import DevelopmentLog from "../Settings/DevelopmentLog";
 import PresetWorkouts from "./PresetWorkouts/PresetWorkouts";
 import Favorites from "./Favorites";
+import { Box } from "@mui/material";
 interface HomeProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -26,67 +27,68 @@ interface HomeProps {
 }
 
 function Workout({ existingExercises, setExistingExercises }: HomeProps) {
-
   return (
-    <Routes>
-      <Route
-        path="/completed-details/:exerciseName/*"
-        element={<CompletedWorkoutsTabs />}
-      />
 
-      <Route path="/*" index element={<CompletedWorkouts />} />
+      <Routes>
+        <Route
+          path="/completed-details/:exerciseName/*"
+          element={<CompletedWorkoutsTabs />}
+        />
 
-      <Route
-        path="new/*"
-        index
-        element={
-          <NewWorkout
-            existingExercises={existingExercises}
-            setExistingExercises={setExistingExercises}
-          />
-        }
-      />
+        <Route path="/*" index element={<CompletedWorkouts />} />
 
-      <Route path="settings/send-feedback" element={<SendFeedback />} />
+        <Route
+          path="new/*"
+          index
+          element={
+            <NewWorkout
+              existingExercises={existingExercises}
+              setExistingExercises={setExistingExercises}
+            />
+          }
+        />
 
-      <Route
-        path="/new/workout_categories/exercises/:selectedMuscleGroup/selected/:exerciseName/*"
-        element={<ExerciseSelected />}
-      />
+        <Route path="settings/send-feedback" element={<SendFeedback />} />
 
-      <Route
-        path="/new/workout_categories/*"
-        element={<MuscleGroupsSelectionMenu />}
-      />
-            <Route
-        path="/new/workout_categories/favorites/"
-        element={<Favorites />}
-      />
+        <Route
+          path="/new/workout_categories/exercises/:selectedMuscleGroup/selected/:exerciseName/*"
+          element={<ExerciseSelected />}
+        />
 
-      <Route
-        path="/new/workout_categories/exercises/:selectedMuscleGroup/*"
-        element={<ExerciseSelectionMenu />}
-      />
-      
+        <Route
+          path="/new/workout_categories/*"
+          element={<MuscleGroupsSelectionMenu />}
+        />
+        <Route
+          path="/new/workout_categories/favorites/"
+          element={<Favorites />}
+        />
 
-      <Route path="settings" element={<Settings />} />
-      <Route
-        path="settings/terms-and-conditions"
-        element={<TermsAndConditions />}
-      />
-      <Route path="settings/import-data" element={<ImportData />} />
-      <Route path="settings/development-log" element={<DevelopmentLog />} />
+        <Route
+          path="/new/workout_categories/exercises/:selectedMuscleGroup/*"
+          element={<ExerciseSelectionMenu />}
+        />
 
-      <Route path="calendar" element={<WorkoutCalendar />} />
+        <Route path="settings" element={<Settings />} />
+        <Route
+          path="settings/terms-and-conditions"
+          element={<TermsAndConditions />}
+        />
+        <Route path="settings/import-data" element={<ImportData />} />
+        <Route path="settings/development-log" element={<DevelopmentLog />} />
 
-      <Route path="analysis/*" element={<Analysis />} />
+        <Route path="calendar" element={<WorkoutCalendar />} />
 
-      <Route path="bodytracker/*" element={<BodyTracker />} />
-      
-      <Route path="new/congratulations" element={<WorkoutCongratulations />} />
-      <Route path="preset-workouts/*" element={<PresetWorkouts />} />
+        <Route path="analysis/*" element={<Analysis />} />
 
-    </Routes>
+        <Route path="bodytracker/*" element={<BodyTracker />} />
+
+        <Route
+          path="new/congratulations"
+          element={<WorkoutCongratulations />}
+        />
+        <Route path="preset-workouts/*" element={<PresetWorkouts />} />
+      </Routes>
   );
 }
 

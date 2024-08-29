@@ -181,7 +181,11 @@ function WorkoutCalendar() {
     navigate("/home/workout");
   }
   return (
-    <Container sx={{ pb: "72px" }}>
+    <Container
+    sx={{
+      pb:"16px"
+    }}
+    >
       <AppBar
         elevation={3}
         position="fixed"
@@ -256,7 +260,9 @@ function WorkoutCalendar() {
         style={{ transformOrigin: "0 1 0" }}
         {...(true ? { timeout: 750 } : {})}
       >
-        <Box>
+        <Box
+        
+        >
           {workoutDateExercises.length > 0 &&
             workoutDateExercises.map((group, index) => (
               <Box
@@ -426,6 +432,7 @@ function WorkoutCalendar() {
           There are no exercises for this date.
         </Typography>
       )}
+      
     </Container>
   );
 }

@@ -60,9 +60,7 @@ function FitWorldBoard() {
 
   return (
     <Box
-      sx={{
-        pb: "64px",
-      }}
+    height="100%"
     >
       <ToggleButtonGroup
         value={selectedZenkai}
@@ -90,7 +88,7 @@ function FitWorldBoard() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "calc(100svh - 180px)",
+            height: "100%",
             flexDirection: "column",
             gap: 1,
           }}
@@ -123,7 +121,6 @@ function FitWorldBoard() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "calc(100svh - 180px)",
               flexDirection: "column",
               gap: 1,
             }}

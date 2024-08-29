@@ -13,6 +13,7 @@ import { storage } from "../../config/firebase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -48,9 +49,16 @@ function AddExerciseToPresetWorkoutModal({
 
   const { currentUserData } = useContext(AuthContext);
 
+
+  console.log('inside AddExerciseToPresetWorkoutModal:')
+  const location = useLocation();
+  const routine = location.state.routine;
+
+  
   const handleClose = () => setOpenAddExerciseToPresetWorkoutModal(false);
 
-  const isMale = currentUserData.sex === "male" ? true : false;
+  const isMale = currentUserData && currentUserData.sex === "male" ? true : false;
+
   const [libraryOfExercises, setLibraryOfExercises] = useState<
     IUserExercisesLibrary[]
   >(() => {
@@ -111,7 +119,7 @@ function AddExerciseToPresetWorkoutModal({
   }
 
   function handleTileClick(exerciseName: string) {
-    navigate(`preset-workout-exercise/${exerciseName}?${searchParams}`);
+    navigate(`preset-workout-exercise/${exerciseName}?${searchParams}`,{ state: { routine } });
   }
 
   const Row = ({

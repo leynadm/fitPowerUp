@@ -74,11 +74,10 @@ function PresetWorkoutsOverview() {
 
   const routines = getRoutines(presetWorkoutsData);
 
-  console.log('logging presetRoutinesData:')
-  console.log(presetRoutinesData)
-
-  const workouts = getWorkouts(presetWorkoutsData);
-
+  console.log('all data:')
+  console.log({presetRoutinesData})
+   const workouts = getWorkouts(presetWorkoutsData);
+ 
   const isRoutineEmptyCheck = false /* isRoutineEmpty(routines); */
 
   /* function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
@@ -223,7 +222,7 @@ function PresetWorkoutsOverview() {
       </ToggleButtonGroup>
 
       {selectedCategory === "routines" && !isRoutineEmptyCheck ? (
-        <Box display="flex" flexDirection="column" gap={2} pb="64px">
+        <Box display="flex" flexDirection="column" gap={2} pb="8px">
           {presetRoutinesData.length > 0 &&
              presetRoutinesData.map((routine: IPresetRoutineData, index: number) => {
               return <RoutineCard key={index} routine={routine} />;
@@ -231,18 +230,24 @@ function PresetWorkoutsOverview() {
         </Box>
       ) : selectedCategory === "routines" && isRoutineEmptyCheck ? (
         <Box
-          display="flex"
-          height="calc(100svh - 112px)"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
-          <Typography>We couldn't find any routines.</Typography>
-        </Box>
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+        <Typography textAlign="center" fontSize="2rem" color="#1c4595">
+          We couldn't find
+          <br />any routines
+        </Typography>
+      </Box>
       ) : null}
 
       {selectedCategory === "workouts" && workouts.length > 0 ? (
-        <Box display="flex" flexDirection="column" gap={2} pb="64px">
+        <Box display="flex" flexDirection="column" gap={2} pb="8px">
           {workouts.map((workout: IPresetWorkoutData, index: number) => (
             <StandaloneWorkoutCard key={index} workoutData={workout} />
           ))}
@@ -266,118 +271,17 @@ export default PresetWorkoutsOverview;
 export function getWorkouts(presetWorkoutsData: IPresetWorkoutData[]) {
   const tempWorkoutsArr = [];
 
-  if (presetWorkoutsData.length > 0) {
-    for (let index = 0; index < presetWorkoutsData.length; index++) {
-      const workoutElement = presetWorkoutsData[index];
 
-      if (workoutElement.routineName === "") {
-        tempWorkoutsArr.push(workoutElement);
-      }
-    }
-  }
 
-  return tempWorkoutsArr;
+  return [];
 }
 
 export function getIndividualPresetWorkouts(
   presetWorkoutsData: IPresetWorkoutData[],
   routineName: string | undefined
 ) {
-  const tempWorkoutsArr = [];
 
-  if (!routineName) {
-    return [];
-  }
-
-  if (presetWorkoutsData.length > 0 && routineName) {
-    for (let index = 0; index < presetWorkoutsData.length; index++) {
-      const workoutElement = presetWorkoutsData[index];
-
-      if (workoutElement.routineName === routineName) {
-        tempWorkoutsArr.push(workoutElement);
-      }
-    }
-  }
-
-  return tempWorkoutsArr;
-}
-
-export function getIndividualRoutine(
-  presetWorkoutsData: IPresetWorkoutData[],
-  routineName: string | undefined
-) {
-  const tempRoutinesArr: any = [];
-
-  if (!routineName) {
-    return [];
-  }
-
-  if (presetWorkoutsData.length > 0) {
-    //const tempRoutinesArr: IPresetWorkoutData[] = presetWorkoutsData.filter((workout: IPresetWorkoutData) => workout.routineName !== "");
-
-    for (let index = 0; index < presetWorkoutsData.length; index++) {
-      const workoutElement = presetWorkoutsData[index];
-
-      if (workoutElement.routineName === routineName) {
-        tempRoutinesArr.push(workoutElement);
-      }
-    }
-
-    const groupedByRoutineName = tempRoutinesArr.reduce(
-      (
-        accumulator: IPresetWorkoutAccumulator,
-        currentObject: IPresetWorkoutData
-      ) => {
-        const routineName = currentObject.routineName;
-
-        if (!accumulator[routineName]) {
-          accumulator[routineName] = {
-            workouts: [],
-            details: {},
-          };
-        }
-
-        accumulator[routineName].workouts.push(currentObject);
-
-        // Explicitly check and assign each known property
-        if (
-          currentObject.routineDescription &&
-          currentObject.routineDescription.trim() !== ""
-        ) {
-          accumulator[routineName].details.routineDescription =
-            currentObject.routineDescription;
-        }
-        if (
-          currentObject.routineLinkReference &&
-          currentObject.routineLinkReference.trim() !== ""
-        ) {
-          accumulator[routineName].details.routineLinkReference =
-            currentObject.routineLinkReference;
-        }
-
-        if (currentObject.routineBy && currentObject.routineBy.trim() !== "") {
-          accumulator[routineName].details.routineBy = currentObject.routineBy;
-        }
-        if (currentObject.workoutBy && currentObject.workoutBy.trim() !== "") {
-          accumulator[routineName].details.workoutBy = currentObject.workoutBy;
-        }
-        if (
-          currentObject.workoutLinkReference &&
-          currentObject.workoutLinkReference.trim() !== ""
-        ) {
-          accumulator[routineName].details.workoutLinkReference =
-            currentObject.workoutLinkReference;
-        }
-
-        accumulator[routineName].details.delete = currentObject.delete;
-
-        return accumulator;
-      },
-      {}
-    );
-
-    return groupedByRoutineName;
-  }
+  return []
 }
 
 function getRoutines(presetWorkoutsData: IPresetWorkoutData[]) {

@@ -44,7 +44,7 @@ function ExerciseCompletedStatTile({
         <div>{statIcon}</div>
       </div>
 
-      <div className="secondary-font" style={{ fontSize: "1.25rem",color:"#FFA500" }}>
+      <div className="secondary-font" style={{ fontSize: "1.25rem",color:`${statTextColor}` }}>
         {statValue} {statDetail}
       </div>
     </div>

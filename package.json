@@ -16,6 +16,7 @@
     "@types/react-dom": "^18.2.4",
     "date-fns": "^2.30.0",
     "firebase": "^9.22.0",
+    "firestore-size": "^2.0.7",
     "mui-image": "^1.0.7",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",

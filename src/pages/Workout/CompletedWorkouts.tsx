@@ -253,7 +253,7 @@ function CompletedWorkouts() {
 
   return (
     <Container
-      sx={{ height: "calc(100dvh - 112px)", width: "100%" }}
+      sx={{ height: "100%", width: "100%" }}
       maxWidth="md"
       className="ThisIsTheBoxUnder"
       onTouchStart={handleTouchStart}
@@ -328,10 +328,13 @@ function CompletedWorkouts() {
                     my: 2,
                     color: "white",
                     fontFamily: "inherit",
-                    fontWeight: "400",
+                    fontWeight: "400",                    
                   }}
                 >
+                  <Typography className="secondary-font" >
                   {page}
+                  </Typography>
+                  
                 </Button>
               ))}
             </Box>
@@ -488,12 +491,11 @@ function CompletedWorkouts() {
       </Fab>
 
       <Box
-        className="AAAAThisIsPossiblyTheOtherThingThatWorks"
         sx={{
-          paddingBottom: "64px",
           gap: 2,
           display: "flex",
           flexDirection: "column",
+          pb:"8px"
         }}
         ref={containerRef}
       >
@@ -790,7 +792,6 @@ function CompletedWorkouts() {
         {filteredUserTrainingData.length === 0 && (
           <Box
             sx={{
-              height: "calc(100dvh - 168px)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -799,7 +800,7 @@ function CompletedWorkouts() {
           >
             <img src="/svg/goku.svg" alt="son goku" width={128} height={128} />
             <Typography textAlign="center" fontSize="2rem" color="#1c4595">
-              Workout log is empty
+              Workout log <br/>is empty
             </Typography>
           </Box>
         )}

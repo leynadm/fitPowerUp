@@ -35,7 +35,7 @@ function CompletedWorkoutsTabs() {
 
   return (
     <>
-      <Box sx={{ height: "100%", width: "100%" }}>
+      <Box sx={{ height: "100%", width: "100%",overflow:"auto" }}>
         <AppBar
           elevation={3}
           position="fixed"

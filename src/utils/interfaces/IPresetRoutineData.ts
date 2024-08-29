@@ -1,7 +1,6 @@
 import { Exercise } from "./IUserTrainingData";
 
-interface IPresetRoutineData {
-    id: string;
+interface IPresetRoutineData {  
     rName:string,
     del:boolean,
     rDesc:string,

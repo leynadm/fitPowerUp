@@ -181,7 +181,7 @@ function ProgressGraph() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      height="calc(100% - 112px)"
+
     >
       {/* 
       <Button onClick={loopThroughData}>Check Data</Button>

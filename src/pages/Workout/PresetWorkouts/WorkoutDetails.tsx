@@ -18,57 +18,25 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteRoutineOrWorkoutModal from "../../../components/ui/DeleteRoutineOrWorkoutModal";
 import { IPresetWorkoutGroup } from "./PresetWorkoutsOverview";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 function WorkoutDetails() {
-  const { routineName, workoutName } = useParams();
+  
+  const location = useLocation();
 
+  const workoutData = location.state.workoutData;
+
+  console.log(location.state)
+  console.log(workoutData)
+
+  
   const navigate = useNavigate();
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
 
   const [openDeleteRoutineOrWorkoutModal, setOpenDeleteRoutineOrWorkoutModal] =
     useState(false);
 
-  const individualWorkout = routineName
-    ? getIndividualWorkoutInRoutine()
-    : getIndividualWorkout();
 
-  console.log({ individualWorkout });
-
-  const individualRoutineIsEmptyCheck = isRoutineEmpty(individualWorkout);
-
-  function isRoutineEmpty(obj: IPresetWorkoutGroup) {
-    if (individualWorkout) {
-      return Object.keys(obj).length === 0;
-    }
-  }
-
-  function getIndividualWorkoutInRoutine() {
-    if (presetWorkoutsData.length > 0) {
-      for (let index = 0; index < presetWorkoutsData.length; index++) {
-        const workoutElement = presetWorkoutsData[index];
-        if (
-          workoutElement.routineName === routineName &&
-          workoutElement.workoutName === workoutName
-        ) {
-          return workoutElement;
-        }
-      }
-    }
-  }
-
-  function getIndividualWorkout() {
-    if (presetWorkoutsData.length > 0) {
-      for (let index = 0; index < presetWorkoutsData.length; index++) {
-        const workoutElement = presetWorkoutsData[index];
-        if (
-          workoutElement.routineName === "" &&
-          workoutElement.workoutName === workoutName
-        ) {
-          return workoutElement;
-        }
-      }
-    }
-  }
 
   async function handleCopyWorkout() {
     try {
@@ -88,10 +56,10 @@ function WorkoutDetails() {
 
         for (
           let index = 0;
-          index < individualWorkout.wExercises.length;
+          index < workoutData.wEx.length;
           index++
         ) {
-          const exercisesGroup = individualWorkout.wExercises[index];
+          const exercisesGroup = workoutData.wEx[index];
 
           for (
             let index = 0;
@@ -143,7 +111,7 @@ function WorkoutDetails() {
         flexDirection: "column",
       }}
     >
-      {individualWorkout && (
+         {
         <DeleteRoutineOrWorkoutModal
           openDeleteRoutineOrWorkoutModal={openDeleteRoutineOrWorkoutModal}
           setOpenDeleteRoutineOrWorkoutModal={
@@ -151,10 +119,10 @@ function WorkoutDetails() {
           }
           routineOrWorkout="workout"
           presetWorkoutData={presetWorkoutsData}
-          routineOrWorkoutName={individualWorkout.id}
-          isValid={!individualRoutineIsEmptyCheck}
+          routineOrWorkoutId={workoutData.id}
+          isValid={workoutData.wEx.length>0}
         />
-      )}
+      }  
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
@@ -169,10 +137,10 @@ function WorkoutDetails() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
-              {/* 
+               
               <FormatListNumberedIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              /> */}
+              /> 
 
               <Typography
                 variant="h6"
@@ -187,11 +155,6 @@ function WorkoutDetails() {
               >
                 Workout Details
               </Typography>
-
-              {/* 
-              <FormatListNumberedIcon
-                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              /> */}
 
               <Typography
                 variant="h5"
@@ -209,7 +172,7 @@ function WorkoutDetails() {
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
-                {individualWorkout && individualWorkout.delete && (
+                {workoutData && workoutData.del && (
                   <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -247,19 +210,19 @@ function WorkoutDetails() {
           variant="h6"
           gutterBottom
         >
-          {individualWorkout && capitalizeWords(individualWorkout.workoutName)}
+          {workoutData && capitalizeWords(workoutData.wName)}
         </Typography>
 
         <Box pt={1}>
           {presetWorkoutsData.length > 0 && (
-            <GroupedWorkout workoutExercises={individualWorkout.wExercises} />
+            <GroupedWorkout workoutExercises={workoutData.wEx} />
           )}
         </Box>
         <Typography variant="caption" align="left">
           Workout Description
         </Typography>
-        <Typography variant="body2">{individualWorkout.workoutDescription}</Typography>
-      </Box>
+        <Typography >{workoutData.wDesc}</Typography>
+      </Box> 
     </Box>
   );
 }

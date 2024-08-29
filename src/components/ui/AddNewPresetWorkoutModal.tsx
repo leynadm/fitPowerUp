@@ -95,9 +95,9 @@ function AddNewPresetWorkoutModal({
     };
 
     try {
-      setIsLoading(true)
+      setIsLoading(true)/* 
       await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData);
-
+ */
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");

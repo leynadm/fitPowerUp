@@ -15,6 +15,7 @@ import { Skeleton } from "@mui/material";
 function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   const [imageURL, setImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchImageURL = async () => {
       let exerciseImageRef;
@@ -104,7 +105,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
           label="Description"
           defaultValue={routine.rDesc}
           multiline
-          maxRows={5}
+          maxRows={6}
           size="small"
           fullWidth
           InputProps={{

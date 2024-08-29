@@ -1,11 +1,12 @@
 import { Exercise } from "./IUserTrainingData";
 interface IPresetWorkoutDataForRoutine {
-  wExercises: { name: string; exercises: Exercise[] }[];
-  id: string;
-  delete: boolean;
-  workoutName: string;
-  workoutDescription: string;
-  exercisesinRoutine: string[];
-  [key: string]: any;
+  wEx: { name: string; exercises: Exercise[] }[];
+  del: boolean;
+  wName: string;
+  wDesc: string;
+  wOvr: string[];
+  wBy: string;
+  wLink:string;
+  wInt:number;
 }
 export default IPresetWorkoutDataForRoutine;

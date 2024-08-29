@@ -5,7 +5,7 @@ import IPresetWorkoutData from "../interfaces/IPresetWorkoutsData";
 async function deletePresetWorkout(
   userId: string,
   presetWorkoutData: IPresetWorkoutData[],
-  workoutId: string | undefined
+  workoutName: string | undefined
 ) {
   const userDocRef = doc(db, "users", userId);
 
@@ -16,7 +16,7 @@ async function deletePresetWorkout(
 
   const filteredData = presetWorkoutData.filter(
     (presetWorkout: IPresetWorkoutData) =>
-      presetWorkout.id !== workoutId
+      presetWorkout.wName !== workoutName
   );
 
   if(filteredData.length===0){

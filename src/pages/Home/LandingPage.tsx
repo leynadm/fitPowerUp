@@ -628,23 +628,32 @@ function LandingPage() {
             gap: 1,
           }}
         >
-          <Typography
-            color="white"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
+          <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      height="100%"
+                      width="100%"
           >
-            Disclaimer <InfoIcon fontSize="small" style={{ color: "white" }} />
+          <Typography
+            color="#FFA500"
+            fontSize="1.75rem"
+                      
+          >
+            Disclaimer 
           </Typography>
-
+          <InfoIcon fontSize="large" style={{ color: "#FFA500" }} />
+          </Box>
+          
 
           <Typography
-            color="white"
+            color="#FFA500"
             variant="caption"
             align="center"
             padding={1}
           lineHeight={1.25}
             fontSize="1.5rem"
+            
           >
             This app is a fan-made creation, inspired by the Dragon Ball Z
             series, which is a property of FUNimation, Toei Animation, Fuji TV,

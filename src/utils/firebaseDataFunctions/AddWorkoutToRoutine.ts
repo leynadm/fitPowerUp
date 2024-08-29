@@ -7,25 +7,32 @@ import IPresetWorkoutDataForRoutine from "../interfaces/IPresetWorkoutDataForRou
 async function addWorkoutToRoutine(
   userId: string,
   presetWorkoutData: IPresetWorkoutDataForRoutine,
-  routineName:string
+  rName: string
 ) {
   try {
-    const userDocRef = doc(db, "users", userId);
-
+    // Correctly reference the document path
     const userTrainingDataDocRef = doc(
-      userDocRef,
-      `userCollection/userPresetWorkouts`
+      db,
+      "users",
+      userId,
+      "userCollection",
+      "userPresetRoutines"
     );
-    const fieldPath = `${routineName}.routineWorkouts`;
 
+    // Define the correct field path for nested array updates
+    const fieldPath = `${rName}.rWorkouts`;
+
+    console.log({fieldPath})
+     // Update the document, directly targeting the correct field path
     await updateDoc(userTrainingDataDocRef, {
-        [fieldPath]:arrayUnion(presetWorkoutData)
+      [fieldPath]: arrayUnion(presetWorkoutData)
     });
 
+    toast.success("Workout added to routine successfully!");
   } catch (error) {
     console.log(error);
-    console.error(error);
-    toast.error("addWorkoutToRoutine had an error!");
+    
+    toast.error("An error occurred while adding the workout to the routine!");
   }
 }
 

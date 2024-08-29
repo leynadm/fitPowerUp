@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import WorkoutCard from "./WorkoutCard";
 import IconButton from "@mui/material/IconButton";
@@ -14,7 +14,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { TextField } from "@mui/material";
-
+import { ArrowBackIos, DeleteForever } from "@mui/icons-material";
 function RoutineCardDetails() {
   const location = useLocation();
 
@@ -27,12 +27,30 @@ function RoutineCardDetails() {
   const [openDeleteRoutineOrWorkoutModal, setOpenDeleteRoutineOrWorkoutModal] =
     useState(false);
 
+  const groupedWorkoutsArr = groupWorkoutsByWeekInterval(routine.rWorkouts);
+
+  const [selectedWeekInterval, setSelectedWeekInterval] = useState<
+    number | null
+  >(routine.multi ? 1 : 0);
+
+  console.log({ selectedWeekInterval });
+  const handleWeekIntervalChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newWeekInterval: number | null
+  ) => {
+    if (newWeekInterval !== null) {
+      setSelectedWeekInterval(newWeekInterval);
+    }
+  };
+
   return (
     <Box
       sx={{
-        width: "100%",
         display: "flex",
         flexDirection: "column",
+        height: "100%",
+        gap: 1,
+        position: "relative",
       }}
     >
       <DeleteRoutineOrWorkoutModal
@@ -40,7 +58,7 @@ function RoutineCardDetails() {
         setOpenDeleteRoutineOrWorkoutModal={setOpenDeleteRoutineOrWorkoutModal}
         routineOrWorkout="routine"
         presetWorkoutData={presetWorkoutsData}
-        routineOrWorkoutName={routine.rName}
+        routineOrWorkoutId={routine.rName}
         isValid={false}
       />
 
@@ -73,7 +91,7 @@ function RoutineCardDetails() {
                   textDecoration: "none",
                 }}
               >
-                Routine Details
+                Routine
               </Typography>
               {/* 
               <FormatListNumberedIcon
@@ -92,29 +110,39 @@ function RoutineCardDetails() {
                   textDecoration: "none",
                 }}
               >
-                Routine Details
+                Routine
               </Typography>
 
-              {/* {!individualRoutineIsEmptyCheck &&
-                routineData.routineDetails &&
-                routineData.routineDetails.delete && (
-                  <Box sx={{ flexGrow: 1, display: "flex" }}>
-                    <Box sx={{ marginLeft: "auto" }}>
-                      <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        color="inherit"
-                        onClick={handleDeleteRoutineOrWorkoutModal}
-                      >
-                        <DeleteForeverIcon sx={{ color: "white" }} />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                )} */}
-
               <Box sx={{ marginLeft: "auto" }}>
+
+              <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    navigate("new-preset-workout", { state: { routine } })
+                  }
+                >
+                  <ArrowBackIos sx={{ color: "white" }} />
+                </IconButton>
+
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    setOpenDeleteRoutineOrWorkoutModal(
+                      !openDeleteRoutineOrWorkoutModal
+                    )
+                  }
+                >
+                  <DeleteForever sx={{ color: "white" }} />
+                </IconButton>
+
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -139,75 +167,120 @@ function RoutineCardDetails() {
       <Typography fontSize={18} textAlign="right">
         {routine.rBy}
       </Typography>
-      <TextField
-        variant="outlined"
-        disabled
-        value={routine.rDesc}
-        size="small"
-      />
-     {/*  {true && (
-        <Box>
-          <Box width="100%" display="flex" overflow="auto" p={1}>
-            <ToggleButtonGroup
-              value={true}
-              exclusive
-              onChange={() => console.log("yes")}
-              aria-label="text alignment"
-            >
-              <ToggleButton
-                fullWidth
-                value="left"
-                aria-label="left aligned"
-                size="small"
-                sx={{ whiteSpace: "nowrap" }}
-              >
-                WeeK 12
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
 
-          <Box display="flex" flexDirection="column" gap={1} pb="64px">
-            {presetWorkoutsData.length > 0 &&
-              routine.rWorkouts.map(
-                (workout: IPresetWorkoutData, index: number) => (
-                  <WorkoutCard key={index} workoutData={workout} />
+      <Typography
+        sx={{
+          bgcolor: "#FFA500",
+          p: 1,
+          borderRadius: 1,
+          border: "1px solid black",
+        }}
+      >
+        {routine.rDesc}
+      </Typography>
+
+      <ToggleButtonGroup
+        value={selectedWeekInterval}
+        exclusive
+        onChange={handleWeekIntervalChange}
+        aria-label="week interval selection"
+        sx={{
+          width: "100%",
+          display: "flex",
+          overflow: "auto",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none" /* IE and Edge */,
+          "scrollbar-width": "none" /* Firefox */,
+        }}
+      >
+        {routine.multi &&
+          Object.keys(groupedWorkoutsArr).map((key, index) => (
+            <ToggleButton
+              key={index}
+              value={key}
+              aria-label={`Week ${key}`}
+              sx={{ w: "100%", minWidth: "4rem" }}
+            >
+              WK {key}
+            </ToggleButton>
+          ))}
+      </ToggleButtonGroup>
+
+      {routine.rWorkouts.length > 0 ? (
+        <>
+          {selectedWeekInterval !== null &&
+          groupedWorkoutsArr[selectedWeekInterval] ? (
+            <Box display="flex" flexDirection="column" gap={2} height="100%">
+              {routine.multi && (
+                <Typography variant="h6">
+                  Week {selectedWeekInterval}
+                </Typography>
+              )}
+              {groupedWorkoutsArr[selectedWeekInterval].map(
+                (workout, workoutIndex) => (
+                  <WorkoutCard key={workoutIndex} workoutData={workout} />
                 )
               )}
-
-            {routine && routine.rLink !== "" && (
-              <Box>
-                <Typography variant="caption">Routine Description</Typography>
-                <Typography variant="body2">{routine.rDesc}</Typography>
-              </Box>
-            )}
-
-            {routine && routine.rLink !== "" && (
-              <Box>
-                <Typography variant="caption">Link Reference</Typography>
-                <Typography
-                  variant="subtitle2"
-                  align="center"
-                  width="100%"
-                  sx={{ wordWrap: "break-word" }}
-                >
-                  <a
-                    href={routine.rLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {routine.rLink}
-                  </a>
-                </Typography>
-              </Box>
-            )}
-          </Box>
+            </Box>
+          ) : (
+            <Typography variant="h6" textAlign="center">
+              Select a week to view workouts
+            </Typography>
+          )}
+        </>
+      ) : (
+        <Box
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <Typography textAlign="center" fontSize="2rem" color="#1c4595">
+            No workouts
+            <br /> in routine
+          </Typography>
         </Box>
-      )} */}
+      )}
 
-
-      
     </Box>
   );
 }
 
 export default RoutineCardDetails;
+
+function groupWorkoutsByWeekInterval(workouts: IPresetWorkoutData[]) {
+  if (workouts.length === 0) return [];
+
+  // Log the objects to verify the structure
+  console.log("Workouts:", workouts);
+
+  const groupedWorkoutsByWeekInterval = workouts.reduce((acc, workout) => {
+    const key = workout.wInt;
+
+    // Check if the key is missing or invalid
+    if (key === undefined || key === null || isNaN(key)) {
+      console.error("Invalid or missing 'wInt' found in:", workout);
+      return acc; // Skip adding this workout to any group if key is invalid
+    }
+
+    // Initialize the group if it doesn't exist
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+
+    // Add the workout to the correct group based on wInt
+    acc[key].push(workout);
+
+    return acc;
+  }, {} as Record<number, IPresetWorkoutData[]>); // Use number type for keys
+
+  console.log("Grouped Workouts:", groupedWorkoutsByWeekInterval);
+
+  return groupedWorkoutsByWeekInterval;
+}

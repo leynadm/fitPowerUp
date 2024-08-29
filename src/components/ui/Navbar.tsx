@@ -25,13 +25,13 @@ function Navbar() {
   }
 
   return (
-    <Box sx={{ pb: 7 }}>
+    <>
       <CssBaseline />
 
       <Paper
         sx={{
-          zIndex: 9995,
           position: "fixed",
+          zIndex: 1,        
           bottom: 0,
           left: 0,
           right: 0,
@@ -41,14 +41,14 @@ function Navbar() {
       >
         <BottomNavigation
           className="bottomNavigation"
-         sx={{ backgroundColor: "white", zIndex: 9999 }}
+          sx={{ backgroundColor: "white", zIndex: 9999 }}
           showLabels
           onChange={(event, newValue) => {}}
         >
           <BottomNavigationAction
             label="Workouts"
             icon={<FitnessCenterIcon />}
-            onClick={handleWorkoutClick}            
+            onClick={handleWorkoutClick}
           />
           <BottomNavigationAction
             label="Fit World"
@@ -62,7 +62,7 @@ function Navbar() {
           />
         </BottomNavigation>
       </Paper>
-    </Box>
+    </>
   );
 }
 

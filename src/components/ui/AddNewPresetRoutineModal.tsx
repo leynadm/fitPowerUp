@@ -82,7 +82,6 @@ function AddNewPresetRoutineModal({
     }
 
     const presetWorkoutData = {
-      id: uuid(),
       rName: workoutState.routineName.toLocaleLowerCase(),
       rDesc: workoutState.routineDescription,
       rBy: workoutState.routineBy,
@@ -95,7 +94,7 @@ function AddNewPresetRoutineModal({
 
     try {
       setIsLoading(true);
-      await addNewRoutine(currentUser.uid, presetWorkoutData);
+      await addNewRoutine(currentUser.uid, presetWorkoutData,uuid());
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");

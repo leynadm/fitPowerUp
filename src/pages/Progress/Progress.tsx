@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";
 import ProgressFeats from "./ProgressFeats";
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ProgressHero from "./ProgressHero";
 function Progress() {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ function Progress() {
 
   return (
     <Container
-    maxWidth="md"
+      maxWidth="md"
       sx={{
         width: "100%",
         height: "100%",
@@ -127,12 +127,10 @@ function Progress() {
       </ButtonGroup>
 
       <Routes>
-        
         <Route path="" element={<ProgressLevel />} />
         <Route path="path" element={<ProgressPath />} />
-        <Route path="path/hero/:id" element={<ProgressHero/>}/>
+        <Route path="path/hero/:id" element={<ProgressHero />} />
         <Route path="feats" element={<ProgressFeats />} />
-        
       </Routes>
     </Container>
   );

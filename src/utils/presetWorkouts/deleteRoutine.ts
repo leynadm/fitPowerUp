@@ -16,7 +16,7 @@ async function deleteRoutine(
 
   const filteredData = presetWorkoutData.filter(
     (presetWorkout: IPresetWorkoutData) =>
-      presetWorkout.routineName !== routineName
+      presetWorkout.wName !== routineName
   );
 
   if(filteredData.length===0){

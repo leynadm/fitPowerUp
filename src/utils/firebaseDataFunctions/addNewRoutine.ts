@@ -5,6 +5,7 @@ import IPresetRoutineData from "../interfaces/IPresetRoutineData";
 async function addNewRoutine(
   userId: string,
   presetWorkoutData: IPresetRoutineData,
+  routineId:string
 ) {
   try {
     
@@ -16,9 +17,8 @@ async function addNewRoutine(
     );
 
     await updateDoc(userTrainingDataDocRef, {
-      [presetWorkoutData.rName]: 
-        presetWorkoutData
-      
+      [routineId]: 
+        presetWorkoutData      
     });
 
   } catch (error) {

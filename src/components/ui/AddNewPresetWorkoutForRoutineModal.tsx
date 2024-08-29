@@ -19,6 +19,7 @@ import { Container } from "@mui/material";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import CircularProgressWithText from "./CircularProgressWithText";
 import addWorkoutToRoutine from "../../utils/firebaseDataFunctions/AddWorkoutToRoutine";
+import { useLocation } from "react-router-dom";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -41,9 +42,9 @@ interface ParentComponentProps {
     workoutName: string;
     workoutDescription: string;
     workoutLinkReference: string;
-    routineName:string;
-    weekInterval:string;
+    weekInterval:number;
   };
+  routineId:string;
 }
 
 function AddNewPresetWorkoutForRoutineModal({
@@ -51,9 +52,14 @@ function AddNewPresetWorkoutForRoutineModal({
   setOpenAddNewPresetWorkoutForRoutineModal,
   existingExercises,
   workoutState,
+  routineId
 }: ParentComponentProps) {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
+
+  const location = useLocation();
+  const routine = location.state.routine;
 
   const isOnline = useOnlineStatus()
   const { refetchPresetWorkoutsData } = useContext(
@@ -80,23 +86,26 @@ function AddNewPresetWorkoutForRoutineModal({
     }
 
     const presetWorkoutData = {
-      id: uuid(),
-      wExercises: existingExercisesArr,
-      workoutName: workoutState.workoutName.toLocaleLowerCase(),
-      workoutDescription: workoutState.workoutDescription,
-      exercisesinRoutine: tempExercisesInRoutine,
-      delete: true,
+      wEx: existingExercisesArr,
+      wName: workoutState.workoutName,
+      wDesc: workoutState.workoutDescription,
+      wOvr: tempExercisesInRoutine,
+      del: true,
+      wInt:workoutState.weekInterval,
+      wBy:'',
+      wLink:workoutState.workoutLinkReference
     };
 
     try {
+      console.log({presetWorkoutData})
       setIsLoading(true)
-      await addWorkoutToRoutine(currentUser.uid, presetWorkoutData,workoutState.routineName);
+       await addWorkoutToRoutine(currentUser.uid, presetWorkoutData,routineId);
 
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");
       setIsLoading(false)
-      navigate("/home/workout/preset-workouts");
+      navigate("/home/workout/preset-workouts",{ state: { routine } }); 
     } catch (error) {
       console.log(error);
     }
@@ -111,53 +120,61 @@ function AddNewPresetWorkoutForRoutineModal({
         aria-describedby="modal-modal-description"
       >
         <Container maxWidth="md" sx={style}>
+          {isLoading ? (
+            <CircularProgressWithText text="Please wait, your preset workout is being saved..." />
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              justifyContent="center"
+              height="100%"
+            >
+              <Typography align="center" variant="h6">
+                Save your preset workout
+              </Typography>
 
-          {isLoading?(
-            <CircularProgressWithText text="Please wait, your preset workout is being saved..."/>
-          ):(
-<Box
-            display="flex"
-            flexDirection="column"
-            gap={1}
-            justifyContent="center"
-            height="100%"
-          >
-            <Typography align="center" variant="h6">
-              Save your preset workout
-            </Typography>
-
-
-           
-
-            <TextField
-              id="outlined-basic"
-              label="Workout Name"
-              variant="filled"
-              required
-              size="small"
-              InputProps={{
-                readOnly: true,
-              }}
-              value={workoutState.workoutName}
-            />
-
-            {workoutState.workoutDescription !== "" && (
               <TextField
                 id="outlined-basic"
-                required
-                label="Workout Description"
+                label="Workout Name"
                 variant="filled"
+                required
+                size="small"
                 InputProps={{
                   readOnly: true,
                 }}
-                multiline
-                maxRows={3}
-                value={workoutState.workoutDescription}
+                value={workoutState.workoutName}
               />
-            )}
 
+              {workoutState.workoutDescription !== "" && (
+                <TextField
+                  id="outlined-basic"
+                  required
+                  label="Workout Description"
+                  variant="filled"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  multiline
+                  maxRows={3}
+                  value={workoutState.workoutDescription}
+                />
+              )}
 
               <Box display="flex" flexDirection="column" width="100%" gap={1}>
+                {workoutState.weekInterval!==0 && (
+                  <TextField
+                    id="outlined-basic"
+                    label="Week Interval"
+                    variant="filled"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    multiline
+                    maxRows={3}
+                    value={`Week ${workoutState.weekInterval}`}
+                  />
+                )}
 
                 <TextField
                   id="outlined-basic"
@@ -170,45 +187,31 @@ function AddNewPresetWorkoutForRoutineModal({
                   maxRows={3}
                   value={workoutState.workoutLinkReference}
                 />
-
-<TextField
-                  id="outlined-basic"
-                  label="Week Interval"
-                  variant="filled"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  multiline
-                  maxRows={3}
-                  value={workoutState.weekInterval}
-                />
               </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-              }}
-            >
-              <Button
-                variant="dbz_save"
-                sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                onClick={handleCompleteNewPresetWorkout}
-                disabled={!isOnline}
+              <Box
+                sx={{
+                  display: "flex",
+                }}
               >
-                {isOnline ? "Save" : "Reconecting..."}
-              </Button>
-              <Button
-                variant="dbz_clear"
-                sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-                onClick={handleClose}
-              >
-                Cancel
-              </Button>
+                <Button
+                  variant="dbz_save"
+                  sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                  onClick={handleCompleteNewPresetWorkout}
+                  disabled={!isOnline}
+                >
+                  {isOnline ? "Save" : "Reconecting..."}
+                </Button>
+                <Button
+                  variant="dbz_clear"
+                  sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
-          </Box>
           )}
-
-          
         </Container>
       </Modal>
     </div>

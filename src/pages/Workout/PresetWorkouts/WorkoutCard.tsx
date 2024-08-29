@@ -40,10 +40,10 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
 
       for (
         let index = 0;
-        index < workoutData.exercisesinRoutine.length;
+        index < workoutData.wOvr.length;
         index++
       ) {
-        const exerciseName = workoutData.exercisesinRoutine[index];
+        const exerciseName = workoutData.wOvr[index];
 
         exerciseImageRef = ref(
           storage,
@@ -66,10 +66,10 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
     };
 
     fetchImageURL();
-  }, []); //
+  }, [workoutData]); //
 
   return (
-    <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
+    <Card elevation={4} sx={{ backgroundColor: "#fafafa",height:"100%" }} >
       <CardContent sx={{ pt: 0 }}>
         <Typography
           align="center"
@@ -77,11 +77,11 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
           variant="h6"
           gutterBottom
         >
-          {capitalizeWords(workoutData.workoutName)}
+          {capitalizeWords(workoutData.wName)}
         </Typography>
         <Typography variant="caption">Workout Description</Typography>
         <Typography style={styles.textOverflow as React.CSSProperties}>
-          {workoutData.workoutDescription}
+          {workoutData.wDesc}
         </Typography>
 
         <Box pt={1} display="flex" flexDirection="column">
@@ -114,7 +114,7 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
                   </Box>
                 ))
               : Array.from({
-                  length: workoutData.exercisesinRoutine.length,
+                  length: workoutData.wOvr.length,
                 }).map((_, index) => (
                   <Skeleton
                     key={index}
@@ -136,8 +136,14 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
         }}
       >
         <Button
-          size="small"
-          onClick={() => navigate(`workout-details/${workoutData.workoutName}`)}
+
+          onClick={() =>
+            navigate(`workout-details/${workoutData.wName}`, {
+              state: { workoutData },
+            })
+          }
+
+          sx={{color:"#1c4595"}}
         >
           Go To Workout
         </Button>
