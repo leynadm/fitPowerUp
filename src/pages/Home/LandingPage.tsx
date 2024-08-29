@@ -191,7 +191,10 @@ function LandingPage() {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="h4" sx={{ color: "#FF8C00",fontFamily:"Saiyan" }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "#FF8C00", fontFamily: "Saiyan" }}
+            >
               fit<span style={{ color: "white" }}>PowerUp</span>
             </Typography>
 
@@ -212,7 +215,7 @@ function LandingPage() {
           </Toolbar>
         </Container>
       </AppBar>
-        <Hero/>
+      <Hero />
       <Box
         component="main"
         sx={{
@@ -226,8 +229,6 @@ function LandingPage() {
           openInstallInstructionsModal={openInstallInstructionsModal}
           setOpenInstallInstructionsModal={setOpenInstallInstructionsModal}
         />
-
-        
 
         <Box
           width="100%"
@@ -248,14 +249,32 @@ function LandingPage() {
               isVisible[0] ? "visible slide-in-left" : "initial-position"
             }`}
           >
-            <Box display="grid" gridTemplateColumns="1fr 1fr" overflow="hidden">
+            <Box display="grid" gridTemplateColumns="1fr 1fr" overflow="hidden"
+                            position="relative"
+            >
+            <img
+                  src="/images/landing/lightning-blue.webp"
+                  alt=""
+                  style={{
+                    objectFit: "contain",
+                    maxWidth: "100%",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: -1,
+                  }}
+                ></img>
               <Box
                 overflow="hidden"
                 width="100%"
                 justifyContent="flex-end"
                 alignItems="flex-end"
                 display="flex"
+
               >
+
                 <img
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.webp?alt=media&token=49e609b6-56e6-4268-8b59-d74fbb087b13"
                   alt=""
@@ -278,21 +297,19 @@ function LandingPage() {
               >
                 <Typography
                   align="center"
-                  
                   ref={containerRefs[1]}
                   className={`${
                     isVisible[1] ? "visible counter-library-exercises" : ""
                   }`}
                   minHeight="40px"
                 ></Typography>
-                <Typography align="center"  fontSize="1.25rem">
+                <Typography align="center" fontSize="2rem" color="#1c4595">
                   EXERCISES
                 </Typography>
               </Box>
             </Box>
 
             <Typography
-              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -303,7 +320,22 @@ function LandingPage() {
               And you can add your own too!
             </Typography>
 
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-white.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
+
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2-1.webp?alt=media&token=3e8b16c8-39a7-4865-9535-4b4743404c45"
                 alt=""
@@ -336,7 +368,22 @@ function LandingPage() {
             display="grid"
             gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-white.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
+
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3.webp?alt=media&token=2a79984a-6f4c-403e-88c1-ded808d5556f"
                 alt=""
@@ -350,7 +397,6 @@ function LandingPage() {
             </Box>
 
             <Typography
-              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -360,7 +406,21 @@ function LandingPage() {
               exercise!
             </Typography>
 
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-red.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-3-1.webp?alt=media&token=81fc5f04-417c-40a6-beb9-5f19c6074ac4"
                 alt=""
@@ -393,7 +453,21 @@ function LandingPage() {
             display="grid"
             gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/power-blue.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4.webp?alt=media&token=511d72a1-1723-4304-9126-56574a142b69"
                 alt=""
@@ -408,7 +482,6 @@ function LandingPage() {
             </Box>
 
             <Typography
-              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -418,7 +491,21 @@ function LandingPage() {
               groups, aggregated data and more!
             </Typography>
 
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-red.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-4-1.webp?alt=media&token=88107327-146b-43b6-902f-38290795d1e0"
                 alt=""
@@ -448,7 +535,21 @@ function LandingPage() {
             display="grid"
             gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-white.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5.webp?alt=media&token=179a5b29-a2ee-47b7-b0e5-2e5a0abd599a"
                 alt=""
@@ -462,7 +563,6 @@ function LandingPage() {
             </Box>
 
             <Typography
-              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
@@ -470,10 +570,24 @@ function LandingPage() {
             >
               Every workout you complete gives you a chance to increase your
               power level. <br />
-              Why not getting stronger while having fun?
+              Why not get stronger while having fun?
             </Typography>
 
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-red.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-5-1.webp?alt=media&token=9bf050f9-a151-4dc7-b816-c096b2411b80"
                 alt=""
@@ -506,7 +620,21 @@ function LandingPage() {
             display="grid"
             gridTemplateRows="4.5fr 1fr 4.5fr"
           >
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/power-blue.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6.webp?alt=media&token=f3aa35d0-c797-44b8-bc74-899187f6411f"
                 alt=""
@@ -521,17 +649,30 @@ function LandingPage() {
             </Box>
 
             <Typography
-              
               fontSize="1.25rem"
               align="center"
               padding={1.5}
               color="white"
             >
-              Unlock DBZ heroes with the Path feature and reach new gym
-              milestones in the Feats menu!
+              Unlock DBZ heroes with the Path feature, and reach new gym
+              milestones using Feats!
             </Typography>
 
-            <Box overflow="hidden" height="100%">
+            <Box overflow="hidden" height="100%" position="relative">
+              <img
+                src="/images/landing/electric-white.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-6-1.webp?alt=media&token=67df5913-9ee9-4f22-94f4-ffaefee9a973"
                 alt=""
@@ -565,7 +706,23 @@ function LandingPage() {
             isVisible[6] ? "visible slide-in-left" : "initial-position"
           }`}
         >
-          <Box overflow="hidden" height="100%">
+          <Box overflow="hidden" height="100%" position="relative">
+            
+          <img
+                  src="/images/landing/power-blue.webp"
+                  alt=""
+                  style={{
+                    objectFit: "contain",
+                    maxWidth: "100%",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: -1,
+                  }}
+                ></img>
+
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7.webp?alt=media&token=83c35143-14c2-4683-ad01-504c3316d264"
               alt=""
@@ -581,7 +738,6 @@ function LandingPage() {
 
           <Typography
             color="white"
-            
             fontSize="1.25rem"
             align="center"
             padding={1.5}
@@ -592,7 +748,22 @@ function LandingPage() {
             app!
           </Typography>
 
-          <Box overflow="hidden" height="100%">
+          <Box overflow="hidden" height="100%" position="relative">
+          <img
+                  src="/images/landing/electric-red.webp"
+                  alt=""
+                  style={{
+                    objectFit: "contain",
+                    maxWidth: "100%",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: -1,
+                  }}
+                ></img>
+
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
               alt=""
@@ -629,58 +800,57 @@ function LandingPage() {
           }}
         >
           <Box
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      height="100%"
-                      width="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+            width="100%"
           >
-          <Typography
-            color="#FFA500"
-            fontSize="1.75rem"
-                      
-          >
-            Disclaimer 
-          </Typography>
-          <InfoIcon fontSize="large" style={{ color: "#FFA500" }} />
+            <Typography color="#FFA500" fontSize="1.75rem">
+              Disclaimer
+            </Typography>
+            <InfoIcon fontSize="large" style={{ color: "#FFA500" }} />
           </Box>
-          
 
           <Typography
             color="#FFA500"
             variant="caption"
             align="center"
             padding={1}
-          lineHeight={1.25}
+            lineHeight={1.25}
             fontSize="1.5rem"
-            
           >
             This app is a fan-made creation, inspired by the Dragon Ball Z
             series, which is a property of FUNimation, Toei Animation, Fuji TV,
-            and Akira Toriyama. 
-            <br /><br/>
-            All intellectual property rights for Dragon Ball
-            Z are owned by their respective holders, and I, as an independent
-            developer, claim no affiliation with or endorsement by them.
-            <br /><br/>
+            and Akira Toriyama.
+            <br />
+            <br />
+            All intellectual property rights for Dragon Ball Z are owned by
+            their respective holders, and I, as an independent developer, claim
+            no affiliation with or endorsement by them.
+            <br />
+            <br />
             Some content within this app is generated using AI technology and is
             inspired by the themes, characters, and universe of Dragon Ball Z.
-            <br /><br/>
+            <br />
+            
+            <br />
             This app is purely a passion project, created by a fan for fans,
             with the dual purpose of celebrating the series and promoting
-            physical fitness and a healthy lifestyle. 
-            <br /><br/>
-            I encourage users to get
-            active and visit the gym through engaging, DBZ-themed challenges and
-            content.
-            <br /><br/>
+            physical fitness and a healthy lifestyle.
+            <br />
+            <br />
+            I encourage users to get active and visit the gym through engaging,
+            DBZ-themed challenges and content.
+            <br />
+            <br />
             There is no commercial intent or gain behind this project; it is
             entirely a labor of love dedicated to the Dragon Ball Z community.
-            <br /><br/>
+            <br />
+            <br />
             My aim is not only to celebrate the iconic Dragon Ball Z series and
-            to inspire fans to pursue a healthier lifestyle, sharing
-            their fitness journeys within this interactive and supportive
-            community.
+            to inspire fans to pursue a healthier lifestyle, sharing their
+            fitness journeys within this interactive and supportive community.
           </Typography>
         </Container>
 
@@ -732,9 +902,9 @@ function LandingPage() {
           </Typography>
 
           <Typography variant="body2" color="white" align="center">
-            <Link color="inherit" href={myWebsite} target="_blank">
+            {/* <Link color="inherit" href={myWebsite} target="_blank">
               Developed by Daniel Matei {new Date().getFullYear()}
-            </Link>
+            </Link> */}
           </Typography>
         </Box>
       </Box>

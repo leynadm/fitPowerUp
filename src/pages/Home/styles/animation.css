@@ -97,12 +97,13 @@
 }
 
 .visible.counter-library-exercises::after {
-  font: 800 35px system-ui;
+  font: 900 55px system-ui;
   font-family: "LuckiestGuy";
   content: "+" counter(count);
   animation: counter 3s linear 1;
   counter-reset: count 100;
   animation-fill-mode: forwards;
+  color: #1c4595;
 }
 
 @keyframes counter {

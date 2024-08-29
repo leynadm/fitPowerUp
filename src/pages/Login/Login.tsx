@@ -45,9 +45,9 @@ function Copyright() {
         align="center"
         
       >
-        <Link href="https://mateidaniel.com" target="_blank">
+{/*         <Link href="https://mateidaniel.com" target="_blank">
           Developed by Daniel Matei {new Date().getFullYear()}
-        </Link>
+        </Link> */}
 
       </Typography>
 
@@ -161,7 +161,7 @@ export default function SignIn() {
             alt=""
             onClick={()=>navigate("/")}
             loading="lazy"
-          ></img>
+          ></img> 
         </div>
         <Typography component="h1" variant="h5" autoFocus>
           Sign in and get fit!
@@ -225,7 +225,7 @@ export default function SignIn() {
             </Grid>
             <Grid item>
               <Link variant="body2" onClick={handleSignUpClick}>
-                {"Don't have an account? Sign Up"}
+                {"Need an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
