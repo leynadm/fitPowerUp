@@ -305,7 +305,7 @@ function ExerciseBreakdownAnalysis() {
           </MenuItem>
         </Select>
 
-        <Typography variant="subtitle1">Select timeframe ({selectedTimeframe})</Typography>
+        <Typography variant="subtitle1" color="text.secondary">Select timeframe ({selectedTimeframe})</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"

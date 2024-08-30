@@ -748,6 +748,7 @@ function ExerciseSelectedTrack() {
           textAlign: "center",
         }}
         variant="h6"
+        color="text.secondary"
       >
         {exerciseSelected.name.toLocaleUpperCase()}
       </Typography>

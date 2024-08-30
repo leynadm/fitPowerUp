@@ -5,7 +5,6 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import { useState } from "react";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../../config/firebase";
@@ -13,6 +12,7 @@ import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import capitalizeWords from "../../../utils/capitalizeWords";
 import IPresetStandaloneWorkout from "../../../utils/interfaces/IPresetStandaloneWorkout";
+import { TextField } from "@mui/material";
 interface StandaloneWorkoutCardProps {
   workoutData: IPresetStandaloneWorkout;
 }
@@ -72,9 +72,10 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
       <CardContent sx={{ pt: 0 }}>
         <Typography
           align="center"
-          color="text.secondary"
+          color="#1c4595"
           variant="h6"
           gutterBottom
+          
         >
           {capitalizeWords(workoutData.wName)}
         </Typography>
@@ -84,16 +85,34 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
           m={0}
           align="right"
           component="div"
+          sx={{color:"text.secondary",fontSize:"1rem"}}
         >
           by {workoutData.wBy}
         </Typography>
-        <Typography variant="caption">Workout Description</Typography>
-        <Typography style={styles.textOverflow as React.CSSProperties}>
-          {workoutData.wDesc}
-        </Typography>
+        <TextField
+          id="outlined-read-only-input"
+          defaultValue={workoutData.wDesc}
+          multiline
+          maxRows={6}
+          fullWidth
+          InputLabelProps={{
+            style:{
+           }
+          }}
+          InputProps={{
+            readOnly: true,
+            sx: {
+              fontFamily: 'Acme, Arial, sans-serif',
+              padding:1  
+            },
+          }}
+          variant="filled"
+        />
 
         <Box pt={1} display="flex" flexDirection="column">
-          <Typography variant="caption">Workout Exercises</Typography>
+          <Typography variant="caption" color="text.secondary"
+                    sx={{color:"text.secondary",fontSize:"1rem"}}
+          >Workout Exercises</Typography>
           <Box
             display="grid"
             gridTemplateColumns={{
@@ -106,8 +125,8 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
               ? exerciseImagesSrc.map((imageSrc, index) => (
                   <Box
                     key={index}
-                    minHeight={{ xs: "48px", sm: "128px" }}
-                    height={{ xs: "48px", sm: "128px" }}
+                    minHeight={{ xs: "64px", sm: "128px" }}
+                    height={{ xs: "64px", sm: "128px" }}
                     width={{ xs: "85px", sm: "228px" }}
                   >
                     <img
@@ -129,7 +148,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
                     variant="rectangular"
                     sx={{
                       width: { xs: "85px", sm: "228px" },
-                      height: { xs: "48px", sm: "128px" },
+                      height: { xs: "64px", sm: "128px" },
                       borderRadius: "4px",
                     }}
                   />
@@ -155,15 +174,16 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
               { state: { workoutData } }
             )
           }
+          sx={{color:"text.secondary",fontSize:"1rem"}}          
         >
           Go To Workout
         </Button>
         {workoutData.wLink !== "" && (
           <Button
-            size="small"
             component="a"
             target="_blank"
             href={workoutData.wLink}
+            sx={{color:"text.secondary",fontSize:"1rem"}}
           >
             Go To Source
           </Button>

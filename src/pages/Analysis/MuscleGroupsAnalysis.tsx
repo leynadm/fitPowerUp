@@ -199,7 +199,7 @@ function MuscleGroupsAnalysis() {
             ))}
         </Select>
 
-        <Typography variant="subtitle1">Select timeframe ({selectedTimeframe})</Typography>
+        <Typography variant="subtitle1" color="text.secondary">Select timeframe ({selectedTimeframe})</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -217,7 +217,7 @@ function MuscleGroupsAnalysis() {
           ))}
         </ButtonGroup>
 
-        <Typography variant="subtitle1">Interval grouped data ({selectedDataGroup}) </Typography>
+        <Typography variant="subtitle1" color="text.secondary">Interval grouped data ({selectedDataGroup}) </Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined secondary button group"

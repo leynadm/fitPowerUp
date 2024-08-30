@@ -208,7 +208,7 @@ function WorkoutDetails() {
             <GroupedWorkout workoutExercises={workoutData.wEx} />
           )}
         </Box>
-        <Typography variant="caption" align="left">
+        <Typography sx={{fontSize:"1.25rem",color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
         <Typography>{workoutData.wDesc}</Typography>

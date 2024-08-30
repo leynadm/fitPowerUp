@@ -51,10 +51,11 @@ function Home() {
                         bottom="56px"
                         overflow="auto"
                         width="100%"
-                        className="nowbox"
-              paddingBottom={1}
-                      >
+                        className="XXXX---BOOXXnowbox"
+    paddingBottom={1}
+>
                         <Routes>
+                        
                           <Route
                             path="workout/*"
                             index
@@ -65,8 +66,11 @@ function Home() {
                               />
                             }
                           />
+                        
                           <Route path="friends/*" element={<Friends />} />
+                        
                           <Route path="progress/*" element={<Progress />} />
+                        
                         </Routes>
                       </Box>
                     </UserChallengesDataProvider>

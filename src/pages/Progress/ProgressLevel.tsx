@@ -388,10 +388,10 @@ function ProgressLevel() {
           marginTop="0.25rem"
           marginBottom="0.25rem"
         >
-          <Typography variant="h3" fontWeight="500">
+          <Typography color="#1c4595" variant="h3" fontWeight="500">
             {currentUserData.powerLevel}
           </Typography>
-          <Typography variant="subtitle1" fontWeight="500" p={0} m={0}>
+          <Typography color="text.secondary" variant="subtitle1" fontWeight="500" p={0} m={0}>
             Your Saved Power Level
           </Typography>
         </Box>
@@ -414,28 +414,31 @@ function ProgressLevel() {
               fontSize={15}
               type="number"
               tick={false}
+              
               domain={[0, "dataMax + 50"]}
             />
-            <YAxis dataKey="name" type="category" fontSize={15} />
-            <Tooltip />
+            <YAxis fontFamily="LuckiestGuy" dataKey="name" type="category" fontSize={15} />
+            <Tooltip  />
             <Legend
+
               align="center"
               verticalAlign="bottom"
               iconType="star"
-              iconSize={12}
+              iconSize={16}
+              wrapperStyle={{fontFamily:"LuckiestGuy",fontSize:"1.25rem"}}
             />
-            <Bar dataKey="Strength" stackId="a" fill="#520975">
-              <LabelList dataKey="Strength" position="top" />
+            <Bar  dataKey="Strength" stackId="a" fill="#520975">
+              <LabelList dataKey="Strength" fontFamily="LuckiestGuy" fontSize="1.5rem" position="top" />
             </Bar>
-            <Bar dataKey="Experience" stackId="a" fill="#FFA500">
-              <LabelList dataKey="Experience" position="top" />
+            <Bar dataKey="Experience"  stackId="a" fill="#FFA500">
+              <LabelList dataKey="Experience" fontFamily="LuckiestGuy" fontSize="1.5rem" position="top" />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
 
         {userExercisesLibrary.length > 0 && (
           <Box display="flex" flexDirection="column" gap={2}>
-            <Typography variant="subtitle1" textAlign="center">
+            <Typography color="text.secondary" variant="subtitle1" textAlign="center">
               Select your strongest lifts to calculate your maximum Power Level
             </Typography>
 

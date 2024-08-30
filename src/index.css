@@ -16,6 +16,24 @@
   src: local('LuckiestGuy'), url(../src/assets/fonts/LuckiestGuy-Regular.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'Acme';
+  src: local('Acme'), url(../src/assets/fonts/Acme-Regular.ttf) format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Poppins-Light';
+  src: local('LuckiestGuy'), url(../src/assets/fonts/Poppins-Light.ttf) format('truetype');
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: 'Poppins-SemiBold';
+  src: local('LuckiestGuy'), url(../src/assets/fonts/Poppins-SemiBold.ttf) format('truetype');
+  font-weight:bolder;
+}
+
 .secondary-font{
   font-family: 'LuckiestGuy';
 }

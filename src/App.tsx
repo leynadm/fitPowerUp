@@ -285,14 +285,24 @@ function App() {
     },
 
     typography: {
+      fontFamily: "LuckiestGuy, Arial, sans-serif", // Default font
+      
       button: {
-        // Here is where you can customise the button
         fontWeight: "lighter",
       },
-
-      fontFamily: "LuckiestGuy",
+    
+      h1: {
+        fontFamily: "LuckiestGuy, Arial, sans-serif", // Specific font for headers
+      },
+      
+      h2: {
+        fontFamily: "LuckiestGuy, Arial, sans-serif", // Specific font for headers
+      },
+      
+      body1: {
+        fontFamily: "LuckiestGuy, Arial, sans-serif", // Body text using 'Saiyan' font
+      },
     },
-
     shape: {},
   });
 

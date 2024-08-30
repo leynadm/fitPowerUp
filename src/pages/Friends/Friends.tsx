@@ -162,7 +162,7 @@ function Friends() {
 
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{height:"100%"}}>
       <AppBar
         position="fixed"
         elevation={2}
@@ -248,7 +248,7 @@ function Friends() {
 
 
       {/* This is the container that I might have to check if it reached to bottom */}
-      <Box sx={{ height: "100%" }}>
+      <Box pt={1} pb={1}>
         <Routes>
           <Route path="" element={<FitWorldBoard />} />
           <Route path="new-z-fighter-challenge" element={<CreateFitWorldGoal />} />

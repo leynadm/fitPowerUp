@@ -10,6 +10,7 @@ import { UserChallengesContext } from "../../context/UserChallenges";
 import IChallengeObj from "../../utils/interfaces/IChallengeObj";
 import ActiveChallengeCard from "./ActiveChallengeCard";
 import CompleteChallenges from "./CompleteChallenges";
+import { Button } from "@mui/material";
 function FitWorldBoard() {
   const [selectedZenkai, setSelectedZenkai] = useState("in progress"); // default value
   const { userChallengesData } = useContext(UserChallengesContext);
@@ -59,9 +60,7 @@ function FitWorldBoard() {
   }
 
   return (
-    <Box
-    height="100%"
-    >
+    <Box height="100%">
       <ToggleButtonGroup
         value={selectedZenkai}
         onChange={handleZenkai}
@@ -96,18 +95,20 @@ function FitWorldBoard() {
           <Typography align="center" fontSize="1.25rem">
             Here you can create your own unique<br></br> Zenkai Challenges!
           </Typography>
-          <IconButton
-            aria-label="add workout"
-            sx={{
-              mb: 2,
-              display: "flex",
-              flexDirection: "column"
-            }}
-            onClick={() => navigate("new-z-fighter-challenge")}
-          >
-            <AddCircleIcon fontSize="medium" />
-            <Typography fontSize="1.25rem">Create Zenkai challenge</Typography>
-          </IconButton>
+          <Button
+      variant="outlined"
+      startIcon={<AddCircleIcon fontSize="large"  sx={{color:"#FFA500"}} />}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textTransform: "none", // Prevents button text from being uppercase
+        mb: 2,
+      }}
+      onClick={() => navigate("new-z-fighter-challenge")}
+    >
+      <Typography fontSize="1.25rem" color="text.secondary">Create Zenkai challenge</Typography>
+    </Button>
         </Box>
       ) : null}
 

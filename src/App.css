@@ -102,8 +102,7 @@ section {
 }
 
 body {
-	font-family: 'Saiyan';
-	line-height: 1;
+	
 	overscroll-behavior: none;
 }
 
@@ -137,4 +136,5 @@ table {
 html,
 body {
 	overscroll-behavior: none;
+	height: 100%;
 }

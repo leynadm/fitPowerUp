@@ -76,10 +76,10 @@ function CompleteChallengeCard({
         width: "100%",
       }}
     >
-      <Typography variant="h6" align="center">
+      <Typography variant="h6" color="#1c4595" align="center">
         {completeChallengeEntry.name}
       </Typography>
-      <Typography variant="caption" align="left" width="100%">
+      <Typography variant="caption" fontSize="1rem" color="text.secondary" align="left" width="100%">
         Your Challenge Interval
       </Typography>
       <Box
@@ -98,7 +98,7 @@ function CompleteChallengeCard({
         </Box>
       </Box>
 
-      <Typography variant="caption" align="left" width="100%">
+      <Typography variant="caption" fontSize="1rem" color="text.secondary" align="left" width="100%">
         Your Challenge Final Result
       </Typography>
 
@@ -114,14 +114,14 @@ function CompleteChallengeCard({
         </Typography>
       </Box>
 
-      <Typography variant="caption" align="left" width="100%">
+      <Typography variant="caption" fontSize="1rem" color="text.secondary" align="left" width="100%">
         Your Chosen Challenges
       </Typography>
 
       <Box width="100%" display="flex" flexDirection="column">
         {completeChallengeEntry.goals.saiyanTrainingSchedule.isActive && (
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography variant="overline">
+            <Typography variant="overline" fontSize="1rem">
               Workouts Objective:{" "}
               {
                 completeChallengeEntry.goals.saiyanTrainingSchedule
@@ -206,7 +206,7 @@ function CompleteChallengeCard({
         {completeChallengeEntry.goals.gravityChamberGains.isActive && (
           <Box>
             <Box display="flex" alignItems="center" gap={1}>
-              <Typography variant="overline" align="left">
+              <Typography variant="overline" fontSize="1rem" align="left">
                 Your Exercises Objectives
               </Typography>
               {completeChallengeEntry.goals.gravityChamberGains.resultStatus ===
@@ -294,7 +294,7 @@ function CompleteChallengeCard({
           </Box>
         )}
         <Box display="flex" flexDirection="column" pt={1}>
-          <Typography variant="caption" align="left" width="100%">
+          <Typography variant="caption" fontSize="1rem" color="text.secondary" align="left" width="100%">
             Your Challenge's Comment
           </Typography>
           <Typography textAlign="center" pt={1} pb={1}>
@@ -333,7 +333,7 @@ function CompleteChallengeCard({
                       zIndex: 0,
                     }}
                   />
-                  <Typography variant="caption">Delete</Typography>
+                  <Typography variant="caption" fontSize="1rem" color="text.secondary">Delete</Typography>
                 </IconButton>
              
           </AccordionDetails>

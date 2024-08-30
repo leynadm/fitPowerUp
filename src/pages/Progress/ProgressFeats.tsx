@@ -121,6 +121,7 @@ function ProgressGraph() {
                 readOnly: true,
                 sx: {
                   // Apply styles to the input element
+                  fontFamily:"Acme",
                   input: {
                     paddingTop: 0,
                     margin:0
@@ -130,11 +131,12 @@ function ProgressGraph() {
               }}
               maxRows={4}
               size="small"
-              
+                            
               defaultValue={featEntry.description}
               sx={{
                 width: "100%",
                 background:"orange",
+                fontFamily:"Acme"
               }}
               multiline
             />

@@ -742,7 +742,6 @@ function PresetWorkoutExercise() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        paddingBottom: "56px",
       }}
       maxWidth="md"
     >

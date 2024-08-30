@@ -257,7 +257,7 @@ function CompletedWorkouts() {
 
   return (
     <Container
-      sx={{ height: "100%", width: "100%" }}
+      sx={{  width: "100%", height:"100%" }}
       maxWidth="md"
       className="ThisIsTheBoxUnder"
       onTouchStart={handleTouchStart}
@@ -331,11 +331,11 @@ function CompletedWorkouts() {
                   sx={{
                     my: 2,
                     color: "white",
-                    fontFamily: "inherit",
-                    fontWeight: "400",
+                    fontFamily: "Acme",
+                    fontWeight: "400",                    
                   }}
                 >
-                  <Typography className="secondary-font">{page}</Typography>
+                  <Typography>{page}</Typography>
                 </Button>
               ))}
             </Box>
@@ -362,33 +362,33 @@ function CompletedWorkouts() {
                 <ListItemIcon>
                   <InsertChartIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Analysis</ListItemText>
+                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Analysis</ListItemText>
               </MenuItem>
 
               <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
                 <ListItemIcon>
                   <FormatListNumberedIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Workouts & Routines</ListItemText>
+                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Workouts & Routines</ListItemText>
               </MenuItem>
 
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Body Tracker</ListItemText>
+                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Body Tracker</ListItemText>
               </MenuItem>
               <MenuItem onClick={() => handlePageClick("Settings")}>
                 <ListItemIcon>
                   <SettingsIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Settings</ListItemText>
+                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Settings</ListItemText>
               </MenuItem>
               <MenuItem onClick={() => handlePageClick("Sign Out")}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Log Out</ListItemText>
+                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Log Out</ListItemText>
               </MenuItem>
             </Menu>
 
@@ -423,6 +423,7 @@ function CompletedWorkouts() {
       </AppBar>
 
       <Container
+      
         maxWidth="md"
         className="ThisIsTheWrappingContainerForTheFuncitionalDateBar"
         sx={{
@@ -495,7 +496,8 @@ function CompletedWorkouts() {
         sx={{
           gap: 2,
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          height:"100%"
         }}
         ref={containerRef}
       >
@@ -586,7 +588,6 @@ function CompletedWorkouts() {
                         width="100%"
                         display="flex"
                         flexDirection="row-reverse"
-                        padding={1}
                       >
                         <IconButton
                           size="large"
@@ -800,7 +801,9 @@ function CompletedWorkouts() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: "center",                    
+                    flexGrow:1,
+                    height:"100%"
                   }}
                 >
                   <img

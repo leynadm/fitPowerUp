@@ -15,9 +15,49 @@ import { Skeleton } from "@mui/material";
 function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   const [imageURL, setImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [exerciseImagesSrc, setExerciseImagesSrc] = useState<string[]>([]);
+
+  const uniqueStrings = Array.from(
+    new Set(routine.rWorkouts.flatMap((workout) => workout.wOvr))
+  );
+
+  console.log({uniqueStrings})
 
   useEffect(() => {
+
+
     const fetchImageURL = async () => {
+      let exerciseImageRef;
+
+      const tempImagesLinkArr: string[] = [];
+
+      for (let index = 0; index < uniqueStrings.length; index++) {
+        const exerciseName = uniqueStrings[index];
+
+        exerciseImageRef = ref(
+          storage,
+          `assets/exercises-assets-small-size/${exerciseName.replaceAll(
+            " ",
+            "-"
+          )}.jpg`
+        );
+
+        try {
+          const url = await getDownloadURL(exerciseImageRef);
+          tempImagesLinkArr.push(url);
+        } catch (error) {
+          //toast.error("Oops, there was an error fetching the image!");
+          console.error("Error fetching image:", error);
+        }
+      }
+
+      setExerciseImagesSrc(tempImagesLinkArr);
+    };
+
+    fetchImageURL();
+
+
+    /* const fetchImageURL = async () => {
       let exerciseImageRef;
 
       if (routine.rImg !== "") {
@@ -43,7 +83,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
       }
     };
 
-    fetchImageURL();
+    fetchImageURL(); */
   }, []); // Dependency array includes index and userExercise
 
   const encodedParameter = encodeURIComponent(routine.rName);
@@ -55,7 +95,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
       <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Typography
           align="center"
-          color="text.secondary"
+          color="#1c4595"
           variant="h6"
           gutterBottom
         >
@@ -76,43 +116,88 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          minHeight={350}
+          flexDirection="column"
         >
-          {imageURL === "" ? (
+{/*           {imageURL === "" ? (
             <Skeleton height={350} width="100%" />
           ) : (
-            <img
-              src={imageURL}
-              alt=""
-              loading="eager"
-              style={{
-                maxHeight: "512px",
-                maxWidth: "512px",
-                width: "100%",
-                height: "auto", // Maintain aspect ratio
-                minHeight: "100%",
-                boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
-                border: "2px solid orange",
-              }}
-              width="512px" // Set the width explicitly
-              height="512px" // Set the height explicitly
-            />
-          )}
+            <>
+            <Typography color="text.secondary" fontSize="2rem">{routine.rWorkouts.length} Workouts</Typography>
+            </>
+
+          )} */}
+          <Box display="flex" gap={1}>
+          <Typography color="text.secondary" fontSize="1.5rem">{routine.rWorkouts.length} Workouts</Typography>
+          <Typography color="text.secondary" fontSize="1.5rem"> - </Typography>
+          
+                      <Typography color="text.secondary" fontSize="1.5rem">{uniqueStrings.length} Exercises</Typography>
+          </Box>
+            
+
+<Box
+width="100%"
+            display="grid"
+            gridTemplateColumns={{
+              xs: "repeat(3, 1fr)", // 3 columns on extra-small screens
+              sm: "repeat(3, 1fr)", // 5 columns on small screens and above
+            }}
+            gap={1}
+          >
+            
+{exerciseImagesSrc.length > 0
+              ? exerciseImagesSrc.map((imageSrc, index) => (
+                  <Box
+                    key={index}
+                    minHeight={{ xs: "64px", sm: "128px" }}
+                    height={{ xs: "64px", sm: "128px" }}
+                    width={{ xs: "85px", sm: "228px" }}
+                  >
+                    <img
+                      src={imageSrc}
+                      alt=""
+                      style={{
+                        height: "100%",
+                        width: "auto",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  </Box>
+                ))
+              : Array.from({
+                  length: uniqueStrings.length,
+                }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    variant="rectangular"
+                    sx={{
+                      width: { xs: "85px", sm: "228px" },
+                      height: { xs: "64px", sm: "128px" },
+                      borderRadius: "4px",
+                    }}
+                  />
+                ))}
+          </Box>
+
+
         </Box>
 
         <TextField
           id="outlined-read-only-input"
-          label="Description"
           defaultValue={routine.rDesc}
           multiline
-          maxRows={6}
-          size="small"
+          maxRows={5}
           fullWidth
           InputProps={{
             readOnly: true,
+            sx: {
+              fontFamily: 'Acme, Arial, sans-serif',
+              fontSize:"1rem",
+              padding:1  
+            
+            },
           }}
-          variant="standard"
-        />
+          variant="filled"
+                />
       </CardContent>
       <CardActions
         sx={{
@@ -128,7 +213,8 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
               state: { routine },
             })
           }
-          sx={{ color: "#1c4595" }}
+
+          sx={{color:"text.secondary",fontSize:"1rem"}}
         >
           Go To Routine
         </Button>
@@ -139,7 +225,8 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
             component="a"
             target="_blank"
             href={routine.rLink}
-          >
+            sx={{color:"text.secondary",fontSize:"1rem"}}
+>
             Go To Source
           </Button>
         )}
@@ -149,3 +236,22 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
 }
 
 export default RoutineCard;
+
+/* 
+             <img
+              src={imageURL}
+              alt=""
+              loading="eager"
+              style={{
+                maxHeight: "512px",
+                maxWidth: "512px",
+                width: "100%",
+                height: "auto", // Maintain aspect ratio
+                minHeight: "100%",
+                boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+                border: "2px solid orange",
+              }}
+              width="512px" // Set the width explicitly
+              height="512px" // Set the height explicitly
+            /> 
+*/

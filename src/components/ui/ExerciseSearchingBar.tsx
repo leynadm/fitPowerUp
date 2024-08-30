@@ -57,7 +57,7 @@ interface ParentsProps {
 function ExerciseSearchingBar({query,onChange}:ParentsProps) {
 
   return (
-    <Search sx={{ display: "flex" }}>
+    <Search sx={{ display: "flex",width:"100%" }}>
       <Paper
         component="form"
         sx={{
@@ -69,12 +69,12 @@ function ExerciseSearchingBar({query,onChange}:ParentsProps) {
         }}
       >
         <SearchIconWrapper >
-          <SearchIcon />
+          <SearchIcon sx={{width:"100%"}} />
         </SearchIconWrapper>
         <StyledInputBase
           placeholder="Search for an exercise..."
           inputProps={{ "aria-label": "search" }}
-          sx={{ width: "100%" }}
+          sx={{ width:"100%" }}
           type="search"
           onChange={onChange}
           fullWidth

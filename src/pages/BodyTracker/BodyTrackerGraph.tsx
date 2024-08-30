@@ -161,7 +161,7 @@ function BodyTrackerGraph() {
           ))}
         </Select>
 
-        <Typography variant="subtitle1">Select timeframe</Typography>
+        <Typography variant="subtitle1" color="text.secondary">Select timeframe</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -179,7 +179,7 @@ function BodyTrackerGraph() {
           ))}
         </ButtonGroup>
 
-        <Typography variant="subtitle1">Interval grouped data</Typography>
+        <Typography variant="subtitle1" color="text.secondary">Interval grouped data</Typography>
         <ButtonGroup
           variant="contained"
           aria-label="outlined secondary button group"

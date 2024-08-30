@@ -29,7 +29,7 @@ interface HomeProps {
 function Workout({ existingExercises, setExistingExercises }: HomeProps) {
   return (
     <Box>
-<Routes>
+      <Routes>
         <Route
           path="/completed-details/:exerciseName/*"
           element={<CompletedWorkoutsTabs />}
@@ -90,7 +90,6 @@ function Workout({ existingExercises, setExistingExercises }: HomeProps) {
         <Route path="preset-workouts/*" element={<PresetWorkouts />} />
       </Routes>
     </Box>
-      
   );
 }
 

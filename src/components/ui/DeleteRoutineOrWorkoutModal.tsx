@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import CircularProgressWithText from "./CircularProgressWithText";
 import deletePresetWorkoutInRoutine from "../../utils/presetWorkouts/deletePresetWorkoutInRoutine";
 import IPresetWorkoutDataForRoutine from "../../utils/interfaces/IPresetWorkoutDataForRoutine";
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -31,7 +32,7 @@ interface ParentComponentProps {
   setOpenDeleteRoutineOrWorkoutModal: Dispatch<SetStateAction<boolean>>;
   routineOrWorkout: string;
   presetWorkoutData: IPresetWorkoutData[];
-  routineOrWorkoutId: string | undefined;
+  routineOrWorkoutId: string;
   isValid: boolean | undefined;
   workoutData?:IPresetWorkoutDataForRoutine
 }
@@ -67,7 +68,7 @@ function DeleteRoutineOrWorkoutModal({
         setIsLoading(false);
         navigate("/home/workout/preset-workouts"); 
       }
-    } else {
+    } else if(routineOrWorkout==="workout") {
       if (isValid) {
         setIsLoading(true);
         if(workoutData){
@@ -83,6 +84,21 @@ function DeleteRoutineOrWorkoutModal({
           setIsLoading(false);
           navigate("/home/workout/preset-workouts"); 
         }
+        }        
+    } else {
+
+        setIsLoading(true);
+        if(workoutData){
+        
+          await deletePresetWorkout(
+            currentUser.uid,
+            routineOrWorkoutId
+          );
+  
+           await refetchPresetWorkoutsData();
+          toast.success("Routine was deleted successfully!");
+          setIsLoading(false);
+          navigate("/home/workout/preset-workouts"); 
         }
         
     }

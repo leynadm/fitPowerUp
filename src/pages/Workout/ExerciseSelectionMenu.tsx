@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import capitalizeWords from "../../utils/capitalizeWords";
 import Box from "@mui/material/Box";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import { useNavigate } from "react-router-dom";
 import { FixedSizeList } from "react-window";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -184,7 +183,7 @@ function ExerciseSelectionMenu() {
         onClick={() => handleTileClick(userExercise.name)}
         pt={2}
       >
-        <Typography align="center" overflow="hidden">
+        <Typography align="center" sx={{                color:"text.secondary",fontSize:"1.15rem"}} overflow="hidden">
           {userExercise.name.toLocaleUpperCase()}
         </Typography>
 
@@ -219,7 +218,7 @@ function ExerciseSelectionMenu() {
         )}
 
         <Box display="flex" justifyContent="center" gap={1}>
-          <Typography variant="caption">
+          <Typography variant="caption" sx={{color:"text.secondary",fontSize:"1rem"}}>
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>

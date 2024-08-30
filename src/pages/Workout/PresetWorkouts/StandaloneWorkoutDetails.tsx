@@ -103,7 +103,7 @@ function StandaloneWorkoutDetails() {
           setOpenDeleteRoutineOrWorkoutModal={
             setOpenDeleteRoutineOrWorkoutModal
           }
-          routineOrWorkout="workout"
+          routineOrWorkout="standalone"
           presetWorkoutData={presetWorkoutsData}
           routineOrWorkoutId={workoutData.id}
           workoutData={workoutData}
@@ -189,10 +189,10 @@ function StandaloneWorkoutDetails() {
         </AppBar>
       </Box>
 
-      <Box pb="56px">
+      <Box>
         <Typography
           align="center"
-          color="text.secondary"
+          color="#1c4595"
           variant="h6"
           gutterBottom
         >
@@ -204,10 +204,10 @@ function StandaloneWorkoutDetails() {
             <GroupedWorkout workoutExercises={workoutData.wEx} />
           )}
         </Box>
-        <Typography variant="caption" align="left">
+        <Typography sx={{fontSize:"1rem",color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
-        <Typography>{workoutData.wDesc}</Typography>
+        <Typography sx={{fontFamily:"Acme"}}>{workoutData.wDesc}</Typography>
       </Box>
     </Box>
   );

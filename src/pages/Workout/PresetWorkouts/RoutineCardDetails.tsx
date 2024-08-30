@@ -174,7 +174,10 @@ function RoutineCardDetails() {
           p: 1,
           borderRadius: 1,
           border: "1px solid black",
+        
         }}
+fontFamily="Acme"
+fontSize={18}
       >
         {routine.rDesc}
       </Typography>

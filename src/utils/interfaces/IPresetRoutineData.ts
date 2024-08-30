@@ -1,12 +1,11 @@
-import { Exercise } from "./IUserTrainingData";
-
+import IPresetWorkoutData from "./IPresetWorkoutsData";
 interface IPresetRoutineData {  
     rName:string,
     del:boolean,
     rDesc:string,
     rBy:string;
     rLink:string;
-    rWorkouts:Exercise[];
+    rWorkouts:IPresetWorkoutData[];
     multi:boolean;
     rImg:string;
   }
