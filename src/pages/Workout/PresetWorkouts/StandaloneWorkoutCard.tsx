@@ -12,8 +12,9 @@ import { storage } from "../../../config/firebase";
 import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import capitalizeWords from "../../../utils/capitalizeWords";
+import IPresetStandaloneWorkout from "../../../utils/interfaces/IPresetStandaloneWorkout";
 interface StandaloneWorkoutCardProps {
-  workoutData: IPresetWorkoutData;
+  workoutData: IPresetStandaloneWorkout;
 }
 
 const styles = {
@@ -30,6 +31,8 @@ const styles = {
 function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
   const navigate = useNavigate();
 
+  console.log("inside standalone workout card:");
+  console.log({ workoutData });
   const [exerciseImagesSrc, setExerciseImagesSrc] = useState<string[]>([]);
 
   useEffect(() => {
@@ -38,11 +41,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
 
       const tempImagesLinkArr: string[] = [];
 
-      for (
-        let index = 0;
-        index < workoutData.wOvr.length;
-        index++
-      ) {
+      for (let index = 0; index < workoutData.wOvr.length; index++) {
         const exerciseName = workoutData.wOvr[index];
 
         exerciseImageRef = ref(
@@ -140,15 +139,22 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
       </CardContent>
       <CardActions
         sx={{
-            paddingTop: 0,
-            display: "flex",
-            justifyContent: "space-between",
-            position:"relative"
-          }}
+          paddingTop: 0,
+          display: "flex",
+          justifyContent: "space-between",
+          position: "relative",
+        }}
       >
         <Button
           size="small"
-          onClick={() => navigate(`standalone-workout-details/${encodeURIComponent(workoutData.wName)}`)}
+          onClick={() =>
+            navigate(
+              `standalone-workout-details/${encodeURIComponent(
+                workoutData.wName
+              )}`,
+              { state: { workoutData } }
+            )
+          }
         >
           Go To Workout
         </Button>

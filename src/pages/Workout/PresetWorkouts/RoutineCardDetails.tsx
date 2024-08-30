@@ -58,8 +58,8 @@ function RoutineCardDetails() {
         setOpenDeleteRoutineOrWorkoutModal={setOpenDeleteRoutineOrWorkoutModal}
         routineOrWorkout="routine"
         presetWorkoutData={presetWorkoutsData}
-        routineOrWorkoutId={routine.rName}
-        isValid={false}
+        routineOrWorkoutId={routine.id}
+        isValid={routine.del}
       />
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
@@ -220,7 +220,7 @@ function RoutineCardDetails() {
               )}
               {groupedWorkoutsArr[selectedWeekInterval].map(
                 (workout, workoutIndex) => (
-                  <WorkoutCard key={workoutIndex} workoutData={workout} />
+                  <WorkoutCard key={workoutIndex} workoutData={workout} routine={routine} />
                 )
               )}
             </Box>

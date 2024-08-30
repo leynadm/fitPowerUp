@@ -12,8 +12,10 @@ import { storage } from "../../../config/firebase";
 import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import capitalizeWords from "../../../utils/capitalizeWords";
+import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
 interface WorkoutCardProps {
   workoutData: IPresetWorkoutData;
+  routine:IPresetRoutineData
 }
 
 const styles = {
@@ -27,7 +29,8 @@ const styles = {
   },
 };
 
-function WorkoutCard({ workoutData }: WorkoutCardProps) {
+function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
+  
   const navigate = useNavigate();
 
   const [exerciseImagesSrc, setExerciseImagesSrc] = useState<string[]>([]);
@@ -139,7 +142,7 @@ function WorkoutCard({ workoutData }: WorkoutCardProps) {
 
           onClick={() =>
             navigate(`workout-details/${workoutData.wName}`, {
-              state: { workoutData },
+              state: { workoutData,routine },
             })
           }
 

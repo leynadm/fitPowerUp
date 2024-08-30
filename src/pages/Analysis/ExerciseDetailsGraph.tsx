@@ -307,7 +307,7 @@ function ExerciseDetailsGraph() {
   return (
     <Container
       maxWidth="md"
-      sx={{ height: "100%", width: "100%", paddingBottom: "64px" }}
+      sx={{ height: "100%", width: "100%" }}
     >
       <Box paddingBottom="16px" display="flex" flexDirection="column">
         {!exerciseName && (

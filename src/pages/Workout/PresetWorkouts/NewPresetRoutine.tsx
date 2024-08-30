@@ -8,53 +8,32 @@ import React, {
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
-import CommentIcon from "@mui/icons-material/Comment";
-import ViewCommentModal from "../../../components/ui/ViewCommentModal";
 import { Exercise } from "../../../utils/interfaces/IUserTrainingData";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import formatTime from "../../../utils/formatTime";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
-import { AuthContext } from "../../../context/Auth";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
-import Autocomplete from "@mui/material/Autocomplete";
-import capitalizeWords from "../../../utils/capitalizeWords";
-import {
-  AutocompleteChangeReason,
-  AutocompleteChangeDetails,
-} from "@mui/material/Autocomplete";
 import AddNewPresetRoutineModal from "../../../components/ui/AddNewPresetRoutineModal";
 import { Paper } from "@mui/material";
-import AddExerciseToPresetWorkoutModal from "../../../components/ui/AddExerciseToPresetWorkoutModal";
 import getNewPresetWorkoutExercises from "../../../utils/IndexedDbCRUDFunctions/getNewPresetWorkoutExercises";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import AddNewPresetWorkoutModal from "../../../components/ui/AddNewPresetWorkoutModal";
 import { useSearchParams } from "react-router-dom";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
 import toast from "react-hot-toast";
 function NewPresetRoutine() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  
+
   const [existingExercises, setExistingExercises] = useState<
     { name: string; exercises: Exercise[] }[]
   >([]);
-  const [multiWeeksRoutineCheck, setMultiWeeksRoutineCheck] = useState(false);
 
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
 
   const existingRoutinesNames = getRoutineNames();
-  
+
   const isDataValidated = () => {
     if (
       workoutState.routineName !== "" &&
@@ -67,17 +46,13 @@ function NewPresetRoutine() {
     return false;
   };
 
-
   const [workoutState, setWorkoutState] = useState({
     routineName: searchParams.get("routineName") || "",
     routineDescription: searchParams.get("routineDescription") || "",
     routineBy: searchParams.get("routineBy") || "",
     routineLinkReference: searchParams.get("routineLinkReference") || "",
-    multi:multiWeeksRoutineCheck
+    multi: false,
   });
-
-  const [exerciseComment, setExerciseComment] = useState("");
-  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
 
   const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -107,7 +82,10 @@ function NewPresetRoutine() {
     setSearchParams(newSearchParams);
   };
 
-  const handleSwitchChange = (event: SyntheticEvent<Element, Event>, checked: boolean) => {
+  const handleSwitchChange = (
+    event: SyntheticEvent<Element, Event>,
+    checked: boolean
+  ) => {
     setWorkoutState((prevState) => ({ ...prevState, multi: checked }));
   };
 
@@ -122,18 +100,8 @@ function NewPresetRoutine() {
       .catch(console.error);
   }, []);
 
-  const [
-    openAddExerciseToPresetRoutineModal,
-    setOpenAddExerciseToPresetRoutineModal,
-  ] = useState(false);
-
   const [openAddNewPresetRoutineModal, setOpenAddNewPresetRoutineModal] =
     useState(false);
-  function handleOpenAddExerciseToPresetRoutineModal() {
-    setOpenAddExerciseToPresetRoutineModal(
-      !openAddExerciseToPresetRoutineModal
-    );
-  }
 
   function handleopenAddNewPresetRoutineModal() {
     setOpenAddNewPresetRoutineModal(!openAddNewPresetRoutineModal);
@@ -154,80 +122,6 @@ function NewPresetRoutine() {
     return tempRoutines.sort(); // Sort the array alphabetically
   }
 
-  const handleSelectWorkoutExercise = (
-    exerciseName: string,
-    exerciseGroup: string
-  ) => {
-    const searchParamsString = searchParams.toString();
-
-    // Create the navigation URL, appending the search parameters
-    const navigationUrl = `preset-workout-exercise/${exerciseName}?${searchParamsString}`;
-
-    // Navigate to the new URL with the search parameters
-    navigate(navigationUrl);
-
-    //navigate(`preset-workout-exercise/${exerciseName}?${searchParamsString}`);
-  };
-
-  function handleViewCommentModalVisibility(
-    exerciseComment: string | undefined
-  ) {
-    if (exerciseComment) {
-      setExerciseComment(exerciseComment);
-      setOpenViewCommentModal(!openViewCommentModal);
-    }
-  }
-
-  const handleRoutineChange = (
-    event: SyntheticEvent<Element, Event>,
-    newValue: string | null,
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<any>
-  ) => {
-    if (newValue !== null) {
-      setWorkoutState((prevState) => ({ ...prevState, routineName: newValue }));
-      // Update the URL search parameters
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("routineName", newValue);
-      setSearchParams(newSearchParams);
-    }
-  };
-
-  const handleRoutineCheck = (
-    event: React.SyntheticEvent,
-    checked: boolean
-  ) => {
-    if (!checked) {
-      setWorkoutState((prevState) => ({
-        ...prevState,
-        routineName: "",
-        routineDescription: "",
-        routineLinkReference: "",
-        routineBy: "",
-      }));
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("workoutRoutineCheck", "false");
-
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-    } else {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("workoutRoutineCheck", "true");
-      setWorkoutState((prevState) => ({
-        ...prevState,
-        routineName: "",
-        routineDescription: "",
-        routineLinkReference: "",
-        routineBy: "",
-        workoutBy: "",
-        workoutLinkReference: "",
-      }));
-
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -237,12 +131,6 @@ function NewPresetRoutine() {
         height: "calc(100svh - 112px)",
       }}
     >
-      <ViewCommentModal
-        openViewCommentModal={openViewCommentModal}
-        setOpenViewCommentModal={setOpenViewCommentModal}
-        exerciseComment={exerciseComment}
-      />
-
       <Box position="fixed" sx={{ width: "100%", zIndex: 2 }}>
         <AppBar
           elevation={2}
@@ -402,10 +290,9 @@ function NewPresetRoutine() {
             checked={workoutState.multi}
             onChange={handleSwitchChange} // Passing additional value
             label={
-              multiWeeksRoutineCheck ? "Multi-week Routine" : "Standard Routine"
+              workoutState.multi ? "Multi-week Routine" : "Standard Routine"
             }
           />
-{/*           <Button variant="dbz_mini">Next</Button> */}
         </Box>
       </Box>
     </Box>

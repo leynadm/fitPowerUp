@@ -63,8 +63,7 @@ function Notifications() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        pb: "64px",
+        alignItems: "center"
       }}
     >
       {notificationsData.map((notification: any, index: number) => (

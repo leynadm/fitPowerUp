@@ -1,22 +1,22 @@
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { arrayUnion } from "firebase/firestore";
 import toast from "react-hot-toast";
-import IPresetWorkoutData from "../interfaces/IPresetWorkoutsData";
+import IPresetStandaloneWorkout from "../interfaces/IPresetStandaloneWorkout";
 async function addPresetCompleteWorkout(
   userId: string,
-  presetWorkoutData: IPresetWorkoutData,
+  presetWorkoutData: IPresetStandaloneWorkout,
+  workoutId:string
 ) {
   try {
     const userDocRef = doc(db, "users", userId);
 
     const userTrainingDataDocRef = doc(
       userDocRef,
-      `userCollection/userPresetWorkouts`
+      `userCollection/userPresetStandaloneWorkouts`
     );
 
     await updateDoc(userTrainingDataDocRef, {
-      presetWorkouts: arrayUnion(presetWorkoutData),
+      [workoutId]:presetWorkoutData,
     });
 
   } catch (error) {

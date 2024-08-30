@@ -23,18 +23,14 @@ import formatTime from "../../../utils/formatTime";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { AuthContext } from "../../../context/Auth";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
-import Autocomplete from "@mui/material/Autocomplete";
-import capitalizeWords from "../../../utils/capitalizeWords";
+import AddExerciseToStandaloneWorkout from "../../../components/ui/AddExerciseToStandaloneWorkout";
 import {
   AutocompleteChangeReason,
   AutocompleteChangeDetails,
 } from "@mui/material/Autocomplete";
 
 import { Paper } from "@mui/material";
-import AddExerciseToPresetWorkoutModal from "../../../components/ui/AddExerciseToPresetWorkoutModal";
+
 import getNewPresetWorkoutExercises from "../../../utils/IndexedDbCRUDFunctions/getNewPresetWorkoutExercises";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -53,31 +49,9 @@ function NewPresetWorkout() {
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
 
   const existingRoutinesNames = getRoutineNames();
-  const [workoutRoutineCheck, setWorkoutRoutineCheck] = useState(
-    searchParams.get("workoutRoutineCheck") === "true" ? true : false
-  );
 
   const isDataValidated = () => {
     if (
-      workoutRoutineCheck &&
-      routineTypeCheck === "new" &&
-      workoutState.routineBy !== "" &&
-      workoutState.routineName !== "" &&
-      workoutState.routineDescription !== "" &&
-      workoutState.workoutName !== "" &&
-      workoutState.workoutDescription !== ""
-    ) {
-      return true;
-    } else if (
-      workoutRoutineCheck &&
-      routineTypeCheck === "existing" &&
-      workoutState.routineName !== "" &&
-      workoutState.workoutName !== "" &&
-      workoutState.workoutDescription !== ""
-    ) {
-      return true;
-    } else if (
-      !workoutRoutineCheck &&
       workoutState.workoutName !== "" &&
       workoutState.workoutDescription !== "" &&
       workoutState.workoutBy !== ""
@@ -91,54 +65,14 @@ function NewPresetWorkout() {
     searchParams.get("routineTypeCheck") || "new"
   );
   const [workoutState, setWorkoutState] = useState({
-    routineName: searchParams.get("routineName") || "",
     workoutName: searchParams.get("workoutName") || "",
     workoutDescription: searchParams.get("workoutDescription") || "",
-    routineDescription: searchParams.get("routineDescription") || "",
-    routineBy: searchParams.get("routineBy") || "",
-    routineLinkReference: searchParams.get("routineLinkReference") || "",
     workoutLinkReference: searchParams.get("workoutLinkReference") || "",
     workoutBy: searchParams.get("workoutBy") || "",
   });
 
   const [exerciseComment, setExerciseComment] = useState("");
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
-
-  function handleRoutineTypeCheck(checkValue: string) {
-    if (checkValue === "existing") {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("routineTypeCheck", "existing");
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-      setRoutineTypeCheck("existing");
-    } else if (checkValue === "new") {
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("routineTypeCheck", "new");
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-      setRoutineTypeCheck("new");
-    }
-  }
-
-  const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
-
-    if (
-      value !== "" &&
-      existingRoutinesNames.includes(value.toLocaleLowerCase())
-    ) {
-      toast.error(`${value} routine already exists!`);
-      return;
-    }
-
-    setWorkoutState((prevState) => ({ ...prevState, [id]: value }));
-    // Create a new object with all current search parameters
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(id, value);
-
-    // Update the URL without overwriting other parameters
-    setSearchParams(newSearchParams);
-  };
 
   const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -163,16 +97,14 @@ function NewPresetWorkout() {
   }, []);
 
   const [
-    openAddExerciseToPresetWorkoutModal,
-    setOpenAddExerciseToPresetWorkoutModal,
+    openAddExerciseToStandaloneWorkout,
+    setOpenAddExerciseToStandaloneWorkout,
   ] = useState(false);
 
   const [openAddNewPresetWorkoutModal, setOpenAddNewPresetWorkoutModal] =
     useState(false);
-  function handleOpenAddExerciseToPresetWorkoutModal() {
-    setOpenAddExerciseToPresetWorkoutModal(
-      !openAddExerciseToPresetWorkoutModal
-    );
+  function handleOpenAddExerciseToStandaloneWorkout() {
+    setOpenAddExerciseToStandaloneWorkout(!openAddExerciseToStandaloneWorkout);
   }
 
   function handleopenAddNewPresetWorkoutModal() {
@@ -198,10 +130,8 @@ function NewPresetWorkout() {
     exerciseName: string,
     exerciseGroup: string
   ) => {
-    const searchParamsString = searchParams.toString();
-
     // Create the navigation URL, appending the search parameters
-    const navigationUrl = `preset-workout-exercise/${exerciseName}?${searchParamsString}`;
+    const navigationUrl = `standalone-workout-exercise/${exerciseName}`;
 
     // Navigate to the new URL with the search parameters
     navigate(navigationUrl);
@@ -218,63 +148,6 @@ function NewPresetWorkout() {
     }
   }
 
-  const handleRoutineChange = (
-    event: SyntheticEvent<Element, Event>,
-    newValue: string | null,
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<any>
-  ) => {
-    if (newValue !== null) {
-      setWorkoutState((prevState) => ({ ...prevState, routineName: newValue }));
-      // Update the URL search parameters
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("routineName", newValue);
-      setSearchParams(newSearchParams);
-    }
-  };
-
-  const handleRoutineCheck = (
-    event: React.SyntheticEvent,
-    checked: boolean
-  ) => {
-    if (!checked) {
-      setWorkoutRoutineCheck(false);
-      setWorkoutState((prevState) => ({
-        ...prevState,
-        routineName: "",
-        routineDescription: "",
-        routineLinkReference: "",
-        routineBy: "",
-      }));
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("workoutRoutineCheck", "false");
-
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-    } else {
-      setWorkoutRoutineCheck(true);
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("workoutRoutineCheck", "true");
-      setWorkoutState((prevState) => ({
-        ...prevState,
-        routineName: "",
-        routineDescription: "",
-        routineLinkReference: "",
-        routineBy: "",
-        workoutBy: "",
-        workoutLinkReference: "",
-      }));
-
-      // Update the URL without overwriting other parameters
-      setSearchParams(newSearchParams);
-    }
-  };
-
-  const isWorkoutRoutineChecked = () => {
-    const param = searchParams.get("workoutRoutineCheck");
-    return param === "true" ? true : false;
-  };
-
   return (
     <Box
       sx={{
@@ -283,12 +156,10 @@ function NewPresetWorkout() {
         flexDirection: "column",
       }}
     >
-      <AddExerciseToPresetWorkoutModal
-        openAddExerciseToPresetWorkoutModal={
-          openAddExerciseToPresetWorkoutModal
-        }
-        setOpenAddExerciseToPresetWorkoutModal={
-          setOpenAddExerciseToPresetWorkoutModal
+      <AddExerciseToStandaloneWorkout
+        openAddExerciseToStandaloneWorkout={openAddExerciseToStandaloneWorkout}
+        setOpenAddExerciseToStandaloneWorkout={
+          setOpenAddExerciseToStandaloneWorkout
         }
         searchParams={searchParams}
       />
@@ -298,9 +169,9 @@ function NewPresetWorkout() {
         setOpenAddNewPresetWorkoutModal={setOpenAddNewPresetWorkoutModal}
         existingExercises={existingExercises}
         workoutState={workoutState}
-        
         routineTypeCheck={routineTypeCheck}
       />
+
       <ViewCommentModal
         openViewCommentModal={openViewCommentModal}
         setOpenViewCommentModal={setOpenViewCommentModal}
@@ -383,93 +254,6 @@ function NewPresetWorkout() {
         gap={2}
         pt={2}
       >
-
-        {workoutRoutineCheck && (
-          <ButtonGroup
-            variant="contained"
-            aria-label="outlined primary button group"
-            fullWidth
-          >
-            <Button
-              onClick={() => handleRoutineTypeCheck("new")}
-              sx={{ backgroundColor: "#520975" }}
-            >
-              New Routine
-            </Button>
-            <Button
-              onClick={() => handleRoutineTypeCheck("existing")}
-              sx={{ backgroundColor: "#520975" }}
-            >
-              Existing Routine
-            </Button>
-          </ButtonGroup>
-        )}
-
-        {workoutRoutineCheck && routineTypeCheck === "new" ? (
-          <Box display="flex" flexDirection="column" gap={1} width="100%">
-            <TextField
-              fullWidth
-              id="routineName"
-              label="New Routine Name"
-              variant="outlined"
-              placeholder="Add your routine name"
-              required
-              onChange={handleWorkoutNameChange}
-              value={workoutState.routineName}
-              inputProps={{ maxLength: 48 }}
-            />
-
-            <TextField
-              fullWidth
-              id="routineDescription"
-              label="New Routine Short Description"
-              variant="outlined"
-              placeholder="Add a routine description/summary"
-              inputProps={{ maxLength: 1024 }}
-              required
-              multiline
-              rows={3}
-              onChange={handleFieldChange}
-              value={workoutState.routineDescription}
-            />
-
-            <TextField
-              fullWidth
-              id="routineBy"
-              label="Routine Created By"
-              variant="outlined"
-              inputProps={{ maxLength: 48 }}
-              placeholder="Add the name of the creator of this routine"
-              required
-              onChange={handleFieldChange}
-              value={workoutState.routineBy}
-            />
-
-            <TextField
-              fullWidth
-              id="routineLinkReference"
-              label="Routine Link Reference"
-              variant="outlined"
-              inputProps={{ maxLength: 256 }}
-              placeholder="Link external sources for this routine"
-              onChange={handleFieldChange}
-              value={workoutState.routineLinkReference}
-            />
-          </Box>
-        ) : workoutRoutineCheck && routineTypeCheck === "existing" ? (
-          <Autocomplete
-            fullWidth
-            disablePortal
-            id="combo-box-demo"
-            options={existingRoutinesNames}
-            value={capitalizeWords(workoutState.routineName)}
-            onChange={handleRoutineChange}
-            renderInput={(params) => (
-              <TextField {...params} label="Existing Routines" />
-            )}
-          />
-        ) : null}
-
         <TextField
           fullWidth
           required
@@ -496,32 +280,30 @@ function NewPresetWorkout() {
           value={workoutState.workoutDescription}
         />
 
-        {!workoutRoutineCheck && (
-          <Box display="flex" flexDirection="column" gap={2} width="100%">
-            <TextField
-              fullWidth
-              required
-              id="workoutBy"
-              label="Workout Created By"
-              inputProps={{ maxLength: 48 }}
-              variant="outlined"
-              placeholder="Add the name of the creator of this workout"
-              onChange={handleFieldChange}
-              value={workoutState.workoutBy}
-            />
+        <Box display="flex" flexDirection="column" gap={2} width="100%">
+          <TextField
+            fullWidth
+            required
+            id="workoutBy"
+            label="Workout Created By"
+            inputProps={{ maxLength: 48 }}
+            variant="outlined"
+            placeholder="Add the name of the creator of this workout"
+            onChange={handleFieldChange}
+            value={workoutState.workoutBy}
+          />
 
-            <TextField
-              fullWidth
-              id="workoutLinkReference"
-              label="Workout Link Reference"
-              inputProps={{ maxLength: 256 }}
-              variant="outlined"
-              placeholder="Link external sources for this workout"
-              onChange={handleFieldChange}
-              value={workoutState.workoutLinkReference}
-            />
-          </Box>
-        )}
+          <TextField
+            fullWidth
+            id="workoutLinkReference"
+            label="Workout Link Reference"
+            inputProps={{ maxLength: 256 }}
+            variant="outlined"
+            placeholder="Link external sources for this workout"
+            onChange={handleFieldChange}
+            value={workoutState.workoutLinkReference}
+          />
+        </Box>
 
         <Paper
           sx={{
@@ -538,7 +320,7 @@ function NewPresetWorkout() {
               display: "flex",
               flexDirection: "column",
             }}
-            onClick={handleOpenAddExerciseToPresetWorkoutModal}
+            onClick={handleOpenAddExerciseToStandaloneWorkout}
           >
             <AddIcon fontSize="medium" />
             <Typography fontSize="1rem" p={0} m={0}>
@@ -548,7 +330,7 @@ function NewPresetWorkout() {
         </Paper>
 
         <Container
-          sx={{ padding: 1, height: "100%", paddingBottom: "56px" }}
+          sx={{ padding: 1, height: "100%" }}
           maxWidth="md"
           className="ThisIsTheFirstContainer"
         >

@@ -46,11 +46,12 @@
   #hero-1856 .cs-text {
     text-align: left;
     color: #FFA500;
-
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
   }
 
   #hero-1856 .cs-text {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 2rem;
   }
 
@@ -237,6 +238,8 @@
 }
 
 .cs-topper {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
   color: white;
   font-size: 2.5rem;
   border-radius: 30px;

@@ -91,6 +91,7 @@ function NewWorkout({
         width: "100%",
         display: "flex",
         flexDirection: "column",
+        height:"100%"
       }}
       className="WrapperInsideNewWorkout"
     >
@@ -192,16 +193,16 @@ function NewWorkout({
       </Box>
 
       <Container
-        sx={{ padding: 1 }}
+        sx={{ padding: 1,height:"100%" }}
         maxWidth="md"
         className="ThisIsTheFirstContainer"
       >
-        {existingExercises.length === 0 ? (
+        {existingExercises && existingExercises.length === 0 ? (
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "flex-end",
+              justifyContent: "flex-start",
               alignItems: "center",
               flexGrow: 1,
               height: "100%",

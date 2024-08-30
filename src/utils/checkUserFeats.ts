@@ -788,7 +788,7 @@ export const feats = [
     feat: "Perform 50 Different Exercises",
     name: "More Varied Than Goku's Menu",
     description:
-      "Conquering 50 exercises? You're the ultimate fitness warrior, tackling a workout menu more varied than Goku's post-training feast!",
+      "50 exercises? You're tackling a workout menu more varied than Goku's post-training feast!",
     state: false,
     date: "",
     level: 7,

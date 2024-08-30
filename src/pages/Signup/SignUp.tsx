@@ -147,26 +147,27 @@ export default function SignUp() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <div style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}>
+        <div
+          style={{ minHeight: "17.5rem", width: "17.5rem", height: "17.5rem" }}
+        >
           <img
             style={{
               width: "100%",
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fvegeta_signup_512.jpg?alt=media&token=950addab-6acb-426f-a591-8897be81169d"
+            src="/images/dbz-sign-up.webp"
             alt=""
             loading="lazy"
           ></img>
         </div>
         <Typography component="h1" variant="h5">
-          Sign up to join!
+          Join the community!
         </Typography>
         <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
           <Grid container spacing={2}>

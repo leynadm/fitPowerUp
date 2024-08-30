@@ -198,7 +198,7 @@ function Settings() {
         </Container>
       </AppBar>
 
-      <Box display="flex" flexDirection="column" gap={1} pb="64px">
+      <Box display="flex" flexDirection="column" gap={1}>
         <Typography variant="subtitle1">Preferences</Typography>
         <Divider />
         <Card>

@@ -88,8 +88,8 @@ function SocialSearchBar() {
   };
 
   return (
-    <Box>
-      <Search sx={{ display: "flex", padding: "0", margin: "0" }}>
+    <Box sx={{width:"100%"}}>
+      <Search sx={{ display: "flex", padding: "0", margin: "0",width:"100%" }}>
         <IconButton
           onClick={getUsers}
           sx={{ display: "flex", justifyContent: "center" }}
@@ -102,7 +102,7 @@ function SocialSearchBar() {
           onChange={onChange}
           value={userToSearch}
           
-          sx={{ p: 0, m: 0 }}
+          sx={{ p: 0, m: 0,width:"100%" }}
           inputProps={{ "aria-label": "search" }}
         />
       </Search>

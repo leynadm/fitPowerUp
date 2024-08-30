@@ -215,11 +215,15 @@ function AddContentModal({
   const handleChangeTrainingDate = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedDate = event.target.value;
     if (event.target.value) {
-      filterUserTrainingsPerDay(
+      
+      const filteredUserTrainingDataArr = filterUserTrainingsPerDay(
         selectedDate,
         userTrainingData,
-        setFilteredUserTrainingData
       );
+  
+      setFilteredUserTrainingData(filteredUserTrainingDataArr)
+
+    
       setExpanded(true);
     } else {
       setExpanded(false);

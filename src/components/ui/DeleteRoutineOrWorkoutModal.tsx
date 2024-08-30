@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import deletePresetWorkout from "../../utils/presetWorkouts/deletePresetWorkout";
 import toast from "react-hot-toast";
 import CircularProgressWithText from "./CircularProgressWithText";
+import deletePresetWorkoutInRoutine from "../../utils/presetWorkouts/deletePresetWorkoutInRoutine";
+import IPresetWorkoutDataForRoutine from "../../utils/interfaces/IPresetWorkoutDataForRoutine";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -31,6 +33,7 @@ interface ParentComponentProps {
   presetWorkoutData: IPresetWorkoutData[];
   routineOrWorkoutId: string | undefined;
   isValid: boolean | undefined;
+  workoutData?:IPresetWorkoutDataForRoutine
 }
 
 function DeleteRoutineOrWorkoutModal({
@@ -40,6 +43,7 @@ function DeleteRoutineOrWorkoutModal({
   presetWorkoutData,
   routineOrWorkoutId,
   isValid,
+  workoutData
 }: ParentComponentProps) {
   const { currentUser } = useContext(AuthContext);
   const { refetchPresetWorkoutsData } = useContext(
@@ -48,35 +52,39 @@ function DeleteRoutineOrWorkoutModal({
   const [isLoading, setIsLoading] = useState(false);
   const handleClose = () => setOpenDeleteRoutineOrWorkoutModal(false);
   const navigate = useNavigate();
+  console.log({routineOrWorkout})
   async function handleDeleteRoutineOrWorkout() {
     if (routineOrWorkout === "routine") {
       if (isValid) {
         setIsLoading(true);
         await deleteRoutine(
           currentUser.uid,
-          presetWorkoutData,
           routineOrWorkoutId
         );
 
-        await refetchPresetWorkoutsData();
+         await refetchPresetWorkoutsData();
         toast.success("Routine was deleted successfully!");
         setIsLoading(false);
-        navigate("/home/workout/preset-workouts");
+        navigate("/home/workout/preset-workouts"); 
       }
     } else {
       if (isValid) {
         setIsLoading(true);
-        await deletePresetWorkout(
-          currentUser.uid,
-          presetWorkoutData,
-          routineOrWorkoutId
-        );
-
-        await refetchPresetWorkoutsData();
-        toast.success("Routine was deleted successfully!");
-        setIsLoading(false);
-        navigate("/home/workout/preset-workouts");
-      }
+        if(workoutData){
+        
+          await deletePresetWorkoutInRoutine(
+            currentUser.uid,
+            workoutData,
+            routineOrWorkoutId
+          );
+  
+           await refetchPresetWorkoutsData();
+          toast.success("Routine was deleted successfully!");
+          setIsLoading(false);
+          navigate("/home/workout/preset-workouts"); 
+        }
+        }
+        
     }
   }
 

@@ -375,9 +375,8 @@ function NewPresetWorkoutForRoutine() {
         </Paper>
 
         <Container
-          sx={{ padding: 1, height: "100%", paddingBottom: "56px" }}
+          sx={{ padding: 1, height: "100%" }}
           maxWidth="md"
-          className="ThisIsTheFirstContainer"
         >
           <Box
             className="wrapperForTheExercisesGrouped"

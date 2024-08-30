@@ -7,6 +7,8 @@ import RoutineCardDetails from "./RoutineCardDetails";
 import WorkoutDetails from "./WorkoutDetails";
 import NewPresetRoutine from "./NewPresetRoutine";
 import NewPresetWorkoutForRoutine from "./NewPresetWorkoutForRoutine";
+import StandaloneWorkoutExercise from "./StandaloneWorkoutExercise";
+import StandaloneWorkoutDetails from "./StandaloneWorkoutDetails";
 function PresetWorkouts() {
   return (
     <Container maxWidth="md">
@@ -17,13 +19,14 @@ function PresetWorkouts() {
         />
         <Route path="" element={<PresetWorkoutsOverview />} />
         <Route
-          path="new-preset-workout/preset-workout-exercise/:exerciseName"
-          element={<PresetWorkoutExercise />}
+          path="new-preset-workout/standalone-workout-exercise/:exerciseName"
+          element={<StandaloneWorkoutExercise />}
         />
         <Route
           path="preset-routine-details/:routineName/new-preset-workout/preset-workout-exercise/:exerciseName"
           element={<PresetWorkoutExercise />}
         />
+
         <Route
           path="preset-routine-details/:routineName"
           element={<RoutineCardDetails />}
@@ -34,9 +37,11 @@ function PresetWorkouts() {
         />
         <Route
           path="standalone-workout-details/:workoutName"
-          element={<WorkoutDetails />}
+          element={<StandaloneWorkoutDetails />}
         />
+
         <Route path="new-preset-workout" element={<NewPresetWorkout />} />
+
         <Route path="new-preset-routine" element={<NewPresetRoutine />} />
       </Routes>
     </Container>

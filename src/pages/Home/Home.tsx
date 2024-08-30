@@ -52,6 +52,7 @@ function Home() {
                         overflow="auto"
                         width="100%"
                         className="nowbox"
+              paddingBottom={1}
                       >
                         <Routes>
                           <Route

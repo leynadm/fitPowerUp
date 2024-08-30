@@ -26,7 +26,7 @@ export const usePresetWorkoutsData = () => {
 
     const userPresetWorkoutsDataDocRef = doc(
       userCollectionRef,
-      "userPresetWorkouts"
+      "userPresetStandaloneWorkouts"
     );
     const userPresetRoutinesDataDocRef = doc(
       userCollectionRef,

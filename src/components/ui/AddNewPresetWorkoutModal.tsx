@@ -37,12 +37,8 @@ interface ParentComponentProps {
   setOpenAddNewPresetWorkoutModal: Dispatch<SetStateAction<boolean>>;
   existingExercises: { name: string; exercises: Exercise[] }[];
   workoutState: {
-    routineName: string;
     workoutName: string;
     workoutDescription: string;
-    routineDescription: string;
-    routineBy: string;
-    routineLinkReference: string;
     workoutBy: string;
     workoutLinkReference: string;
   };
@@ -56,9 +52,8 @@ function AddNewPresetWorkoutModal({
   workoutState,
   routineTypeCheck,
 }: ParentComponentProps) {
-  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const {currentUser} = useContext(AuthContext)
   const isOnline = useOnlineStatus()
   const { refetchPresetWorkoutsData } = useContext(
     UserPresetWorkoutsDataContext
@@ -77,27 +72,27 @@ function AddNewPresetWorkoutModal({
       workoutDate
     );
 
-    const tempExercisesInRoutine = [];
+    const tempExercisesInStandaloneWorkout = [];
     for (let index = 0; index < existingExercisesArr.length; index++) {
       const element = existingExercisesArr[index];
-      tempExercisesInRoutine.push(element.name);
+      tempExercisesInStandaloneWorkout.push(element.name);
     }
 
     const presetWorkoutData = {
-      id: uuid(),
-      wExercises: existingExercisesArr,
-      workoutName: workoutState.workoutName.toLocaleLowerCase(),
-      workoutDescription: workoutState.workoutDescription,
-      exercisesinRoutine: tempExercisesInRoutine,
-      delete: true,
-      workoutBy: workoutState.workoutBy,
-      workoutLinkReference: workoutState.workoutLinkReference,
+      wName:workoutState.workoutName.toLocaleLowerCase(),
+      del:false,
+      wDesc:workoutState.workoutDescription,
+      wBy:workoutState.workoutBy,
+      wLink:workoutState.workoutLinkReference,
+      wEx: existingExercisesArr,
+      wImg:'w-def',
+      wOvr:tempExercisesInStandaloneWorkout
     };
 
     try {
-      setIsLoading(true)/* 
-      await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData);
- */
+      setIsLoading(true) 
+      await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData,uuid());
+
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");

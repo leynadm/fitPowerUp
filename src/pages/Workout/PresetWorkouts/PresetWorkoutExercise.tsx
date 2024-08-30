@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, useContext } from "react";
+import  { useState, useEffect, ChangeEvent, useContext } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -32,7 +32,6 @@ import updateExercisesPRAfterAction from "../../../utils/IndexedDbCRUDFunctions/
 import LoadingScreenCircle from "../../../components/ui/LoadingScreenCircle";
 import getExistingPresetExerciseComment from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExerciseComment";
 import getExistingPresetExercises from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExercises";
-import { useSearchParams } from "react-router-dom";
 import { validateIndexedDbEntry } from "../../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 import { useLocation } from "react-router-dom";
 
@@ -40,14 +39,10 @@ function PresetWorkoutExercise() {
   const { exerciseName } = useParams();
   const navigate = useNavigate();
 
-  const { routineName } = useParams();
-
   const location = useLocation();
   const routine = location.state.routine;
 
   const encodedParameter = encodeURIComponent(routine.rName);
-
-  const [searchParams] = useSearchParams();
 
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext

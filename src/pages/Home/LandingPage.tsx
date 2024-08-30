@@ -249,32 +249,33 @@ function LandingPage() {
               isVisible[0] ? "visible slide-in-left" : "initial-position"
             }`}
           >
-            <Box display="grid" gridTemplateColumns="1fr 1fr" overflow="hidden"
-                            position="relative"
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              overflow="hidden"
+              position="relative"
             >
-            <img
-                  src="/images/landing/lightning-blue.webp"
-                  alt=""
-                  style={{
-                    objectFit: "contain",
-                    maxWidth: "100%",
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    zIndex: -1,
-                  }}
-                ></img>
+              <img
+                src="/images/landing/lightning-blue.webp"
+                alt=""
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: -1,
+                }}
+              ></img>
               <Box
                 overflow="hidden"
                 width="100%"
                 justifyContent="flex-end"
                 alignItems="flex-end"
                 display="flex"
-
               >
-
                 <img
                   src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-2.webp?alt=media&token=49e609b6-56e6-4268-8b59-d74fbb087b13"
                   alt=""
@@ -707,21 +708,20 @@ function LandingPage() {
           }`}
         >
           <Box overflow="hidden" height="100%" position="relative">
-            
-          <img
-                  src="/images/landing/power-blue.webp"
-                  alt=""
-                  style={{
-                    objectFit: "contain",
-                    maxWidth: "100%",
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    zIndex: -1,
-                  }}
-                ></img>
+            <img
+              src="/images/landing/power-blue.webp"
+              alt=""
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: -1,
+              }}
+            ></img>
 
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7.webp?alt=media&token=83c35143-14c2-4683-ad01-504c3316d264"
@@ -749,20 +749,20 @@ function LandingPage() {
           </Typography>
 
           <Box overflow="hidden" height="100%" position="relative">
-          <img
-                  src="/images/landing/electric-red.webp"
-                  alt=""
-                  style={{
-                    objectFit: "contain",
-                    maxWidth: "100%",
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    zIndex: -1,
-                  }}
-                ></img>
+            <img
+              src="/images/landing/electric-red.webp"
+              alt=""
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: -1,
+              }}
+            ></img>
 
             <img
               src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-page-7-1.webp?alt=media&token=0b398595-0642-496f-91ce-23e9c05a3141"
@@ -780,7 +780,6 @@ function LandingPage() {
       </Box>
 
       <Box
-        height="100%"
         width="100%"
         display="grid"
         gridTemplateRows="8.5fr 1.5fr"
@@ -803,7 +802,6 @@ function LandingPage() {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            height="100%"
             width="100%"
           >
             <Typography color="#FFA500" fontSize="1.75rem">
@@ -833,7 +831,6 @@ function LandingPage() {
             Some content within this app is generated using AI technology and is
             inspired by the themes, characters, and universe of Dragon Ball Z.
             <br />
-            
             <br />
             This app is purely a passion project, created by a fan for fans,
             with the dual purpose of celebrating the series and promoting
@@ -860,13 +857,14 @@ function LandingPage() {
           flexDirection="column"
           alignItems="center"
           justifyContent="flex-start"
+          gap={2}
         >
           <Typography
             color="white"
             display="flex"
             alignItems="center"
             gap={1}
-            variant="overline"
+            variant="body2"
           >
             <RedditIcon />
             Join the
@@ -886,7 +884,7 @@ function LandingPage() {
             display="flex"
             alignItems="center"
             gap={1}
-            variant="overline"
+            variant="body2"
           >
             <EmailIcon />
             Click
@@ -901,11 +899,11 @@ function LandingPage() {
             to contact me via email.
           </Typography>
 
-          <Typography variant="body2" color="white" align="center">
-            {/* <Link color="inherit" href={myWebsite} target="_blank">
+          {/*<Typography variant="body2" color="white" align="center">
+             <Link color="inherit" href={myWebsite} target="_blank">
               Developed by Daniel Matei {new Date().getFullYear()}
-            </Link> */}
-          </Typography>
+            </Link> 
+          </Typography>*/}
         </Box>
       </Box>
     </Box>

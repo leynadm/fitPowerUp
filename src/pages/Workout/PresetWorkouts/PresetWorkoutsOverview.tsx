@@ -17,10 +17,7 @@ import RoutineCard from "./RoutineCard";
 import { useEffect } from "react";
 import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
 import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
-// This is the type for the accumulator
-interface IPresetWorkoutAccumulator {
-  [key: string]: IPresetWorkoutGroup;
-}
+import IPresetStandaloneWorkout from "../../../utils/interfaces/IPresetStandaloneWorkout";
 
 export interface IPresetRoutine {
   routineName: string;
@@ -48,9 +45,8 @@ interface IPresetWorkoutDetails {
 }
 
 function PresetWorkoutsOverview() {
-  const { presetWorkoutsData, presetRoutinesData, refetchPresetWorkoutsData } = useContext(
-    UserPresetWorkoutsDataContext
-  );
+  const { presetWorkoutsData, presetRoutinesData, refetchPresetWorkoutsData } =
+    useContext(UserPresetWorkoutsDataContext);
   useEffect(() => {
     const fetchData = async () => {
       if (presetWorkoutsData.length === 0) {
@@ -61,6 +57,7 @@ function PresetWorkoutsOverview() {
     fetchData().catch(console.error); // Handle errors
   }, []);
 
+  console.log({ presetWorkoutsData });
   const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
 
   const blob = new Blob([jsonString], { type: "application/json" });
@@ -72,20 +69,9 @@ function PresetWorkoutsOverview() {
 
   const [selectedCategory, setSelectedCategory] = useState("routines"); // default value
 
-  const routines = getRoutines(presetWorkoutsData);
+  console.log({ selectedCategory });
+  const workouts = getWorkouts(presetWorkoutsData);
 
-  console.log('all data:')
-  console.log({presetRoutinesData})
-   const workouts = getWorkouts(presetWorkoutsData);
- 
-  const isRoutineEmptyCheck = false /* isRoutineEmpty(routines); */
-
-  /* function isRoutineEmpty(obj: IPresetWorkoutAccumulator) {
-    if (routines) {
-      return Object.keys(obj).length === 0;
-    }
-  }
- */
   const handleAlignment = (
     event: MouseEvent<HTMLElement>,
     newCategory: string | null
@@ -221,45 +207,58 @@ function PresetWorkoutsOverview() {
         </ToggleButton>
       </ToggleButtonGroup>
 
-      {selectedCategory === "routines" && !isRoutineEmptyCheck ? (
+      {selectedCategory === "routines" && presetRoutinesData.length > 0 ? (
         <Box display="flex" flexDirection="column" gap={2} pb="8px">
           {presetRoutinesData.length > 0 &&
-             presetRoutinesData.map((routine: IPresetRoutineData, index: number) => {
-              return <RoutineCard key={index} routine={routine} />;
-            })}  
+            presetRoutinesData.map(
+              (routine: IPresetRoutineData, index: number) => {
+                return <RoutineCard key={index} routine={routine} />;
+              }
+            )}
         </Box>
-      ) : selectedCategory === "routines" && isRoutineEmptyCheck ? (
+      ) : selectedCategory === "routines" ? (
         <Box
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
-        <Typography textAlign="center" fontSize="2rem" color="#1c4595">
-          We couldn't find
-          <br />any routines
-        </Typography>
-      </Box>
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <Typography textAlign="center" fontSize="2rem" color="#1c4595">
+            We couldn't find
+            <br />
+            any routines
+          </Typography>
+        </Box>
       ) : null}
 
-      {selectedCategory === "workouts" && workouts.length > 0 ? (
+      {selectedCategory === "workouts" && presetWorkoutsData.length > 0 ? (
         <Box display="flex" flexDirection="column" gap={2} pb="8px">
-          {workouts.map((workout: IPresetWorkoutData, index: number) => (
-            <StandaloneWorkoutCard key={index} workoutData={workout} />
-          ))}
+          {presetWorkoutsData.map(
+            (workout: IPresetStandaloneWorkout, index: number) => (
+              <StandaloneWorkoutCard key={index} workoutData={workout} />
+            )
+          )}
         </Box>
       ) : selectedCategory === "workouts" && workouts.length === 0 ? (
         <Box
-          display="flex"
-          height="calc(100svh - 112px)"
-          justifyContent="center"
-          alignItems="center"
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Typography textAlign="center" fontSize="1.25rem">We couldn't find any stand-alone workouts.</Typography>
+          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <Typography textAlign="center" fontSize="2rem" color="#1c4595">
+            We couldn't find
+            <br />
+            any workouts
+          </Typography>
         </Box>
       ) : null}
     </Box>
@@ -271,8 +270,6 @@ export default PresetWorkoutsOverview;
 export function getWorkouts(presetWorkoutsData: IPresetWorkoutData[]) {
   const tempWorkoutsArr = [];
 
-
-
   return [];
 }
 
@@ -280,18 +277,13 @@ export function getIndividualPresetWorkouts(
   presetWorkoutsData: IPresetWorkoutData[],
   routineName: string | undefined
 ) {
-
-  return []
+  return [];
 }
 
 function getRoutines(presetWorkoutsData: IPresetWorkoutData[]) {
+  console.log(presetWorkoutsData);
 
-console.log(presetWorkoutsData)
-
-
-
-return []
-
+  return [];
 
   /*   const tempRoutinesArr: IPresetWorkoutData = presetWorkoutsData[0];
 

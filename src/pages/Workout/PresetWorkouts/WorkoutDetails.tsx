@@ -5,38 +5,32 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import { useParams } from "react-router-dom";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import GroupedWorkout from "../../../components/ui/GroupedWorkout";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import TextField from "@mui/material/TextField";
 import capitalizeWords from "../../../utils/capitalizeWords";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteRoutineOrWorkoutModal from "../../../components/ui/DeleteRoutineOrWorkoutModal";
-import { IPresetWorkoutGroup } from "./PresetWorkoutsOverview";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function WorkoutDetails() {
-  
   const location = useLocation();
 
   const workoutData = location.state.workoutData;
+  const routine = location.state.routine;
 
-  console.log(location.state)
-  console.log(workoutData)
+  console.log(location.state);
+  console.log(workoutData);
 
-  
   const navigate = useNavigate();
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
 
   const [openDeleteRoutineOrWorkoutModal, setOpenDeleteRoutineOrWorkoutModal] =
     useState(false);
-
-
 
   async function handleCopyWorkout() {
     try {
@@ -54,11 +48,7 @@ function WorkoutDetails() {
           "user-exercises-entries"
         );
 
-        for (
-          let index = 0;
-          index < workoutData.wEx.length;
-          index++
-        ) {
+        for (let index = 0; index < workoutData.wEx.length; index++) {
           const exercisesGroup = workoutData.wEx[index];
 
           for (
@@ -111,7 +101,7 @@ function WorkoutDetails() {
         flexDirection: "column",
       }}
     >
-         {
+      {
         <DeleteRoutineOrWorkoutModal
           openDeleteRoutineOrWorkoutModal={openDeleteRoutineOrWorkoutModal}
           setOpenDeleteRoutineOrWorkoutModal={
@@ -119,10 +109,11 @@ function WorkoutDetails() {
           }
           routineOrWorkout="workout"
           presetWorkoutData={presetWorkoutsData}
-          routineOrWorkoutId={workoutData.id}
-          isValid={workoutData.wEx.length>0}
+          routineOrWorkoutId={routine.id}
+          workoutData={workoutData}
+          isValid={workoutData.wEx.length > 0}
         />
-      }  
+      }
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
@@ -137,10 +128,9 @@ function WorkoutDetails() {
         >
           <Container maxWidth="md">
             <Toolbar disableGutters>
-               
               <FormatListNumberedIcon
                 sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              /> 
+              />
 
               <Typography
                 variant="h6"
@@ -221,8 +211,8 @@ function WorkoutDetails() {
         <Typography variant="caption" align="left">
           Workout Description
         </Typography>
-        <Typography >{workoutData.wDesc}</Typography>
-      </Box> 
+        <Typography>{workoutData.wDesc}</Typography>
+      </Box>
     </Box>
   );
 }

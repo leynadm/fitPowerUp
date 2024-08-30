@@ -186,7 +186,7 @@ function CompletedDetailsOverview() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ paddingBottom: "80px" }}>
+    <Container maxWidth="md">
       <Typography
         sx={{
           padding: {

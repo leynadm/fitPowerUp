@@ -34,21 +34,14 @@ function Copyright() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        pt:5,
-        pb:2
+        pt: 2,
+        pb: 2,
       }}
-
     >
-      <Typography
-        variant="body2"
-        color="text.primary"
-        align="center"
-        
-      >
-{/*         <Link href="https://mateidaniel.com" target="_blank">
+      <Typography variant="body2" color="text.primary" align="center">
+        {/*         <Link href="https://mateidaniel.com" target="_blank">
           Developed by Daniel Matei {new Date().getFullYear()}
         </Link> */}
-
       </Typography>
 
       <Typography
@@ -144,27 +137,29 @@ export default function SignIn() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <div style={{ minHeight: "15rem", width: "15rem", height: "15rem" }}>
+        <div
+          style={{ minHeight: "17.5rem", width: "17.5rem", height: "17.5rem" }}
+        >
           <img
             style={{
               width: "100%",
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
             }}
-            src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fgoku_login_512.jpg?alt=media&token=393c2a1a-5bcd-45ae-b09b-5023cd837de7"
+            src="/images/dbz-sign-in.webp"
             alt=""
-            onClick={()=>navigate("/")}
+            onClick={() => navigate("/")}
             loading="lazy"
-          ></img> 
+          ></img>
         </div>
         <Typography component="h1" variant="h5" autoFocus>
-          Sign in and get fit!
+          Welcome to fitPowerUp!
         </Typography>
 
         <Box component="form" onSubmit={handleLogIn} noValidate sx={{ mt: 1 }}>
@@ -194,7 +189,7 @@ export default function SignIn() {
             fullWidth
             variant="dbz"
             sx={{
-              mt: 3,
+              mt: 1,
               mb: 2,
               gap: 1,
               display: "flex",
@@ -209,12 +204,20 @@ export default function SignIn() {
           <Button
             type="button"
             fullWidth
-            variant="outlined"
-            sx={{ mb: 2, gap: 1 }}
+            variant="contained"
+            className="secondary-font"
+            sx={{
+              mb: 2,
+              gap: 1,
+              fontSize: "1.5rem",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             onClick={SignInWithGoogle}
           >
-            <GoogleIcon />
-            LOG IN WITH GOOGLE
+            <GoogleIcon fontSize="large" />
+            <span style={{ textAlign: "center" }}>LOG IN WITH GOOGLE</span>
           </Button>
 
           <Grid container>

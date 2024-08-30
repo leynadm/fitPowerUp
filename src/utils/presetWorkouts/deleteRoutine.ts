@@ -1,34 +1,34 @@
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, deleteField } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import IPresetWorkoutData from "../interfaces/IPresetWorkoutsData";
 
 async function deleteRoutine(
   userId: string,
-  presetWorkoutData: IPresetWorkoutData[],
-  routineName: string | undefined
+  routineId: string | undefined
 ) {
-  const userDocRef = doc(db, "users", userId);
-
-  const userPresetWorkoutsDataDocRef = doc(
-    userDocRef,
-    `userCollection/userPresetWorkouts`
-  );
-
-  const filteredData = presetWorkoutData.filter(
-    (presetWorkout: IPresetWorkoutData) =>
-      presetWorkout.wName !== routineName
-  );
-
-  if(filteredData.length===0){
-    return
+  if (!routineId) {
+    console.log("Routine ID is undefined");
+    return;
   }
 
+  // Reference to the user's document
+  const userPresetWorkoutsDataDocRef = doc(
+    db,
+    "users",
+    userId,
+    "userCollection",
+    "userPresetRoutines"
+  );
+
   try {
+    // Deleting the specific map entry using the key (routineId)
     await updateDoc(userPresetWorkoutsDataDocRef, {
-      presetWorkouts: filteredData,
+      [routineId]: deleteField(),
     });
+
+    console.log(`Routine with ID ${routineId} deleted successfully.`);
   } catch (error) {
-    console.log(error);
+    console.log("Error deleting routine:", error);
   }
 }
 

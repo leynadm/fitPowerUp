@@ -86,7 +86,7 @@ function AddNewPresetRoutineModal({
       rDesc: workoutState.routineDescription,
       rBy: workoutState.routineBy,
       rLink: workoutState.routineLinkReference,
-      del: true,
+      del: false,
       rWorkouts: [],
       rImg:"r-def",
       multi: workoutState.multi,
