@@ -1,8 +1,11 @@
 {
   "projects": {
     "default": "fitpowerup-2bbc8",
-    "deploying": "fitpowerup-2bbc8"
+    "deploying": "fitpowerup-2bbc8",
+    "staging": "fitpowerup-2bbc8",
+    "fitpowerup": "fitpowerup-2bbc8"
   },
   "targets": {},
-  "etags": {}
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
