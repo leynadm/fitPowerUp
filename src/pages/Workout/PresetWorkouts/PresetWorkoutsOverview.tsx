@@ -297,8 +297,6 @@ function PresetWorkoutsOverview() {
 export default PresetWorkoutsOverview;
 
 export function getWorkouts(presetWorkoutsData: IPresetWorkoutData[]) {
-  const tempWorkoutsArr = [];
-
   return [];
 }
 
