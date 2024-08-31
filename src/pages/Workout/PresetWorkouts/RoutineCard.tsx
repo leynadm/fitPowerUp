@@ -13,25 +13,24 @@ import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
 import { Skeleton } from "@mui/material";
 
 function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
-  const [imageURL, setImageURL] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [exerciseImagesSrc, setExerciseImagesSrc] = useState<string[]>([]);
+  const [exercisesLimitCheck, setExercisesLimitCheck] = useState(false);
 
   const uniqueStrings = Array.from(
-    new Set(routine.rWorkouts.flatMap((workout) => workout.wOvr))
-  );
-
-  console.log({uniqueStrings})
+    new Set(routine.rWorkouts.flatMap((workout) => workout.wOvr)));
 
   useEffect(() => {
-
-
     const fetchImageURL = async () => {
       let exerciseImageRef;
 
       const tempImagesLinkArr: string[] = [];
 
       for (let index = 0; index < uniqueStrings.length; index++) {
+        if (index > 5) {
+          setExercisesLimitCheck(true);
+          break;
+        }
+
         const exerciseName = uniqueStrings[index];
 
         exerciseImageRef = ref(
@@ -55,36 +54,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
     };
 
     fetchImageURL();
-
-
-    /* const fetchImageURL = async () => {
-      let exerciseImageRef;
-
-      if (routine.rImg !== "") {
-        exerciseImageRef = ref(
-          storage,
-          `assets/workout-and-routines/preset-thumbnails/${routine.rImg}.webp`
-        );
-      } else {
-        exerciseImageRef = ref(
-          storage,
-          `assets/workout-and-routines/preset-thumbnails/r-def.webp`
-        );
-      }
-
-      try {
-        const url = await getDownloadURL(exerciseImageRef);
-        setImageURL(url);
-      } catch (error) {
-        //toast.error("Oops, there was an error fetching the image!");
-        console.error("Error fetching image:", error);
-      } finally {
-        setIsLoading(false); // Stop loading whether there was an error or not
-      }
-    };
-
-    fetchImageURL(); */
-  }, []); // Dependency array includes index and userExercise
+  }, []); 
 
   const encodedParameter = encodeURIComponent(routine.rName);
 
@@ -93,12 +63,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   return (
     <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
       <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Typography
-          align="center"
-          color="#1c4595"
-          variant="h6"
-          gutterBottom
-        >
+        <Typography align="center" color="#1c4595" variant="h6" gutterBottom>
           {routine.rName}
         </Typography>
         <Typography
@@ -118,24 +83,22 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
           alignItems="center"
           flexDirection="column"
         >
-{/*           {imageURL === "" ? (
-            <Skeleton height={350} width="100%" />
-          ) : (
-            <>
-            <Typography color="text.secondary" fontSize="2rem">{routine.rWorkouts.length} Workouts</Typography>
-            </>
-
-          )} */}
           <Box display="flex" gap={1}>
-          <Typography color="text.secondary" fontSize="1.5rem">{routine.rWorkouts.length} Workouts</Typography>
-          <Typography color="text.secondary" fontSize="1.5rem"> - </Typography>
-          
-                      <Typography color="text.secondary" fontSize="1.5rem">{uniqueStrings.length} Exercises</Typography>
-          </Box>
-            
+            <Typography color="text.secondary" fontSize="1.5rem">
+              {routine.rWorkouts.length} Workouts
+            </Typography>
+            <Typography color="text.secondary" fontSize="1.5rem">
+              {" "}
+              -{" "}
+            </Typography>
 
-<Box
-width="100%"
+            <Typography color="text.secondary" fontSize="1.5rem">
+              {uniqueStrings.length} Exercises
+            </Typography>
+          </Box>
+
+          <Box
+            width="100%"
             display="grid"
             gridTemplateColumns={{
               xs: "repeat(3, 1fr)", // 3 columns on extra-small screens
@@ -143,8 +106,7 @@ width="100%"
             }}
             gap={1}
           >
-            
-{exerciseImagesSrc.length > 0
+            {exerciseImagesSrc.length > 0
               ? exerciseImagesSrc.map((imageSrc, index) => (
                   <Box
                     key={index}
@@ -164,7 +126,7 @@ width="100%"
                   </Box>
                 ))
               : Array.from({
-                  length: uniqueStrings.length,
+                  length: uniqueStrings.length>6?6:uniqueStrings.length,
                 }).map((_, index) => (
                   <Skeleton
                     key={index}
@@ -177,8 +139,11 @@ width="100%"
                   />
                 ))}
           </Box>
-
-
+          {exercisesLimitCheck && (
+            <Typography color="text.secondary" fontSize="1.5rem">
+              ...
+            </Typography>
+          )}
         </Box>
 
         <TextField
@@ -190,14 +155,13 @@ width="100%"
           InputProps={{
             readOnly: true,
             sx: {
-              fontFamily: 'Acme, Arial, sans-serif',
-              fontSize:"1rem",
-              padding:1  
-            
+              fontFamily: "Acme, Arial, sans-serif",
+              fontSize: "1rem",
+              padding: 1,
             },
           }}
           variant="filled"
-                />
+        />
       </CardContent>
       <CardActions
         sx={{
@@ -213,8 +177,7 @@ width="100%"
               state: { routine },
             })
           }
-
-          sx={{color:"text.secondary",fontSize:"1rem"}}
+          sx={{ color: "text.secondary", fontSize: "1rem" }}
         >
           Go To Routine
         </Button>
@@ -225,8 +188,8 @@ width="100%"
             component="a"
             target="_blank"
             href={routine.rLink}
-            sx={{color:"text.secondary",fontSize:"1rem"}}
->
+            sx={{ color: "text.secondary", fontSize: "1rem" }}
+          >
             Go To Source
           </Button>
         )}

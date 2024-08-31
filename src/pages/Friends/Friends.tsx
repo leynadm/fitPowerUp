@@ -95,7 +95,7 @@ function Friends() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleAccount}>Account</MenuItem>
-      <MenuItem onClick={handleProfile}>Profile</MenuItem>
+{/*       <MenuItem onClick={handleProfile}>Profile</MenuItem> */}
     </Menu>
   );
 
@@ -140,7 +140,7 @@ function Friends() {
         <p>Account</p>
       </MenuItem>
 
-      <MenuItem onClick={handleProfile}>
+{/*       <MenuItem onClick={handleProfile}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -151,7 +151,7 @@ function Friends() {
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
   );
 
@@ -185,7 +185,36 @@ function Friends() {
               fit<span style={{ color: "white" }}>PowerUp!</span>
             </Typography>
 
-            <SocialSearchBar />
+{/*             <SocialSearchBar /> */}
+              
+<Typography
+                variant="h6"
+                noWrap
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Fit World
+              </Typography>
+              <Typography
+                variant="h5"
+                noWrap
+                sx={{
+                  mr: 2,
+                  display: { xs: "flex", md: "none" },
+                  flexGrow: 1,
+                  letterSpacing: ".1rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Fit World
+              </Typography>
+
 {/* 
             <IconButton
               size="large"

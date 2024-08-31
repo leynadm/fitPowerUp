@@ -23,7 +23,6 @@ import formatTime from "../../utils/formatTime";
 import CompleteWorkoutModal from "./CompleteWorkoutModal";
 import getNewWorkoutExercises from "../../utils/IndexedDbCRUDFunctions/getNewWorkoutExercises";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
@@ -368,7 +367,7 @@ function NewWorkout({
                       {exercise.weight !== 0 && (
                         <Typography>
                           {`${exercise.weight.toFixed(2)} ${
-                            currentUserData.unitsSystem === "metric"
+                            currentUserData && currentUserData.unitsSystem === "metric"
                               ? "kg"
                               : "lbs"
                           }`}

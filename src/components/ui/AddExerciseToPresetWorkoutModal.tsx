@@ -179,7 +179,9 @@ function AddExerciseToPresetWorkoutModal({
         pt={2}
         onClick={() => handleTileClick(userExercise.name)}
       >
-        <Typography align="center" overflow="hidden">
+        <Typography align="center" overflow="hidden"
+        fontSize="1rem" color="text.secondary"
+        >
           {userExercise.name.toLocaleUpperCase()}
         </Typography>
 
@@ -214,7 +216,9 @@ function AddExerciseToPresetWorkoutModal({
         )}
 
         <Box display="flex" justifyContent="center" gap={1}>
-          <Typography variant="caption">
+          <Typography 
+          fontSize="1rem" color="text.secondary"
+          >
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>

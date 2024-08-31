@@ -169,7 +169,7 @@ function PostComment({
                 to={`/home/friends/results/u/${comment.userId}`}
                 style={{ textDecoration: "none", color: "black" }}
               > */}
-                <h6 style={{ margin: 0, textAlign: "left" }}>
+                <h6 style={{ margin: 0, textAlign: "left",fontFamily:"Acme" }}>
                   {comment.name} {comment.surname}
                 </h6>
                 {/* 
@@ -233,7 +233,7 @@ function PostComment({
                         id="input-with-sx"
                         label="Reply to the comment"
                         className="dbz-subvariant"
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%",fontFamily:"Acme" }}
                         size="small"
                         onChange={(e) => setReplyText(e.target.value)}
                         value={replyText}

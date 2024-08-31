@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { UserPresetWorkoutsDataContext } from "../../../context/UserPresetWorkouts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import IPresetWorkoutData from "../../../utils/interfaces/IPresetWorkoutsData";
 import WorkoutCard from "./WorkoutCard";
 import IconButton from "@mui/material/IconButton";
@@ -13,8 +13,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { TextField } from "@mui/material";
-import { ArrowBackIos, DeleteForever } from "@mui/icons-material";
+import {  ArrowBackIosNew, DeleteForever } from "@mui/icons-material";
 function RoutineCardDetails() {
   const location = useLocation();
 
@@ -33,14 +32,15 @@ function RoutineCardDetails() {
     number | null
   >(routine.multi ? 1 : 0);
 
-  console.log({ selectedWeekInterval });
   const handleWeekIntervalChange = (
     event: React.MouseEvent<HTMLElement>,
     newWeekInterval: number | null
   ) => {
+    
     if (newWeekInterval !== null) {
       setSelectedWeekInterval(newWeekInterval);
     }
+
   };
 
   return (
@@ -114,20 +114,6 @@ function RoutineCardDetails() {
               </Typography>
 
               <Box sx={{ marginLeft: "auto" }}>
-
-              <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={() =>
-                    navigate("new-preset-workout", { state: { routine } })
-                  }
-                >
-                  <ArrowBackIos sx={{ color: "white" }} />
-                </IconButton>
-
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -155,6 +141,17 @@ function RoutineCardDetails() {
                 >
                   <AddOutlinedIcon sx={{ color: "white" }} />
                 </IconButton>
+
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() => navigate("/home/workout/preset-workouts/")}
+                >
+                  <ArrowBackIosNew sx={{ color: "white" }} />
+                </IconButton>
               </Box>
             </Toolbar>
           </Container>
@@ -174,10 +171,9 @@ function RoutineCardDetails() {
           p: 1,
           borderRadius: 1,
           border: "1px solid black",
-        
         }}
-fontFamily="Acme"
-fontSize={18}
+        fontFamily="Acme"
+        fontSize={18}
       >
         {routine.rDesc}
       </Typography>
@@ -221,9 +217,14 @@ fontSize={18}
                   Week {selectedWeekInterval}
                 </Typography>
               )}
+
               {groupedWorkoutsArr[selectedWeekInterval].map(
                 (workout, workoutIndex) => (
-                  <WorkoutCard key={workoutIndex} workoutData={workout} routine={routine} />
+                  <WorkoutCard
+                    key={workoutIndex}
+                    workoutData={workout}
+                    routine={routine}
+                  />
                 )
               )}
             </Box>
@@ -250,7 +251,6 @@ fontSize={18}
           </Typography>
         </Box>
       )}
-
     </Box>
   );
 }
@@ -259,9 +259,6 @@ export default RoutineCardDetails;
 
 function groupWorkoutsByWeekInterval(workouts: IPresetWorkoutData[]) {
   if (workouts.length === 0) return [];
-
-  // Log the objects to verify the structure
-  console.log("Workouts:", workouts);
 
   const groupedWorkoutsByWeekInterval = workouts.reduce((acc, workout) => {
     const key = workout.wInt;
@@ -282,8 +279,6 @@ function groupWorkoutsByWeekInterval(workouts: IPresetWorkoutData[]) {
 
     return acc;
   }, {} as Record<number, IPresetWorkoutData[]>); // Use number type for keys
-
-  console.log("Grouped Workouts:", groupedWorkoutsByWeekInterval);
 
   return groupedWorkoutsByWeekInterval;
 }

@@ -1,8 +1,7 @@
 import { IWorkoutData } from "../../../interfaces/IUserTrainingData";
 import getFlattenedExerciseData from "../../utility/getFlattenedExerciseData";
-import groupDataByTimePeriodAverage from "../../utility/groupDataByTimePeriodAverage";
 import get1RepMaxForExercise from "../get1RepMaxForExercise";
-
+import groupDataByTimePeriodMax1RM from "../../utility/groupDataByTimePeriodDefault";
 function handleGet1RepMaxForExercise(
     userTrainingData: IWorkoutData[],
     exerciseName: string,
@@ -15,9 +14,10 @@ function handleGet1RepMaxForExercise(
       timeframe
     );
     const groupedData = flattenedData
-      ? groupDataByTimePeriodAverage(flattenedData, dataGroup)
+      ? groupDataByTimePeriodMax1RM(flattenedData, dataGroup)
       : [];
-    const modeledData = groupedData ? get1RepMaxForExercise(groupedData) : [];
+    console.log({groupedData})
+      const modeledData = groupedData ? get1RepMaxForExercise(groupedData) : [];
     return modeledData;
   }
 

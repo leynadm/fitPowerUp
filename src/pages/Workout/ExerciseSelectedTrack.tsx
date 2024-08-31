@@ -7,7 +7,6 @@ import Divider from "@mui/material/Divider";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
-import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CommentModal from "../../components/ui/CommentModal";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -29,10 +28,10 @@ import getExistingExercises from "../../utils/IndexedDbCRUDFunctions/selectedExe
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { validateIndexedDbEntry } from "../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { Chip } from "@mui/material";
+import getExerciseRepMaxOvr from "../../utils/firebaseDataFunctions/getExerciseRepMaxOvr";
 
+import Drawer from "@mui/material/Drawer";
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userTrainingData, refetchUserTrainingData } = useContext(
@@ -40,6 +39,13 @@ function ExerciseSelectedTrack() {
   );
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
+  );
+
+  const [performanceDetailsOpen, setPerformanceDetailsOpen] = useState(false);
+
+  const exerciseRepMaxOvr = getExerciseRepMaxOvr(
+    userTrainingData,
+    exerciseName
   );
 
   const { currentUserData } = useContext(AuthContext);
@@ -84,6 +90,10 @@ function ExerciseSelectedTrack() {
   );
   const [dropsetRenderTrigger, setDropsetRenderTrigger] = useState(0);
   //const [lastExercise, setLastExercise] = useState<Exercise | null>(null);
+
+  const togglePerformanceDetailsDrawer = (newOpen: boolean) => () => {
+    setPerformanceDetailsOpen(newOpen);
+  };
 
   const exerciseSelected =
     userExercisesLibrary.length > 0
@@ -711,6 +721,171 @@ function ExerciseSelectedTrack() {
     );
   }
 
+  const DrawerList = (
+    <Box role="presentation" onClick={togglePerformanceDetailsDrawer(false)}>
+      <Typography textAlign="center" color="text.secondary">
+        Historic Rep Max Performance
+      </Typography>
+      <Box
+        width="100%"
+        display="grid"
+        p={1}
+        gridTemplateColumns="1fr 1fr 1fr 1fr 1fr 1fr"
+        gap={1}
+        gridTemplateRows="1fr 4fr"
+      >
+        <Chip
+          variant="outlined"
+          sx={{ p: 0, m: 0 }}
+          size="small"
+          color="primary"
+          label="Time"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="1 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="3 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="5 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="8 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="10 RM"
+        />
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>1 m</Typography>
+          <Typography>6 m</Typography>
+          <Typography>1 y</Typography>
+          <Typography>All</Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["1RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["3RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["5RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["8RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["10RM"].toFixed(0)}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+
   return (
     <Container
       sx={{
@@ -737,21 +912,23 @@ function ExerciseSelectedTrack() {
         setIsAMRAP={setIsAMRAP}
       />
 
-      <Typography
-        sx={{
-          padding: {
-            xs: "0.25rem", // Padding for extra small screens
-            sm: "0.5rem", // Padding for small screens
-            md: "0.75rem", // Padding for medium screens
-            lg: "1.25rem", // Padding for large screens
-          },
-          textAlign: "center",
-        }}
-        variant="h6"
-        color="text.secondary"
-      >
-        {exerciseSelected.name.toLocaleUpperCase()}
-      </Typography>
+      <Button onClick={togglePerformanceDetailsDrawer(true)}>
+        <Typography
+          sx={{
+            padding: {
+              xs: "0.25rem", // Padding for extra small screens
+              sm: "0.5rem", // Padding for small screens
+              md: "0.75rem", // Padding for medium screens
+              lg: "1.25rem", // Padding for large screens
+            },
+            textAlign: "center",
+          }}
+          variant="h6"
+          color="text.secondary"
+        >
+          {exerciseSelected.name.toLocaleUpperCase()}
+        </Typography>
+      </Button>
 
       <Divider sx={{ width: "100vw" }} />
 
@@ -992,6 +1169,14 @@ function ExerciseSelectedTrack() {
         }
       )}
 
+      <Drawer
+        anchor="top"
+        open={performanceDetailsOpen}
+        onClose={togglePerformanceDetailsDrawer(false)}
+      >
+        {DrawerList}
+      </Drawer>
+
       <Box
         sx={{
           width: "100%",
@@ -1035,7 +1220,6 @@ function ExerciseSelectedTrack() {
                 display: "flex",
               }}
             >
-
               <IconButton
                 size="large"
                 aria-label="account of current user"

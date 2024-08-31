@@ -13,24 +13,13 @@ import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import capitalizeWords from "../../../utils/capitalizeWords";
 import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
+import { TextField } from "@mui/material";
 interface WorkoutCardProps {
   workoutData: IPresetWorkoutData;
-  routine:IPresetRoutineData
+  routine: IPresetRoutineData;
 }
 
-const styles = {
-  textOverflow: {
-    display: "-webkit-box",
-    WebkitBoxOrient: "vertical" as "vertical",
-    WebkitLineClamp: 3,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    fontWeight: 400,
-  },
-};
-
-function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
-  
+function WorkoutCard({ workoutData, routine }: WorkoutCardProps) {
   const navigate = useNavigate();
 
   const [exerciseImagesSrc, setExerciseImagesSrc] = useState<string[]>([]);
@@ -41,11 +30,7 @@ function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
 
       const tempImagesLinkArr: string[] = [];
 
-      for (
-        let index = 0;
-        index < workoutData.wOvr.length;
-        index++
-      ) {
+      for (let index = 0; index < workoutData.wOvr.length; index++) {
         const exerciseName = workoutData.wOvr[index];
 
         exerciseImageRef = ref(
@@ -72,7 +57,7 @@ function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
   }, [workoutData]); //
 
   return (
-    <Card elevation={4} sx={{ backgroundColor: "#fafafa",height:"100%" }} >
+    <Card elevation={4} sx={{ backgroundColor: "#fafafa", height: "100%" }}>
       <CardContent sx={{ pt: 0 }}>
         <Typography
           align="center"
@@ -82,13 +67,42 @@ function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
         >
           {capitalizeWords(workoutData.wName)}
         </Typography>
-        <Typography variant="caption">Workout Description</Typography>
-        <Typography style={styles.textOverflow as React.CSSProperties}>
+
+        {/*        <Typography
+          align="center"
+          color="text.secondary"
+          gutterBottom
+          noWrap
+    fontFamily="Acme"
+    
+>
           {workoutData.wDesc}
         </Typography>
+ */}
+
+        <TextField
+          id="outlined-read-only-input"
+          value={workoutData.wDesc}
+          multiline
+          maxRows={6}
+          fullWidth
+          InputLabelProps={{
+            style: {},
+          }}
+          InputProps={{
+            readOnly: true,
+            sx: {
+              fontFamily: "Acme, Arial, sans-serif",
+              padding: 1,
+            },
+          }}
+          variant="filled"
+        />
 
         <Box pt={1} display="flex" flexDirection="column">
-          <Typography variant="caption">Workout Exercises</Typography>
+          <Typography sx={{ color: "text.secondary", fontSize: "1rem" }}>
+            Workout Exercises
+          </Typography>
           <Box
             display="grid"
             gridTemplateColumns={{
@@ -139,14 +153,12 @@ function WorkoutCard({ workoutData,routine }: WorkoutCardProps) {
         }}
       >
         <Button
-
           onClick={() =>
             navigate(`workout-details/${workoutData.wName}`, {
-              state: { workoutData,routine },
+              state: { workoutData, routine },
             })
           }
-
-          sx={{color:"#1c4595"}}
+          sx={{ color: "text.secondary", fontSize: "1rem" }}
         >
           Go To Workout
         </Button>

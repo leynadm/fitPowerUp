@@ -77,11 +77,10 @@ function TermsAndConditions() {
           justifyContent: "center",
           marginBottom: "56px", // Add
         }}
-        className="secondary-font"
-        fontFamily="Arial"
-        fontSize="1rem"
+        fontFamily="Acme"
+        fontSize="1.25rem"
       >
-        <Typography variant="h6">Terms and Conditions</Typography>
+        <Typography>Terms and Conditions</Typography>
         
         <span>
           Welcome to <strong>fitPowerUp</strong>!

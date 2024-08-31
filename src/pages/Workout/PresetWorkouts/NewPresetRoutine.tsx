@@ -154,6 +154,7 @@ function NewPresetRoutine() {
                   color: "inherit",
                   textDecoration: "none",
                 }}
+
               >
                 Add New Routine
               </Typography>
@@ -222,7 +223,7 @@ function NewPresetRoutine() {
           pb="72px"
         >
           <Paper sx={{ padding: 1, mt: 1, mb: 1 }} elevation={2}>
-            <Typography fontSize="small">
+            <Typography  fontFamily="Acme">
               A routine can contain multiple workouts, with workouts that can be
               distributed across multiple weeks.
               <br />
@@ -237,6 +238,11 @@ function NewPresetRoutine() {
             id="routineName"
             label="New Routine Name"
             variant="outlined"
+            InputProps={{
+              sx:{
+                fontFamily:"Acme"
+              }
+            }}
             placeholder="Add your routine name"
             required
             onChange={handleWorkoutNameChange}
@@ -254,6 +260,11 @@ function NewPresetRoutine() {
             required
             multiline
             rows={3}
+            InputProps={{
+              sx:{
+                fontFamily:"Acme"
+              }
+            }}
             onChange={handleFieldChange}
             value={workoutState.routineDescription}
           />
@@ -263,6 +274,11 @@ function NewPresetRoutine() {
             id="routineBy"
             label="Routine Created By"
             variant="outlined"
+            InputProps={{
+              sx:{
+                fontFamily:"Acme"
+              }
+            }}
             inputProps={{ maxLength: 48 }}
             placeholder="Add the name of the creator of this routine"
             required
@@ -278,10 +294,15 @@ function NewPresetRoutine() {
             inputProps={{ maxLength: 256 }}
             placeholder="Link external sources for this routine"
             onChange={handleFieldChange}
+            InputProps={{
+              sx:{
+                fontFamily:"Acme"
+              }
+            }}
             value={workoutState.routineLinkReference}
           />
 
-          <Typography fontSize="small" textAlign="center">
+          <Typography textAlign="center" fontFamily="Acme">
             Toggle the button below if your routine has different workouts
             across multiple weeks
           </Typography>
@@ -289,9 +310,11 @@ function NewPresetRoutine() {
             control={<Switch />}
             checked={workoutState.multi}
             onChange={handleSwitchChange} // Passing additional value
-            label={
+            
+            label={            
               workoutState.multi ? "Multi-week Routine" : "Standard Routine"
             }
+            
           />
         </Box>
       </Box>

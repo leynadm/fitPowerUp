@@ -1,22 +1,24 @@
 import { format, getISOWeek } from "date-fns";
 import { Exercise } from "../../interfaces/IUserTrainingData";
-function groupDataByTimePeriodMax(
+
+function groupDataByTimePeriodMax1RM(
   flattenedData: Exercise[],
   timePeriod: string
 ) {
   const groupedData: {
     date: string;
-    maxWeight: number;
-    maxReps: number;
-    maxDistance: number;
-    maxTime: number;
+    weight: number;
+    reps: number;
+    distance: number;
+    time: number;
     count: number;
   }[] = [];
 
-  flattenedData.forEach((exercise: Exercise, index: number) => {
+  flattenedData.forEach((exercise: Exercise) => {
     const date = new Date(exercise.date);
     let key: string = "";
 
+    // Determine the grouping key based on the time period
     if (timePeriod === "week") {
       const weekNumber = getISOWeek(date);
       key = `WK${weekNumber}-${format(date, "yyyy")}`;
@@ -32,38 +34,36 @@ function groupDataByTimePeriodMax(
       key = customDateKey;
     }
 
+    // Calculate the 1RM using the Epley formula
+    const calculated1RM = exercise.weight * (1 + exercise.reps / 30);
+
     let groupedExercise = groupedData.find((group) => group.date === key);
 
     if (!groupedExercise) {
+      // Initialize a new group if it doesn't exist
       groupedExercise = {
         date: key,
-        maxWeight: 0,
-        maxReps: 0,
-        maxDistance: 0,
-        maxTime: 0,
-        count: 0,
+        weight: exercise.weight,
+        reps: exercise.reps,
+        distance: exercise.distance,
+        time: exercise.time,
+        count: 1,
       };
       groupedData.push(groupedExercise);
+    } else {
+      // Update the group only if the new 1RM is higher
+      const existing1RM = groupedExercise.weight * (1 + groupedExercise.reps / 30);
+      if (calculated1RM > existing1RM) {
+        groupedExercise.weight = exercise.weight;
+        groupedExercise.reps = exercise.reps;
+        groupedExercise.distance = exercise.distance;
+        groupedExercise.time = exercise.time;
+      }
+      groupedExercise.count += 1; // Update count
     }
-
-    // Update maximum values for exercise properties
-    if (exercise.weight > groupedExercise.maxWeight) {
-      groupedExercise.maxWeight = exercise.weight;
-    }
-    if (exercise.reps > groupedExercise.maxReps) {
-      groupedExercise.maxReps = exercise.reps;
-    }
-    if (exercise.distance > groupedExercise.maxDistance) {
-      groupedExercise.maxDistance = exercise.distance;
-    }
-    if (exercise.time > groupedExercise.maxTime) {
-      groupedExercise.maxTime = exercise.time;
-    }
-    const count = groupedExercise.count || 0;
-    groupedExercise.count = count + 1;
   });
 
   return groupedData;
 }
 
-export default groupDataByTimePeriodMax;
+export default groupDataByTimePeriodMax1RM;

@@ -514,8 +514,8 @@ function UserProfile() {
         variant="outlined"
         size="small"
         InputProps={{
-          style: { borderRadius: 30, textAlign: "center" },
-          readOnly: true,
+          style: { borderRadius: 30, textAlign: "center",fontFamily:"Acme" },
+          readOnly: true,          
         }}
         sx={{ textAlign: "center", padding: 1 }}
         fullWidth

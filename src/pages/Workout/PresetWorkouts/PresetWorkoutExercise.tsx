@@ -20,7 +20,6 @@ import { UserTrainingDataContext } from "../../../context/UserTrainingData";
 import { UserExercisesLibraryContext } from "../../../context/UserExercisesLibrary";
 import { AuthContext } from "../../../context/Auth";
 import { AppBar, Toolbar } from "@mui/material";
-import AddHomeIcon from "@mui/icons-material/AddHome";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useNavigate } from "react-router-dom";
 import {
@@ -34,6 +33,10 @@ import getExistingPresetExerciseComment from "../../../utils/IndexedDbCRUDFuncti
 import getExistingPresetExercises from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExercises";
 import { validateIndexedDbEntry } from "../../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
 import { useLocation } from "react-router-dom";
+import { ArrowBackIosNew } from "@mui/icons-material";
+import Drawer from "@mui/material/Drawer";
+import { Chip } from "@mui/material";
+import getExerciseRepMaxOvr from "../../../utils/firebaseDataFunctions/getExerciseRepMaxOvr";
 
 function PresetWorkoutExercise() {
   const { exerciseName } = useParams();
@@ -41,12 +44,21 @@ function PresetWorkoutExercise() {
 
   const location = useLocation();
   const routine = location.state.routine;
+  
 
   const encodedParameter = encodeURIComponent(routine.rName);
 
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
+  
+  const exerciseRepMaxOvr = getExerciseRepMaxOvr(
+    userTrainingData,
+    exerciseName
+  );
+  const [performanceDetailsOpen, setPerformanceDetailsOpen] = useState(false);
+
+
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
   );
@@ -735,6 +747,175 @@ function PresetWorkoutExercise() {
     navigate(navigationUrl, { state: { routine } });
   };
 
+  const togglePerformanceDetailsDrawer = (newOpen: boolean) => () => {
+    setPerformanceDetailsOpen(newOpen);
+  };
+
+  const DrawerList = (
+    <Box role="presentation" onClick={togglePerformanceDetailsDrawer(false)}>
+      <Typography textAlign="center" color="text.secondary">
+        Historic Rep Max Performance
+      </Typography>
+      <Box
+        width="100%"
+        display="grid"
+        p={1}
+        gridTemplateColumns="1fr 1fr 1fr 1fr 1fr 1fr"
+        gap={1}
+        gridTemplateRows="1fr 4fr"
+      >
+        <Chip
+          variant="outlined"
+          sx={{ p: 0, m: 0 }}
+          size="small"
+          color="primary"
+          label="Time"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="1 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="3 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="5 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="8 RM"
+        />
+        <Chip
+          variant="filled"
+          sx={{ p: 0, m: 0, color: "orange" }}
+          size="small"
+          color="primary"
+          label="10 RM"
+        />
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>1 m</Typography>
+          <Typography>6 m</Typography>
+          <Typography>1 y</Typography>
+          <Typography>All</Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["1RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["1RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["3RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["3RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["5RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["5RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["8RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["8RM"].toFixed(0)}
+          </Typography>
+        </Box>
+
+        <Box
+          display="grid"
+          justifyContent="center"
+          gridTemplateRows="1fr 1fr 1fr 1fr"
+        >
+          <Typography>
+            {exerciseRepMaxOvr?.["1 month"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["6 months"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["1 year"]["10RM"].toFixed(0)}
+          </Typography>
+          <Typography>
+            {exerciseRepMaxOvr?.["all time"]["10RM"].toFixed(0)}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+
   return (
     <Container
       sx={{
@@ -760,20 +941,23 @@ function PresetWorkoutExercise() {
         isAMRAP={isAMRAP}
       />
 
-      <Typography
-        sx={{
-          padding: {
-            xs: "0.25rem", // Padding for extra small screens
-            sm: "0.5rem", // Padding for small screens
-            md: "0.75rem", // Padding for medium screens
-            lg: "1.25rem", // Padding for large screens
-          },
-          textAlign: "center",
-        }}
-        variant="h6"
-      >
-        {exerciseSelected.name.toLocaleUpperCase()}
-      </Typography>
+<Button onClick={togglePerformanceDetailsDrawer(true)}>
+        <Typography
+          sx={{
+            padding: {
+              xs: "0.25rem", // Padding for extra small screens
+              sm: "0.5rem", // Padding for small screens
+              md: "0.75rem", // Padding for medium screens
+              lg: "1.25rem", // Padding for large screens
+            },
+            textAlign: "center",
+          }}
+          variant="h6"
+          color="text.secondary"
+        >
+          {exerciseSelected.name.toLocaleUpperCase()}
+        </Typography>
+      </Button>
 
       <AppBar
         elevation={2}
@@ -835,7 +1019,7 @@ function PresetWorkoutExercise() {
                   color="inherit"
                   onClick={handleNewWorkout}
                 >
-                  <AddHomeIcon />
+                  <ArrowBackIosNew />
                 </IconButton>
               </Box>
             </Box>
@@ -1082,6 +1266,14 @@ function PresetWorkoutExercise() {
         }
       )}
 
+<Drawer
+        anchor="top"
+        open={performanceDetailsOpen}
+        onClose={togglePerformanceDetailsDrawer(false)}
+      >
+        {DrawerList}
+      </Drawer>
+      
       <Box
         sx={{
           width: "100%",

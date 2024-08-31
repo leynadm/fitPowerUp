@@ -1,38 +1,39 @@
 function get1RepMaxForExercise(
-    groupedData: {
+  groupedData: {
+    date: string;
+    weight: number;
+    reps: number;
+    distance: number;
+    time: number;
+    count: number;
+  }[]
+) {
+  const exerciseData: { exerciseDate: string; value: number }[] = [];
+
+  groupedData.forEach(
+    (exercise: {
       date: string;
-      averageWeight: number;
-      averageReps: number;
-      averageDistance: number;
-      averageTime: number;
+      weight: number;
+      reps: number;
+      distance: number;
+      time: number;
       count: number;
-    }[]
-  ) {
-    const exerciseData: { exerciseDate: string; value: number }[] = [];
+    }) => {
+      const reps = exercise.reps;
+      const weight = exercise.weight;
+      const exerciseDate = exercise.date;
 
-    groupedData.forEach(
-      (exercise: {
-        date: string;
-        averageWeight: number;
-        averageReps: number;
-        averageDistance: number;
-        averageTime: number;
-        count: number;
-      }) => {
-        const avgReps = exercise.averageReps;
-        const avgWeight = exercise.averageWeight;
-        const exerciseDate = exercise.date;
-
-        if (avgReps > 0 && avgWeight > 0) {
-          const value = parseFloat(
-            (avgWeight * (1 + 0.0333 * avgReps)).toFixed(1)
-          );
-          exerciseData.push({ exerciseDate, value });
-        }
+      if (reps > 0 && weight > 0) {
+        // Calculate the 1RM using the Brzycki formula and format to one decimal place
+        const value = parseFloat(
+          (weight / (1.0278 - 0.0278 * reps)).toFixed(1)
+        );
+        exerciseData.push({ exerciseDate, value });
       }
-    );
+    }
+  );
 
-    return exerciseData;
-  }
+  return exerciseData;
+}
 
-  export default get1RepMaxForExercise
+export default get1RepMaxForExercise;

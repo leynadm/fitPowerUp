@@ -16,6 +16,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteRoutineOrWorkoutModal from "../../../components/ui/DeleteRoutineOrWorkoutModal";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ArrowBackIos } from "@mui/icons-material";
 
 function StandaloneWorkoutDetails() {
   const location = useLocation();
@@ -146,16 +147,18 @@ function StandaloneWorkoutDetails() {
                 variant="h5"
                 noWrap
                 sx={{
-                  mr: 2,
+                  mr: 0,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  letterSpacing: ".1rem",
+                  letterSpacing: ".0rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
               >
                 Workout Details
               </Typography>
+
+
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
                 {workoutData && workoutData.del && (
@@ -183,6 +186,20 @@ function StandaloneWorkoutDetails() {
                     <ContentCopyIcon sx={{ color: "white" }} />
                   </IconButton>
                 </Box>
+
+                               <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    navigate("/home/workout/preset-workouts/")
+                  }
+                >
+                  <ArrowBackIos sx={{ color: "white" }} />
+                </IconButton> 
+
               </Box>
             </Toolbar>
           </Container>
@@ -207,7 +224,7 @@ function StandaloneWorkoutDetails() {
         <Typography sx={{fontSize:"1rem",color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
-        <Typography sx={{fontFamily:"Acme"}}>{workoutData.wDesc}</Typography>
+        <Typography sx={{fontFamily:"Acme",fontSize:"1rem"}}>{workoutData.wDesc}</Typography>
       </Box>
     </Box>
   );

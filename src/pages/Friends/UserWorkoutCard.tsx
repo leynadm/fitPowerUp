@@ -542,7 +542,7 @@ export default function UserWorkoutCard({
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ whiteSpace: "pre-line" }}
+            sx={{ whiteSpace: "pre-line",fontFamily:"Acme",fontSize:"1rem",fontWeight:"500" }}
           >
             {postText}
           </Typography>

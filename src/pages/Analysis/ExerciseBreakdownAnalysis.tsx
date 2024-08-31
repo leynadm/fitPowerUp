@@ -354,8 +354,8 @@ function ExerciseBreakdownAnalysis() {
       ) : muscleGroupChart ? (
         <ResponsiveContainer minHeight="500px">
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
-            <PolarGrid />
-            <PolarAngleAxis dataKey="exerciseMuscleGroup" fontSize={12} />
+            <PolarGrid  />
+            <PolarAngleAxis dataKey="exerciseMuscleGroup" fontFamily="LuckiestGuy" fontSize={16} />
             <PolarRadiusAxis
               fontSize={14}
               tickFormatter={(value) =>
@@ -393,11 +393,11 @@ function ExerciseBreakdownAnalysis() {
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Category</TableCell>
-                <TableCell align="right">Value</TableCell>
-                <TableCell align="center">Measure</TableCell>
-                <TableCell align="right">%</TableCell> {/* New column */}
+              <TableRow sx={{color:"text.secondary"}}>
+                <TableCell sx={{color:"text.secondary"}} >Category</TableCell>
+                <TableCell sx={{color:"text.secondary"}} align="right">Value</TableCell>
+                <TableCell sx={{color:"text.secondary"}} align="center">Measure</TableCell>
+                <TableCell sx={{color:"text.secondary"}} align="right">%</TableCell> {/* New column */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -418,17 +418,17 @@ function ExerciseBreakdownAnalysis() {
                       key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row" align="left">
+                      <TableCell component="th" scope="row" align="left" sx={{color:"text.secondary"}}>
                         {entry.exerciseMuscleGroup
                           ? capitalizeWords(entry.exerciseMuscleGroup)
                           : capitalizeWords(entry.name)}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{color:"text.secondary"}}>
                         {formatNumberWithComma(entry.value)}
                       </TableCell>
 
-                      <TableCell align="center">
+                      <TableCell align="center" sx={{color:"text.secondary"}}>
                         {selectedKPI === "Training Volume by Muscle Group"
                           ? currentUserData.unitsSystem === "metric"
                             ? "kg"
@@ -450,7 +450,7 @@ function ExerciseBreakdownAnalysis() {
                           : "value"}
                       </TableCell>
 
-                      <TableCell align="right">{percentage}%</TableCell>
+                      <TableCell align="right" sx={{color:"text.secondary"}}>{percentage}%</TableCell>
                     </TableRow>
                   );
                 })}

@@ -216,8 +216,8 @@ export default function SignIn() {
             }}
             onClick={SignInWithGoogle}
           >
-            <GoogleIcon fontSize="large" />
-            <span style={{ textAlign: "center" }}>LOG IN WITH GOOGLE</span>
+            <GoogleIcon fontSize="medium" sx={{alignSelf:"center",pb:0.5}}  />
+            <span style={{ textAlign: "center",fontFamily:"LuckiestGuy" }}>LOG IN WITH GOOGLE</span>
           </Button>
 
           <Grid container>

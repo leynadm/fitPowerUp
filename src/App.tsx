@@ -286,19 +286,19 @@ function App() {
 
     typography: {
       fontFamily: "LuckiestGuy, Arial, sans-serif", // Default font
-      
+
       button: {
         fontWeight: "lighter",
       },
-    
+
       h1: {
         fontFamily: "LuckiestGuy, Arial, sans-serif", // Specific font for headers
       },
-      
+
       h2: {
         fontFamily: "LuckiestGuy, Arial, sans-serif", // Specific font for headers
       },
-      
+
       body1: {
         fontFamily: "LuckiestGuy, Arial, sans-serif", // Body text using 'Saiyan' font
       },
@@ -309,7 +309,15 @@ function App() {
   return (
     <ThemeProvider theme={DBZTheme}>
       <div className="App">
-        <Toaster position="top-center" />
+        <Toaster
+          toastOptions={{
+            style: {
+              fontFamily: "LuckiestGuy",
+              textAlign: "center",
+            },
+          }}
+          position="top-center"
+        />
 
         <AuthProvider>
           <Router>

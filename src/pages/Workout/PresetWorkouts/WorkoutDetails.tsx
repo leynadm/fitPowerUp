@@ -16,6 +16,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteRoutineOrWorkoutModal from "../../../components/ui/DeleteRoutineOrWorkoutModal";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ArrowBackIos, ArrowBackIosNew } from "@mui/icons-material";
 
 function WorkoutDetails() {
   const location = useLocation();
@@ -25,6 +26,8 @@ function WorkoutDetails() {
 
   console.log(location.state);
   console.log(workoutData);
+
+  const encodedRoutine = encodeURIComponent(routine.rName)
 
   const navigate = useNavigate();
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
@@ -150,10 +153,10 @@ function WorkoutDetails() {
                 variant="h5"
                 noWrap
                 sx={{
-                  mr: 2,
+                  mr: 0,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  letterSpacing: ".1rem",
+                  letterSpacing: ".0rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
@@ -162,6 +165,9 @@ function WorkoutDetails() {
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
+                
+ 
+
                 {workoutData && workoutData.del && (
                   <IconButton
                     size="large"
@@ -186,6 +192,19 @@ function WorkoutDetails() {
                   >
                     <ContentCopyIcon sx={{ color: "white" }} />
                   </IconButton>
+
+                  <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    navigate(`/home/workout/preset-workouts/preset-routine-details/${encodedRoutine}`,{state:{routine}})
+                  }
+                >
+                  <ArrowBackIosNew sx={{ color: "white" }} />
+                </IconButton>
                 </Box>
               </Box>
             </Toolbar>
@@ -193,7 +212,7 @@ function WorkoutDetails() {
         </AppBar>
       </Box>
 
-      <Box pb="56px">
+      <Box >
         <Typography
           align="center"
           color="text.secondary"
@@ -211,7 +230,7 @@ function WorkoutDetails() {
         <Typography sx={{fontSize:"1.25rem",color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
-        <Typography>{workoutData.wDesc}</Typography>
+        <Typography sx={{fontSize:"1.25rem",color:"text.secondary"}} fontFamily="Acme">{workoutData.wDesc}</Typography>
       </Box>
     </Box>
   );

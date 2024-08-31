@@ -33,6 +33,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { ArrowBackIosNew } from "@mui/icons-material";
 
 function NewPresetWorkoutForRoutine() {
 
@@ -40,18 +41,10 @@ function NewPresetWorkoutForRoutine() {
 
   const { routineName } = useParams();
 
-
   const location = useLocation();
   const routine = location.state.routine;
-  console.log('inside newpresetworkoutforroutine:')
   
   const encodedParameter = encodeURIComponent(routine.rName);
-
-
-  console.log({routine})
-  
-  console.log('loggin routine')
-  console.log(routine)
 
   const { currentUserData } = useContext(AuthContext);
   const [existingExercises, setExistingExercises] = useState<
@@ -65,20 +58,10 @@ function NewPresetWorkoutForRoutine() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log('logging search params:')
-  console.log({searchParams})
   const [
     openAddNewPresetWorkoutForRoutineModal,
     setOpenAddNewPresetWorkoutForRoutineModal,
   ] = useState(false);
-
-/*   const [workoutState, setWorkoutState] = useState({
-    workoutName: searchParams.get("workoutName") || "",
-    workoutDescription: searchParams.get("workoutDescription") || "",
-    workoutLinkReference: searchParams.get("workoutLinkReference") || "",
-    weekInterval: searchParams.get("weekInterval") || "",
-    routineName: "123",
-  }); */
 
   const [workoutState, setWorkoutState] = useState({
     workoutName:  "",
@@ -138,7 +121,7 @@ function NewPresetWorkoutForRoutine() {
     exerciseGroup: string
   ) => {
     // Create the navigation URL, appending the search parameters
-    const navigationUrl = `home/workout/preset-workouts/preset-routine-details/${encodedParameter}/new-preset-workout`;
+    const navigationUrl = `/home/workout/preset-workouts/preset-routine-details/${encodedParameter}/new-preset-workout/preset-workout-exercise/${exerciseName}`;
 
     // Navigate to the new URL with the search parameters
     navigate(navigationUrl, { state: { routine } });
@@ -219,7 +202,7 @@ function NewPresetWorkoutForRoutine() {
                 variant="h5"
                 noWrap
                 sx={{
-                  mr: 1,
+                  mr: 0,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
                   letterSpacing: ".0rem",
@@ -227,15 +210,19 @@ function NewPresetWorkoutForRoutine() {
                   textDecoration: "none",
                 }}
               >
-                Add Workout to Routine
+                Add W to Routine
               </Typography>
               <Box
                 sx={{
                   flexGrow: 1,
                   display: "flex",
-                  flexDirection: "row-reverse",
+                  flexDirection: "row",
+                  alignItems:"flex-end",
+                  justifyContent:"flex-end"
                 }}
               >
+
+
                 {existingExercises.length > 0 &&
                   isDataValidated() &&
                   workoutState.workoutName !== "" && (
@@ -254,6 +241,22 @@ function NewPresetWorkoutForRoutine() {
                       <DoneOutlineIcon sx={{ color: "white" }} />
                     </IconButton>
                   )}
+
+<IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={() =>
+                    navigate(`/home/workout/preset-workouts/preset-routine-details/${encodedParameter}`,{state:{routine}})
+                  }
+                >
+                  <ArrowBackIosNew sx={{ color: "white" }} />
+                </IconButton>
+
+
+
               </Box>
             </Toolbar>
           </Container>

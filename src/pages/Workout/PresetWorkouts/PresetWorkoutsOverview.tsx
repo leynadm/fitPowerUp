@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
 import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
 import IPresetStandaloneWorkout from "../../../utils/interfaces/IPresetStandaloneWorkout";
+import { Button } from "@mui/material";
 
 export interface IPresetRoutine {
   routineName: string;
@@ -58,14 +59,40 @@ function PresetWorkoutsOverview() {
   }, []);
 
   console.log({ presetWorkoutsData });
-  const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // The '2' argument adds indentation for readability
 
-  const blob = new Blob([jsonString], { type: "application/json" });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "myData.json"; // Filename for the downloaded file
+  function handleDownload() {
+    // Convert presetWorkoutsData to a JSON string
+    const jsonString = JSON.stringify(presetWorkoutsData, null, 2); // Pretty print with indentation
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+  
+    // Create and click a download link for workouts
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "workout.json"; // Filename for the workouts file
+    document.body.appendChild(link);
+    link.click(); // Programmatically click the link to start the download
+    document.body.removeChild(link); // Clean up the DOM
+    URL.revokeObjectURL(url); // Release the memory
+  
+    // Convert presetRoutinesData to a JSON string
+    const jsonStringRoutines = JSON.stringify(presetRoutinesData, null, 2); // Pretty print with indentation
+    const blobRoutines = new Blob([jsonStringRoutines], { type: "application/json" });
+    const urlRoutines = URL.createObjectURL(blobRoutines);
+  
+    // Create and click a download link for routines
+    const linkRoutines = document.createElement("a");
+    linkRoutines.href = urlRoutines;
+    linkRoutines.download = "routines.json"; // Filename for the routines file
+    document.body.appendChild(linkRoutines);
+    linkRoutines.click(); // Programmatically click the link to start the download
+    document.body.removeChild(linkRoutines); // Clean up the DOM
+    URL.revokeObjectURL(urlRoutines); // Release the memory
+  }
+  
+  // In your React component
+  <Button onClick={handleDownload}>Test Download</Button>
+  
 
   const [selectedCategory, setSelectedCategory] = useState("routines"); // default value
 
@@ -145,7 +172,7 @@ function PresetWorkoutsOverview() {
                   mr: 2,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  letterSpacing: ".1rem",
+                  letterSpacing: ".0rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
@@ -261,6 +288,8 @@ function PresetWorkoutsOverview() {
           </Typography>
         </Box>
       ) : null}
+
+{/*       <Button onClick={handleDownload}>Test Download</Button> */}
     </Box>
   );
 }

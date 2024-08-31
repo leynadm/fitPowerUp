@@ -18,10 +18,12 @@ function PresetWorkouts() {
           element={<NewPresetWorkoutForRoutine />}
         />
         <Route path="" element={<PresetWorkoutsOverview />} />
+
         <Route
           path="new-preset-workout/standalone-workout-exercise/:exerciseName"
           element={<StandaloneWorkoutExercise />}
         />
+
         <Route
           path="preset-routine-details/:routineName/new-preset-workout/preset-workout-exercise/:exerciseName"
           element={<PresetWorkoutExercise />}
