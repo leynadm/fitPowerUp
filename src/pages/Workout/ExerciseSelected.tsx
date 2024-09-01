@@ -20,6 +20,7 @@ import { AuthContext } from "../../context/Auth";
 import addExerciseToFavorite from "../../utils/firebaseDataFunctions/addExerciseToFavorite";
 import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import toast from "react-hot-toast";
+import { ArrowBackIosNew } from "@mui/icons-material";
 function ExerciseSelected() {
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
@@ -110,7 +111,7 @@ function ExerciseSelected() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
 
-                letterSpacing: ".3rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -161,7 +162,10 @@ function ExerciseSelected() {
                 >
                   <AddHomeIcon />
                 </IconButton>
+              
               </Box>
+
+
             </Box>
           </Toolbar>
         </Container>

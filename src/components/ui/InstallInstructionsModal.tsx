@@ -12,6 +12,9 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { Padding } from "@mui/icons-material";
+import InstallMobileIcon from '@mui/icons-material/InstallMobile';
 interface BrowserInstructionUrls {
   firstImageLink: string;
   secondImageLink: string;
@@ -53,6 +56,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   boxShadow: 24,
+  width:"90%"
 };
 
 function InstallInstructionsModal({
@@ -77,36 +81,46 @@ function InstallInstructionsModal({
         sx={{ overflow: "scroll" }}
       >
         <Container sx={style}  maxWidth="md">
-        <IconButton aria-label="close-modal" sx={{alignSelf:"flex-end"}} onClick={handleClose}>
-        <CloseIcon />
-      </IconButton>
-          <ButtonGroup variant="contained" aria-label="outlined primary button group" fullWidth>
-            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Chrome")}>
-              <img src={ChromeIcon} alt="Chrome" />
-            </Button>
-            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Safari")}>
-              <img src={SafariIcon} alt="Safari" />
-            </Button>
-            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Firefox")}>
-              <img src={FirefoxIcon} alt="Firefox" />
-            </Button>
-            <Button sx={{background:"#520975"}} onClick={() => handleBrowserSelection("Edge")}>
-              <img src={EdgeIcon} alt="Edge" />
-            </Button>
-          </ButtonGroup>
 
-          <Typography align="center">
-            If the installation didn't start automatically, follow these steps to install the app:
+
+
+
+        <Box display="flex" justifyContent="center" alignItems="center">
+        <Typography fontSize="1.25rem" textAlign="center" alignSelf="flex-end" color="#1c4595">Install App</Typography>
+        <InstallMobileIcon fontSize="large" />
+        
+        </Box>
+
+
+          <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                gap={2}
+                padding={2}
+              >
+            <Typography fontSize="1.25rem"  fontFamily="Acme" align="center">
+            Install the app for a quicker access.
           </Typography>
 
-          {selectedBrowser && browserInstructions[selectedBrowser] && (
-            <BrowserTile
-              firstImageLink={browserInstructions[selectedBrowser].firstImageLink}
-              secondImageLink={browserInstructions[selectedBrowser].secondImageLink}
-              thirdImageLink={browserInstructions[selectedBrowser].thirdImageLink}
-              browser={selectedBrowser}
-            />
-          )}
+                <Box
+                  display="flex"
+                  gap={1}
+                  alignItems="center"
+                  justifyContent="center"
+                  fontFamily="Acme"
+                  fontSize="1.25rem"
+                >
+                  Just tap <MoreHorizIcon fontSize="large" />and<span style={{ fontWeight: "bold" }}>Install App</span>
+                </Box>
+              </Box>
+
+
+
+
+
+    
         </Container>
       </Modal>
     </div>

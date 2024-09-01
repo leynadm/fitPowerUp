@@ -542,7 +542,7 @@ function CompletedWorkouts() {
                       />
                     </AccordionSummary>
                     <AccordionDetails sx={{ pb: 0, pt: 0 }}>
-                      <Typography>"{entry.wEval.comment}"</Typography>
+                      <Typography color="text.secondary">"{entry.wEval.comment}"</Typography>
                       <Box>
                         <FormGroup>
                           <FormControlLabel
@@ -550,18 +550,33 @@ function CompletedWorkouts() {
                               <Checkbox checked={entry.wEval.trainHarder} />
                             }
                             label="I trained harder than last time"
+                            sx={{
+                              '& .MuiFormControlLabel-label': {
+                                color: 'text.secondary',
+                              },
+                            }}
                           />
                           <FormControlLabel
                             control={
                               <Checkbox checked={entry.wEval.warmStretch} />
                             }
                             label="I stretched and warmed up properly"
+                            sx={{
+                              '& .MuiFormControlLabel-label': {
+                                color: 'text.secondary',
+                              },
+                            }}
                           />
                           <FormControlLabel
                             control={
                               <Checkbox checked={entry.wEval.feelPain} />
                             }
                             label="I didn't feel unusual or unwanted pain"
+                            sx={{
+                              '& .MuiFormControlLabel-label': {
+                                color: 'text.secondary',
+                              },
+                            }}
                           />
                         </FormGroup>
                       </Box>

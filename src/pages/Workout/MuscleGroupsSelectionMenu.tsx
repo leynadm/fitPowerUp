@@ -23,6 +23,7 @@ import { useSearchParams } from "react-router-dom";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { ArrowBackIosNew } from "@mui/icons-material";
 function MuscleGroupsSelectionMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -154,7 +155,7 @@ function MuscleGroupsSelectionMenu() {
         pt={2}
         onClick={() => handleTileClick(userExercise.name, userExercise.group)}
       >
-        <Typography align="center">
+        <Typography color="text.secondary" fontSize="1.15rem" align="center">
           {userExercise.name.toLocaleUpperCase()}
         </Typography>
 
@@ -190,7 +191,7 @@ function MuscleGroupsSelectionMenu() {
         )}
 
         <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-          <Typography variant="subtitle2">
+          <Typography color="text.secondary" variant="subtitle2">
             {userExercise.type.toLocaleUpperCase()}
           </Typography>
         </Box>
@@ -248,8 +249,7 @@ function MuscleGroupsSelectionMenu() {
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-
-                letterSpacing: ".1rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -282,6 +282,18 @@ function MuscleGroupsSelectionMenu() {
               >
                 <AddBoxIcon />
               </IconButton>
+
+              <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={()=>navigate("/home/workout/new")}
+                >
+                  <ArrowBackIosNew />
+                </IconButton>
+
             </Box>
           </Toolbar>
         </Container>
@@ -314,7 +326,7 @@ function MuscleGroupsSelectionMenu() {
                   onClick={() => handleMuscleGroupClick(muscleGroup)}
                   sx={{ paddingLeft: "1rem" }}
                 >
-                  <Typography>{muscleGroup.toLocaleUpperCase()}</Typography>
+                  <Typography color="text.secondary" fontSize="1.15rem">{muscleGroup.toLocaleUpperCase()}</Typography>
                 </IconButton>
 
 {/*                 <IconButton

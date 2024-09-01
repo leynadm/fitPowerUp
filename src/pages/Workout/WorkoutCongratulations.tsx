@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import { Box } from "@mui/system";
-import { Button, Rating } from "@mui/material";
+import { Button, Rating, Typography } from "@mui/material";
 import StarsIcon from "@mui/icons-material/Stars";
 import { AuthContext } from "../../context/Auth";
 import { useContext } from "react";
@@ -219,7 +219,7 @@ function WorkoutCongratulations() {
         alignItems: "center",
       }}
     >
-      <h1 style={{ fontSize: "2rem" }}>Workout complete!</h1>
+      <Typography style={{ fontSize: "2rem" }}>Workout complete!</Typography>
       <div
         style={{
           display: "flex",
@@ -240,12 +240,12 @@ function WorkoutCongratulations() {
           loading="lazy"
         ></img>
 
-        <p style={{ textAlign: "center" }}>
+        <Typography color="text.secondary" style={{ textAlign: "center" }}>
           "{endOfWorkoutQuotes[randomQuote].quote}"
-        </p>
-        <p style={{ textAlign: "right", width: "100%" }}>
+        </Typography>
+        <Typography color="text.secondary" style={{ textAlign: "right", width: "100%" }}>
           {endOfWorkoutQuotes[randomQuote].character}
-        </p>
+        </Typography>
       </div>
 
       <Rating
@@ -267,7 +267,7 @@ function WorkoutCongratulations() {
         }}
       >
         <ExerciseCompletedStatTile
-          statName="Session Power Level"
+          statName="Session PL"
           statValue={workoutData.power}
           statDetail="PL"
           statColor="#520975"

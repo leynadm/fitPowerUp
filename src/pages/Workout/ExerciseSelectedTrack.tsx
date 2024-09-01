@@ -32,6 +32,7 @@ import { Chip } from "@mui/material";
 import getExerciseRepMaxOvr from "../../utils/firebaseDataFunctions/getExerciseRepMaxOvr";
 
 import Drawer from "@mui/material/Drawer";
+
 function ExerciseSelectedTrack() {
   const { exerciseName } = useParams();
   const { userTrainingData, refetchUserTrainingData } = useContext(

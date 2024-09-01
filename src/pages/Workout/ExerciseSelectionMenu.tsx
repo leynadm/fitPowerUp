@@ -18,6 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { AuthContext } from "../../context/Auth";
 import { useSearchParams } from "react-router-dom";
+import { ArrowBackIosNew } from "@mui/icons-material";
 function ExerciseSelectionMenu() {
   const { currentUserData } = useContext(AuthContext);
   const { selectedMuscleGroup } = useParams();
@@ -304,6 +305,17 @@ function ExerciseSelectionMenu() {
                     <AddOutlinedIcon />
                   </IconButton>
      */}
+                   <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={()=>navigate("/home/workout/new/workout_categories/")}
+                >
+                  <ArrowBackIosNew />
+                </IconButton>
+
                 </Box>
               </Box>
             </Toolbar>

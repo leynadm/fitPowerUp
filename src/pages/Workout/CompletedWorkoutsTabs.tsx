@@ -12,6 +12,8 @@ import CompletedDetailsOverview from "./CompletedDetailsOverview";
 import { useNavigate } from "react-router-dom";
 import ExerciseSelectedHistory from "./ExerciseSelectedHistory";
 import ExerciseDetailsGraph from "../Analysis/ExerciseDetailsGraph";
+import { ArrowBackIosNew } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 
 function CompletedWorkoutsTabs() {
   const { userTrainingData } = useContext(UserTrainingDataContext);
@@ -84,6 +86,24 @@ function CompletedWorkoutsTabs() {
               >
                 Exercise Details
               </Typography>
+
+              <Box sx={{ flexGrow: 1, display: "flex" }}>
+              <Box sx={{ marginLeft: "auto" }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={()=>navigate("/home/workout")}
+                >
+                  <ArrowBackIosNew />
+                </IconButton>
+              </Box>
+
+
+            </Box>
+
             </Toolbar>
           </Container>
         </AppBar>
