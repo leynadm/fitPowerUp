@@ -232,7 +232,7 @@ function WorkoutCalendar() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
 
-                letterSpacing: ".3rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}

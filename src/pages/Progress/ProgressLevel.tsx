@@ -508,7 +508,7 @@ function ProgressLevel() {
         )}
 
 {calculatedMaximumPowerLevel !== 0 && (
-          <Paper sx={{ width: "100%", height: "100%",mt:1 }}>
+          <Paper sx={{ width: "100%",mt:1 }}>
             <Box
               display="flex"
               justifyContent="center"
@@ -520,20 +520,20 @@ function ProgressLevel() {
               <Typography variant="caption" align="left" width="100%">New Power Level</Typography>
               
               <Box display="flex" width="100%" justifyContent="space-evenly">
-                <Typography display="flex" gap={1} alignItems="center">
-                  <PowerLevelIcon width="1rem" height="1rem"/> <strong>{calculatedMaximumPowerLevel}</strong>
+                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                  <PowerLevelIcon width="1rem" height="1rem"/> {calculatedMaximumPowerLevel}
                 </Typography>
-                <Typography display="flex" gap={1} alignItems="center">
-                  <StrengthIcon width="1rem" height="1rem"/><strong>{calculatedMaximumStrengthLevel}</strong>
+                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                  <StrengthIcon width="1rem" height="1rem"/>{calculatedMaximumStrengthLevel}
                 </Typography>
-                <Typography display="flex" gap={1} alignItems="center">
-                  <ExperienceIcon width="1rem" height="1rem"/><strong>{calculatedMaximumExperienceLevel}</strong>
+                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                  <ExperienceIcon width="1rem" height="1rem"/>{calculatedMaximumExperienceLevel}
                 </Typography>
                 </Box>
               </Box>
 
               {isToday ? (
-                <Typography align="center">
+                <Typography align="center"  color="text.secondary"fontWeight="400">
                   You already updated your Power Level today.
                 </Typography>
               ) : (

@@ -60,7 +60,7 @@ function BodyTracker() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
 
-                letterSpacing: ".3rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -82,7 +82,7 @@ function BodyTracker() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
 
-                letterSpacing: ".3rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}

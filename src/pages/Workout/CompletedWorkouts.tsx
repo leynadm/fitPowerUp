@@ -316,7 +316,7 @@ function CompletedWorkouts() {
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                letterSpacing: ".3rem",
+                letterSpacing: ".0rem",
                 color: "inherit",
                 textDecoration: "none",
               }}
@@ -497,7 +497,6 @@ function CompletedWorkouts() {
           gap: 2,
           display: "flex",
           flexDirection: "column",
-          height:"100%"
         }}
         ref={containerRef}
       >
@@ -818,7 +817,7 @@ function CompletedWorkouts() {
                     justifyContent: "center",
                     alignItems: "center",                    
                     flexGrow:1,
-                    height:"100%"
+          height:"calc(100svh - 168px)"
                   }}
                 >
                   <img

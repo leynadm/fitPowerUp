@@ -175,6 +175,7 @@ function Friends() {
       >
         <Container maxWidth="md">
           <Toolbar>
+            
             <Typography
               variant="h4"
               sx={{
@@ -182,7 +183,7 @@ function Friends() {
                 display: { xs: "none", sm: "block" },
               }}
             >
-              fit<span style={{ color: "white" }}>PowerUp!</span>
+{/*               fit<span style={{ color: "white" }}>PowerUp!</span> */}
             </Typography>
 
 {/*             <SocialSearchBar /> */}
@@ -207,7 +208,7 @@ function Friends() {
                   mr: 2,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
-                  letterSpacing: ".1rem",
+                  letterSpacing: ".0rem",
                   color: "inherit",
                   textDecoration: "none",
                 }}
