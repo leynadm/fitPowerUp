@@ -1,0 +1,12 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 192" width="512" height="192">
+	<title>Proyecto nuevo</title>
+	<style>
+		tspan { white-space:pre } 
+		.t0 { font-size: 143px;fill: #ffa500;font-weight: 400;font-family: "SaiyanSans", "Saiyan Sans - Right Oblique" } 
+		.t1 { font-size: 143px;fill: #ffffff;font-weight: 400;font-family: "SaiyanSans", "Saiyan Sans - Right Oblique" } 
+	</style>
+	<text id="fitPowerUp" style="transform: matrix(1,0,0,1,254,149)" >
+		<tspan x="-255.5" y="0" class="t0">f</tspan><tspan  y="0" class="t0">i</tspan><tspan  y="0" class="t0">t</tspan><tspan  y="0" class="t1">P</tspan><tspan  y="0" class="t1">o</tspan><tspan  y="0" class="t1">w</tspan><tspan  y="0" class="t1">e</tspan><tspan  y="0" class="t1">r</tspan><tspan  y="0" class="t1">U</tspan><tspan  y="0" class="t1">p
+</tspan>
+	</text>
+</svg>

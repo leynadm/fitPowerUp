@@ -419,7 +419,7 @@ function CreateFitWorldGoal() {
         {saiyanTrainingScheduleCheck ? (
           <Box display="flex" flexDirection="column" gap={1}          
           >
-            <Typography width="100%" align="left" fontFamily="Acme">
+            <Typography width="100%" align="left" variant="secondary" fontWeight={500}>
               Choose your objective for how many workouts you want to complete
               throughout your challenge
             </Typography>
@@ -439,7 +439,7 @@ function CreateFitWorldGoal() {
           </Box>
         ) : (
           <Box>
-            <Typography width="100%" align="left" fontFamily="Acme">
+            <Typography width="100%" align="left" variant="secondary" fontWeight={500}>
               The Saiyan Training Schedule is a feature designed to help you set
               specific goals for the number of training sessions you aim to
               complete within your challenge's timeframe. It's ideal for
@@ -480,7 +480,7 @@ function CreateFitWorldGoal() {
 
         {gravityChamberGainsCheck ? (
           <Box>
-            <Typography width="100%" align="left" fontFamily="Acme">
+            <Typography width="100%" align="left" variant="secondary" fontWeight={500}>
               Choose your goal for specific exercises you want to progress, you
               can set the goal for weight, reps, etc.
             </Typography>
@@ -643,18 +643,23 @@ function CreateFitWorldGoal() {
                                             exerciseIndex
                                           )
                                         }
-                                        InputLabelProps={{
-                                          shrink: true,
-                                        }}
-                                        inputProps={{
-                                          min: 0,
-                                          max: 59,
-                                          style: {
-                                            fontSize: "1.5rem",
-                                            textAlign: "center",
-                                            padding: "8px",
+
+                                        slotProps={{
+                                          inputLabel:{
+                                            shrink:true,
                                           },
+                                          input:{
+                                            
+                                            sx: {
+                                              fontSize: "1.5rem",
+                                              textAlign: "center",
+                                              padding: "8px",
+                                            },
+                                          }
+                                          
+                                          
                                         }}
+                                        
                                         sx={{ textAlign: "center" }}
                                         variant="outlined"
                                       />
@@ -822,7 +827,7 @@ function CreateFitWorldGoal() {
             )}
           </Box>
         ) : (
-          <Typography align="left" fontFamily="Acme">
+          <Typography align="left" variant="secondary" fontWeight={500}>
             The Gravity Chamber is your go-to place for setting and pursuing new
             personal records in specific exercises. It's designed to challenge
             and push your limits, helping you strive for higher strength, speed,
@@ -859,7 +864,7 @@ function CreateFitWorldGoal() {
 
         {majinMetabolismCheck ? (
           <Box display="flex" flexDirection="column" gap={1}>
-            <Typography width="100%" align="left" fontFamily="Acme">
+            <Typography width="100%" align="left" variant="secondary" fontWeight={500}>
               Choose your objective for how many total calories you want to
               consume throughout your challenge
             </Typography>
@@ -878,7 +883,7 @@ function CreateFitWorldGoal() {
             />
           </Box>
         ) : (
-          <Typography align="left" fontFamily="Acme">
+          <Typography align="left" variant="secondary" fontWeight={500}>
             Majin Metabolism offers a straightforward way to monitor your
             consistency in caloric intake. It's designed to help you maintain a
             steady and balanced caloric intake, tracking how closely you adhere
@@ -917,7 +922,7 @@ function CreateFitWorldGoal() {
 
         {namekianNightRestCheck ? (
           <Box display="flex" flexDirection="column" gap={1}>
-            <Typography width="100%" align="left" fontFamily="Acme">
+            <Typography width="100%" align="left" variant="secondary" fontWeight={500}>
               Choose your objective for how many hours per night you want to
               sleep
             </Typography>
@@ -938,7 +943,7 @@ function CreateFitWorldGoal() {
             </Box>
           </Box>
         ) : (
-          <Typography align="left" fontFamily="Acme">
+          <Typography align="left" variant="secondary" fontWeight={500}>
             Namekian Night's Rest is meant to help track and achieve consistent,
             restful sleep patterns. This feature helps you set and stick to your
             sleep goals for every night, ensuring that you get the rejuvenating

@@ -37,7 +37,6 @@ function Navbar() {
           right: 0,
           backgroundColor: "white",
         }}
-        elevation={3}
       >
         <BottomNavigation
           className="bottomNavigation"

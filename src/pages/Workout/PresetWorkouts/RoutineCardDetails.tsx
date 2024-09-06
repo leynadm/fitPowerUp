@@ -64,13 +64,10 @@ function RoutineCardDetails() {
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
-          elevation={2}
           style={{
             top: 0,
             width: "100%",
-            height: "56px",
-            background:
-              "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+            height: "56px"
           }}
         >
           <Container maxWidth="md">
@@ -87,7 +84,7 @@ function RoutineCardDetails() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -106,7 +103,7 @@ function RoutineCardDetails() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -171,8 +168,9 @@ function RoutineCardDetails() {
           p: 1,
           borderRadius: 1,
           border: "1px solid black",
+
         }}
-        fontFamily="Acme"
+
         fontSize={18}
       >
         {routine.rDesc}

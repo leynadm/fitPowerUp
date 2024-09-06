@@ -114,13 +114,10 @@ function StandaloneWorkoutDetails() {
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
-          elevation={2}
           style={{
             top: 0,
             width: "100%",
             height: "56px",
-            background:
-              "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
           <Container maxWidth="md">
@@ -136,7 +133,7 @@ function StandaloneWorkoutDetails() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -151,7 +148,7 @@ function StandaloneWorkoutDetails() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
                   letterSpacing: ".0rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -224,7 +221,7 @@ function StandaloneWorkoutDetails() {
         <Typography sx={{fontSize:"1rem",color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
-        <Typography sx={{fontFamily:"Acme",fontSize:"1rem"}}>{workoutData.wDesc}</Typography>
+        <Typography variant="secondary" fontWeight={500}  sx={{fontSize:"1rem"}}>{workoutData.wDesc}</Typography>
       </Box>
     </Box>
   );

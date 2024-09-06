@@ -18,7 +18,7 @@ const style = {
 interface ParentComponentProps {
   openViewCommentModal: boolean;
   setOpenViewCommentModal: Dispatch<SetStateAction<boolean>>;
-  exerciseComment: string;
+  exerciseComment: string | undefined;
 }
 
 function ViewCommentModal({

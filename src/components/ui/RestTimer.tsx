@@ -151,15 +151,18 @@ function RestTimer() {
               type="number"
               value={countdown}
               onChange={handleInputChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{
-                style: {
-                  fontSize: "1.5rem",
-                  textAlign: "center",
-                  padding: "10px",
+              
+              slotProps={{
+                inputLabel:{
+                  shrink: true,
                 },
+                input:{
+                  sx: {
+                    fontSize: "1.5rem",
+                    textAlign: "center",
+                    padding: "10px",
+                  },
+                }
               }}
               sx={{ textAlign: "center", width: "100%" }}
               variant="filled"

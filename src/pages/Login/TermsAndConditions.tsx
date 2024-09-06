@@ -19,13 +19,10 @@ function TermsAndConditions() {
       }}
     >
       <AppBar
-        elevation={3}
         position="fixed"
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <Container maxWidth="md">
@@ -40,7 +37,7 @@ function TermsAndConditions() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".1rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -60,7 +57,7 @@ function TermsAndConditions() {
                 flexGrow: 1,
 
                 letterSpacing: ".1rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -77,7 +74,6 @@ function TermsAndConditions() {
           justifyContent: "center",
           marginBottom: "56px", // Add
         }}
-        fontFamily="Acme"
         fontSize="1.25rem"
       >
         <Typography>Terms and Conditions</Typography>

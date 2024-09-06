@@ -133,13 +133,10 @@ function NewPresetRoutine() {
     >
       <Box position="fixed" sx={{ width: "100%", zIndex: 2 }}>
         <AppBar
-          elevation={2}
           style={{
             top: 0,
             width: "100%",
             height: "56px",
-            background:
-              "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
           <Container maxWidth="md">
@@ -151,7 +148,7 @@ function NewPresetRoutine() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   letterSpacing: ".3rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
 
@@ -166,7 +163,7 @@ function NewPresetRoutine() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -222,8 +219,8 @@ function NewPresetRoutine() {
           alignItems="center"
           pb="72px"
         >
-          <Paper sx={{ padding: 1, mt: 1, mb: 1 }} elevation={2}>
-            <Typography  fontFamily="Acme">
+          <Paper sx={{ padding: 1, mt: 1, mb: 1 }} variant="outlined">
+            <Typography  variant="secondary" fontWeight={500}>
               A routine can contain multiple workouts, with workouts that can be
               distributed across multiple weeks.
               <br />
@@ -240,7 +237,7 @@ function NewPresetRoutine() {
             variant="outlined"
             InputProps={{
               sx:{
-                fontFamily:"Acme"
+
               }
             }}
             placeholder="Add your routine name"
@@ -262,7 +259,7 @@ function NewPresetRoutine() {
             rows={3}
             InputProps={{
               sx:{
-                fontFamily:"Acme"
+
               }
             }}
             onChange={handleFieldChange}
@@ -276,7 +273,7 @@ function NewPresetRoutine() {
             variant="outlined"
             InputProps={{
               sx:{
-                fontFamily:"Acme"
+
               }
             }}
             inputProps={{ maxLength: 48 }}
@@ -296,13 +293,13 @@ function NewPresetRoutine() {
             onChange={handleFieldChange}
             InputProps={{
               sx:{
-                fontFamily:"Acme"
+
               }
             }}
             value={workoutState.routineLinkReference}
           />
 
-          <Typography textAlign="center" fontFamily="Acme">
+          <Typography textAlign="center" variant="secondary" fontWeight={500}>
             Toggle the button below if your routine has different workouts
             across multiple weeks
           </Typography>

@@ -21,7 +21,7 @@ const AuthRoute = ({ type }: AuthRouteProps) => {
         alignItems="center"
         flexDirection="column"
       >
-        <LoadingScreenDBZ />
+        <LoadingScreenDBZ  />
       </Box>
     );
   }

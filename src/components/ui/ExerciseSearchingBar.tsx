@@ -59,6 +59,7 @@ function ExerciseSearchingBar({query,onChange}:ParentsProps) {
   return (
     <Search sx={{ display: "flex",width:"100%" }}>
       <Paper
+      variant="outlined"
         component="form"
         sx={{
           marginTop: "8px",

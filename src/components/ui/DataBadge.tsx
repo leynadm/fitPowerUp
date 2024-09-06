@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
 interface DataBadgeProps {
@@ -18,8 +19,8 @@ function DataBadge({ dataValue, dataLabel }: DataBadgeProps) {
           padding: "1px 4px 1px 4px",
         }}
       >
-        <div className="secondary-font" style={{ fontWeight: "bold",fontSize:"1.25rem" }}>{dataValue}</div>
-        <div style={{fontSize:"1.25rem",color:"orange"}}>{dataLabel}</div>
+        <Typography style={{}}>{dataValue}</Typography>
+        <Typography style={{ color: "orange" }}>{dataLabel}</Typography>
       </Box>
     </>
   );

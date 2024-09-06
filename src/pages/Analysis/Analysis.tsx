@@ -31,13 +31,10 @@ function Analysis() {
   return (
     <>
       <AppBar
-        elevation={3}
         position="fixed"
         style={{
           top: 0,
-          height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+          height: "56px"
         }}
       >
         <Container maxWidth="md">
@@ -50,11 +47,12 @@ function Analysis() {
               variant="h6"
               noWrap
               component="text"
+
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -75,7 +73,7 @@ function Analysis() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >

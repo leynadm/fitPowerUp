@@ -17,7 +17,8 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   const [exercisesLimitCheck, setExercisesLimitCheck] = useState(false);
 
   const uniqueStrings = Array.from(
-    new Set(routine.rWorkouts.flatMap((workout) => workout.wOvr)));
+    new Set(routine.rWorkouts.flatMap((workout) => workout.wOvr))
+  );
 
   useEffect(() => {
     const fetchImageURL = async () => {
@@ -54,7 +55,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
     };
 
     fetchImageURL();
-  }, []); 
+  }, []);
 
   const encodedParameter = encodeURIComponent(routine.rName);
 
@@ -126,7 +127,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
                   </Box>
                 ))
               : Array.from({
-                  length: uniqueStrings.length>6?6:uniqueStrings.length,
+                  length: uniqueStrings.length > 6 ? 6 : uniqueStrings.length,
                 }).map((_, index) => (
                   <Skeleton
                     key={index}
@@ -152,13 +153,19 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
           multiline
           maxRows={5}
           fullWidth
-          InputProps={{
-            readOnly: true,
-            sx: {
-              fontFamily: "Acme, Arial, sans-serif",
-              fontSize: "1rem",
-              padding: 1,
-            },
+          
+          slotProps={{
+            input:{
+              readOnly: true,
+              sx: {
+                fontSize: "1rem",
+                padding: 1,
+                fontFamily:"Raleway",
+                fontWeight:700,
+                color:"text.secondary"
+              },
+            }
+            
           }}
           variant="filled"
         />
@@ -199,22 +206,3 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
 }
 
 export default RoutineCard;
-
-/* 
-             <img
-              src={imageURL}
-              alt=""
-              loading="eager"
-              style={{
-                maxHeight: "512px",
-                maxWidth: "512px",
-                width: "100%",
-                height: "auto", // Maintain aspect ratio
-                minHeight: "100%",
-                boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
-                border: "2px solid orange",
-              }}
-              width="512px" // Set the width explicitly
-              height="512px" // Set the height explicitly
-            /> 
-*/

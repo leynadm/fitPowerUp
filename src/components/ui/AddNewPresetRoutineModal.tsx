@@ -135,8 +135,11 @@ function AddNewPresetRoutineModal({
                   variant="filled"
                   size="small"
                   required
-                  InputProps={{
-                    readOnly: true,
+                  slotProps={{
+                    input:{
+                      readOnly: true,
+                    }
+
                   }}
                   value={workoutState.routineName.toLocaleUpperCase()}
                 />
@@ -152,8 +155,11 @@ function AddNewPresetRoutineModal({
                     id="outlined-basic"
                     label="Routine Description"
                     variant="filled"
-                    InputProps={{
-                      readOnly: true,
+                    slotProps={{
+                      input:{
+readOnly: true,
+                      }
+                      
                     }}
                     multiline
                     maxRows={3}
@@ -164,8 +170,11 @@ function AddNewPresetRoutineModal({
                     label="Routine Created By"
                     variant="filled"
                     size="small"
-                    InputProps={{
-                      readOnly: true,
+                    slotProps={{
+                      input:{
+readOnly: true,
+                      }
+                      
                     }}
                     value={workoutState.routineBy}
                   />
@@ -174,8 +183,11 @@ function AddNewPresetRoutineModal({
                     label="Routine Link Reference"
                     variant="filled"
                     size="small"
-                    InputProps={{
-                      readOnly: true,
+                    slotProps={{
+                      input:{
+readOnly: true,
+                      }
+                      
                     }}
                     value={workoutState.routineLinkReference}
                   />

@@ -32,7 +32,7 @@ import LoadingScreenCircle from "../../../components/ui/LoadingScreenCircle";
 import getExistingPresetExerciseComment from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExerciseComment";
 import getExistingPresetExercises from "../../../utils/IndexedDbCRUDFunctions/presetExercise/getExistingPresetExercises";
 import { validateIndexedDbEntry } from "../../../utils/IndexedDbCRUDFunctions/validateIndexedDbEntry";
-import {  ArrowBackIosNew } from "@mui/icons-material";
+import { ArrowBackIosNew } from "@mui/icons-material";
 import Drawer from "@mui/material/Drawer";
 import { Chip } from "@mui/material";
 import getExerciseRepMaxOvr from "../../../utils/firebaseDataFunctions/getExerciseRepMaxOvr";
@@ -40,7 +40,7 @@ import getExerciseRepMaxOvr from "../../../utils/firebaseDataFunctions/getExerci
 function StandaloneWorkoutExercise() {
   const { exerciseName } = useParams();
   const navigate = useNavigate();
-  
+
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
@@ -50,8 +50,6 @@ function StandaloneWorkoutExercise() {
     exerciseName
   );
   const [performanceDetailsOpen, setPerformanceDetailsOpen] = useState(false);
-
-
 
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
@@ -953,15 +951,12 @@ function StandaloneWorkoutExercise() {
         </Typography>
       </Button>
 
-
       <AppBar
         elevation={2}
         position="fixed"
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <Container maxWidth="md">
@@ -978,7 +973,7 @@ function StandaloneWorkoutExercise() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".1rem",
-                color: "inherit",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -997,7 +992,7 @@ function StandaloneWorkoutExercise() {
                 flexGrow: 1,
 
                 letterSpacing: ".1rem",
-                color: "inherit",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -1261,14 +1256,14 @@ function StandaloneWorkoutExercise() {
         }
       )}
 
-<Drawer
+      <Drawer
         anchor="top"
         open={performanceDetailsOpen}
         onClose={togglePerformanceDetailsDrawer(false)}
       >
         {DrawerList}
       </Drawer>
-      
+
       <Box
         sx={{
           width: "100%",

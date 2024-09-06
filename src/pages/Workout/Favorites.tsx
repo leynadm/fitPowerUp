@@ -164,13 +164,10 @@ function Favorites() {
   return (
     <>
       <AppBar
-        elevation={2}
         position="fixed"
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <Container maxWidth="md">
@@ -187,7 +184,7 @@ function Favorites() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -204,7 +201,7 @@ function Favorites() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >

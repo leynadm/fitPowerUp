@@ -11,8 +11,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import "../Home/styles/animation.css";
 import RedditIcon from "@mui/icons-material/Reddit";
 import EmailIcon from "@mui/icons-material/Email";
-import Link from "@mui/material/Link";
-import Hero from "./LandingPage/Hero";
+import { DBZ } from "./LandingPage/DBZ";
 function LandingPage() {
   const navigate = useNavigate();
   function useContainerRefs() {
@@ -172,13 +171,10 @@ function LandingPage() {
   return (
     <Box>
       <AppBar
-        elevation={2}
         position="sticky"
         style={{
           height: "56px",
           top: 0,
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           width: "100%",
         }}
       >
@@ -191,12 +187,14 @@ function LandingPage() {
               justifyContent: "space-between",
             }}
           >
-            <Typography
-              variant="h4"
-              sx={{ color: "#FF8C00", fontFamily: "Saiyan" }}
-            >
-              fit<span style={{ color: "white" }}>PowerUp</span>
-            </Typography>
+            <Box width={154}>
+              <img
+                src="/fitpowerup_logo.svg"
+                alt=""
+                width="100%"
+                height="100%"
+              />
+            </Box>
 
             {showInstallButton && (
               <Button
@@ -215,7 +213,7 @@ function LandingPage() {
           </Toolbar>
         </Container>
       </AppBar>
-      <Hero />
+      <DBZ />
       <Box
         component="main"
         sx={{

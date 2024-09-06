@@ -20,7 +20,7 @@ import { AuthContext } from "../../context/Auth";
 import addExerciseToFavorite from "../../utils/firebaseDataFunctions/addExerciseToFavorite";
 import { IUserExercisesLibrary } from "../../utils/interfaces/IUserExercisesLibrary";
 import toast from "react-hot-toast";
-import { ArrowBackIosNew } from "@mui/icons-material";
+
 function ExerciseSelected() {
   const { userExercisesLibrary, refetchUserExercisesLibrary } = useContext(
     UserExercisesLibraryContext
@@ -70,13 +70,11 @@ function ExerciseSelected() {
   return (
     <>
       <AppBar
-        elevation={2}
+        elevation={0}
         position="fixed"
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <Container maxWidth="md">
@@ -93,7 +91,7 @@ function ExerciseSelected() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -112,7 +110,7 @@ function ExerciseSelected() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -181,7 +179,6 @@ function ExerciseSelected() {
         variant="text"
         aria-label="outlined button group"
         sx={{ width: "100%" }}
-        className="aaa-button-group"
       >
         <Button sx={{ width: "100%" }} onClick={handleNavigateTrack}>
           Track

@@ -125,8 +125,6 @@ function WorkoutDetails() {
             top: 0,
             width: "100%",
             height: "56px",
-            background:
-              "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
           }}
         >
           <Container maxWidth="md">
@@ -142,7 +140,7 @@ function WorkoutDetails() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -157,7 +155,7 @@ function WorkoutDetails() {
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,
                   letterSpacing: ".0rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -227,10 +225,10 @@ function WorkoutDetails() {
             <GroupedWorkout workoutExercises={workoutData.wEx} />
           )}
         </Box>
-        <Typography sx={{fontSize:"1.25rem",color:"text.secondary"}} align="left">
+        <Typography sx={{color:"text.secondary"}} align="left">
           Workout Description
         </Typography>
-        <Typography sx={{fontSize:"1.25rem",color:"text.secondary"}} fontFamily="Acme">{workoutData.wDesc}</Typography>
+        <Typography sx={{color:"text.secondary"}} variant="secondary" fontWeight={500}>{workoutData.wDesc}</Typography>
       </Box>
     </Box>
   );

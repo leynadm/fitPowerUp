@@ -27,7 +27,7 @@ function SendFeedback() {
                 fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -48,7 +48,7 @@ function SendFeedback() {
                 fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >

@@ -386,7 +386,11 @@ function AddContentModal({
             variant="outlined"
             maxRows={5}
             rows={2}
-            inputProps={{ maxLength: 2048 }}
+            slotProps={{
+              input: {
+                maxRows: 2048,
+              },
+            }}
             sx={{ width: "100%", marginTop: "8px" }}
             onChange={(event) => setPostText(event.target.value)}
           />

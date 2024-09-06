@@ -16,7 +16,6 @@ import LockIcon from "@mui/icons-material/Lock";
 import { AuthContext } from "../../context/Auth";
 import { UserFeatsDataContext } from "../../context/UserFeatsData";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
-import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 function ProgressGraph() {
   const { userFeatsData, refetchUserFeatsData } =
     useContext(UserFeatsDataContext);
@@ -24,7 +23,6 @@ function ProgressGraph() {
   const [filterSelection, setFilterSelection] = useState("All");
 
   const userFeatsDataArr = getFilteredUserFeatsArr();
-  const { userExercisesLibrary } = useContext(UserExercisesLibraryContext);
   useEffect(() => {
     const fetchData = async () => {
       if (userFeatsData.length === 0) {
@@ -87,27 +85,30 @@ function ProgressGraph() {
 
     return (
       <Box sx={{ width: "100%" }} style={customStyle} key={index}>
-        <Typography sx={{  paddingTop: "8px",fontSize:"1.25rem" }}>
+        <Typography
+          sx={{ paddingTop: "8px", fontSize: "1.25rem" }}
+          color="secondary"
+        >
           {featEntry.name}
         </Typography>
         <Box display="flex" gap={1} alignItems="center">
-          <Typography variant="overline" color="text.secondary">
+          <Typography variant="body1" color="text.secondary">
             {featEntry.feat} {variableObjective}
           </Typography>
           {featEntry.state && (
-            <CheckCircleIcon fontSize="small" sx={{ color: "#520975" }} />
+            <CheckCircleIcon fontSize="medium" sx={{ color: "#520975" }} />
           )}
         </Box>
 
         <Box display="flex" alignItems="center" sx={{ marginBottom: 0 }}>
-          <Typography variant="subtitle2">Difficulty: </Typography>
+          <Typography variant="body1">Difficulty: </Typography>
           <Rating
             icon={<StarsIcon fontSize="inherit" />}
             name="read-only"
             value={featEntry.level}
             max={7}
             readOnly
-            size="small"
+            size="medium"
             sx={{ color: "#FFA500" }}
           />
         </Box>
@@ -117,26 +118,25 @@ function ProgressGraph() {
             <TextField
               id="filled-basic"
               variant="outlined"
-              InputProps={{
-                readOnly: true,
-                sx: {
-                  // Apply styles to the input element
-                  fontFamily:"Acme",
-                  input: {
-                    paddingTop: 0,
-                    margin:0
-                     // Example padding value, adjust as needed
-                  },
-                }
-              }}
               maxRows={4}
               size="small"
-                            
               defaultValue={featEntry.description}
+              slotProps={{
+                input: {
+                  readOnly: true,
+
+                  // Apply styles to the input element
+                  sx: {
+                    margin: 0,
+                    color: "white",
+                  },
+                },
+              }}
               sx={{
+                color: "white",
                 width: "100%",
-                background:"orange",
-                fontFamily:"Acme"
+                background: "orange",
+                fontFamily: "Raleway",
               }}
               multiline
             />
@@ -183,7 +183,6 @@ function ProgressGraph() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-
     >
       {/* 
       <Button onClick={loopThroughData}>Check Data</Button>

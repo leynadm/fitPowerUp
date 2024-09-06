@@ -70,13 +70,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
   return (
     <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
       <CardContent sx={{ pt: 0 }}>
-        <Typography
-          align="center"
-          color="#1c4595"
-          variant="h6"
-          gutterBottom
-          
-        >
+        <Typography align="center" color="#1c4595" variant="h6" gutterBottom>
           {capitalizeWords(workoutData.wName)}
         </Typography>
         <Typography
@@ -85,7 +79,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
           m={0}
           align="right"
           component="div"
-          sx={{color:"text.secondary",fontSize:"1rem"}}
+          sx={{ color: "text.secondary", fontSize: "1rem" }}
         >
           by {workoutData.wBy}
         </Typography>
@@ -95,24 +89,28 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
           multiline
           maxRows={6}
           fullWidth
-          InputLabelProps={{
-            style:{
-           }
-          }}
-          InputProps={{
-            readOnly: true,
-            sx: {
-              fontFamily: 'Acme, Arial, sans-serif',
-              padding:1  
+          sx={{ fontWeight: 500 }}
+          slotProps={{
+            input: {
+              readOnly: true,
+              sx: {
+                fontFamily:"Raleway",
+                fontWeight:"700",
+                color:"text.secondary"
+              },
             },
           }}
           variant="filled"
         />
 
         <Box pt={1} display="flex" flexDirection="column">
-          <Typography variant="caption" color="text.secondary"
-                    sx={{color:"text.secondary",fontSize:"1rem"}}
-          >Workout Exercises</Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ color: "text.secondary", fontSize: "1rem" }}
+          >
+            Workout Exercises
+          </Typography>
           <Box
             display="grid"
             gridTemplateColumns={{
@@ -174,7 +172,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
               { state: { workoutData } }
             )
           }
-          sx={{color:"text.secondary",fontSize:"1rem"}}          
+          sx={{ color: "text.secondary", fontSize: "1rem" }}
         >
           Go To Workout
         </Button>
@@ -183,7 +181,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
             component="a"
             target="_blank"
             href={workoutData.wLink}
-            sx={{color:"text.secondary",fontSize:"1rem"}}
+            sx={{ color: "text.secondary", fontSize: "1rem" }}
           >
             Go To Source
           </Button>

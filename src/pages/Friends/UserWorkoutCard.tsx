@@ -540,9 +540,11 @@ export default function UserWorkoutCard({
         </Box>
         <CardContent>
           <Typography
-            variant="body2"
+
+            variant="secondary" fontWeight={500}
             color="text.secondary"
-            sx={{ whiteSpace: "pre-line",fontFamily:"Acme",fontSize:"1rem",fontWeight:"500" }}
+            
+            sx={{ whiteSpace: "pre-line" }}
           >
             {postText}
           </Typography>

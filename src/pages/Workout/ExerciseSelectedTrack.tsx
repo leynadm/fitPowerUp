@@ -913,7 +913,7 @@ function ExerciseSelectedTrack() {
         setIsAMRAP={setIsAMRAP}
       />
 
-      <Button onClick={togglePerformanceDetailsDrawer(true)}>
+      <Button onClick={togglePerformanceDetailsDrawer(true)} sx={{padding:0}}>
         <Typography
           sx={{
             padding: {

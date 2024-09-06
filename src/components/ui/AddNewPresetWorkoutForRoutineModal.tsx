@@ -42,9 +42,9 @@ interface ParentComponentProps {
     workoutName: string;
     workoutDescription: string;
     workoutLinkReference: string;
-    weekInterval:number;
+    weekInterval: number;
   };
-  routineId:string;
+  routineId: string;
 }
 
 function AddNewPresetWorkoutForRoutineModal({
@@ -52,21 +52,20 @@ function AddNewPresetWorkoutForRoutineModal({
   setOpenAddNewPresetWorkoutForRoutineModal,
   existingExercises,
   workoutState,
-  routineId
+  routineId,
 }: ParentComponentProps) {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-
   const location = useLocation();
   const routine = location.state.routine;
 
-  const isOnline = useOnlineStatus()
+  const isOnline = useOnlineStatus();
   const { refetchPresetWorkoutsData } = useContext(
     UserPresetWorkoutsDataContext
   );
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const workoutDate = formatDateForTextField(new Date());
 
   function handleClose() {
@@ -91,21 +90,21 @@ function AddNewPresetWorkoutForRoutineModal({
       wDesc: workoutState.workoutDescription,
       wOvr: tempExercisesInRoutine,
       del: true,
-      wInt:workoutState.weekInterval,
-      wBy:'',
-      wLink:workoutState.workoutLinkReference
+      wInt: workoutState.weekInterval,
+      wBy: "",
+      wLink: workoutState.workoutLinkReference,
     };
 
     try {
-      console.log({presetWorkoutData})
-      setIsLoading(true)
-       await addWorkoutToRoutine(currentUser.uid, presetWorkoutData,routineId);
+      console.log({ presetWorkoutData });
+      setIsLoading(true);
+      await addWorkoutToRoutine(currentUser.uid, presetWorkoutData, routineId);
 
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");
-      setIsLoading(false)
-      navigate("/home/workout/preset-workouts",{ state: { routine } }); 
+      setIsLoading(false);
+      navigate("/home/workout/preset-workouts", { state: { routine } });
     } catch (error) {
       console.log(error);
     }
@@ -140,8 +139,10 @@ function AddNewPresetWorkoutForRoutineModal({
                 variant="filled"
                 required
                 size="small"
-                InputProps={{
-                  readOnly: true,
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  },
                 }}
                 value={workoutState.workoutName}
               />
@@ -152,8 +153,10 @@ function AddNewPresetWorkoutForRoutineModal({
                   required
                   label="Workout Description"
                   variant="filled"
-                  InputProps={{
-                    readOnly: true,
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
                   }}
                   multiline
                   maxRows={3}
@@ -162,13 +165,15 @@ function AddNewPresetWorkoutForRoutineModal({
               )}
 
               <Box display="flex" flexDirection="column" width="100%" gap={1}>
-                {workoutState.weekInterval!==0 && (
+                {workoutState.weekInterval !== 0 && (
                   <TextField
                     id="outlined-basic"
                     label="Week Interval"
                     variant="filled"
-                    InputProps={{
-                      readOnly: true,
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                      },
                     }}
                     multiline
                     maxRows={3}
@@ -180,8 +185,10 @@ function AddNewPresetWorkoutForRoutineModal({
                   id="outlined-basic"
                   label="Workout Link Reference"
                   variant="filled"
-                  InputProps={{
-                    readOnly: true,
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
                   }}
                   multiline
                   maxRows={3}

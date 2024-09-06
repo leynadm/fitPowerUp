@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useContext } from "react";
 import Container from "@mui/material/Container";
-import { useState, useMemo, useEffect } from "react";
+import { useState, Fragment,useMemo, useEffect } from "react";
 import { AppBar, Toolbar } from "@mui/material";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import Typography from "@mui/material/Typography";
@@ -19,6 +19,8 @@ import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
 import { AuthContext } from "../../context/Auth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowBackIosNew } from "@mui/icons-material";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 function ExerciseSelectionMenu() {
   const { currentUserData } = useContext(AuthContext);
   const { selectedMuscleGroup } = useParams();
@@ -169,61 +171,54 @@ function ExerciseSelectionMenu() {
     }, [index, userExercise]); // Dependency array includes index and userExercise
 
     const rowStyle = {
-      ...style,
-      display: "grid",
-      gridTemplateRows: "1fr 8fr 1fr",
-      justifyContent: "center",
-      alignItems: "center",
+      ...style
     };
 
     return (
-      <Box
-        boxShadow={2}
-        borderRadius="4px"
-        style={rowStyle}
+      <Card
         onClick={() => handleTileClick(userExercise.name)}
-        pt={2}
+        variant="outlined"
+        style={rowStyle}
       >
-        <Typography align="center" sx={{                color:"text.secondary",fontSize:"1.15rem"}} overflow="hidden">
-          {userExercise.name.toLocaleUpperCase()}
-        </Typography>
-
-        {isLoading ? (
-          <Box
-            justifyContent="center"
-            display="flex"
-            alignItems="center"
-            height="100%"
-            width="100%"
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Box
-            height="100%"
-            width="100%"
-            justifyContent="center"
-            display="flex"
-            alignItems="center"
-          >
-            <img
-              src={imageURL}
-              alt={userExercise.name}
-              width="100%"
-              style={{
-                maxHeight: "128px",
-                width: "auto",
-              }}
-            />
-          </Box>
-        )}
-
-        <Box display="flex" justifyContent="center" gap={1}>
-          <Typography variant="caption" sx={{color:"text.secondary",fontSize:"1rem"}}>
-            {userExercise.type.toLocaleUpperCase()}
+        <CardContent sx={{ display: "grid", gridTemplateRows: "2fr 5fr 1fr",height:"100%" }}>
+          <Typography fontSize={18} textAlign="center" color="secondary">
+            {userExercise.name.toLocaleUpperCase()}
           </Typography>
-        </Box>
-      </Box>
+
+          {isLoading ? (
+            <Box
+              justifyContent="center"
+              display="flex"
+              alignItems="center"
+              height="100%"
+              width="100%"
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box
+              height="100%"
+              width="100%"
+              justifyContent="center"
+              display="flex"
+              alignItems="center"
+            >
+              <img
+                src={imageURL}
+                alt={userExercise.name}
+                width="100%"
+                style={{
+                  maxHeight: "128px",
+                  width: "auto",
+                }}
+              />
+            </Box>
+          )}
+          <Typography textAlign="center" color="text.secondary">
+          {userExercise.type.toLocaleUpperCase()}
+          </Typography>
+        </CardContent>
+      </Card>
     );
   };
 
@@ -231,13 +226,10 @@ function ExerciseSelectionMenu() {
     <>
       <Container maxWidth="md">
         <AppBar
-          elevation={2}
           position="fixed"
           style={{
             top: 0,
-            height: "56px",
-            background:
-              "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+            height: "56px"
           }}
         >
           <Container maxWidth="md">
@@ -255,17 +247,12 @@ function ExerciseSelectionMenu() {
                   display: { xs: "none", md: "flex" },
 
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
                 {muscleGroup ? capitalizeWords(muscleGroup):selectedMuscleGroup&&capitalizeWords(selectedMuscleGroup)}
               </Typography>
-              {/* 
-              <FitnessCenterIcon
-                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              /> */}
-
               <Typography
                 variant="h5"
                 noWrap
@@ -276,7 +263,7 @@ function ExerciseSelectionMenu() {
                   flexGrow: 1,
 
                   letterSpacing: ".1rem",
-                  color: "inherit",
+                color:"#FFA500",
                   textDecoration: "none",
                 }}
               >
@@ -291,20 +278,7 @@ function ExerciseSelectionMenu() {
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     color="inherit"
-                    //onClick={getOnlyFavorites}
                   ></IconButton>
-                  {/* 
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    color="inherit"
-                    //              onClick={handleAddNewExerciseModal}
-                  >
-                    <AddOutlinedIcon />
-                  </IconButton>
-     */}
                    <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -326,9 +300,9 @@ function ExerciseSelectionMenu() {
 
         <Box>
           <FixedSizeList
-            height={window.innerHeight - 165}
+            height={window.innerHeight - 170}
             itemCount={filteredExercises.length}
-            itemSize={225}
+            itemSize={250}
             width="100%"
           >
             {Row}

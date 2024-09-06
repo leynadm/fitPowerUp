@@ -82,7 +82,7 @@ function ProgressHero() {
                 color: "white",
               }}
             >
-              <Typography fontFamily="Acme" fontSize="1.25rem" align="center" fontStyle="italic" padding="4px">
+              <Typography variant="secondary" fontWeight={500} fontSize="1.25rem" align="center" fontStyle="italic" padding="4px">
                 {heroQuote}
               </Typography>
             </Box>

@@ -4,8 +4,6 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import ExerciseSearchingBar from "../../components/ui/ExerciseSearchingBar";
 import { useNavigate } from "react-router-dom";
 import getExercisesMuscleGroups from "../../utils/firebaseDataFunctions/getExercisesMuscleGroups";
@@ -21,9 +19,10 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddNewExerciseModal from "../../components/ui/AddNewExerciseModal";
 import { useSearchParams } from "react-router-dom";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { ArrowBackIosNew } from "@mui/icons-material";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+
 function MuscleGroupsSelectionMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -141,25 +140,20 @@ function MuscleGroupsSelectionMenu() {
     }, [index, userExercise]); // Dependency array includes index and userExercise
 
     const rowStyle = {
-      ...style,
-      display: "grid",
-      gridTemplateRows: "1fr 8fr 1fr",
-      justifyContent: "center",
-      alignItems: "center",
+      ...style
     };
     return (
-      <Box
-        boxShadow={2}
-        borderRadius="4px"
-        style={rowStyle}
-        pt={2}
+      <Card
+      variant="outlined"
+      style={rowStyle}
         onClick={() => handleTileClick(userExercise.name, userExercise.group)}
       >
-        <Typography color="text.secondary" fontSize="1.15rem" align="center">
-          {userExercise.name.toLocaleUpperCase()}
-        </Typography>
-
-        {isLoading ? (
+        <CardContent sx={{ display: "grid", gridTemplateRows: "2fr 5fr 1fr",height:"100%" }}>
+       
+        <Typography fontSize={18} textAlign="center" color="secondary">
+            {userExercise.name.toLocaleUpperCase()}
+          </Typography>
+          {isLoading ? (
           <Box
             justifyContent="center"
             display="flex"
@@ -189,26 +183,22 @@ function MuscleGroupsSelectionMenu() {
             />
           </Box>
         )}
-
-        <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-          <Typography color="text.secondary" variant="subtitle2">
-            {userExercise.type.toLocaleUpperCase()}
+                  <Typography textAlign="center" color="text.secondary">
+          {userExercise.type.toLocaleUpperCase()}
           </Typography>
-        </Box>
-      </Box>
+
+       </CardContent>
+      </Card>
     );
   };
 
   return (
     <Container sx={{}} maxWidth="md">
       <AppBar
-        elevation={2}
         position="fixed"
         style={{
           top: 0,
-          height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+          height: "56px"
         }}
       >
         <AddNewExerciseModal
@@ -230,7 +220,7 @@ function MuscleGroupsSelectionMenu() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".1rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -250,7 +240,7 @@ function MuscleGroupsSelectionMenu() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -329,24 +319,6 @@ function MuscleGroupsSelectionMenu() {
                   <Typography color="text.secondary" fontSize="1.15rem">{muscleGroup.toLocaleUpperCase()}</Typography>
                 </IconButton>
 
-{/*                 <IconButton
-                  size="large"
-                  aria-label="muscle-group-button-submenu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  
-                  onClick={(event) =>
-                    handleOptionsClick(
-                      event,
-                      exercise.name,
-                      exercise.category,
-                      exercise.id
-                    )
-                  } 
-                >
-                  <MoreVertIcon sx={{ zIndex: 0 }} />
-                </IconButton> */}
               </Box>
               <Divider sx={{ width: "100%" }} />
             </Box>
@@ -357,7 +329,7 @@ function MuscleGroupsSelectionMenu() {
             <FixedSizeList
               height={window.innerHeight - 170}
               itemCount={filteredExercises.length}
-              itemSize={225}
+              itemSize={250}
               width="100%"
             >
               {Row}

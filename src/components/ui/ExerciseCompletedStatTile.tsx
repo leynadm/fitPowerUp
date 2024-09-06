@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+import { Typography } from "@mui/material";
 interface ExerciseStatProps {
   statName: string;
   statIcon: ReactNode;
@@ -40,13 +40,13 @@ function ExerciseCompletedStatTile({
           gap: 3,
         }}
       >
-        <div className="secondary-font">{statName}</div>
-        <div>{statIcon}</div>
+        <Typography>{statName}</Typography>
+        <Typography>{statIcon}</Typography>
       </div>
 
-      <div className="secondary-font" style={{ fontSize: "1.25rem",color:`${statTextColor}` }}>
+      <Typography  style={{ fontSize: "1.25rem",color:`${statTextColor}` }}>
         {statValue} {statDetail}
-      </div>
+      </Typography>
     </div>
   );
 }

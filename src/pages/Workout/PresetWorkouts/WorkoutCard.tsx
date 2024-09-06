@@ -68,33 +68,23 @@ function WorkoutCard({ workoutData, routine }: WorkoutCardProps) {
           {capitalizeWords(workoutData.wName)}
         </Typography>
 
-        {/*        <Typography
-          align="center"
-          color="text.secondary"
-          gutterBottom
-          noWrap
-    fontFamily="Acme"
-    
->
-          {workoutData.wDesc}
-        </Typography>
- */}
-
         <TextField
           id="outlined-read-only-input"
           value={workoutData.wDesc}
           multiline
           maxRows={6}
           fullWidth
-          InputLabelProps={{
-            style: {},
-          }}
-          InputProps={{
-            readOnly: true,
-            sx: {
-              fontFamily: "Acme, Arial, sans-serif",
-              padding: 1,
-            },
+          slotProps={{
+            input:{
+              readOnly:true,
+              sx:{
+                padding:1,
+                fontFamily:"Raleway",
+                fontWeight:700,
+                color:"text.secondary"
+              }
+
+            }
           }}
           variant="filled"
         />

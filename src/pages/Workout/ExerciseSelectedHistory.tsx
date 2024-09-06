@@ -14,6 +14,7 @@ import { useContext } from "react";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { AuthContext } from "../../context/Auth";
 import getCompletedExercisesHistory from "../../utils/firebaseDataFunctions/getCompletedExercisesHistory";
+import { Button } from "@mui/material";
 function ExerciseSelectedHistory() {
   const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
   const [exerciseComment, setExerciseComment] = useState("");
@@ -225,8 +226,8 @@ function ExerciseSelectedHistory() {
         setOpenViewCommentModal={setOpenViewCommentModal}
         exerciseComment={exerciseComment}
       />
-
-      <Typography
+    <Button  fullWidth disableRipple  sx={{display:"flex",justifyContent:"center",color:"text.secondary"}}>
+    <Typography
         sx={{
           padding: {
             xs: "0.25rem", // Padding for extra small screens
@@ -234,13 +235,16 @@ function ExerciseSelectedHistory() {
             md: "0.75rem", // Padding for medium screens
             lg: "1.25rem", // Padding for large screens
           },
-          textAlign: "center",
+
         }}
         variant="h6"
-      >
+textAlign="center"
+>
         {exerciseName && exerciseName.toLocaleUpperCase()}
       </Typography>
-      <Divider />
+     
+    </Button>
+       <Divider />
 
       <VariableSizeList
         height={window.innerHeight - 190}

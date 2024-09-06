@@ -308,15 +308,17 @@ function EditExerciseModal({
                       value={distanceValue}
                       label="Number"
                       type="number"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          fontSize: "1.5rem",
+                      slotProps={{
+                        input:{
+                          sx:{
+                            fontSize: "1.5rem",
                           textAlign: "center",
                           padding: "10px",
+                          }
                         },
+                        inputLabel:{
+                          shrink:true
+                        }
                       }}
                       sx={{ textAlign: "center", width: "100%" }}
                       variant="filled"
@@ -371,15 +373,19 @@ function EditExerciseModal({
                       value={Math.floor(timeValue / 3600)}
                       label="hh"
                       type="number"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          fontSize: "1.5rem",
-                          textAlign: "center",
-                          padding: "8px",
+                      
+                      slotProps={{
+                        inputLabel:{
+                          shrink:true
                         },
+                        input:{
+                          sx: {
+                            fontSize: "1.5rem",
+                            textAlign: "center",
+                            padding: "8px",
+                          }
+                        }
+                        
                       }}
                       sx={{ textAlign: "center" }}
                       variant="filled"
@@ -390,15 +396,20 @@ function EditExerciseModal({
                       value={Math.floor((timeValue % 3600) / 60)}
                       label="mm"
                       type="number"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          fontSize: "1.5rem",
-                          textAlign: "center",
-                          padding: "8px",
+                      
+                      
+                      slotProps={{
+                        inputLabel:{
+                          shrink: true,
                         },
+                        input:{
+                          sx: {
+                            fontSize: "1.5rem",
+                            textAlign: "center",
+                            padding: "8px",
+                          },
+                        }
+                        
                       }}
                       sx={{ textAlign: "center" }}
                       variant="filled"
@@ -409,15 +420,18 @@ function EditExerciseModal({
                       value={timeValue % 60}
                       label="ss"
                       type="number"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        style: {
-                          fontSize: "1.5rem",
-                          textAlign: "center",
-                          padding: "8px",
+
+                      slotProps={{
+                        input:{
+                          sx:{
+                            size: "1.5rem",
+                            textAlign: "center",
+                            padding: "8px",
+                          }
                         },
+                        inputLabel:{
+                          shrink:true
+                        }
                       }}
                       sx={{ textAlign: "center" }}
                       variant="filled"
@@ -471,13 +485,16 @@ function EditExerciseModal({
                     type="number"
                     id={measurementType}
                     variant="filled"
-                    inputProps={{
-                      style: {
-                        fontSize: "1.5rem",
-                        textAlign: "center",
-                        height: "100%",
-                        padding: "8px",
-                      },
+                    slotProps={{
+                      input:{
+                        sx: {
+                          fontSize: "1.5rem",
+                          textAlign: "center",
+                          height: "100%",
+                          padding: "8px",
+                        },
+                      }
+                      
                     }}
                     value={
                       measurementType === "weight"

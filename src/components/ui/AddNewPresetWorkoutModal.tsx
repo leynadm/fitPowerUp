@@ -53,13 +53,13 @@ function AddNewPresetWorkoutModal({
   routineTypeCheck,
 }: ParentComponentProps) {
   const navigate = useNavigate();
-  const {currentUser} = useContext(AuthContext)
-  const isOnline = useOnlineStatus()
+  const { currentUser } = useContext(AuthContext);
+  const isOnline = useOnlineStatus();
   const { refetchPresetWorkoutsData } = useContext(
     UserPresetWorkoutsDataContext
   );
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const workoutDate = formatDateForTextField(new Date());
 
   function handleClose() {
@@ -79,24 +79,28 @@ function AddNewPresetWorkoutModal({
     }
 
     const presetWorkoutData = {
-      wName:workoutState.workoutName.toLocaleLowerCase(),
-      del:false,
-      wDesc:workoutState.workoutDescription,
-      wBy:workoutState.workoutBy,
-      wLink:workoutState.workoutLinkReference,
+      wName: workoutState.workoutName.toLocaleLowerCase(),
+      del: false,
+      wDesc: workoutState.workoutDescription,
+      wBy: workoutState.workoutBy,
+      wLink: workoutState.workoutLinkReference,
       wEx: existingExercisesArr,
-      wImg:'w-def',
-      wOvr:tempExercisesInStandaloneWorkout
+      wImg: "w-def",
+      wOvr: tempExercisesInStandaloneWorkout,
     };
 
     try {
-      setIsLoading(true) 
-      await addPresetCompleteWorkout(currentUser.uid, presetWorkoutData,uuid());
+      setIsLoading(true);
+      await addPresetCompleteWorkout(
+        currentUser.uid,
+        presetWorkoutData,
+        uuid()
+      );
 
       deleteAllPresetEntries();
       await refetchPresetWorkoutsData();
       toast.success("Preset workout succesfully added !");
-      setIsLoading(false)
+      setIsLoading(false);
       navigate("/home/workout/preset-workouts");
     } catch (error) {
       console.log(error);
@@ -112,51 +116,50 @@ function AddNewPresetWorkoutModal({
         aria-describedby="modal-modal-description"
       >
         <Container maxWidth="md" sx={style}>
+          {isLoading ? (
+            <CircularProgressWithText text="Please wait, your preset workout is being saved..." />
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              justifyContent="center"
+              height="100%"
+            >
+              <Typography align="center" variant="h6">
+                Save your preset workout
+              </Typography>
 
-          {isLoading?(
-            <CircularProgressWithText text="Please wait, your preset workout is being saved..."/>
-          ):(
-<Box
-            display="flex"
-            flexDirection="column"
-            gap={1}
-            justifyContent="center"
-            height="100%"
-          >
-            <Typography align="center" variant="h6">
-              Save your preset workout
-            </Typography>
-
-
-           
-
-            <TextField
-              id="outlined-basic"
-              label="Workout Name"
-              variant="filled"
-              required
-              size="small"
-              InputProps={{
-                readOnly: true,
-              }}
-              value={workoutState.workoutName}
-            />
-
-            {workoutState.workoutDescription !== "" && (
               <TextField
                 id="outlined-basic"
-                required
-                label="Workout Description"
+                label="Workout Name"
                 variant="filled"
-                InputProps={{
-                  readOnly: true,
+                required
+                size="small"
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  },
                 }}
-                multiline
-                maxRows={3}
-                value={workoutState.workoutDescription}
+                value={workoutState.workoutName}
               />
-            )}
 
+              {workoutState.workoutDescription !== "" && (
+                <TextField
+                  id="outlined-basic"
+                  required
+                  label="Workout Description"
+                  variant="filled"
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  multiline
+                  maxRows={3}
+                  value={workoutState.workoutDescription}
+                />
+              )}
 
               <Box display="flex" flexDirection="column" width="100%" gap={1}>
                 <TextField
@@ -164,8 +167,10 @@ function AddNewPresetWorkoutModal({
                   required
                   label="Workout By"
                   variant="filled"
-                  InputProps={{
-                    readOnly: true,
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
                   }}
                   multiline
                   maxRows={3}
@@ -176,8 +181,10 @@ function AddNewPresetWorkoutModal({
                   id="outlined-basic"
                   label="Workout Link Reference"
                   variant="filled"
-                  InputProps={{
-                    readOnly: true,
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
                   }}
                   multiline
                   maxRows={3}
@@ -185,31 +192,29 @@ function AddNewPresetWorkoutModal({
                 />
               </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-              }}
-            >
-              <Button
-                variant="dbz_save"
-                sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
-                onClick={handleCompleteNewPresetWorkout}
-                disabled={!isOnline}
+              <Box
+                sx={{
+                  display: "flex",
+                }}
               >
-                {isOnline ? "Save" : "Reconecting..."}
-              </Button>
-              <Button
-                variant="dbz_clear"
-                sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
-                onClick={handleClose}
-              >
-                Cancel
-              </Button>
+                <Button
+                  variant="dbz_save"
+                  sx={{ width: "100%", marginTop: "8px", marginRight: "8px" }}
+                  onClick={handleCompleteNewPresetWorkout}
+                  disabled={!isOnline}
+                >
+                  {isOnline ? "Save" : "Reconecting..."}
+                </Button>
+                <Button
+                  variant="dbz_clear"
+                  sx={{ width: "100%", marginTop: "8px", marginLeft: "8px" }}
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
-          </Box>
           )}
-
-          
         </Container>
       </Modal>
     </div>

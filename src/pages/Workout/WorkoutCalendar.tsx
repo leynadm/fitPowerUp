@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
-import dayjs, { Dayjs } from "dayjs";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -68,7 +68,7 @@ function WorkoutCalendar() {
     return <p>No Data</p>;
   }
 
-  function ServerDay(props: PickersDayProps<Dayjs>) {
+  function ServerDay(props: PickersDayProps<any>) {
     const { day } = props;
 
     const isUniqueDate = uniqueDates.includes(day.format("YYYY-MM-DD"));
@@ -92,7 +92,7 @@ function WorkoutCalendar() {
     );
   }
 
-  const handleDayClick = (clickedDate: Dayjs) => {
+  const handleDayClick = (clickedDate: any) => {
     const formattedDate = clickedDate.format("YYYY-MM-DD");
 
     setCalendarDateValue(clickedDate);
@@ -187,13 +187,10 @@ function WorkoutCalendar() {
     }}
     >
       <AppBar
-        elevation={3}
         position="fixed"
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         <Container maxWidth="md">
@@ -211,7 +208,7 @@ function WorkoutCalendar() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -233,7 +230,7 @@ function WorkoutCalendar() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >

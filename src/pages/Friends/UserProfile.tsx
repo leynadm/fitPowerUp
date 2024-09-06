@@ -147,8 +147,6 @@ function UserProfile() {
         style={{
           top: 0,
           height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
         {currentUserData.name !== undefined && (
@@ -173,7 +171,7 @@ function UserProfile() {
                 fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -194,7 +192,7 @@ function UserProfile() {
                 flexGrow: 1,
                 fontFamily: "monospace",
                 fontWeight: 700,
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >

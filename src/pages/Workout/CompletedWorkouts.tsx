@@ -3,16 +3,12 @@ import React, {
   useEffect,
   useState,
   useRef,
-  Dispatch,
-  SetStateAction,
   MouseEvent,
 } from "react";
 import Box from "@mui/material/Box";
-import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Menu from "@mui/material/Menu";
@@ -22,30 +18,17 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import Divider from "@mui/material/Divider";
 import { auth } from "../../config/firebase";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import CommentIcon from "@mui/icons-material/Comment";
-import ViewCommentModal from "../../components/ui/ViewCommentModal";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import formatTime from "../../utils/formatTime";
+
+import { WorkoutSetCard } from "../../components/workouts/WorkoutSetCard";
 import Fab from "@mui/material/Fab";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
 import { IWorkoutData } from "../../utils/interfaces/IUserTrainingData";
 import { Exercise } from "../../utils/interfaces/IUserTrainingData";
-import { AuthContext } from "../../context/Auth";
 import formatDateForTextField from "../../utils/formatDateForTextfield";
-import { Rating } from "@mui/material";
-import StarsIcon from "@mui/icons-material/Stars";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DataBadge from "../../components/ui/DataBadge";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
@@ -54,11 +37,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteCompletedWorkout from "../../components/ui/DeleteCompletedWorkoutModal";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
 
+import { CompletedWorkoutAccordion } from "../../components/workouts/CompletedWorkoutAccordion";
+import { CompletedWorkoutNavArrows } from "../../components/workouts/CompletedWorkoutNavArrows";
 function CompletedWorkouts() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -68,25 +49,9 @@ function CompletedWorkouts() {
     UserTrainingDataContext
   );
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const [openDeleteCompletedWorkout, setOpenDeleteCompletedWorkout] =
-    useState(false);
-
-  const { currentUserData } = useContext(AuthContext);
-
-  const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<IWorkoutData[]>(
-    () => filterUserTrainingsPerDay(dateForWorkout, userTrainingData)
-  );
-  const [openViewCommentModal, setOpenViewCommentModal] = useState(false);
-  const [exerciseComment, setExerciseComment] = useState("");
+  const [filteredUserTrainingData, setFilteredUserTrainingData] = useState<
+    IWorkoutData[]
+  >(() => filterUserTrainingsPerDay(dateForWorkout, userTrainingData));
 
   const [swipe, setSwipe] = useState<any>({
     moved: false,
@@ -127,27 +92,13 @@ function CompletedWorkouts() {
   useEffect(() => {
     const filteredUserTrainingDataArr = filterUserTrainingsPerDay(
       dateForWorkout,
-      userTrainingData,
+      userTrainingData
     );
 
-    setFilteredUserTrainingData(filteredUserTrainingDataArr)
-
+    setFilteredUserTrainingData(filteredUserTrainingDataArr);
   }, [userTrainingData, dateForWorkout]);
 
   const containerRef = useRef<HTMLElement>(null);
-
-  const workoutId = () => {
-    if (filteredUserTrainingData.length > 0) {
-      return filteredUserTrainingData[0].id;
-    } else {
-      return null;
-    }
-  };
-
-  function handleOpenDeleteCompletedWorkout() {
-    handleClose();
-    setOpenDeleteCompletedWorkout(!openDeleteCompletedWorkout);
-  }
 
   const handleLeftArrowClick = () => {
     const newDate = convertStringToDate(dateForWorkout);
@@ -157,10 +108,10 @@ function CompletedWorkouts() {
 
     const filteredUserTrainingDataArr = filterUserTrainingsPerDay(
       convertedDate,
-      userTrainingData,
+      userTrainingData
     );
 
-    setFilteredUserTrainingData(filteredUserTrainingDataArr)
+    setFilteredUserTrainingData(filteredUserTrainingDataArr);
   };
 
   const handleRightArrowClick = () => {
@@ -170,10 +121,10 @@ function CompletedWorkouts() {
     setDateForWorkout(convertedDate);
     const filteredUserTrainingDataArr = filterUserTrainingsPerDay(
       convertedDate,
-      userTrainingData,
+      userTrainingData
     );
 
-    setFilteredUserTrainingData(filteredUserTrainingDataArr)
+    setFilteredUserTrainingData(filteredUserTrainingDataArr);
   };
 
   function convertStringToDate(dateString: string) {
@@ -189,7 +140,7 @@ function CompletedWorkouts() {
     "Sign Out",
   ];
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
@@ -242,54 +193,25 @@ function CompletedWorkouts() {
     return <LoadingScreen text="Retrieving your data..." />;
   }
 
-  const handleSelectCompletedExercise = (exerciseName: string) => {
-    navigate(`completed-details/${exerciseName}`);
-  };
-
-  function handleViewCommentModalVisibility(
-    exerciseComment: string | undefined
-  ) {
-    if (exerciseComment) {
-      setExerciseComment(exerciseComment);
-      setOpenViewCommentModal(!openViewCommentModal);
-    }
-  }
-
   return (
     <Container
-      sx={{  width: "100%", height:"100%" }}
+      sx={{ width: "100%", height: "100%" }}
       maxWidth="md"
       className="ThisIsTheBoxUnder"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
     >
-      <ViewCommentModal
-        openViewCommentModal={openViewCommentModal}
-        setOpenViewCommentModal={setOpenViewCommentModal}
-        exerciseComment={exerciseComment}
-      />
-
-      <DeleteCompletedWorkout
-        setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
-        openDeleteCompletedWorkout={openDeleteCompletedWorkout}
-        workoutId={workoutId()}
-      />
       <AppBar
-        elevation={2}
         style={{
           top: 0,
           width: "100%",
-          height: "56px",
-          background:
-            "radial-gradient(circle, rgba(80,80,80,1) 0%, rgba(0,0,0,1) 100%)",
+          height: "56px"
         }}
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
-            {/* <FitnessCenterIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            /> */}
+
 
             <Typography
               variant="h6"
@@ -298,7 +220,7 @@ function CompletedWorkouts() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -317,7 +239,7 @@ function CompletedWorkouts() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 letterSpacing: ".0rem",
-                color: "inherit",
+                color:"#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -331,8 +253,8 @@ function CompletedWorkouts() {
                   sx={{
                     my: 2,
                     color: "white",
-                    fontFamily: "Acme",
-                    fontWeight: "400",                    
+
+                    fontWeight: "400",
                   }}
                 >
                   <Typography>{page}</Typography>
@@ -362,33 +284,53 @@ function CompletedWorkouts() {
                 <ListItemIcon>
                   <InsertChartIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Analysis</ListItemText>
+                <ListItemText
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                >
+                  Analysis
+                </ListItemText>
               </MenuItem>
 
               <MenuItem onClick={() => handlePageClick("Preset Workouts")}>
                 <ListItemIcon>
                   <FormatListNumberedIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Workouts & Routines</ListItemText>
+                <ListItemText
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                >
+                  Workouts & Routines
+                </ListItemText>
               </MenuItem>
 
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Body Tracker</ListItemText>
+                <ListItemText
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                >
+                  Body Tracker
+                </ListItemText>
               </MenuItem>
               <MenuItem onClick={() => handlePageClick("Settings")}>
                 <ListItemIcon>
                   <SettingsIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Settings</ListItemText>
+                <ListItemText
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                >
+                  Settings
+                </ListItemText>
               </MenuItem>
               <MenuItem onClick={() => handlePageClick("Sign Out")}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{color:"text.secondary"}}>Log Out</ListItemText>
+                <ListItemText
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                >
+                  Log Out
+                </ListItemText>
               </MenuItem>
             </Menu>
 
@@ -422,60 +364,10 @@ function CompletedWorkouts() {
         </Container>
       </AppBar>
 
-      <Container
-      
-        maxWidth="md"
-        className="ThisIsTheWrappingContainerForTheFuncitionalDateBar"
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 1,
-          flexGrow: 1,
-        }}
-      >
-        <IconButton aria-label="left arrow" onClick={handleLeftArrowClick}>
-          <KeyboardArrowLeftIcon
-            sx={{
-              color: "black",
-              fontSize: "2rem",
-              backgroundColor: "#FFA500",
-              borderRadius: "4px",
-            }}
-          />
-        </IconButton>
-
-        <Button
-          variant="outlined"
-          fullWidth
-          sx={{
-            /* 
-            background:"radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)", 
-             */
-            color: "black",
-            padding: 0,
-            fontSize: "1.25rem",
-            fontWeight: "500",
-          }}
-          disableRipple
-          disableFocusRipple
-          disableTouchRipple
-          disableElevation
-        >
-          {dateForWorkout}
-        </Button>
-
-        <IconButton aria-label="left arrow" onClick={handleRightArrowClick}>
-          <KeyboardArrowRightIcon
-            sx={{
-              color: "black",
-              fontSize: "2rem",
-              backgroundColor: "#FFA500",
-              borderRadius: "4px",
-            }}
-          />
-        </IconButton>
-      </Container>
+      <CompletedWorkoutNavArrows
+        handleLeftArrowClick={handleLeftArrowClick}
+        handleRightArrowClick={handleRightArrowClick}
+      />
 
       <Fab
         sx={{
@@ -517,289 +409,24 @@ function CompletedWorkouts() {
                     </Typography>
                   )}
 
-                  <Accordion sx={{ borderRadius: "4px", padding: 0 }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "100%",
-                        alignItems: "center",
-                        margin: 0,
-                      }}
-                    >
-                      <Rating
-                        readOnly
-                        max={7}
-                        size="large"
-                        name="simple-controlled"
-                        sx={{ color: "#FFA500" }}
-                        value={entry.wEval.value}
-                        icon={<StarsIcon fontSize="inherit" />}
-                      />
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ pb: 0, pt: 0 }}>
-                      <Typography color="text.secondary">"{entry.wEval.comment}"</Typography>
-                      <Box>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={entry.wEval.trainHarder} />
-                            }
-                            label="I trained harder than last time"
-                            sx={{
-                              '& .MuiFormControlLabel-label': {
-                                color: 'text.secondary',
-                              },
-                            }}
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={entry.wEval.warmStretch} />
-                            }
-                            label="I stretched and warmed up properly"
-                            sx={{
-                              '& .MuiFormControlLabel-label': {
-                                color: 'text.secondary',
-                              },
-                            }}
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={entry.wEval.feelPain} />
-                            }
-                            label="I didn't feel unusual or unwanted pain"
-                            sx={{
-                              '& .MuiFormControlLabel-label': {
-                                color: 'text.secondary',
-                              },
-                            }}
-                          />
-                        </FormGroup>
-                      </Box>
-                      <Box display="flex" justifyContent="space-around">
-                        <DataBadge dataValue={entry.power} dataLabel="PL" />
-                        <DataBadge
-                          dataValue={entry.stats.reps}
-                          dataLabel="reps"
-                        />
-                        <DataBadge
-                          dataValue={entry.stats.sets}
-                          dataLabel="sets"
-                        />
-                        <DataBadge
-                          dataValue={entry.stats.vol}
-                          dataLabel={
-                            currentUserData.unitsSystem === "metric"
-                              ? "kg"
-                              : "lbs"
-                          }
-                        />
-                      </Box>
-                      <Box
-                        width="100%"
-                        display="flex"
-                        flexDirection="row-reverse"
-                      >
-                        <IconButton
-                          size="large"
-                          aria-label="account of current user"
-                          aria-controls="menu-appbar"
-                          aria-haspopup="true"
-                          onClick={handleClick}
-                          sx={{ p: 0 }}
-                        >
-                          <MoreHorizIcon
-                            sx={{ alignSelf: "flex-end" }}
-                            fontSize="small"
-                          />
-                        </IconButton>
-
-                        <Menu
-                          id="basic-menu"
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          MenuListProps={{
-                            "aria-labelledby": "basic-button",
-                          }}
-                        >
-                          <MenuItem>
-                            <IconButton
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                              sx={{ p: 0, m: 0 }}
-                              onClick={handleOpenDeleteCompletedWorkout}
-                            >
-                              <DeleteForeverIcon
-                                sx={{
-                                  zIndex: 0,
-                                }}
-                              />
-                              <ListItemText>Delete workout</ListItemText>
-                            </IconButton>
-                          </MenuItem>
-                        </Menu>
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
+                  <CompletedWorkoutAccordion
+                    entry={entry}
+                    filteredUserTrainingData={filteredUserTrainingData}
+                  />
 
                   {entry.wExercises.map(
                     (
                       exercise: { name: string; exercises: Exercise[] },
                       index: number
                     ) => (
-                      <Box
+                      <WorkoutSetCard
                         key={index}
-                        sx={{
-                          borderRadius: "4px",
-                          boxShadow: 1,
-                        }}
-                      >
-                        <Button
-                          sx={{
-                            textAlign: "center",
-                            fontSize: "large",
-                            background:
-                              "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                            width: "100%",
-                            padding: 0,
-                          }}
-                          onClick={() =>
-                            handleSelectCompletedExercise(
-                              exercise.name.toLocaleUpperCase()
-                            )
-                          }
-                        >
-                          {exercise.name.toLocaleUpperCase()}
-                        </Button>
-
-                        <Divider sx={{ backgroundColor: "aliceblue" }} />
-                        {exercise.exercises.map(
-                          (exercise: Exercise, exerciseIndex: number) => (
-                            <Box
-                              key={exerciseIndex}
-                              sx={{
-                                display: "grid",
-                                gridAutoFlow: "column",
-                                gridTemplateColumns: "1fr 1fr 4fr",
-                                justifyContent: "space-evenly",
-                                justifyItems: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              {exercise.comment ? ( // Check if 'comment' property exists
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  onClick={() =>
-                                    handleViewCommentModalVisibility(
-                                      exercise.comment
-                                    )
-                                  }
-                                >
-                                  <CommentIcon
-                                    sx={{
-                                      zIndex: 0,
-                                    }}
-                                  />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <CommentIcon style={{ opacity: 0 }} />
-                                </IconButton>
-                              )}
-
-                              {exercise.is_pr ? (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon
-                                    sx={{ zIndex: -1, color: "#520975" }}
-                                  />
-                                </IconButton>
-                              ) : (
-                                <IconButton
-                                  size="large"
-                                  aria-label="account of current user"
-                                  aria-controls="menu-appbar"
-                                  aria-haspopup="true"
-                                  color="inherit"
-                                  disabled // Placeholder element
-                                >
-                                  <EmojiEventsIcon
-                                    sx={{ opacity: 0, zIndex: 0 }}
-                                  />
-                                </IconButton>
-                              )}
-
-                              <Box
-                                sx={{
-                                  display: "grid",
-                                  gridTemplateColumns:
-                                    "repeat(2, minmax(auto, 1fr))",
-                                  alignItems: "center",
-                                  justifyItems: "center",
-                                  width: "100%",
-                                  justifyContent: "space-evenly",
-                                  borderLeft: exercise.dropset
-                                    ? "5px solid red"
-                                    : "5px solid transparent",
-                                }}
-                              >
-                                {exercise.weight !== 0 && (
-                                  <Typography>
-                                    {`${exercise.weight.toFixed(2)} ${
-                                      currentUserData.unitsSystem === "metric"
-                                        ? "kg"
-                                        : "lbs"
-                                    }`}
-                                  </Typography>
-                                )}
-
-                                {exercise.reps !== 0 && (
-                                  <Typography>
-                                    {exercise.reps}
-                                    {exercise.amrap && "+"} reps
-                                  </Typography>
-                                )}
-
-                                {exercise.distance !== 0 && (
-                                  <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
-                                )}
-
-                                {exercise.time !== 0 && (
-                                  <Typography>
-                                    {exercise.time !== 0
-                                      ? formatTime(exercise.time)
-                                      : ""}
-                                  </Typography>
-                                )}
-                              </Box>
-
-                              <Divider />
-                            </Box>
-                          )
-                        )}
-                      </Box>
+                        exercise={exercise}
+                        index={index}
+                        handleExerciseSelect={() =>
+                          navigate(`completed-details/${exercise.name}`)
+                        }
+                      />
                     )
                   )}
                 </Box>
@@ -815,9 +442,9 @@ function CompletedWorkouts() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    alignItems: "center",                    
-                    flexGrow:1,
-          height:"calc(100svh - 168px)"
+                    alignItems: "center",
+                    flexGrow: 1,
+                    height: "calc(100svh - 168px)",
                   }}
                 >
                   <img
@@ -853,8 +480,9 @@ export function filterUserTrainingsPerDay(
     const filteredUserTrainingDataArr = userTrainingData.filter(
       (entry: IWorkoutData) => entry.date === convertedDate
     );
-    return filteredUserTrainingDataArr.length > 0 ? filteredUserTrainingDataArr : [];
+    return filteredUserTrainingDataArr.length > 0
+      ? filteredUserTrainingDataArr
+      : [];
   }
   return [];
 }
-
