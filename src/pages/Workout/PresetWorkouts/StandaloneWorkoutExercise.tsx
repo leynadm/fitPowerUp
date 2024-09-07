@@ -952,7 +952,6 @@ function StandaloneWorkoutExercise() {
       </Button>
 
       <AppBar
-        elevation={2}
         position="fixed"
         style={{
           top: 0,

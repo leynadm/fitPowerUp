@@ -128,14 +128,14 @@ function ProgressGraph() {
                   // Apply styles to the input element
                   sx: {
                     margin: 0,
-                    color: "white",
+                    color: "#1c4595",
                   },
                 },
               }}
               sx={{
-                color: "white",
+                color: "secondary",
                 width: "100%",
-                background: "orange",
+                background: "#FFA500",
                 fontFamily: "Raleway",
               }}
               multiline

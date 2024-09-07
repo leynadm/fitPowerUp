@@ -29,7 +29,7 @@ import {
   AutocompleteChangeDetails,
 } from "@mui/material/Autocomplete";
 
-import { Paper } from "@mui/material";
+import { Card, Paper } from "@mui/material";
 
 import getNewPresetWorkoutExercises from "../../../utils/IndexedDbCRUDFunctions/getNewPresetWorkoutExercises";
 import Button from "@mui/material/Button";
@@ -337,11 +337,11 @@ function NewPresetWorkout() {
             flexDirection="column"
           >
             {existingExercises.map((group, index) => (
-              <Box
+              <Card
+                variant="outlined"
                 key={index}
                 sx={{
                   borderRadius: "4px",
-                  boxShadow: 2,
                   marginBottom: "8px",
                 }}
               >
@@ -350,10 +350,7 @@ function NewPresetWorkout() {
                   sx={{
                     textAlign: "center",
                     fontSize: "large",
-                    background:
-                      "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
-                    boxShadow: 2,
-                    borderRadius: "4px",
+                    background:"black",
                     color: "white",
                   }}
                   onClick={() =>
@@ -478,7 +475,7 @@ function NewPresetWorkout() {
                     <Divider />
                   </Box>
                 ))}
-              </Box>
+              </Card>
             ))}
           </Box>
         </Container>

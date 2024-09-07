@@ -371,11 +371,11 @@ function CompletedWorkouts() {
 
       <Fab
         sx={{
-          backgroundColor: "#FFA500",
-
+          backgroundColor: "#1c4595",
           position: "fixed",
           bottom: "75px",
           right: "15px",
+          color:"white"
         }}
         size="medium"
         onClick={handleNewWorkout}

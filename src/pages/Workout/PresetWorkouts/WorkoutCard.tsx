@@ -57,7 +57,7 @@ function WorkoutCard({ workoutData, routine }: WorkoutCardProps) {
   }, [workoutData]); //
 
   return (
-    <Card elevation={4} sx={{ backgroundColor: "#fafafa", height: "100%" }}>
+    <Card variant="outlined" sx={{ backgroundColor: "#fafafa", height: "100%" }}>
       <CardContent sx={{ pt: 0 }}>
         <Typography
           align="center"
@@ -86,7 +86,7 @@ function WorkoutCard({ workoutData, routine }: WorkoutCardProps) {
 
             }
           }}
-          variant="filled"
+          variant="outlined"
         />
 
         <Box pt={1} display="flex" flexDirection="column">

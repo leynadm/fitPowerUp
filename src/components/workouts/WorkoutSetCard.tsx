@@ -107,7 +107,7 @@ variant="outlined"
               color="inherit"
               disabled
             >
-              <EmojiEventsIcon sx={{ zIndex: -1, color: "#520975" }} />
+              <EmojiEventsIcon sx={{ zIndex:0, color: "#520975" }} />
             </IconButton>
           ) : (
             <IconButton

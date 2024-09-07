@@ -62,7 +62,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   const navigate = useNavigate();
 
   return (
-    <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
+    <Card variant="outlined" sx={{ backgroundColor: "#fafafa" }}>
       <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Typography align="center" color="#1c4595" variant="h6" gutterBottom>
           {routine.rName}
@@ -162,12 +162,12 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
                 padding: 1,
                 fontFamily:"Raleway",
                 fontWeight:700,
-                color:"text.secondary"
+                color:"text.secondary",
               },
             }
             
           }}
-          variant="filled"
+          variant="outlined"
         />
       </CardContent>
       <CardActions

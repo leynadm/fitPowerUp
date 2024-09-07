@@ -163,9 +163,7 @@ function WorkoutDetails() {
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: "flex" }}>
-                
- 
-
+              
                 {workoutData && workoutData.del && (
                   <IconButton
                     size="large"

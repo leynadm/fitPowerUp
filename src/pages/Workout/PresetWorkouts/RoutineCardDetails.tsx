@@ -155,7 +155,7 @@ function RoutineCardDetails() {
         </AppBar>
       </Box>
 
-      <Typography fontSize={24} textAlign="center">
+      <Typography fontSize={24} color="secondary" textAlign="center">
         {routine.rName}
       </Typography>
       <Typography fontSize={18} textAlign="right">
@@ -168,11 +168,10 @@ function RoutineCardDetails() {
           p: 1,
           borderRadius: 1,
           border: "1px solid black",
-
         }}
-
-        fontSize={18}
-      >
+        variant="secondary"
+        fontWeight={700}
+>
         {routine.rDesc}
       </Typography>
 

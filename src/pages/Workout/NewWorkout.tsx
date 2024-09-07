@@ -26,7 +26,7 @@ import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import { Button } from "@mui/material";
+import { Button, Card } from "@mui/material";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -251,11 +251,11 @@ function NewWorkout({
           >
             {existingExercises.map((group, index) => (
               
-              <Box
+              <Card
                 key={index}
+                variant="outlined"
                 sx={{
                   borderRadius: "4px",
-                  boxShadow: 2,
                   marginBottom: "8px",
                 }}
               >
@@ -264,8 +264,7 @@ function NewWorkout({
                   sx={{
                     textAlign: "center",
                     fontSize:"large",
-                    background:
-                      "radial-gradient(circle, rgba(82,9,117,1) 0%, rgba(0,0,0,1) 100%)",
+                    background:"#520975",
                     padding:0,
                     color:"white",
                     width:"100%",
@@ -393,7 +392,7 @@ function NewWorkout({
                     <Divider />
                   </Box>
                 ))}
-              </Box>
+              </Card>
             ))}
           </Box>
         )}

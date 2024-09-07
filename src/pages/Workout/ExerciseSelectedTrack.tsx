@@ -913,7 +913,8 @@ function ExerciseSelectedTrack() {
         setIsAMRAP={setIsAMRAP}
       />
 
-      <Button onClick={togglePerformanceDetailsDrawer(true)} sx={{padding:0}}>
+      <Box width="100%" display="flex" justifyContent="center">
+      <Button onClick={togglePerformanceDetailsDrawer(true)} size="small" sx={{padding:0}}>
         <Typography
           sx={{
             padding: {
@@ -930,6 +931,8 @@ function ExerciseSelectedTrack() {
           {exerciseSelected.name.toLocaleUpperCase()}
         </Typography>
       </Button>
+      </Box>
+      
 
       <Divider sx={{ width: "100vw" }} />
 

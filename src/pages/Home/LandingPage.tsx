@@ -780,7 +780,7 @@ function LandingPage() {
       <Box
         width="100%"
         display="grid"
-        gridTemplateRows="8.5fr 1.5fr"
+        gridTemplateRows="9.25fr 0.75fr"
         sx={{
           backgroundColor: "black",
           placeItems: "center",
@@ -896,12 +896,6 @@ function LandingPage() {
             </a>
             to contact me via email.
           </Typography>
-
-          {/*<Typography variant="body2" color="white" align="center">
-             <Link color="inherit" href={myWebsite} target="_blank">
-              Developed by Daniel Matei {new Date().getFullYear()}
-            </Link> 
-          </Typography>*/}
         </Box>
       </Box>
     </Box>

@@ -68,7 +68,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
   }, []); //
 
   return (
-    <Card elevation={4} sx={{ backgroundColor: "#fafafa" }}>
+    <Card variant="outlined" sx={{ backgroundColor: "#fafafa" }}>
       <CardContent sx={{ pt: 0 }}>
         <Typography align="center" color="#1c4595" variant="h6" gutterBottom>
           {capitalizeWords(workoutData.wName)}
@@ -100,7 +100,7 @@ function StandaloneWorkoutCard({ workoutData }: StandaloneWorkoutCardProps) {
               },
             },
           }}
-          variant="filled"
+          variant="outlined"
         />
 
         <Box pt={1} display="flex" flexDirection="column">

@@ -6,7 +6,7 @@ import Badge from "@mui/material/Badge";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Card, Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -80,8 +80,8 @@ function WorkoutCalendar() {
         badgeContent={
           isUniqueDate ? (
             <FitnessCenterIcon
-              style={{ fontSize: "0.75rem" }}
-              color="primary"
+              style={{ fontSize: "1rem" }}
+              color="secondary"
             />
           ) : undefined
         }
@@ -262,12 +262,12 @@ function WorkoutCalendar() {
         >
           {workoutDateExercises.length > 0 &&
             workoutDateExercises.map((group, index) => (
-              <Box
+              <Card
+              variant="outlined"
                 key={index}
                 sx={{
-                  borderRadius: "4px",
-                  boxShadow: 1,
-                  margin: "16px",
+
+                  margin: "8px",
                   backgroundColor: "white",
                 }}
               >
@@ -276,10 +276,7 @@ function WorkoutCalendar() {
                   sx={{
                     textAlign: "center",
                     fontSize: "medium",
-                    background:
-                      "radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)",
-                    boxShadow: 2,
-                    borderRadius: "4px",
+                    background:"#FFA500",
                   }}
                 >
                   {group.name.toLocaleUpperCase()}
@@ -313,7 +310,7 @@ function WorkoutCalendar() {
                       >
                         <CommentIcon
                           sx={{
-                            zIndex: 0,
+                            zIndex: 1,
                           }}
                         />
                       </IconButton>
@@ -339,7 +336,7 @@ function WorkoutCalendar() {
                         color="inherit"
                         disabled // Placeholder element
                       >
-                        <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                        <EmojiEventsIcon sx={{ zIndex: 1 }} />
                       </IconButton>
                     ) : (
                       <IconButton
@@ -393,7 +390,7 @@ function WorkoutCalendar() {
                     <Divider />
                   </Box>
                 ))}
-              </Box>
+              </Card>
             ))}
 
           {workoutDateExercises.length > 0 && (

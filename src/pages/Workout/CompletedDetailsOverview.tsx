@@ -378,7 +378,8 @@ const DrawerList = (
         {DrawerList}
       </Drawer>
 
-      <Button onClick={togglePerformanceDetailsDrawer(true)} fullWidth>
+      <Box display="flex" justifyContent="center">
+      <Button onClick={togglePerformanceDetailsDrawer(true)} size="small">
         <Typography
           sx={{
             padding: {
@@ -398,6 +399,8 @@ const DrawerList = (
           {exerciseName && exerciseName.toLocaleUpperCase()}
         </Typography>
       </Button>
+      </Box>
+      
 
       <Box
         display="flex"

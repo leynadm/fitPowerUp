@@ -227,21 +227,7 @@ function ExerciseSelectedHistory() {
         exerciseComment={exerciseComment}
       />
     <Button  fullWidth disableRipple  sx={{display:"flex",justifyContent:"center",color:"text.secondary"}}>
-    <Typography
-        sx={{
-          padding: {
-            xs: "0.25rem", // Padding for extra small screens
-            sm: "0.5rem", // Padding for small screens
-            md: "0.75rem", // Padding for medium screens
-            lg: "1.25rem", // Padding for large screens
-          },
-
-        }}
-        variant="h6"
-textAlign="center"
->
-        {exerciseName && exerciseName.toLocaleUpperCase()}
-      </Typography>
+    
      
     </Button>
        <Divider />

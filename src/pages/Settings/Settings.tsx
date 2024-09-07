@@ -204,7 +204,7 @@ function Settings() {
               Unit System
             </Typography>
 
-            <FormControl>
+            <FormControl fullWidth>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue={updatedUnitsSystem}
@@ -224,7 +224,8 @@ function Settings() {
                 />
               </RadioGroup>
             </FormControl>
-            <Typography variant="body2">
+            
+            <Typography variant="secondary">
               Select here your preferred measurement system.
               <br></br>
               The app uses the metric system by default. If you choose to switch
@@ -253,10 +254,10 @@ function Settings() {
                 </Button>
               ) : updateStatus==='' && (updatedUnitsSystem === "metric" &&
                 currentUserData.unitsSystem === "metric")  ? (
-                <Typography>You're using the metric system.</Typography>
+                <Typography variant="secondary" fontWeight={700}>You're using the metric system.</Typography>
               ) : updateStatus==='' && (updatedUnitsSystem === "imperial" &&
                 currentUserData.unitsSystem === "imperial") ? (
-                <Typography>You're using the imperial system.</Typography>
+                <Typography variant="secondary" fontWeight={700}>You're using the imperial system.</Typography>
               ) : null}
             </Box>
           </CardContent>
@@ -268,7 +269,7 @@ function Settings() {
               Default Weight Increment
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Select here the amount of weight to be increased while using the
               utility buttons.
             </Typography>
@@ -314,13 +315,13 @@ function Settings() {
             <Typography color="text.secondary" gutterBottom>
               Export Your Data
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Export your training logs as a .csv file so you can view them in
               your preferred spreadsheet application.
               <br></br>
             </Typography>
             <Box pt="8px" display="flex" flexDirection="column" gap={2}>
-              <Typography variant="body2">
+              <Typography variant="secondary">
                 The Export Exercises performs a minimalist export containing
                 only exercise data, including specific KPI values (weight, reps,
                 etc.) together with exercise comments and metadata.
@@ -337,7 +338,7 @@ function Settings() {
                 </CSVLink>
               </Button>
 
-              <Typography variant="body2">
+              <Typography variant="secondary">
                 The Export Workouts function performs an export of workout level
                 data, specifically workout comments, workout rating, as well as
                 KPIs.
@@ -366,7 +367,7 @@ function Settings() {
               Import Data
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Import a compatible dataset to fitPowerUp.
             </Typography>
             <Box pt="8px">
@@ -413,7 +414,7 @@ function Settings() {
               Reset Your Training Data
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Delete your training data, including your workouts data, body
               tracker, power level and feats, etc.
               <br />
@@ -439,7 +440,7 @@ function Settings() {
               Feedback
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               You can send an email with your thoughts, comments and suggestions
               about the app by pressing the button below.
             </Typography>
@@ -466,7 +467,7 @@ function Settings() {
               <RedditIcon fontSize="small" />
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Join the fitPowerUp community on Reddit!
             </Typography>
 
@@ -484,7 +485,7 @@ function Settings() {
               Terms And Conditions
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Check the terms and conditions for using the app.
             </Typography>
 
@@ -505,7 +506,7 @@ function Settings() {
               Development Log
             </Typography>
 
-            <Typography variant="body2">
+            <Typography variant="secondary">
               Check out the features list implemented with each version of the
               app.
             </Typography>

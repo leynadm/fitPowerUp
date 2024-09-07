@@ -71,21 +71,21 @@ function DevelopmentLog() {
 
 
         <Typography variant="h6">Version 3.0 - Release 30/08/2024</Typography>
-        <Typography variant="button">
-          - Switched the font to LuckiestGuy
+        <Typography variant="secondary">
+          - Switched the main font to LuckiestGuy and the secondary font to Raleway
           <br />
-          - Overhaul the landing page with new graphics and background image
+          - Overhauled the landing page with a new design
           <br />
-          - Improve the preset workouts implementation and data structure
+          - Improved the preset workouts implementation and data structure
           <br />
-          - Redo the UI implementation across all apps and menus, changing colours and positioning
+          - Redid the UI implementation across all apps and menus for a flat look, changing colours and positioning
           <br/>
-          - Fix a bug where some dropdowns would have their options hidden when they would have too many items
+          - Fixed a bug where some dropdowns would have their options hidden when they would have too many items
         </Typography>
 
 
         <Typography variant="h6">Version 2.1.0 - Release 30/12/2023</Typography>
-        <Typography variant="button">
+        <Typography variant="secondary">
           - Added a loading spinner when completing a new workout, deleting a
           completed workout, importing or reseting data
           <br />
@@ -102,36 +102,36 @@ function DevelopmentLog() {
         </Typography>
 
         <Typography variant="h6">Version 2 - Release 27/12/2023</Typography>
-        <Typography variant="button">
+        <Typography variant="secondary">
           - Moved default data saving to the cloud, so data can persists across
           various supported device.
           <br />
-          - Add ability to import fitNotes app for android datasets.
+          - Addded the ability to import fitNotes app for android datasets.
           <br />
-          - Provide users with the possibility to preload their own
+          - Added the option to preload
           routines/workouts, in addition to providing default routines.
           <br />
-          - Add the ability to copy a previous workout when starting a new
+          - Added the ability to copy a previous workout when starting a new
           session.
           <br />
-          - Add a body tracker menu, users can now save various measurements for
+          - Added a body tracker menu, users can now save various measurements for
           their bodies.
           <br />
-          - Add a "feats" menu, where users can unlock various achievements for
+          - Added a "feats" menu, where users can unlock various achievements for
           specific gym metrics.
           <br />
-          - Add a "path" menu, where users can unlock Dragon Ball Z characters
+          - Added a "path" menu, where users can unlock Dragon Ball Z characters
           for additional motivation.
           <br />
-          - Improve the calendar's ease of us.
+          - Improved the calendar's ease of us.
           <br />
-          - Improve the landing page showcasing various app features.
+          - Improved the landing page showcasing various app features.
           <br />- Overhaul the UI, add new button styling and theme.
         </Typography>
 
         <Typography variant="h6">Version 1 - Release 31/06/2023</Typography>
         
-        <Typography variant="button">
+        <Typography variant="secondary">
           - Implement the ability to save exercises and workouts in phone's
           local storage.
           <br />
