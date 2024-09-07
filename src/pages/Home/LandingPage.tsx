@@ -12,6 +12,7 @@ import "../Home/styles/animation.css";
 import RedditIcon from "@mui/icons-material/Reddit";
 import EmailIcon from "@mui/icons-material/Email";
 import { DBZ } from "./LandingPage/DBZ";
+import CustomLogo from "../../assets/fp-logo.png"
 function LandingPage() {
   const navigate = useNavigate();
   function useContainerRefs() {
@@ -189,7 +190,7 @@ function LandingPage() {
           >
             <Box width={154}>
               <img
-                src="/fitpowerup_logo.svg"
+                src={CustomLogo}
                 alt=""
                 width="100%"
                 height="100%"

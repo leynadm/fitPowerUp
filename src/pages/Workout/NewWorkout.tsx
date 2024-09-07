@@ -27,6 +27,7 @@ import { AuthContext } from "../../context/Auth";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { Button, Card } from "@mui/material";
+import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 interface NewWorkoutProps {
   existingExercises: { name: string; exercises: Exercise[] }[];
   setExistingExercises: Dispatch<
@@ -46,6 +47,7 @@ function NewWorkout({
     useState(false);
 
   const { currentUserData } = useContext(AuthContext);
+  const {userBodyTrackerData}= useContext(BodyTrackerDataContext)
 
   useEffect(() => {
     // declare the data fetching function
@@ -193,7 +195,7 @@ function NewWorkout({
         maxWidth="md"
         className="ThisIsTheFirstContainer"
       >
-        {existingExercises && existingExercises.length === 0 ? (
+        {existingExercises && existingExercises.length === 0 && userBodyTrackerData.length > 0 ? (
           <Box
             sx={{
               display: "flex",
