@@ -165,7 +165,6 @@ function Friends() {
     <Container maxWidth="md" sx={{height:"100%"}}>
       <AppBar
         position="fixed"
-        elevation={2}
         style={{
           top: 0,
           height: "56px",

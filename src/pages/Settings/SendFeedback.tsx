@@ -12,7 +12,7 @@ function SendFeedback() {
         display: "grid",
       }}
     >
-      <AppBar position="fixed" elevation={0} style={{ top: 0, height: "56px" }}>
+      <AppBar position="fixed" style={{ top: 0, height: "56px" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <FeedbackIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

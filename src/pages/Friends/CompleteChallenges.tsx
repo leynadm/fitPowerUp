@@ -65,7 +65,6 @@ function CompleteChallengeCard({
 
   return (
     <Paper
-      elevation={4}
       sx={{
         padding: 1,
         display: "flex",
@@ -303,7 +302,7 @@ function CompleteChallengeCard({
         </Box>
       </Box>
       <Box display="flex" width="100%" justifyContent="space-around" gap={1}>
-        <Accordion elevation={0} >
+        <Accordion >
           <AccordionSummary
           
             expandIcon={<ExpandMoreIcon />}

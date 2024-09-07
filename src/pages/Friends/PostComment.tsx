@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -150,12 +150,11 @@ function PostComment({
         setDeleteCommentModalOpen={setDeleteCommentModalOpen}
         deleteComment={deleteComment}
       />
-      <Paper elevation={0} style={{ padding: "1rem 0 0" }}>
+      <Paper  style={{ padding: "1rem 0 0" }}>
         <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+          
             <Avatar alt="Remy Sharp" src={comment.profileImage} />
-          </Grid>
-          <Grid justifyContent="left" item xs zeroMinWidth>
+          <Grid justifyContent="left" >
             <Box
               sx={{
                 display: "flex",

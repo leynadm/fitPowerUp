@@ -72,19 +72,22 @@ function TermsAndConditions() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          marginBottom: "56px", // Add
         }}
         fontSize="1.25rem"
+
       >
         <Typography>Terms and Conditions</Typography>
         
+        <Typography variant="secondary" fontSize={16}>
         <span>
           Welcome to <strong>fitPowerUp</strong>!
         </span>
         <br></br>
+        <br></br>
         <span>
           <strong>Introduction</strong>
         </span>
+        <br></br>
         These terms and conditions ("Terms") govern your access to and use of
         the fitPowerUp fitness application ("App") provided by Daniel Matei
         ("Independent Developer," "I," or "me").
@@ -92,7 +95,9 @@ function TermsAndConditions() {
         do not agree to these Terms, please refrain from using the App.
         <br></br>
         <br></br>
-        <strong>Description of the App</strong> fitPowerUp is a fitness
+        <strong>Description of the App</strong>
+        <br></br>
+         fitPowerUp is a fitness
         application that offers various features and services to help you track
         your workouts, access exercise routines, in-depth data analysis
         functionalities and connect with a community of fitness enthusiasts. The
@@ -100,14 +105,18 @@ function TermsAndConditions() {
         compatible mobile devices.
         <br></br>
         <br></br>
-        <strong>Eligibility</strong> a. You must be at least 13 years of age to
+        <strong>Eligibility</strong> 
+        <br></br>
+        a. You must be at least 13 years of age to
         use the App. If you are under the age of 18, you must have the consent
         of a parent or legal guardian to use the App. <br></br>b. By using the
         App, you represent and warrant that you have the legal capacity to enter
         into these Terms and comply with all applicable laws.
         <br></br>
         <br></br>
-        <strong>User Account</strong> a. In order to use certain features of the
+        <strong>User Account</strong>
+        <br></br>
+         a. In order to use certain features of the
         App, you do need to create a user account. When creating your account,
         you are advised to provide accurate and complete information. Pseudonyms
         are acceptable, provided they are not offensive, misleading, or violate
@@ -121,6 +130,7 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Free Use and Limitations on Online functionalities</strong>
+        <br></br>
         a. fitPowerUp is available for free use, allowing users to access and
         utilize its features and services at no cost.
         <br></br>
@@ -153,7 +163,10 @@ function TermsAndConditions() {
         on the social component, unless explicitly stated.
         <br></br>
         <br></br>
-        <strong>User Content</strong> a. By using the App, you may have the
+        <strong>User Content</strong> 
+        
+        <br></br>
+        a. By using the App, you may have the
         opportunity to upload, submit, or post content, including but not
         limited to text and photos ("User Content"). <br></br>b. You retain
         ownership of your User Content, but by submitting it to the App, you
@@ -168,7 +181,9 @@ function TermsAndConditions() {
         obscene, or otherwise objectionable.
         <br></br>
         <br></br>
-        <strong>Privacy Policy</strong> a. I am committed to protecting your
+        <strong>Privacy Policy</strong> 
+        <br></br>
+        a. I am committed to protecting your
         privacy. My collection, use, and disclosure of personal information are
         governed by my Privacy Policy categories below. <br></br>b. By using the
         App, you consent to the collection, use, and disclosure of your personal
@@ -176,8 +191,10 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Privacy Policy on Collected Information</strong>
-        <em>a. Account Registration:</em>
-        When creating a user account on fitPowerUp, we collect the following
+        <br></br>
+        <em>a. Account Registration:</em> 
+        <br></br>
+        When creating a user account on fitPowerUp, I collect the following
         information: name, surname and email address.
         <br></br>This information is necessary to create and manage your user
         account. Various features inside the app may require you to add your
@@ -186,7 +203,9 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Privacy Policy on Use of Information</strong>
+        <br></br>
         <em>a. Account Management:</em>
+        <br></br>
         The information collected during account registration is used for the
         purpose of managing and administering your fitPowerUp user account.
         <em>b. Communication: </em>There will be no use of your email address to
@@ -195,52 +214,71 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Data Storage and Security</strong>
-        <em>a. Data Storage:</em> The user information collected during account
+        <br></br>
+        <em>a. Data Storage:</em> 
+        <br></br>
+        The user information collected during account
         registration is securely stored using various services within the Google
         Cloud Infrastructure.
-        <em>b. Data Security:</em> We implement appropriate security measures to
+        <br></br>
+        <em>b. Data Security:</em> 
+        <br></br>
+        I implement appropriate security measures to
         protect your personal information from unauthorized access, alteration,
         disclosure, or destruction. However, please note that no data
         transmission or storage can be guaranteed to be 100% secure. Therefore,
-        while we strive to protect your data, we cannot guarantee its absolute
+        while I strive to protect your data, I cannot guarantee its absolute
         security.
         <br></br>
         <br></br>
         <strong>Cookies and Tracking Technologies</strong>
+        <br></br>
         fitPowerUp does not use cookies or employ any tracking technologies to
         collect information about your use of the App.
         <br></br>
         <br></br>
-        <strong>Third-Party Services</strong> a. We do not share your personal
+        <strong>Third-Party Services</strong>
+        <br></br>
+         a. I do not share your personal
         information with any third parties, except as necessary to provide the
         App's core functionality, support our operations, or as required by law.
         <br></br>
         <br></br>
         <strong>Data Retention</strong>
-        a. We will retain your personal information for as long as necessary to
+        <br></br>
+        a. I will retain your personal information for as long as necessary to
         fulfill the purposes outlined in this Privacy Policy, unless a longer
         retention period is required or permitted by law.
         <br></br>
         <br></br>
         <strong>User Rights and Choices</strong>
-        <em>a. Access and Correction:</em> You may access and update your
+        <br></br>
+        <em>a. Access and Correction:</em> 
+        <br></br>
+        You may access and update your
         personal information stored in your fitPowerUp user account by logging
         into the App and editing your profile.
-        <em>b. Account Deletion: </em>You may request the deletion of your
+        <br></br>
+        <em>b. Account Deletion:
+          
+           </em>
+           <br></br>
+           You may request the deletion of your
         fitPowerUp user account and associated personal information by
         contacting us using the information referenced multiple times inside the
         document.
         <br></br>
         <br></br>
         <strong>Children's Privacy</strong> a. The fitPowerUp App is not
-        intended for use by individuals under the age of 13. We
+        intended for use by individuals under the age of 13. I
         <br></br> do not knowingly collect personal information from children
-        under 13. If you are a parent or guardian and believe we may have
+        under 13. If you are a parent or guardian and believe I may have
         collected information about a child, please contact us using the
         information provided in Section 9.
         <br></br>
         <br></br>
         <strong>Contact Me</strong>
+        <br></br>
         a. If you have any questions, concerns, or requests related to this
         Privacy Policy or the handling of your personal information, please
         contact me at:
@@ -249,6 +287,7 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Changes to this Privacy Policy</strong>
+        <br></br>
         a. I reserve the right to update or modify this Privacy Policy at any
         time. Any changes will be effective immediately upon posting the revised
         Privacy Policy within the App. Your continued use of the App after the
@@ -257,7 +296,9 @@ function TermsAndConditions() {
         periodically review it for any updates or changes.
         <br></br>
         <br></br>
-        <strong>Disclaimers and Limitation of Liability</strong> a. The App is
+        <strong>Disclaimers and Limitation of Liability</strong>
+        <br></br>
+         a. The App is
         provided on an "as is" and "as available" basis, without warranties of
         any kind, express or implied, including, but not limited to, warranties
         of merchantability, fitness for a particular purpose, and
@@ -271,7 +312,9 @@ function TermsAndConditions() {
         losses, arising out of or in connection with your use of the App.
         <br></br>
         <br></br>
-        <strong>Modification and Termination</strong> a. I reserve the right to
+        <strong>Modification and Termination</strong>
+        <br></br>
+         a. I reserve the right to
         modify or discontinue the App at any time, with or without notice.
         <br></br>b. I may also revise these Terms from time to time. The updated
         Terms will be effective as of the date of their posting.
@@ -279,7 +322,9 @@ function TermsAndConditions() {
         updated Terms constitutes your acceptance of the revised Terms.
         <br></br>
         <br></br>
-        <strong>Governing Law and Dispute Resolution</strong> a. These Terms
+        <strong>Governing Law and Dispute Resolution</strong>
+        <br></br>
+         a. These Terms
         shall be governed by and construed in accordance with the laws of Spain.{" "}
         <br></br>b. Any disputes arising out of or in connection with these
         Terms shall be resolved exclusively through arbitration, in accordance
@@ -288,6 +333,7 @@ function TermsAndConditions() {
         <br></br>
         <br></br>
         <strong>Disclaimer of Commercial Exchange and Service Provision</strong>
+        <br></br>
         Please be aware that this app is not engaged in any form of commercial
         exchange and does not offer services for sale or trade. All rights
         related to the content, characters, and trademarks are owned by Toei
@@ -302,6 +348,7 @@ function TermsAndConditions() {
           Statement Regarding Dragon Ball Z-Inspired Elements and Copyright
           Ownership
         </strong>
+        <br></br>
         fitPowerUp would like to acknowledge that certain elements within the
         app are inspired by the iconic anime series Dragon Ball Z. However, it
         is important to note that all copyrights and intellectual property
@@ -350,7 +397,9 @@ function TermsAndConditions() {
         consequences.
         <br></br>
         <br></br>
-        <strong>Miscellaneous</strong> a. These Terms constitute the entire
+        <strong>Miscellaneous</strong> 
+        <br></br>
+        a. These Terms constitute the entire
         agreement between you and the Independent Developer regarding the App
         and supersede any prior agreements or understandings. <br></br>b. If any
         provision of these Terms is found to be unenforceable, the remaining
@@ -363,6 +412,7 @@ function TermsAndConditions() {
         me at: <br></br>
         <strong>{completeEmail}</strong>
         <br></br>Thank you for using fitPowerUp!
+        </Typography>
       </Box>
     </Container>
   );

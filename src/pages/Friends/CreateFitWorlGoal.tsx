@@ -354,7 +354,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <TextField
           id="outlined-basic"
@@ -398,7 +398,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <Box display="flex">
           <Typography align="left" fontSize="1.25rem" color="text.secondary">
@@ -459,7 +459,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <Box display="flex">
           <Typography align="left" fontSize="1.25rem" color="text.secondary">
@@ -845,7 +845,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <Box display="flex">
           <Typography align="left" fontSize="1.25rem" color="text.secondary">
@@ -901,7 +901,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <Box display="flex">
           <Typography align="left" fontSize="1.25rem" color="text.secondary">
@@ -961,7 +961,7 @@ function CreateFitWorldGoal() {
           gap: 1,
           backgroundColor: "orange",
         }}
-        elevation={4}
+        variant="outlined"
       >
         <TextField
           id="outlined-multiline-flexible"

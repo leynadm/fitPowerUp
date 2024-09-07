@@ -120,7 +120,6 @@ function WorkoutDetails() {
 
       <Box position="fixed" sx={{ width: "100%", zIndex: 1 }}>
         <AppBar
-          elevation={2}
           style={{
             top: 0,
             width: "100%",

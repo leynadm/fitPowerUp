@@ -1,10 +1,9 @@
 import React, { useState, useContext } from "react";
 import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import getTimeDifference from "../../utils/socialFunctions/getTimeDifference";
-import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import { AuthContext } from "../../context/Auth";
 import { db } from "../../config/firebase";
@@ -60,12 +59,12 @@ function PostReply({
         setDeleteReplyModalOpen={setDeleteReplyModalOpen}
         deleteReply={deleteReply}
       />
-      <Paper elevation={0} style={{ padding: "1rem 0.25rem 0.25rem 0.25rem" }}>
+      <Paper  style={{ padding: "1rem 0.25rem 0.25rem 0.25rem" }}>
         <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
+          
             <Avatar alt="Remy Sharp" src={reply.profileImage} />
-          </Grid>
-          <Grid justifyContent="left" item xs zeroMinWidth>
+          
+          <Grid justifyContent="left">
             <Box
               sx={{
                 display: "flex",

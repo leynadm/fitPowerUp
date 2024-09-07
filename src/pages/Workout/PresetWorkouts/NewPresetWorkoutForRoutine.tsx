@@ -352,7 +352,7 @@ function NewPresetWorkoutForRoutine() {
             justifyContent: "center",
             alignItems: "center",
           }}
-          elevation={1}
+          variant="outlined"
         >
           <IconButton
             aria-label="add workout"

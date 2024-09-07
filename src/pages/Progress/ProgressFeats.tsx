@@ -128,15 +128,14 @@ function ProgressGraph() {
                   // Apply styles to the input element
                   sx: {
                     margin: 0,
-                    color: "#1c4595",
+                    fontWeight:"500",
+                    fontFamily:"Raleway",
+                    color: "black",
                   },
                 },
               }}
               sx={{
-                color: "secondary",
                 width: "100%",
-                background: "#FFA500",
-                fontFamily: "Raleway",
               }}
               multiline
             />
@@ -187,29 +186,33 @@ function ProgressGraph() {
       {/* 
       <Button onClick={loopThroughData}>Check Data</Button>
        */}
-      <FormControl>
+      <FormControl fullWidth>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
           defaultValue="All"
           name="radio-buttons-group"
           row
+          sx={{display:"flex", justifyContent:"space-around"}}
         >
           <FormControlLabel
+          color="text.secondary"
             value="All"
             control={<Radio />}
             label="All"
             onChange={() => setFilterSelection("All")}
           />
           <FormControlLabel
+          color="text.secondary"
             value="Complete"
             control={<Radio />}
-            label="Complete"
+            label="Done"
             onChange={() => setFilterSelection("Complete")}
           />
           <FormControlLabel
+          color="text.secondary"
             value="Incomplete"
             control={<Radio />}
-            label="Incomplete"
+            label="To Do"
             onChange={() => setFilterSelection("Incomplete")}
           />
         </RadioGroup>

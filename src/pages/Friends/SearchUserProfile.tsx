@@ -342,7 +342,6 @@ function SearchUserProfile() {
       />
 
       <AppBar
-        elevation={0}
         position="fixed"
         style={{
           top: 0,

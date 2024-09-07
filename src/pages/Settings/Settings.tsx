@@ -40,9 +40,9 @@ function Settings() {
     useContext(AuthContext);
 
   const [updatedDefaultWeightIncrement, setUpdatedDefaultWeightIncrement] =
-    useState(currentUserData.defaultWeightIncrement);
+    useState(currentUserData? currentUserData.defaultWeightIncrement:2.5);
   const [updatedUnitsSystem, setUpdatedUnitsSystem] = useState(
-    currentUserData.unitsSystem
+    currentUserData? currentUserData.unitsSystem:"metric"
   );
   const [updateStatus, setUpdateStatus] = useState('');
 
@@ -130,6 +130,12 @@ function Settings() {
     setOpenResetTrainingData(!openResetTrainingData);
   }
 
+
+  if(!userTrainingData){
+    return(
+      <>Wait...</>
+    )
+  }
   return (
     <Container
       maxWidth="md"
@@ -198,7 +204,7 @@ function Settings() {
       <Box display="flex" flexDirection="column" gap={1}>
         <Typography variant="subtitle1">Preferences</Typography>
         <Divider />
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Unit System
@@ -237,7 +243,7 @@ function Settings() {
                 <Typography>Refreshing data, give it a moment...</Typography>
               ):              
               updateStatus==='' &&  (updatedUnitsSystem === "imperial" &&
-              currentUserData.unitsSystem === "metric") ? (
+                currentUserData && currentUserData.unitsSystem === "metric") ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
@@ -245,7 +251,7 @@ function Settings() {
                   Convert To Imperial
                 </Button>
               ) : updateStatus===''&&(updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "imperial") ? (
+                currentUserData && currentUserData.unitsSystem === "imperial") ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
@@ -253,17 +259,17 @@ function Settings() {
                   Convert To Metric
                 </Button>
               ) : updateStatus==='' && (updatedUnitsSystem === "metric" &&
-                currentUserData.unitsSystem === "metric")  ? (
+                currentUserData && currentUserData.unitsSystem === "metric")  ? (
                 <Typography variant="secondary" fontWeight={700}>You're using the metric system.</Typography>
               ) : updateStatus==='' && (updatedUnitsSystem === "imperial" &&
-                currentUserData.unitsSystem === "imperial") ? (
+                currentUserData && currentUserData.unitsSystem === "imperial") ? (
                 <Typography variant="secondary" fontWeight={700}>You're using the imperial system.</Typography>
               ) : null}
             </Box>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Default Weight Increment
@@ -294,7 +300,7 @@ function Settings() {
               </Select>
             </FormControl>
             {updatedDefaultWeightIncrement !==
-            currentUserData.defaultWeightIncrement ? (
+            currentUserData && currentUserData.defaultWeightIncrement ? (
               <Box pt="8px">
                 <Button
                   variant="dbz_mini"
@@ -310,7 +316,7 @@ function Settings() {
         <Typography variant="subtitle1">Data</Typography>
         <Divider />
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Export Your Data
@@ -361,7 +367,7 @@ function Settings() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Import Data
@@ -382,7 +388,7 @@ function Settings() {
         </Card>
 
         {/* 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Delete Your Account
@@ -408,7 +414,7 @@ function Settings() {
         </Card>
         */}
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Reset Your Training Data
@@ -434,7 +440,7 @@ function Settings() {
 
         <Typography variant="subtitle1">Other</Typography>
         <Divider />
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Feedback
@@ -456,7 +462,7 @@ function Settings() {
             </Box>
           </CardContent>
         </Card>
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography
               color="text.secondary"
@@ -479,7 +485,7 @@ function Settings() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Terms And Conditions
@@ -500,7 +506,7 @@ function Settings() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
               Development Log
@@ -521,6 +527,29 @@ function Settings() {
             </Box>
           </CardContent>
         </Card>
+
+        <Card variant="outlined">
+          <CardContent>
+            <Typography color="text.secondary" gutterBottom>
+              Buy Me a Protein Shake
+            </Typography>
+
+            <Typography variant="secondary">
+              Due to popular demand from a handful of DBZ fans, I've created a Buy Me A Coffee page. This is completely optional, as the app is and will always remain 100% free.
+            </Typography>
+
+            <Box pt="8px">
+              <Button
+                variant="dbz_mini"
+                href="https://buymeacoffee.com/mateidaniel"
+                target="_blank"
+              >
+                Yeah, maybe, why not
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+
       </Box>
     </Container>
   );
