@@ -3,8 +3,8 @@ import Typography from "@mui/material/Typography";
 function NoAvailableDataBox() {
   return (
     <>
-      <SearchIcon fontSize="large" />
-      <Typography>There is no available data yet.</Typography>
+      <SearchIcon fontSize="large" sx={{color:"black"}} />
+      <Typography color="black">There is no available data yet.</Typography>
       </>
   );
 }

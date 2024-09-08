@@ -63,6 +63,7 @@ export default function ForgotPassword() {
                   width: "100%",
                   WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                   maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                borderRadius:8
                 }}
                 src="https://firebasestorage.googleapis.com/v0/b/fitpowerup-2bbc8.appspot.com/o/assets%2Flanding-page%2Flanding-screen-images%2Fnew-password.jpeg?alt=media&token=087a1366-1cb3-4f35-b650-a43be043d429"
                 alt=""
@@ -112,6 +113,7 @@ export default function ForgotPassword() {
                   width: "100%",
                   WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
                   maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+                  borderRadius:8
                 }}
                 src="/images/dbz-password.webp"
                 alt=""

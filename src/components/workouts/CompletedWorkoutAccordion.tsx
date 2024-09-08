@@ -73,14 +73,7 @@ export function CompletedWorkoutAccordion({
 
   return (
     <>
-        <Box>
-        <DeleteCompletedWorkout
-        setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
-        openDeleteCompletedWorkout={openDeleteCompletedWorkout}
-        workoutId={workoutId()}
-      />
-        </Box>
-
+        
 
       <Accordion  sx={{ borderRadius: "4px", padding: 0,borderColor:"none" }} variant="outlined">
         <AccordionSummary
@@ -192,6 +185,12 @@ export function CompletedWorkoutAccordion({
             </Menu>
           </Box>
         </AccordionDetails>
+        <DeleteCompletedWorkout
+        setOpenDeleteCompletedWorkout={setOpenDeleteCompletedWorkout}
+        openDeleteCompletedWorkout={openDeleteCompletedWorkout}
+        workoutId={workoutId()}
+      />
+
       </Accordion>
     </>
   );

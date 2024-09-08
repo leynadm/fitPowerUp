@@ -14,11 +14,14 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import {  ArrowBackIosNew, DeleteForever } from "@mui/icons-material";
+import { getThemeMode } from "../../../theme";
 function RoutineCardDetails() {
   const location = useLocation();
 
   const routine = location.state.routine;
 
+  const isDarkModeEnabled = getThemeMode()
+  
   const navigate = useNavigate();
 
   const { presetWorkoutsData } = useContext(UserPresetWorkoutsDataContext);
@@ -241,7 +244,10 @@ function RoutineCardDetails() {
             alignItems: "center",
           }}
         >
-          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <img 
+          
+          src={isDarkModeEnabled==='light'?'/svg/vegeta.svg':'/svg/vegeta-orange.svg'}
+          alt="son goku" width={128} height={128} />
           <Typography textAlign="center" fontSize="2rem" color="#1c4595">
             No workouts
             <br /> in routine

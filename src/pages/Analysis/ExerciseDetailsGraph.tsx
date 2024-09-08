@@ -376,7 +376,7 @@ function ExerciseDetailsGraph() {
               key={option.label}
               style={{ flexGrow: 1 }}
               onClick={() => handleSelectedDataGroupChange(option.value)}
-              sx={{ backgroundColor: "#FFA500" }}
+              sx={{ backgroundColor: "#FFA500",color:"text.primary" }}
             >
               {option.label}
             </Button>
@@ -391,6 +391,8 @@ function ExerciseDetailsGraph() {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
+          bgcolor="#f5f5f5"
+          borderRadius={1}
         >
           <NoAvailableDataBox />
         </Box>

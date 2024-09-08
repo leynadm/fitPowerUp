@@ -348,12 +348,14 @@ function ExerciseBreakdownAnalysis() {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
+          bgcolor="#f5f5f5"
+          borderRadius={1}
         >
           <NoAvailableDataBox />
         </Box>
       ) : muscleGroupChart ? (
         <ResponsiveContainer minHeight="500px">
-          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData}>
+          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={modeledData} style={{borderRadius:4,backgroundColor:"#f5f5f5"}}>
             <PolarGrid  />
             <PolarAngleAxis dataKey="exerciseMuscleGroup" fontFamily="LuckiestGuy" fontSize={16} />
             <PolarRadiusAxis
@@ -374,7 +376,7 @@ function ExerciseBreakdownAnalysis() {
           </RadarChart>
         </ResponsiveContainer>
       ) : (
-        <ResponsiveContainer width="100%" height="100%" minHeight="500px">
+        <ResponsiveContainer width="100%" height="100%" minHeight="500px" >
           <Treemap
             width={300}
             height={200}

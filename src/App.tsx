@@ -10,9 +10,11 @@ import TermsAndConditions from "./pages/Login/TermsAndConditions";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
+import { CustomThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
+    <CustomThemeProvider>
     <ThemeProvider theme={theme}>
       <div className="App">
         <Toaster
@@ -49,6 +51,7 @@ function App() {
         </AuthProvider>
       </div>
     </ThemeProvider>
+    </CustomThemeProvider>
   );
 }
 

@@ -135,14 +135,14 @@ export default function SignIn() {
   }
 
   return (
-    <Container component="main" maxWidth="md">
+    <Container component="main" maxWidth="md" >
       <CssBaseline />
       <Box
         sx={{
           marginTop: 2,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "center"        
         }}
       >
         <div

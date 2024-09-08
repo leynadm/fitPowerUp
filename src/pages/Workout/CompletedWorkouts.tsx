@@ -40,9 +40,9 @@ import LoadingScreen from "../../components/ui/LoadingScreen";
 import { useMediaQuery } from "@mui/material";
 import { CompletedWorkoutAccordion } from "../../components/workouts/CompletedWorkoutAccordion";
 import { CompletedWorkoutNavArrows } from "../../components/workouts/CompletedWorkoutNavArrows";
-
+import { getThemeMode } from "../../theme";
 function CompletedWorkouts() {
-  const isDarkModeEnabled = useMediaQuery('(prefers-color-scheme: light)');
+  const isDarkModeEnabled = getThemeMode();
   
   console.log({isDarkModeEnabled})
   const navigate = useNavigate();
@@ -452,7 +452,7 @@ function CompletedWorkouts() {
                   }}
                 >
                   <img
-                    src={isDarkModeEnabled? '/svg/goku.svg':'/svg/goku-light.svg'}
+                    src={isDarkModeEnabled==='light'?'/svg/goku.svg':'/svg/goku-orange.svg'}
                     alt="son goku"
                     width={128}
                     height={128}

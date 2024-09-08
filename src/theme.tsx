@@ -52,7 +52,20 @@ declare module '@mui/material/Button' {
     neutral: true;
   }
 }
+// Function to determine the theme mode based on Local Storage and system preferences
+export const getThemeMode = (): 'light' | 'dark' => {
+  // Check Local Storage for saved user preference
+  const savedPreference = localStorage.getItem('darkMode');
+  if (savedPreference !== null) {
+    return JSON.parse(savedPreference) ? 'dark' : 'light';
+  }
 
+  // Default to system preference if no saved preference is found
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+console.log("logging theme mode:")
+console.log(getThemeMode())
 const theme = createTheme({
 
   components: {
@@ -312,10 +325,11 @@ const theme = createTheme({
   },
 
   colorSchemes:{
-    dark:true  
+    dark:getThemeMode()==='dark'
   },
 
   palette: {
+
     primary: {
       main: "#01080a", // Deep black for intense DBZ energy
       light: "#303030", // Optional lighter version if needed

@@ -160,6 +160,7 @@ export default function SignUp() {
               width: "100%",
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+              borderRadius:8
             }}
             src="/images/dbz-sign-up.webp"
             alt=""

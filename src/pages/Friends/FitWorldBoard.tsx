@@ -124,9 +124,13 @@ function FitWorldBoard() {
               alignItems: "center",
               flexDirection: "column",
               gap: 1,
+              height:"calc(100svh - 200px)"
             }}
           >
+            <Typography color="text.secondary">
             You haven't completed any challenges yet.
+            </Typography>
+
           </Box>
         ) : null}
       </Box>

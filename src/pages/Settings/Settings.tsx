@@ -60,6 +60,7 @@ function Settings() {
     const isDarkMode = event.target.checked;
     setManualMode(isDarkMode);
     localStorage.setItem('darkMode', JSON.stringify(isDarkMode)); // Save the preference to local storage
+    window.location.reload();
   };
 
     // Determine the effective mode
@@ -148,9 +149,26 @@ function Settings() {
     setOpenResetTrainingData(!openResetTrainingData);
   }
 
-  if (!userTrainingData) {
-    return <>Wait...</>;
+  if (!userTrainingData || !currentUserData) {
+    return (
+      <Container
+        maxWidth="md"
+        sx={{
+          width: "100%",
+          height: "100svh",
+          display: "flex",
+          justifyContent:"center",
+          flexDirection: "column",
+        }}
+      >
+        <Typography color="text.secondary" textAlign="center">
+          Applying the new settings...
+        </Typography>
+        ;
+      </Container>
+    );
   }
+
   return (
     <Container
       maxWidth="md"
@@ -215,7 +233,7 @@ function Settings() {
           </Toolbar>
         </Container>
       </AppBar>
-{/* 
+
       <Box display="flex" flexDirection="column" pb={2}>
         <Typography variant="h6" color="primary">
           Mode
@@ -238,7 +256,6 @@ function Settings() {
           />
         </FormControl>
       </Box>
-       */}
       <Box display="flex" flexDirection="column" gap={1}>
         <Typography variant="h6" color="primary">
           Preferences
@@ -350,7 +367,7 @@ function Settings() {
               </Select>
             </FormControl>
             {updatedDefaultWeightIncrement !== currentUserData &&
-            currentUserData.defaultWeightIncrement ? (
+            (currentUserData.defaultWeightIncrement) ? (
               <Box pt="8px">
                 <Button
                   variant="dbz_mini"

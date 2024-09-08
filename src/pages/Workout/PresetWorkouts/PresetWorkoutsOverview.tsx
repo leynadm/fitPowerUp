@@ -19,6 +19,7 @@ import StandaloneWorkoutCard from "./StandaloneWorkoutCard";
 import IPresetRoutineData from "../../../utils/interfaces/IPresetRoutineData";
 import IPresetStandaloneWorkout from "../../../utils/interfaces/IPresetStandaloneWorkout";
 import { Button } from "@mui/material";
+import { getThemeMode } from "../../../theme";
 
 export interface IPresetRoutine {
   routineName: string;
@@ -46,6 +47,8 @@ interface IPresetWorkoutDetails {
 }
 
 function PresetWorkoutsOverview() {
+  
+  const isDarkModeEnabled = getThemeMode()
   const { presetWorkoutsData, presetRoutinesData, refetchPresetWorkoutsData } =
     useContext(UserPresetWorkoutsDataContext);
   useEffect(() => {
@@ -58,7 +61,6 @@ function PresetWorkoutsOverview() {
     fetchData().catch(console.error); // Handle errors
   }, []);
 
-  console.log({ presetWorkoutsData });
 
   function handleDownload() {
     // Convert presetWorkoutsData to a JSON string
@@ -250,7 +252,10 @@ function PresetWorkoutsOverview() {
             alignItems: "center",
           }}
         >
-          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <img 
+                              src={isDarkModeEnabled==='light'?'/svg/vegeta.svg':'/svg/vegeta-orange.svg'}
+
+          alt="son goku" width={128} height={128} />
           <Typography textAlign="center" fontSize="2rem" color="#1c4595">
             We couldn't find
             <br />
@@ -277,7 +282,11 @@ function PresetWorkoutsOverview() {
             alignItems: "center",
           }}
         >
-          <img src="/svg/vegeta.svg" alt="son goku" width={128} height={128} />
+          <img 
+          
+          src={isDarkModeEnabled==='light'?'/svg/vegeta.svg':'/svg/vegeta-orange.svg'}
+
+          alt="son goku" width={128} height={128} />
           <Typography textAlign="center" fontSize="2rem" color="#1c4595">
             We couldn't find
             <br />
