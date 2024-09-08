@@ -62,9 +62,9 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
   const navigate = useNavigate();
 
   return (
-    <Card variant="outlined" sx={{ backgroundColor: "#fafafa" }}>
+    <Card variant="outlined" >
       <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Typography align="center" color="#1c4595" variant="h6" gutterBottom>
+        <Typography align="center" color="secondary" variant="h6" gutterBottom>
           {routine.rName}
         </Typography>
         <Typography
@@ -73,7 +73,7 @@ function RoutineCard({ routine }: { routine: IPresetRoutineData }) {
           m={0}
           align="right"
           component="div"
-          color="#1c4595"
+          color="secondary"
         >
           by {routine.rBy}
         </Typography>

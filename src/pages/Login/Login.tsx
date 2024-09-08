@@ -3,7 +3,8 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -51,6 +52,7 @@ function Copyright() {
           marginTop: "1rem",
           textDecoration: "underline",
         }}
+        color="text.secondary"
       >
         Terms and Conditions Apply
       </Typography>
@@ -151,6 +153,7 @@ export default function SignIn() {
               width: "100%",
               WebkitMaskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
               maskImage: "linear-gradient(#fff,rgba(255,255,255,1))",
+              borderRadius:8
             }}
             src="/images/dbz-sign-in.webp"
             alt=""
@@ -158,7 +161,7 @@ export default function SignIn() {
             loading="lazy"
           ></img>
         </div>
-        <Typography component="h1" variant="h5" autoFocus>
+        <Typography component="h1" variant="h5" color="text.secondary" autoFocus>
           Welcome to fitPowerUp!
         </Typography>
 
@@ -167,7 +170,7 @@ export default function SignIn() {
             margin="normal"
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email Address"            
             name="email"
             autoComplete="email"
             autoFocus
@@ -220,14 +223,14 @@ export default function SignIn() {
             <span style={{ textAlign: "center",fontFamily:"LuckiestGuy" }}>LOG IN WITH GOOGLE</span>
           </Button>
 
-          <Grid container>
-            <Grid item xs>
-              <Link variant="body2" onClick={handleForgotPasswordClick}>
+          <Grid container spacing={2} justifyContent="space-between">
+            <Grid >
+              <Link onClick={handleForgotPasswordClick} color="text.secondary">
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item>
-              <Link variant="body2" onClick={handleSignUpClick}>
+            <Grid >
+              <Link onClick={handleSignUpClick}color="text.secondary">
                 {"Need an account? Sign Up"}
               </Link>
             </Grid>

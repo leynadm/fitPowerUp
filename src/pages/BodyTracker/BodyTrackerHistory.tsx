@@ -205,6 +205,7 @@ function BodyTrackerHistory() {
                 width="100%"
                 ref={imgRef}
                 style={{
+                  borderRadius:8,
                   objectFit: "contain",
                   objectPosition: "center",
                   maxWidth: "100%",

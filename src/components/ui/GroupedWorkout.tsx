@@ -20,7 +20,7 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
     <Box>
       {workoutExercises.map((group: any, index: any) => (
         <Card
-        variant="outlined"
+          variant="outlined"
           key={index}
           sx={{
             borderRadius: "4px",
@@ -32,15 +32,15 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
             sx={{
               textAlign: "center",
               fontSize: "large",
-              background:"black",
-              color: "white",
+              backgroundColor: "neutral.main",
+              color: "neutral.dark",
             }}
+
             //onClick={() => handleSelectWorkoutExercise(group.name,group.exercises[0].group)}
           >
             {group.name.toLocaleUpperCase()}
           </Typography>
 
-          <Divider sx={{ backgroundColor: "aliceblue" }} />
           {group.exercises.map((exercise: any, exerciseIndex: any) => (
             <Box
               key={exerciseIndex}
@@ -117,7 +117,7 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
                 }}
               >
                 {exercise.weight !== 0 && (
-                  <Typography>
+                  <Typography color="text.secondary">
                     {`${exercise.weight.toFixed(2)} ${
                       currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                     }`}
@@ -125,15 +125,18 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
                 )}
 
                 {exercise.reps !== 0 && (
-                  <Typography>{exercise.reps}{exercise.amrap&&"+"} reps</Typography>
+                  <Typography color="text.secondary">
+                    {exercise.reps}
+                    {exercise.amrap && "+"} reps
+                  </Typography>
                 )}
 
                 {exercise.distance !== 0 && (
-                  <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                  <Typography color="text.secondary">{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                 )}
 
                 {exercise.time !== 0 && (
-                  <Typography>
+                  <Typography color="text.secondary">
                     {exercise.time !== 0 ? formatTime(exercise.time) : ""}
                   </Typography>
                 )}
@@ -148,4 +151,4 @@ function GroupedWorkout({ workoutExercises }: GroupedWorkoutProps) {
   );
 }
 
-export default GroupedWorkout
+export default GroupedWorkout;

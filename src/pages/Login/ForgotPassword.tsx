@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -81,11 +81,11 @@ export default function ForgotPassword() {
               password.
             </Typography>
             <Grid container justifyContent="flex-end">
-              <Grid item sx={{ padding: "8px" }}>
+              
                 <Link variant="body2" onClick={handleSignInClick}>
                   Do you remember your password? Sign in
                 </Link>
-              </Grid>
+              
             </Grid>
           </Box>
         </Container>
@@ -119,7 +119,7 @@ export default function ForgotPassword() {
               ></img>
             </div>
 
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" color="text.secondary">
               Reset your password
             </Typography>
             <Box
@@ -129,14 +129,11 @@ export default function ForgotPassword() {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography>
+                  <Typography color="text.secondary">
                     Forgot your password?<br></br> Please enter your email
                     address. You will receive a link to create a new password
                     via email.
                   </Typography>
-                </Grid>
-                <Grid item xs={12}>
                   <TextField
                     required
                     fullWidth
@@ -146,7 +143,6 @@ export default function ForgotPassword() {
                     autoComplete="email"
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                </Grid>
               </Grid>
               <Button
                 type="submit"
@@ -158,11 +154,11 @@ export default function ForgotPassword() {
                 Reset Password
               </Button>
               <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link variant="body2" onClick={handleSignInClick}>
+                
+                  <Link variant="body1" color="text.secondary" onClick={handleSignInClick}>
                     Remember your password? Sign in
                   </Link>
-                </Grid>
+                
               </Grid>
             </Box>
           </Box>

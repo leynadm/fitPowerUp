@@ -223,35 +223,35 @@ const DrawerList = (
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="1 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="3 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="5 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="8 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="10 RM"
@@ -425,7 +425,7 @@ const DrawerList = (
             <Box>
               <img
                 src={exerciseImgURL}
-                style={{ minHeight: "100%", objectFit: "cover" }}
+                style={{ minHeight: "100%", objectFit: "cover",borderRadius:8 }}
                 width="100%"
                 height="100%"
                 alt=""

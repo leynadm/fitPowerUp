@@ -84,7 +84,7 @@ function RoutineCardDetails() {
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   letterSpacing: ".1rem",
-                color:"#FFA500",
+                color:"secondary",
                   textDecoration: "none",
                 }}
               >
@@ -158,13 +158,13 @@ function RoutineCardDetails() {
       <Typography fontSize={24} color="secondary" textAlign="center">
         {routine.rName}
       </Typography>
-      <Typography fontSize={18} textAlign="right">
+      <Typography fontSize={18} color="secondary" textAlign="right">
         {routine.rBy}
       </Typography>
 
       <Typography
         sx={{
-          bgcolor: "#FFA500",
+          backgroundColor: "secondary.main",
           p: 1,
           borderRadius: 1,
           border: "1px solid black",

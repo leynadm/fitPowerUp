@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -171,7 +171,6 @@ export default function SignUp() {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="given-name"
                 name="firstName"
@@ -188,8 +187,6 @@ export default function SignUp() {
                     : ""
                 }
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <TextField
                 required
                 fullWidth
@@ -205,8 +202,6 @@ export default function SignUp() {
                     : ""
                 }
               />
-            </Grid>
-            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -219,8 +214,7 @@ export default function SignUp() {
                 error={!!validationErrors.email}
                 helperText={validationErrors.email}
               />
-            </Grid>
-            <Grid item xs={12}>
+
               <TextField
                 required
                 fullWidth
@@ -234,17 +228,18 @@ export default function SignUp() {
                 helperText={validationErrors.password}
               />
             </Grid>
-            <Grid item xs={12}>
+
               <Typography
                 onClick={() => navigate("/terms-and-conditions")}
                 sx={{
                   textDecoration: "underline",
+                  pt:2
                 }}
+                color="text.secondary"
               >
                 Click here to read the Terms and Conditions
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
+
               <FormControlLabel
                 control={
                   <Checkbox
@@ -253,11 +248,11 @@ export default function SignUp() {
                     color="primary"
                   />
                 }
+
                 label="Agree with the terms and conditions."
                 onClick={handleTermsAndConditionsClick}
               />
-            </Grid>
-          </Grid>
+
           <Button
             type="submit"
             fullWidth
@@ -268,11 +263,11 @@ export default function SignUp() {
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2" onClick={handleLoginClick}>
+            
+              <Link href="#" variant="body1" color="text.secondary" onClick={handleLoginClick}>
                 Already have an account? Sign in
               </Link>
-            </Grid>
+            
           </Grid>
         </Box>
       </Box>

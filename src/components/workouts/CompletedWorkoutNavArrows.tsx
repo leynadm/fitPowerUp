@@ -48,7 +48,6 @@ export function CompletedWorkoutNavArrows({handleLeftArrowClick,handleRightArrow
             /* 
             background:"radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(204,136,10,1) 100%)", 
              */
-            color: "black",
             padding: 0,
             fontSize: "1.25rem",
             fontWeight: "500",

@@ -358,7 +358,7 @@ function ExerciseDetailsGraph() {
               key={option.label}
               style={{ flexGrow: 1 }}
               onClick={() => handleStandardTimeframeChange(option.value)}
-              sx={{ backgroundColor: "#520975" }}
+              sx={{ backgroundColor: "#520975",color:"white" }}
             >
               {option.label}
             </Button>
@@ -395,7 +395,7 @@ function ExerciseDetailsGraph() {
           <NoAvailableDataBox />
         </Box>
       ) : selectedKPI !== "Max Weight for Reps" ? (
-        <ResponsiveContainer minHeight="500px">
+        <ResponsiveContainer minHeight="500px" style={{borderRadius:4,backgroundColor:"#f5f5f5"}}>
           <LineChart
             width={500}
             height={500}

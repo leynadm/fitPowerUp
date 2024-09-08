@@ -206,7 +206,7 @@ function StandaloneWorkoutDetails() {
       <Box>
         <Typography
           align="center"
-          color="#1c4595"
+          color="secondary"
           variant="h6"
           gutterBottom
         >

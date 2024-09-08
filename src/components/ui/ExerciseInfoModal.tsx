@@ -149,7 +149,7 @@ function ExerciseInfoModal({
                 alt={exerciseSelected && exerciseSelected.name}
                 width="100%"
                 height="100%"
-                style={{ minHeight: "270px", objectFit: "cover" }}
+                style={{ borderRadius:8, minHeight: "270px", objectFit: "cover" }}
               />
             )}
           </Box>

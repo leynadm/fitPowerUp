@@ -130,7 +130,7 @@ function ProgressGraph() {
                     margin: 0,
                     fontWeight:"500",
                     fontFamily:"Raleway",
-                    color: "black",
+                    color: "text.secondary",
                   },
                 },
               }}
@@ -154,7 +154,7 @@ function ProgressGraph() {
                   height: "72px",
                   width: "100%",
                   borderRadius: "4px",
-                  backgroundColor: "rgba(239, 239, 239, 1)", // Semi-transparent overlay
+                  backgroundColor: "#FFA500", // Semi-transparent overlay
                   pointerEvents: "none", // To keep the text field interactable
                 }}
               />

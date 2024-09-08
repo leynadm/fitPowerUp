@@ -103,7 +103,7 @@ function ProgressPath() {
                   minWidth="128px"
                 >
                   <CheckCircleIcon fontSize="large" sx={{ color: "#FFA500" }} />
-                  <Typography>Unlocked</Typography>
+                  <Typography color="text.secondary">Unlocked</Typography>
                 </Box>
               ) : (
                 <Typography variant="button">

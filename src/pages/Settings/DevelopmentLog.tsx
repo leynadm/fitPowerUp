@@ -69,6 +69,12 @@ function DevelopmentLog() {
           Development Log
         </Typography>
 
+        <Typography variant="h6">Version 3.1 - Release 08/09/2024</Typography>
+        <Typography variant="secondary">
+          - Add dark mode
+          <br />
+          - Further enhance the look and feel of the app by improving the color scheme          
+        </Typography>
 
         <Typography variant="h6">Version 3.0 - Release 30/08/2024</Typography>
         <Typography variant="secondary">

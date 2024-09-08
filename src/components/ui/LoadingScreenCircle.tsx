@@ -10,7 +10,7 @@ function LoadingScreenCircle({text}:LoadingScreenCircleProps){
 
       <Box height="calc(100vh - 112px)" display="flex" flexDirection="column" alignItems="center" justifyContent="center" width="100%">
         <CircularProgress sx={{width:"50%"}}/>
-        <Typography padding={2} textAlign="center">{text}</Typography>
+        <Typography padding={2} textAlign="center" color="text.secondary">{text}</Typography>
       </Box>
     );
 }

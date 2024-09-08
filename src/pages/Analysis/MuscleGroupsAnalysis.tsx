@@ -28,11 +28,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { AuthContext } from "../../context/Auth";
+import { useTheme } from "@emotion/react";
+import theme from "../../theme";
 function MuscleGroupsAnalysis() {
   const { userTrainingData,refetchUserTrainingData } = useContext(UserTrainingDataContext);
 
   const { userExercisesLibrary,refetchUserExercisesLibrary } = useContext(UserExercisesLibraryContext);
 
+
+  console.log({theme})
   const { currentUserData } = useContext(AuthContext);
 
   const [exercisesMuscleGroupsArr,setExercisesMuscleGroupsArr] = useState<string[]>(getExercisesMuscleGroups(userExercisesLibrary))
@@ -210,7 +214,7 @@ function MuscleGroupsAnalysis() {
               key={option.label}
               style={{ flexGrow: 1 }}
               onClick={() => handleStandardTimeframeChange(option.value)}
-              sx={{ backgroundColor: "#520975" }}
+              sx={{ backgroundColor: "#520975",color:"white" }}
             >
               {option.label}
             </Button>
@@ -228,7 +232,7 @@ function MuscleGroupsAnalysis() {
               key={option.label}
               style={{ flexGrow: 1 }}
               onClick={() => handleDataGroupChange(option.value)}
-              sx={{ backgroundColor: "#FFA500" }}
+              sx={{ backgroundColor: "#FFA500",color:"text.primary" }}
             >
               {option.label}
             </Button>
@@ -236,7 +240,7 @@ function MuscleGroupsAnalysis() {
         </ButtonGroup>
       </Box>
 
-      <ResponsiveContainer minHeight="500px">
+      <ResponsiveContainer minHeight="500px" style={{borderRadius:4,backgroundColor:"#f5f5f5"}}>
         {modeledData && modeledData?.length > 0 ? (
           <LineChart
             width={500}
@@ -250,8 +254,11 @@ function MuscleGroupsAnalysis() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="exerciseDate" fontSize={12} />
+            <XAxis dataKey="exerciseDate" fontSize={12}
+
+            />
             <YAxis
+              
               width={25}
               fontSize={12}
               tickFormatter={(value) =>
@@ -260,10 +267,11 @@ function MuscleGroupsAnalysis() {
                   compactDisplay: "short",
                 }).format(value)
               }
+              
               label={{
                 value: valueToDisplay(selectedKPI),
                 angle: -90,
-                position: "insideBottomLeft",                
+                position: "insideBottomLeft",
               }}
             />
             <Tooltip />

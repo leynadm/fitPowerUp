@@ -97,12 +97,12 @@ function InstallInstructionsModal({
             <Typography
               fontSize="1.25rem"
               textAlign="center"
-              alignSelf="flex-end"
-              color="#1c4595"
+
+              color="primary.main"
             >
               Install App
             </Typography>
-            <InstallMobileIcon fontSize="large" />
+            <InstallMobileIcon sx={{color:"primary.main"}} />
           </Box>
 
           <Box
@@ -113,8 +113,8 @@ function InstallInstructionsModal({
             gap={1}
             padding={2}
           >
-            <Typography fontFamily="Raleway" fontWeight={700} align="center">
-              Install the app for a quicker access.
+            <Typography fontFamily="Raleway" color="text.secondary" fontWeight={500} align="center">
+              Install the app for quicker access.
             </Typography>
 
             <Box
@@ -123,8 +123,9 @@ function InstallInstructionsModal({
               alignItems="center"
               justifyContent="center"
               fontFamily="Raleway"
-              fontWeight={700}
-            >
+              fontWeight={500}
+    color="text.secondary"
+>
 
               Just tap <MoreHorizIcon fontSize="large" />
               and<span style={{ fontWeight: "bold" }}>Install App</span>

@@ -316,7 +316,7 @@ function ExerciseBreakdownAnalysis() {
               key={option.label}
               style={{ flexGrow: 1 }}
               onClick={() => handleStandardTimeframeChange(option.value)}
-              sx={{ backgroundColor: "#520975" }}
+              sx={{ backgroundColor: "#520975",color:"white" }}
             >
               {option.label}
             </Button>

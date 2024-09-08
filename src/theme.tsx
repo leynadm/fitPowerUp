@@ -35,9 +35,37 @@ declare module "@mui/material/Typography" {
   }
 }
 
+// Extend MUI theme types to include new palette properties
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary']; // Define the new property type
+  }
+
+  interface PaletteOptions {
+    neutral?: PaletteOptions['primary']; // Extend the options to include the new property
+  }
+}
+
+// Extend the color property in Button to use the new `neutral` color type
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    neutral: true;
+  }
+}
 
 const theme = createTheme({
+
   components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          fontFamily:"LuckiestGuy, Arial, sans-serif",
+          '&:hover': {
+            textDecoration: "underline", // Example hover effect
+          },
+        },
+      },
+    },
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
@@ -283,16 +311,60 @@ const theme = createTheme({
     },
   },
 
+  colorSchemes:{
+    dark:true  
+  },
+
   palette: {
     primary: {
-      main: "#01080a",
+      main: "#01080a", // Deep black for intense DBZ energy
+      light: "#303030", // Optional lighter version if needed
+      dark: "#000000", // Darker version for contrast
+      contrastText: "#FFFFFF", // White text for readability
     },
     secondary: {
-      main: "#1c4595",
+      main: "#1c4595", // Bold blue for Saiyan aura
+      light: "#4a6fb3", // Lighter blue for softer elements
+      dark: "#102e72", // Dark blue for deeper accents
+      contrastText: "#FFFFFF", // White for good contrast
     },
-
     success: {
-      main: "#FF8C00",
+      main: "#FF8C00", // Bright orange for Super Saiyan vibes
+      light: "#ffb347", // Lighter orange for highlights
+      dark: "#e67600", // Darker orange for strong accents
+      contrastText: "#000000", // Black text for high contrast
+    },
+    neutral: {
+      main: "#FFA500", // Bright orange similar to Goku's gi
+      light: "#ffcc80", // Light orange for background or highlights
+      dark: "#000", // Dark orange for deeper shades
+      contrastText: "#000000", // Black text for contrast
+    },
+    error: {
+      main: "#FF0000", // Red for danger or intense action
+      light: "#ff4c4c", // Light red for warnings
+      dark: "#b20000", // Dark red for deeper tones
+      contrastText: "#FFFFFF", // White text for contrast
+    },
+    warning: {
+      main: "#FFD700", // Gold, reminiscent of Super Saiyan aura
+      light: "#ffe34f", // Light gold for warnings or subtle accents
+      dark: "#b29600", // Dark gold for richer tones
+      contrastText: "#000000", // Black text for readability
+    },
+    info: {
+      main: "#00BFFF", // Cyan blue for special techniques like energy blasts
+      light: "#66d9ff", // Lighter blue for softer elements
+      dark: "#0080bf", // Dark blue for richer accents
+      contrastText: "#FFFFFF", // White text for contrast
+    },
+    background: {
+      default: "#f5f5f5", // Light gray for app background
+      paper: "#ffffff", // White for cards and dialogs,
+    },
+    text: {
+      primary: "#01080a", // Deep black for main text
+      secondary: "#1c4595", // Blue for secondary text or accents
     },
   },
 
@@ -312,8 +384,10 @@ const theme = createTheme({
     },
     body1: {
       fontFamily: "LuckiestGuy, Arial, sans-serif", // Body text using 'Saiyan' font
-    }
+    },
   },
+  
+
   shape: {},
 });
 

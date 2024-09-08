@@ -37,10 +37,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LoadingScreen from "../../components/ui/LoadingScreen";
-
+import { useMediaQuery } from "@mui/material";
 import { CompletedWorkoutAccordion } from "../../components/workouts/CompletedWorkoutAccordion";
 import { CompletedWorkoutNavArrows } from "../../components/workouts/CompletedWorkoutNavArrows";
+
 function CompletedWorkouts() {
+  const isDarkModeEnabled = useMediaQuery('(prefers-color-scheme: light)');
+  
+  console.log({isDarkModeEnabled})
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -448,7 +452,7 @@ function CompletedWorkouts() {
                   }}
                 >
                   <img
-                    src="/svg/goku.svg"
+                    src={isDarkModeEnabled? '/svg/goku.svg':'/svg/goku-light.svg'}
                     alt="son goku"
                     width={128}
                     height={128}
@@ -456,7 +460,7 @@ function CompletedWorkouts() {
                   <Typography
                     textAlign="center"
                     fontSize="2rem"
-                    color="#1c4595"
+                    color="text.secondary"
                   >
                     Workout log <br />
                     is empty

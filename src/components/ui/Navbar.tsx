@@ -35,12 +35,11 @@ function Navbar() {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: "white",
         }}
       >
         <BottomNavigation
           className="bottomNavigation"
-          sx={{ backgroundColor: "white", zIndex: 9999 }}
+          sx={{ zIndex: 9999 }}
           showLabels
           onChange={(event, newValue) => {}}
         >

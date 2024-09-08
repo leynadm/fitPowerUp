@@ -136,7 +136,7 @@ variant="outlined"
             }}
           >
             {exercise.weight !== 0 && (
-              <Typography>
+              <Typography color="text.secondary">
                 {`${exercise.weight.toFixed(2)} ${
                   currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                 }`}
@@ -144,18 +144,19 @@ variant="outlined"
             )}
 
             {exercise.reps !== 0 && (
-              <Typography>
+              <Typography color="text.secondary"
+              >
                 {exercise.reps}
                 {exercise.amrap && "+"} reps
               </Typography>
             )}
 
             {exercise.distance !== 0 && (
-              <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+              <Typography color="text.secondary">{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
             )}
 
             {exercise.time !== 0 && (
-              <Typography>
+              <Typography color="text.secondary">
                 {exercise.time !== 0 ? formatTime(exercise.time) : ""}
               </Typography>
             )}

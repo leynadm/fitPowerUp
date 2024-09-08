@@ -47,10 +47,6 @@ function CompletedWorkoutsTabs() {
         >
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              {/* 
-              <LibraryBooksIcon
-                sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-              /> */}
               <Typography
                 variant="h6"
                 noWrap
@@ -64,10 +60,6 @@ function CompletedWorkoutsTabs() {
               >
                 Exercise Details
               </Typography>
-              {/* 
-              <LibraryBooksIcon
-                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-              /> */}
 
               <Typography
                 variant="h5"

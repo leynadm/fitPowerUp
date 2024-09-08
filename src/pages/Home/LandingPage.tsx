@@ -844,7 +844,7 @@ function LandingPage() {
             entirely a labor of love dedicated to the Dragon Ball Z community.
             <br />
             <br />
-            My aim is not only to celebrate the iconic Dragon Ball Z series and
+            My aim is to celebrate the iconic Dragon Ball Z series, and
             to inspire fans to pursue a healthier lifestyle, sharing their
             fitness journeys within this interactive and supportive community.
           </Typography>
@@ -871,12 +871,13 @@ function LandingPage() {
               href="https://reddit.com/r/fitpowerup"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "white" }}
+          style={{color:"white"}}
             >
               r/fitPowerUp
             </a>
             community!
           </Typography>
+          
 
           <Typography
             color="white"
@@ -891,7 +892,7 @@ function LandingPage() {
               href={`mailto:${myEmailName}@${emailClient}`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "white" }}
+              style={{color:"white"}}
             >
               here
             </a>

@@ -1,22 +1,19 @@
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar,  Toolbar } from "@mui/material";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import SettingsIcon from "@mui/icons-material/Settings";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import RedditIcon from "@mui/icons-material/Reddit";
 import { UserTrainingDataContext } from "../../context/UserTrainingData";
-import { useContext } from "react";
 import updateUnitSystemPreference from "../../utils/firebaseDataFunctions/updateUnitSystemPreference";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
+import { useState,ChangeEvent ,useContext} from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { AuthContext } from "../../context/Auth";
@@ -27,6 +24,8 @@ import { CSVLink } from "react-csv";
 import getFlattenedExercisesForExport from "../../utils/progressFunctions/getFlattenedExercisesForExport";
 import getFlattenedWorkoutsForExport from "../../utils/progressFunctions/getFlattenedWorkoutsForExport";
 import ResetTrainingDataModal from "../../components/ui/ResetTrainingDataModal";
+import Switch from "@mui/material/Switch";
+import {useMediaQuery} from "@mui/material";
 function Settings() {
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
@@ -36,15 +35,35 @@ function Settings() {
     BodyTrackerDataContext
   );
 
-  const { currentUser, currentUserData} =
-    useContext(AuthContext);
+  const { currentUser, currentUserData } = useContext(AuthContext);
+
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  console.log({prefersDarkMode})
 
   const [updatedDefaultWeightIncrement, setUpdatedDefaultWeightIncrement] =
-    useState(currentUserData? currentUserData.defaultWeightIncrement:2.5);
+    useState(currentUserData ? currentUserData.defaultWeightIncrement : 2.5);
   const [updatedUnitsSystem, setUpdatedUnitsSystem] = useState(
-    currentUserData? currentUserData.unitsSystem:"metric"
+    currentUserData ? currentUserData.unitsSystem : "metric"
   );
-  const [updateStatus, setUpdateStatus] = useState('');
+  const [updateStatus, setUpdateStatus] = useState("");
+
+  // State to manage if the user has manually set the mode
+  const [manualMode, setManualMode] = useState(() => {
+    // Initialize from local storage, fallback to null if not set
+    const savedPreference = localStorage.getItem('darkMode');
+    return savedPreference !== null ? JSON.parse(savedPreference) : null;
+  });
+
+  // Handle the toggle switch and save the preference
+  const handleDarkModeChange = (event:ChangeEvent<HTMLInputElement>) => {
+    const isDarkMode = event.target.checked;
+    setManualMode(isDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode)); // Save the preference to local storage
+  };
+
+    // Determine the effective mode
+    const darkMode = manualMode !== null ? manualMode : prefersDarkMode;
 
   const [openResetTrainingData, setOpenResetTrainingData] = useState(false);
 
@@ -68,13 +87,12 @@ function Settings() {
       currentUser.uid,
       updatedDefaultWeightIncrement
     );
-    
 
     //await fetchCurrentUserData(currentUser, setCurrentUserData);
   }
 
   async function handleUpdateUnitsSystemChange() {
-    setUpdateStatus('Updating...');
+    setUpdateStatus("Updating...");
 
     await updateUnitSystemPreference(
       userTrainingData,
@@ -86,10 +104,10 @@ function Settings() {
     //await fetchCurrentUserData(currentUser, setCurrentUserData);
     await refetchUserBodyTrackerData();
     await refetchUserTrainingData();
-    
+
     // Start a timer to reset the update status
     setTimeout(() => {
-      setUpdateStatus('');
+      setUpdateStatus("");
     }, 10000); // Adjust time as needed
   }
 
@@ -130,11 +148,8 @@ function Settings() {
     setOpenResetTrainingData(!openResetTrainingData);
   }
 
-
-  if(!userTrainingData){
-    return(
-      <>Wait...</>
-    )
+  if (!userTrainingData) {
+    return <>Wait...</>;
   }
   return (
     <Container
@@ -171,7 +186,7 @@ function Settings() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -191,7 +206,7 @@ function Settings() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -200,10 +215,34 @@ function Settings() {
           </Toolbar>
         </Container>
       </AppBar>
+{/* 
+      <Box display="flex" flexDirection="column" pb={2}>
+        <Typography variant="h6" color="primary">
+          Mode
+        </Typography>
 
+        <FormControl component="fieldset">
+          <FormControlLabel
+            value="top"
+            control={
+              <Switch
+                checked={darkMode}
+                onChange={handleDarkModeChange}
+                sx={{ color: "white" }}
+                inputProps={{ "aria-label": "Dark Mode" }}
+              />
+            }
+            label="Dark Mode"
+            labelPlacement="end"
+            color="text.secondary"
+          />
+        </FormControl>
+      </Box>
+       */}
       <Box display="flex" flexDirection="column" gap={1}>
-        <Typography variant="subtitle1">Preferences</Typography>
-        <Divider />
+        <Typography variant="h6" color="primary">
+          Preferences
+        </Typography>
         <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
@@ -230,7 +269,7 @@ function Settings() {
                 />
               </RadioGroup>
             </FormControl>
-            
+
             <Typography variant="secondary">
               Select here your preferred measurement system.
               <br></br>
@@ -239,31 +278,42 @@ function Settings() {
               converted to pounds, and length data to inches.
             </Typography>
             <Box pt="8px" height="2rem">
-              {updateStatus==='Updating...'?(
+              {updateStatus === "Updating..." ? (
                 <Typography>Refreshing data, give it a moment...</Typography>
-              ):              
-              updateStatus==='' &&  (updatedUnitsSystem === "imperial" &&
-                currentUserData && currentUserData.unitsSystem === "metric") ? (
+              ) : updateStatus === "" &&
+                updatedUnitsSystem === "imperial" &&
+                currentUserData &&
+                currentUserData.unitsSystem === "metric" ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
                 >
                   Convert To Imperial
                 </Button>
-              ) : updateStatus===''&&(updatedUnitsSystem === "metric" &&
-                currentUserData && currentUserData.unitsSystem === "imperial") ? (
+              ) : updateStatus === "" &&
+                updatedUnitsSystem === "metric" &&
+                currentUserData &&
+                currentUserData.unitsSystem === "imperial" ? (
                 <Button
                   variant="dbz_mini"
                   onClick={handleUpdateUnitsSystemChange}
                 >
                   Convert To Metric
                 </Button>
-              ) : updateStatus==='' && (updatedUnitsSystem === "metric" &&
-                currentUserData && currentUserData.unitsSystem === "metric")  ? (
-                <Typography variant="secondary" fontWeight={700}>You're using the metric system.</Typography>
-              ) : updateStatus==='' && (updatedUnitsSystem === "imperial" &&
-                currentUserData && currentUserData.unitsSystem === "imperial") ? (
-                <Typography variant="secondary" fontWeight={700}>You're using the imperial system.</Typography>
+              ) : updateStatus === "" &&
+                updatedUnitsSystem === "metric" &&
+                currentUserData &&
+                currentUserData.unitsSystem === "metric" ? (
+                <Typography variant="secondary" fontWeight={700}>
+                  You're using the metric system.
+                </Typography>
+              ) : updateStatus === "" &&
+                updatedUnitsSystem === "imperial" &&
+                currentUserData &&
+                currentUserData.unitsSystem === "imperial" ? (
+                <Typography variant="secondary" fontWeight={700}>
+                  You're using the imperial system.
+                </Typography>
               ) : null}
             </Box>
           </CardContent>
@@ -299,8 +349,8 @@ function Settings() {
                 <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>
-            {updatedDefaultWeightIncrement !==
-            currentUserData && currentUserData.defaultWeightIncrement ? (
+            {updatedDefaultWeightIncrement !== currentUserData &&
+            currentUserData.defaultWeightIncrement ? (
               <Box pt="8px">
                 <Button
                   variant="dbz_mini"
@@ -313,8 +363,9 @@ function Settings() {
           </CardContent>
         </Card>
 
-        <Typography variant="subtitle1">Data</Typography>
-        <Divider />
+        <Typography variant="h6" color="primary">
+          Data
+        </Typography>
 
         <Card variant="outlined">
           <CardContent>
@@ -438,8 +489,9 @@ function Settings() {
           </CardContent>
         </Card>
 
-        <Typography variant="subtitle1">Other</Typography>
-        <Divider />
+        <Typography variant="h6" color="primary">
+          Other
+        </Typography>
         <Card variant="outlined">
           <CardContent>
             <Typography color="text.secondary" gutterBottom>
@@ -473,7 +525,7 @@ function Settings() {
               <RedditIcon fontSize="small" />
             </Typography>
 
-            <Typography variant="secondary">
+            <Typography variant="secondary" color="text.secondary">
               Join the fitPowerUp community on Reddit!
             </Typography>
 
@@ -535,7 +587,9 @@ function Settings() {
             </Typography>
 
             <Typography variant="secondary">
-              Due to popular demand from a handful of DBZ fans, I've created a Buy Me A Coffee page. This is completely optional, as the app is and will always remain 100% free.
+              Due to popular demand from a handful of DBZ fans, I've created a
+              Buy Me A Coffee page. This is completely optional, as the app is
+              and will always remain 100% free.
             </Typography>
 
             <Box pt="8px">
@@ -549,7 +603,6 @@ function Settings() {
             </Box>
           </CardContent>
         </Card>
-
       </Box>
     </Container>
   );

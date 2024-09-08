@@ -202,6 +202,7 @@ function ExerciseSelectionMenu() {
               justifyContent="center"
               display="flex"
               alignItems="center"
+              borderRadius={8}
             >
               <img
                 src={imageURL}
@@ -210,6 +211,7 @@ function ExerciseSelectionMenu() {
                 style={{
                   maxHeight: "128px",
                   width: "auto",
+                  borderRadius:8
                 }}
               />
             </Box>

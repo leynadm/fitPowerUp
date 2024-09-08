@@ -388,11 +388,11 @@ function ProgressLevel() {
           marginTop="0.25rem"
           marginBottom="0.25rem"
         >
-          <Typography color="#1c4595" variant="h3" fontWeight="500">
+          <Typography color="text.primary" variant="h3" fontWeight="500">
             {currentUserData.powerLevel}
           </Typography>
           <Typography color="text.secondary" variant="subtitle1" fontWeight="500" p={0} m={0}>
-            Your Saved Power Level
+            Your Current Power Level
           </Typography>
         </Box>
 
@@ -427,7 +427,7 @@ function ProgressLevel() {
               iconSize={16}
               wrapperStyle={{fontFamily:"LuckiestGuy",fontSize:"1.25rem"}}
             />
-            <Bar  dataKey="Strength" stackId="a" fill="#520975">
+            <Bar  dataKey="Strength" stackId="a" fill="#2955DC">
               <LabelList dataKey="Strength" fontFamily="LuckiestGuy" fontSize="1.5rem" position="top" />
             </Bar>
             <Bar dataKey="Experience"  stackId="a" fill="#FFA500">
@@ -517,16 +517,16 @@ function ProgressLevel() {
             padding={1}
             >
               <Box display="flex" justifyContent="space-evenly" width="100%" flexDirection="column">
-              <Typography variant="caption" align="left" width="100%">New Power Level</Typography>
+              <Typography variant="caption" color="text.secondary" align="left" width="100%">New Power Level</Typography>
               
               <Box display="flex" width="100%" justifyContent="space-evenly">
-                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
                   <PowerLevelIcon width="1rem" height="1rem"/> {calculatedMaximumPowerLevel}
                 </Typography>
-                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
                   <StrengthIcon width="1rem" height="1rem"/>{calculatedMaximumStrengthLevel}
                 </Typography>
-                <Typography color="#1c4595" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
+                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
                   <ExperienceIcon width="1rem" height="1rem"/>{calculatedMaximumExperienceLevel}
                 </Typography>
                 </Box>

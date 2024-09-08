@@ -170,6 +170,7 @@ function MuscleGroupsSelectionMenu() {
             justifyContent="center"
             display="flex"
             alignItems="center"
+            borderRadius={8}
           >
             <img
               src={imageURL}
@@ -179,6 +180,7 @@ function MuscleGroupsSelectionMenu() {
               style={{
                 maxHeight: "128px",
                 width: "auto",
+                borderRadius:8
               }}
             />
           </Box>

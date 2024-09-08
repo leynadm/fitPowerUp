@@ -44,17 +44,18 @@ const EllipsisTypography = styled(Typography)({
 function LoadingScreenDBZ() {
   return (
     <Box
-      height="calc(100vh - 112px)"
+      height="calc(100vh)"
       display="flex"
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
       width="100%"
+      bgcolor="neutral.main"      
     >
       <RotatingBox position="relative">
-        <StarsIcon sx={{ color: "#FFA500",height:"3.5rem", width:"3.5rem" }}   />
+        <StarsIcon sx={{ color: "black",height:"3.5rem", width:"3.5rem" }}   />
       </RotatingBox>
-      <Typography sx={{fontSize:"2rem",fontWeight:"normal",textAlign:"center"}}>Gathering the <br/>dragon balls...</Typography>
+      <Typography sx={{fontSize:"2rem",fontWeight:"normal",textAlign:"center",color:"black"}}>Gathering the <br/>dragon balls...</Typography>
     </Box>
   );
 }

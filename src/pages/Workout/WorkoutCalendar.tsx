@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -79,10 +79,7 @@ function WorkoutCalendar() {
         overlap="circular"
         badgeContent={
           isUniqueDate ? (
-            <FitnessCenterIcon
-              style={{ fontSize: "1rem" }}
-              color="secondary"
-            />
+            <FitnessCenterIcon style={{ fontSize: "1rem" }} color="secondary" />
           ) : undefined
         }
         showZero={false}
@@ -182,9 +179,9 @@ function WorkoutCalendar() {
   }
   return (
     <Container
-    sx={{
-      pb:"16px"
-    }}
+      sx={{
+        pb: "16px",
+      }}
     >
       <AppBar
         position="fixed"
@@ -208,7 +205,7 @@ function WorkoutCalendar() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -230,7 +227,7 @@ function WorkoutCalendar() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -257,18 +254,14 @@ function WorkoutCalendar() {
         style={{ transformOrigin: "0 1 0" }}
         {...(true ? { timeout: 750 } : {})}
       >
-        <Box
-        
-        >
+        <Box>
           {workoutDateExercises.length > 0 &&
             workoutDateExercises.map((group, index) => (
               <Card
-              variant="outlined"
+                variant="outlined"
                 key={index}
                 sx={{
-
                   margin: "8px",
-                  backgroundColor: "white",
                 }}
               >
                 <Typography
@@ -276,13 +269,13 @@ function WorkoutCalendar() {
                   sx={{
                     textAlign: "center",
                     fontSize: "medium",
-                    background:"#FFA500",
+                    background: "#FFA500",
+                    color: "black",
                   }}
                 >
                   {group.name.toLocaleUpperCase()}
                 </Typography>
 
-                <Divider sx={{ backgroundColor: "aliceblue" }} />
                 {group.exercises.map((exercise, exerciseIndex) => (
                   <Box
                     key={exerciseIndex}
@@ -363,7 +356,7 @@ function WorkoutCalendar() {
                       }}
                     >
                       {exercise.weight !== 0 && (
-                        <Typography>
+                        <Typography color="text.secondary">
                           {`${exercise.weight.toFixed(2)} ${
                             currentUserData.unitsSystem === "metric"
                               ? "kg"
@@ -373,15 +366,17 @@ function WorkoutCalendar() {
                       )}
 
                       {exercise.reps !== 0 && (
-                        <Typography>{exercise.reps} reps</Typography>
+                        <Typography color="text.secondary">
+                          {exercise.reps} reps
+                        </Typography>
                       )}
 
                       {exercise.distance !== 0 && (
-                        <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                        <Typography color="text.secondary">{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                       )}
 
                       {exercise.time !== 0 && (
-                        <Typography>
+                        <Typography color="text.secondary">
                           {exercise.time !== 0 ? formatTime(exercise.time) : ""}
                         </Typography>
                       )}
@@ -426,7 +421,6 @@ function WorkoutCalendar() {
           There are no exercises for this date.
         </Typography>
       )}
-      
     </Container>
   );
 }
