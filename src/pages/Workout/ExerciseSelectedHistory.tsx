@@ -74,6 +74,7 @@ function ExerciseSelectedHistory() {
             backgroundColor: "orange",
             borderRadius: "5px",
           }}
+          color="black"
         >
           {group.date.toLocaleString()}
         </Typography>
@@ -156,25 +157,25 @@ function ExerciseSelectedHistory() {
               }}
             >
               {exercise.weight !== 0 && (
-                <Typography>
+                <Typography color="text.secondary">
                   {`${exercise.weight.toFixed(2)} ${
                     currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
                   }`}
                 </Typography>
               )}
               {exercise.reps !== 0 && (
-                <Typography>
+                <Typography color="text.secondary">
                   {exercise.reps}
                   {exercise.amrap && "+"} reps
                 </Typography>
               )}
 
               {exercise.distance !== 0 && (
-                <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                <Typography color="text.secondary">{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
               )}
 
               {exercise.time !== 0 && (
-                <Typography>
+                <Typography color="text.secondary">
                   {exercise.time !== 0 ? formatTime(exercise.time) : ""}
                 </Typography>
               )}
@@ -187,12 +188,12 @@ function ExerciseSelectedHistory() {
           justifyContent="space-around"
           flexDirection="row-reverse"
         >
-          <Typography variant="subtitle2">
+          <Typography color="text.secondary" variant="subtitle2">
             {group.stats.totalReps !== 0 && `${group.stats.totalReps} reps`}
           </Typography>
 
           {group.stats.totalVolume !== 0 && (
-            <Typography variant="subtitle2">
+            <Typography color="text.secondary" variant="subtitle2">
               {group.stats.totalVolume !== 0 &&
                 `${group.stats.totalVolume} ${
                   currentUserData.unitsSystem === "metric" ? "kg" : "lbs"
@@ -200,18 +201,18 @@ function ExerciseSelectedHistory() {
             </Typography>
           )}
           {group.stats.totalDistance !== 0 && (
-            <Typography variant="subtitle2">
+            <Typography color="text.secondary" variant="subtitle2">
               {group.stats.totalDistance !== 0 &&
                 `Distance: ${group.stats.totalDistance}`}
             </Typography>
           )}
           {group.stats.totalTime !== 0 && (
-            <Typography variant="subtitle2">
+            <Typography color="text.secondary" variant="subtitle2">
               {group.stats.totalTime !== 0 &&
                 `Time: ${formatTime(group.stats.totalTime)}`}
             </Typography>
           )}
-          <Typography variant="subtitle2">
+          <Typography color="text.secondary" variant="subtitle2">
             {group.stats.totalSets !== 0 && group.stats.totalSets} sets
           </Typography>
         </Box>

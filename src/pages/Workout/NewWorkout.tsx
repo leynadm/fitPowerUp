@@ -169,7 +169,7 @@ function NewWorkout({
                       color="inherit"
                       onClick={CompleteWorkoutModalVisibility}
                     >
-                      <DoneOutlineIcon sx={{ color: "white" }} />
+                      <DoneOutlineIcon sx={{ color: "#FFA500" }} />
                     </IconButton>
                   )}
 
@@ -181,7 +181,7 @@ function NewWorkout({
                     color="inherit"
                     onClick={handleNewWorkout}
                   >
-                    <AddOutlinedIcon sx={{ color: "white" }} />
+                    <AddOutlinedIcon sx={{ color: "#FFA500" }} />
                   </IconButton>
                 </Box>
               </Box>
@@ -215,8 +215,8 @@ function NewWorkout({
               }}
               onClick={handleNewWorkout}
             >
-              <AddIcon fontSize="medium" />
-              <Typography fontSize="1rem">Add new exercise</Typography>
+              <AddIcon fontSize="medium" color="primary" />
+              <Typography color="text.secondary">Add new exercise</Typography>
             </IconButton>
 
             <IconButton
@@ -228,8 +228,8 @@ function NewWorkout({
               }}
               onClick={() => navigate("/home/workout/calendar")}
             >
-              <ContentCopyIcon fontSize="medium" />
-              <Typography fontSize="1rem">Copy previous workout</Typography>
+              <ContentCopyIcon fontSize="medium" color="primary" />
+              <Typography color="text.secondary">Copy previous workout</Typography>
             </IconButton>
 
             <IconButton
@@ -241,8 +241,8 @@ function NewWorkout({
               }}
               onClick={() => navigate("/home/workout/preset-workouts")}
             >
-              <FormatListNumberedIcon fontSize="medium" />
-              <Typography fontSize="1rem">Copy preset workout</Typography>
+              <FormatListNumberedIcon fontSize="medium" color="primary" />
+              <Typography color="text.secondary">Copy preset workout</Typography>
             </IconButton>
           </Box>
         ) : (
@@ -334,7 +334,7 @@ function NewWorkout({
                         disabled // Placeholder element
                       >
                         <EmojiEventsIcon
-                          sx={{ zIndex: -1, color: "#520975" }}
+                          sx={{ zIndex: -1, color: "neutral.main" }}
                         />
                       </IconButton>
                     ) : (
@@ -364,7 +364,9 @@ function NewWorkout({
                       }}
                     >
                       {exercise.weight !== 0 && (
-                        <Typography>
+                        <Typography
+                        sx={{color:"text.secondary"}}
+                        >
                           {`${exercise.weight.toFixed(2)} ${
                             currentUserData && currentUserData.unitsSystem === "metric"
                               ? "kg"
@@ -374,18 +376,24 @@ function NewWorkout({
                       )}
 
                       {exercise.reps !== 0 && (
-                        <Typography>
+                        <Typography
+                        sx={{color:"text.secondary"}}
+                        >
                           {exercise.reps}
                           {exercise.amrap && "+"} reps
                         </Typography>
                       )}
 
                       {exercise.distance !== 0 && (
-                        <Typography>{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
+                        <Typography
+                        sx={{color:"text.secondary"}}
+                        >{`${exercise.distance} ${exercise.distance_unit}`}</Typography>
                       )}
 
                       {exercise.time !== 0 && (
-                        <Typography>
+                        <Typography
+                        sx={{color:"text.secondary"}}
+                        >
                           {exercise.time !== 0 ? formatTime(exercise.time) : ""}
                         </Typography>
                       )}

@@ -289,7 +289,7 @@ function ExerciseSelectionMenu() {
                   color="inherit"
                   onClick={()=>navigate("/home/workout/new/workout_categories/")}
                 >
-                  <ArrowBackIosNew />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
 
                 </Box>

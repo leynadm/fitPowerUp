@@ -272,7 +272,7 @@ function MuscleGroupsSelectionMenu() {
                 color="inherit"
                 onClick={handleAddNewExerciseModal}
               >
-                <AddBoxIcon />
+                <AddBoxIcon sx={{color:"#FFA500"}} />
               </IconButton>
 
               <IconButton
@@ -283,7 +283,7 @@ function MuscleGroupsSelectionMenu() {
                   color="inherit"
                   onClick={()=>navigate("/home/workout/new")}
                 >
-                  <ArrowBackIosNew />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
 
             </Box>

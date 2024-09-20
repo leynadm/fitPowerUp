@@ -16,8 +16,6 @@ async function deletePresetWorkoutInRoutine(
         "userPresetRoutines"
       );
 
-      console.log({routineId})
-      console.log(workoutData)
 /*   const filteredData = presetWorkoutData.filter(
     (presetWorkout: IPresetWorkoutData) =>
       presetWorkout.wName !== workoutId

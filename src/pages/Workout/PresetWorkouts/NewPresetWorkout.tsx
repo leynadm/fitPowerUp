@@ -363,7 +363,6 @@ function NewPresetWorkout() {
                   {group.name.toLocaleUpperCase()}
                 </Typography>
 
-                <Divider sx={{ backgroundColor: "aliceblue" }} />
                 {group.exercises.map((exercise, exerciseIndex) => (
                   <Box
                     key={exerciseIndex}

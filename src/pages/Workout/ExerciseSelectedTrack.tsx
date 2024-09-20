@@ -419,6 +419,7 @@ function ExerciseSelectedTrack() {
 
         userEntryTransaction.oncomplete = async function () {
           db.close();
+          if(!updatedEntryToSave) return
           await updateExercisesPRAfterAction(
             userTrainingData,
             exerciseSelected.name,
@@ -744,35 +745,35 @@ function ExerciseSelectedTrack() {
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="1 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="3 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="5 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="8 RM"
         />
         <Chip
           variant="filled"
-          sx={{ p: 0, m: 0, color: "orange" }}
+          sx={{ p: 0, m: 0 }}
           size="small"
           color="primary"
           label="10 RM"
@@ -978,16 +979,18 @@ function ExerciseSelectedTrack() {
                     value={distanceValue}
                     label="Number"
                     type="number"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style: {
-                        fontSize: "1.5rem",
-                        textAlign: "center",
-                        padding: "10px",
-                        fontStyle: editingExercise ? "italic" : "normal",
+
+                    slotProps={{
+                      htmlInput:{
+                        style: {
+                          fontSize: "1.5rem",
+                          textAlign: "center",
+                          padding: "10px",
+                          fontStyle: editingExercise ? "italic" : "normal",
+                        },
+                        inputMode:"decimal"
                       },
+                        
                     }}
                     sx={{ textAlign: "center", width: "100%" }}
                     variant="filled"
@@ -1042,16 +1045,16 @@ function ExerciseSelectedTrack() {
                     value={Math.floor(timeValue / 3600)}
                     label="hh"
                     type="number"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style: {
-                        fontSize: "1.5rem",
-                        textAlign: "center",
-                        padding: "8px",
-                        fontStyle: editingExercise ? "italic" : "normal",
-                      },
+                    slotProps={{
+                      htmlInput:{
+                        style: {
+                          fontSize: "1.5rem",
+                          textAlign: "center",
+                          padding: "8px",
+                          fontStyle: editingExercise ? "italic" : "normal",
+                        },
+                      }
+                      
                     }}
                     sx={{ textAlign: "center" }}
                     variant="filled"
@@ -1062,16 +1065,22 @@ function ExerciseSelectedTrack() {
                     value={Math.floor((timeValue % 3600) / 60)}
                     label="mm"
                     type="number"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      style: {
-                        fontSize: "1.5rem",
-                        textAlign: "center",
-                        padding: "8px",
-                        fontStyle: editingExercise ? "italic" : "normal",
+                    slotProps={{
+                      htmlInput:{
+                        style: {
+                          fontSize: "1.5rem",
+                          textAlign: "center",
+                          padding: "8px",
+                          fontStyle: editingExercise ? "italic" : "normal",
+                        },
+                      inputMode:"numeric"
                       },
+                      inputLabel:{
+                        style:{
+                          flexShrink:"inherit"
+                        }
+                      }
+                      
                     }}
                     sx={{ textAlign: "center" }}
                     variant="filled"
@@ -1135,35 +1144,46 @@ function ExerciseSelectedTrack() {
                 }}
               >
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleSubtractButtonClick(measurement)}
                 >
-                  <RemoveIcon />
+                  <RemoveIcon/>
                 </Button>
 
                 <TextField
                   type={measurement === "weight" ? "text" : "number"}
                   id={measurement}
                   variant="filled"
-                  inputProps={{
-                    style: {
-                      fontSize: "1.5rem",
-                      textAlign: "center",
-                      height: "100%",
-                      padding: "8px",
-                      fontStyle: editingExercise ? "italic" : "normal",
-                    },
+
+                  slotProps={{
+                    htmlInput:{
+                      style: {
+                        fontSize:"1.75rem",
+                        margin:0,
+                        padding:0, 
+                        fontWeight:400,                             
+                        textAlign: "center",
+                        fontStyle: editingExercise ? "italic" : "normal",
+                    },                
                     inputMode: "decimal",
-                  }}
+                  },
+                  inputLabel:{
+                    style:{
+                      flexShrink:"unset"
+                    }
+                  }
+                }
+
+                  
+                }
                   value={measurement === "weight" ? weightValue : repsValue}
                   onChange={handleTextFieldChange}
                 />
 
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleAddButtonClick(measurement)}
+                
                 >
                   <AddIcon />
                 </Button>
@@ -1234,6 +1254,7 @@ function ExerciseSelectedTrack() {
                 <BorderColorIcon
                   sx={{
                     zIndex: 0,
+                    color:"text.secondary"
                   }}
                 />
               </IconButton>
@@ -1247,7 +1268,7 @@ function ExerciseSelectedTrack() {
                   color="inherit"
                   disabled // Placeholder element
                 >
-                  <EmojiEventsIcon sx={{ zIndex: 0 }} />
+                  <EmojiEventsIcon sx={{ zIndex: 0,color:"neutral.main" }} />
                 </IconButton>
               ) : (
                 <IconButton
@@ -1285,7 +1306,7 @@ function ExerciseSelectedTrack() {
               }
             >
               {exercise.weight !== 0 && (
-                <Typography
+                <Typography color="text.secondary"
                   fontStyle={
                     editingExercise && idExerciseUpdate === exercise.id
                       ? "italic"
@@ -1298,7 +1319,7 @@ function ExerciseSelectedTrack() {
                 </Typography>
               )}
               {exercise.reps !== 0 && (
-                <Typography
+                <Typography color="text.secondary"
                   fontStyle={
                     editingExercise && idExerciseUpdate === exercise.id
                       ? "italic"
@@ -1311,7 +1332,7 @@ function ExerciseSelectedTrack() {
               )}
 
               {exercise.distance !== 0 && (
-                <Typography
+                <Typography color="text.secondary"
                   fontStyle={
                     editingExercise && idExerciseUpdate === exercise.id
                       ? "italic"
@@ -1321,7 +1342,7 @@ function ExerciseSelectedTrack() {
               )}
 
               {exercise.time !== 0 && (
-                <Typography
+                <Typography color="text.secondary"
                   fontStyle={
                     editingExercise && idExerciseUpdate === exercise.id
                       ? "italic"
@@ -1343,6 +1364,7 @@ function ExerciseSelectedTrack() {
               <DeleteIcon
                 sx={{
                   zIndex: 0,
+                  color:"text.secondary"
                 }}
               />
             </IconButton>

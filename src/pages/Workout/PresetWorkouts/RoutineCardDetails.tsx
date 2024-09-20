@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import {  ArrowBackIosNew, DeleteForever } from "@mui/icons-material";
 import { getThemeMode } from "../../../theme";
+import { Card } from "@mui/material";
 function RoutineCardDetails() {
   const location = useLocation();
 
@@ -126,7 +127,7 @@ function RoutineCardDetails() {
                     )
                   }
                 >
-                  <DeleteForever sx={{ color: "white" }} />
+                  <DeleteForever sx={{color:"#FFA500"}} />
                 </IconButton>
 
                 <IconButton
@@ -139,7 +140,7 @@ function RoutineCardDetails() {
                     navigate("new-preset-workout", { state: { routine } })
                   }
                 >
-                  <AddOutlinedIcon sx={{ color: "white" }} />
+                  <AddOutlinedIcon sx={{color:"#FFA500"}} />
                 </IconButton>
 
                 <IconButton
@@ -150,7 +151,7 @@ function RoutineCardDetails() {
                   color="inherit"
                   onClick={() => navigate("/home/workout/preset-workouts/")}
                 >
-                  <ArrowBackIosNew sx={{ color: "white" }} />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
               </Box>
             </Toolbar>
@@ -165,18 +166,19 @@ function RoutineCardDetails() {
         {routine.rBy}
       </Typography>
 
+      <Card variant="outlined" sx={{p:1}}>
       <Typography
         sx={{
-          backgroundColor: "secondary.main",
           p: 1,
           borderRadius: 1,
-          border: "1px solid black",
         }}
         variant="secondary"
         fontWeight={700}
 >
         {routine.rDesc}
       </Typography>
+      </Card>
+      
 
       <ToggleButtonGroup
         value={selectedWeekInterval}

@@ -48,9 +48,6 @@ function AddExerciseToPresetWorkoutModal({
   const navigate = useNavigate();
 
   const { currentUserData } = useContext(AuthContext);
-
-
-  console.log('inside AddExerciseToPresetWorkoutModal:')
   const location = useLocation();
   const routine = location.state.routine;
 

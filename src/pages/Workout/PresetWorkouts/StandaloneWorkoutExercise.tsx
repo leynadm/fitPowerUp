@@ -1008,7 +1008,7 @@ function StandaloneWorkoutExercise() {
                   color="inherit"
                   onClick={handleNewWorkout}
                 >
-                  <ArrowBackIosNew />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
               </Box>
             </Box>
@@ -1217,7 +1217,6 @@ function StandaloneWorkoutExercise() {
                 }}
               >
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleSubtractButtonClick(measurement)}
                 >
@@ -1243,7 +1242,6 @@ function StandaloneWorkoutExercise() {
                 />
 
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleAddButtonClick(measurement)}
                 >

@@ -82,7 +82,6 @@ function ActiveChallengeCard({
     }
   };
 
-  console.log(activeChallenge);
   const calculateStatus = (endDate: string, startDate: string) => {
     const end = new Date(endDate);
     const start = new Date(startDate);
@@ -158,7 +157,6 @@ function ActiveChallengeCard({
   }
 
   async function handleCompleteChallenge() {
-    console.log(activeChallenge);
 
     const updatedGoals = activeChallenge.goals;
 

@@ -235,7 +235,7 @@ function NewPresetWorkoutForRoutine() {
                         )
                       }
                     >
-                      <DoneOutlineIcon sx={{ color: "white" }} />
+                      <DoneOutlineIcon sx={{color:"#FFA500"}} />
                     </IconButton>
                   )}
 
@@ -249,7 +249,7 @@ function NewPresetWorkoutForRoutine() {
                     navigate(`/home/workout/preset-workouts/preset-routine-details/${encodedParameter}`,{state:{routine}})
                   }
                 >
-                  <ArrowBackIosNew sx={{ color: "white" }} />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
 
 

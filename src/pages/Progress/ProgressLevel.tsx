@@ -1,5 +1,7 @@
 import calculateDOTS from "../../utils/progressFunctions/calculateDOTS";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+
 import Typography from "@mui/material/Typography";
 import fetchCurrentUserData from "../../utils/fetchCurrentUserData";
 import {
@@ -31,14 +33,13 @@ import { IconButton, Paper } from "@mui/material";
 import { BodyTrackerDataContext } from "../../context/BodyTrackerData";
 import { UserExercisesLibraryContext } from "../../context/UserExercisesLibrary";
 import LoadingScreenCircle from "../../components/ui/LoadingScreenCircle";
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import DeleteIcon from '@mui/icons-material/Delete';
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ReactComponent as StrengthIcon } from "../../assets/strength.svg";
 import { ReactComponent as ExperienceIcon } from "../../assets/gym.svg";
 import { ReactComponent as PowerLevelIcon } from "../../assets/powerlevel.svg";
 
 function ProgressLevel() {
-
   const { userTrainingData, refetchUserTrainingData } = useContext(
     UserTrainingDataContext
   );
@@ -53,15 +54,16 @@ function ProgressLevel() {
 
   const { currentUser, currentUserData, setCurrentUserData } =
     useContext(AuthContext);
-    
-    const todayTimestamp = new Date();
-    const yesterdayTimestamp = new Date(todayTimestamp.getTime() - (24 * 60 * 60 * 1000));
-    
 
-    const firebaseTimestamp = currentUserData && currentUserData.lastUpdateTimestamp!==null 
-        ? new Date(currentUserData.lastUpdateTimestamp.toMillis()) 
-        : yesterdayTimestamp;
-    
+  const todayTimestamp = new Date();
+  const yesterdayTimestamp = new Date(
+    todayTimestamp.getTime() - 24 * 60 * 60 * 1000
+  );
+
+  const firebaseTimestamp =
+    currentUserData && currentUserData.lastUpdateTimestamp !== null
+      ? new Date(currentUserData.lastUpdateTimestamp.toMillis())
+      : yesterdayTimestamp;
 
   const currentDate = new Date();
 
@@ -147,7 +149,7 @@ function ProgressLevel() {
             exercise.name.toUpperCase() ===
             currentUserData.firstPowerExercise.toUpperCase()
         );
-     
+
       setFirstExerciseSelected(firstExerciseFound());
 
       const secondExerciseFound = () =>
@@ -184,8 +186,8 @@ function ProgressLevel() {
   const data = [
     {
       name: "PL",
-      Strength: currentUserData? currentUserData.strengthLevel : 0,
-      Experience: currentUserData? currentUserData.experienceLevel : 0,
+      Strength: currentUserData ? currentUserData.strengthLevel : 0,
+      Experience: currentUserData ? currentUserData.experienceLevel : 0,
     },
   ];
 
@@ -257,19 +259,15 @@ function ProgressLevel() {
 
     toast.success(`Your power level is ${maximumPowerLevel}`, {
       duration: 5000,
-      style:{
-        fontFamily:"LuckiestGuy",
-      }
-    },
-    
-  
-  );
+      style: {
+        fontFamily: "LuckiestGuy",
+      },
+    });
 
     setCalculatedMaximumPowerLevel(maximumPowerLevel);
     setCalculatedMaximumStrengthLevel(strengthLevel);
     setCalculatedMaximumExperienceLevel(experiencePoints);
   }
-  
 
   async function handlePublishPowerLevel() {
     if (isToday) {
@@ -295,10 +293,10 @@ function ProgressLevel() {
     }
   }
 
-  function handleDiscardNewPL(){
-    setCalculatedMaximumExperienceLevel(0)
-    setCalculatedMaximumPowerLevel(0)
-    setCalculatedMaximumStrengthLevel(0)
+  function handleDiscardNewPL() {
+    setCalculatedMaximumExperienceLevel(0);
+    setCalculatedMaximumPowerLevel(0);
+    setCalculatedMaximumStrengthLevel(0);
   }
   function calculatePowerLevel() {
     const flattenedFirstExercise = getFlattenedExerciseData(
@@ -368,17 +366,14 @@ function ProgressLevel() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        pb:1,
+        pb: 1,
         gap: 2,
       }}
       maxWidth="md"
     >
-      <Box
-        width="100%"
-        boxShadow={2}
-        padding="8px"
-        marginTop="1rem"
-        borderRadius="4px"
+      <Card
+        variant="outlined"
+        sx={{padding:1}}
       >
         <Box
           display="flex"
@@ -391,7 +386,13 @@ function ProgressLevel() {
           <Typography color="text.primary" variant="h3" fontWeight="500">
             {currentUserData.powerLevel}
           </Typography>
-          <Typography color="text.secondary" variant="subtitle1" fontWeight="500" p={0} m={0}>
+          <Typography
+            color="text.secondary"
+            variant="subtitle1"
+            fontWeight="500"
+            p={0}
+            m={0}
+          >
             Your Current Power Level
           </Typography>
         </Box>
@@ -414,31 +415,48 @@ function ProgressLevel() {
               fontSize={15}
               type="number"
               tick={false}
-              
               domain={[0, "dataMax + 50"]}
             />
-            <YAxis fontFamily="LuckiestGuy" dataKey="name" type="category" fontSize={15} />
-            <Tooltip  />
+            <YAxis
+              fontFamily="LuckiestGuy"
+              dataKey="name"
+              type="category"
+              fontSize={15}
+            />
+            <Tooltip />
             <Legend
-
               align="center"
               verticalAlign="bottom"
               iconType="star"
               iconSize={16}
-              wrapperStyle={{fontFamily:"LuckiestGuy",fontSize:"1.25rem"}}
+              wrapperStyle={{ fontFamily: "LuckiestGuy", fontSize: "1.25rem" }}
             />
-            <Bar  dataKey="Strength" stackId="a" fill="#2955DC">
-              <LabelList dataKey="Strength" fontFamily="LuckiestGuy" fontSize="1.5rem" position="top" />
+            <Bar dataKey="Strength" stackId="a" fill="#2955DC">
+              <LabelList
+                dataKey="Strength"
+                fontFamily="LuckiestGuy"
+                fontSize="1.5rem"
+                position="top"
+              />
             </Bar>
-            <Bar dataKey="Experience"  stackId="a" fill="#FFA500">
-              <LabelList dataKey="Experience" fontFamily="LuckiestGuy" fontSize="1.5rem" position="top" />
+            <Bar dataKey="Experience" stackId="a" fill="#FFA500">
+              <LabelList
+                dataKey="Experience"
+                fontFamily="LuckiestGuy"
+                fontSize="1.5rem"
+                position="top"
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
 
         {userExercisesLibrary.length > 0 && (
           <Box display="flex" flexDirection="column" gap={2}>
-            <Typography color="text.secondary" variant="subtitle1" textAlign="center">
+            <Typography
+              color="text.secondary"
+              variant="subtitle1"
+              textAlign="center"
+            >
               Select your strongest lifts to calculate your maximum Power Level
             </Typography>
 
@@ -507,61 +525,100 @@ function ProgressLevel() {
           </Box>
         )}
 
-{calculatedMaximumPowerLevel !== 0 && (
-          <Paper sx={{ width: "100%",mt:1 }}>
+        {calculatedMaximumPowerLevel !== 0 && (
+          <Paper variant="outlined" sx={{ width: "100%", mt: 1 }}>
             <Box
               display="flex"
               justifyContent="center"
               alignItems="center"
               flexDirection="column"
-            padding={1}
+              padding={1}
             >
-              <Box display="flex" justifyContent="space-evenly" width="100%" flexDirection="column">
-              <Typography variant="caption" color="text.secondary" align="left" width="100%">New Power Level</Typography>
-              
-              <Box display="flex" width="100%" justifyContent="space-evenly">
-                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
-                  <PowerLevelIcon width="1rem" height="1rem"/> {calculatedMaximumPowerLevel}
+              <Box
+                display="flex"
+                justifyContent="space-evenly"
+                width="100%"
+                flexDirection="column"
+              >
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  align="left"
+                  width="100%"
+                >
+                  New Power Level
                 </Typography>
-                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
-                  <StrengthIcon width="1rem" height="1rem"/>{calculatedMaximumStrengthLevel}
-                </Typography>
-                <Typography color="text.secondary" fontSize="1.25rem" fontWeight="normal" display="flex" gap={1} alignItems="center">
-                  <ExperienceIcon width="1rem" height="1rem"/>{calculatedMaximumExperienceLevel}
-                </Typography>
+
+                <Box display="flex" width="100%" justifyContent="space-evenly">
+                  <Typography
+                    color="text.secondary"
+                    fontSize="1.25rem"
+                    fontWeight="normal"
+                    display="flex"
+                    gap={1}
+                    alignItems="center"
+                  >
+                    <PowerLevelIcon width="1rem" height="1rem" />{" "}
+                    {calculatedMaximumPowerLevel}
+                  </Typography>
+                  <Typography
+                    color="text.secondary"
+                    fontSize="1.25rem"
+                    fontWeight="normal"
+                    display="flex"
+                    gap={1}
+                    alignItems="center"
+                  >
+                    <StrengthIcon width="1rem" height="1rem" />
+                    {calculatedMaximumStrengthLevel}
+                  </Typography>
+                  <Typography
+                    color="text.secondary"
+                    fontSize="1.25rem"
+                    fontWeight="normal"
+                    display="flex"
+                    gap={1}
+                    alignItems="center"
+                  >
+                    <ExperienceIcon width="1rem" height="1rem" />
+                    {calculatedMaximumExperienceLevel}
+                  </Typography>
                 </Box>
               </Box>
 
               {isToday ? (
-                <Typography align="center"  color="text.secondary"fontWeight="400">
+                <Typography
+                  align="center"
+                  color="text.secondary"
+                  fontWeight="400"
+                >
                   You already updated your Power Level today.
                 </Typography>
               ) : (
                 <Box display="flex" justifyContent="space-around" width="100%">
-                  
                   <IconButton
                     size="large"
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     color="inherit"
-                    sx={{p:0,display:"flex", flexDirection:"column"}}
+                    sx={{ p: 0, display: "flex", flexDirection: "column" }}
                     onClick={handlePublishPowerLevel}
                   >
-                    <SaveAsIcon sx={{p:0,m:0}} />
+                    <SaveAsIcon sx={{ p: 0, m: 0 }} />
                     <Typography variant="caption">Save New PL</Typography>
                   </IconButton>
-                  
+
                   <IconButton
                     size="large"
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     color="inherit"
-                    sx={{p:0,display:"flex", flexDirection:"column"}}
+                    sx={{ p: 0, display: "flex", flexDirection: "column" }}
                     onClick={handleDiscardNewPL}
                   >
-                    <DeleteIcon sx={{p:0,m:0}} />
+                    <DeleteIcon sx={{ p: 0, m: 0 }} />
                     <Typography variant="caption">Discard New PL</Typography>
                   </IconButton>
                 </Box>
@@ -593,7 +650,7 @@ function ProgressLevel() {
             CALCULATE
           </Button>
         </Box>
-      </Box>
+      </Card>
     </Box>
   );
 }

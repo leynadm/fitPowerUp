@@ -44,7 +44,6 @@ import { getThemeMode } from "../../theme";
 function CompletedWorkouts() {
   const isDarkModeEnabled = getThemeMode();
   
-  console.log({isDarkModeEnabled})
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -280,11 +279,12 @@ function CompletedWorkouts() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
+              
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
-              <MenuItem onClick={() => handlePageClick("Analysis")}>
+              <MenuItem  onClick={() => handlePageClick("Analysis")}>
                 <ListItemIcon>
                   <InsertChartIcon fontSize="small" />
                 </ListItemIcon>
@@ -344,11 +344,10 @@ function CompletedWorkouts() {
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
+                  aria-haspopup="true"                  
                   onClick={handleCalendar}
                 >
-                  <CalendarMonthIcon sx={{ color: "white" }} />
+                  <CalendarMonthIcon sx={{color:"neutral.main"}}  />
                 </IconButton>
 
                 <IconButton
@@ -357,10 +356,9 @@ function CompletedWorkouts() {
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   onClick={handleOpenNavMenu}
-                  color="inherit"
-                  sx={{ display: { md: "none" } }}
+                  sx={{ display: { md: "none" } ,color:"neutral.main"}}
                 >
-                  <MenuIcon sx={{ color: "white" }} />
+                  <MenuIcon  />
                 </IconButton>
               </Box>
             </Box>
@@ -375,11 +373,11 @@ function CompletedWorkouts() {
 
       <Fab
         sx={{
-          backgroundColor: "#1c4595",
+          background:"#FFA500",
           position: "fixed",
           bottom: "75px",
           right: "15px",
-          color:"white"
+
         }}
         size="medium"
         onClick={handleNewWorkout}

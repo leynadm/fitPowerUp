@@ -7,7 +7,6 @@ async function fetchFriendsOverview(
   try {
     const tempData: User[] = []; // Copy the existing array
 
-    console.log('fetching friends overview')
     for (const docId of spottingIdsArr) {
       try {
         const documentData = await getUserDocumentById(docId);

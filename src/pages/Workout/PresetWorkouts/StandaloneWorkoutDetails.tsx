@@ -167,7 +167,7 @@ function StandaloneWorkoutDetails() {
                     color="inherit"
                     onClick={handleDeleteRoutineOrWorkoutModal}
                   >
-                    <DeleteForeverIcon sx={{ color: "white" }} />
+                    <DeleteForeverIcon sx={{color:"#FFA500"}} />
                   </IconButton>
                 )}
 
@@ -180,7 +180,7 @@ function StandaloneWorkoutDetails() {
                     color="inherit"
                     onClick={handleCopyWorkout}
                   >
-                    <ContentCopyIcon sx={{ color: "white" }} />
+                    <ContentCopyIcon sx={{color:"#FFA500"}} />
                   </IconButton>
                 </Box>
 
@@ -194,7 +194,7 @@ function StandaloneWorkoutDetails() {
                     navigate("/home/workout/preset-workouts/")
                   }
                 >
-                  <ArrowBackIos sx={{ color: "white" }} />
+                  <ArrowBackIos sx={{color:"#FFA500"}} />
                 </IconButton> 
 
               </Box>

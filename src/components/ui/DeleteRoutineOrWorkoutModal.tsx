@@ -53,7 +53,6 @@ function DeleteRoutineOrWorkoutModal({
   const [isLoading, setIsLoading] = useState(false);
   const handleClose = () => setOpenDeleteRoutineOrWorkoutModal(false);
   const navigate = useNavigate();
-  console.log({routineOrWorkout})
   async function handleDeleteRoutineOrWorkout() {
     if (routineOrWorkout === "routine") {
       if (isValid) {

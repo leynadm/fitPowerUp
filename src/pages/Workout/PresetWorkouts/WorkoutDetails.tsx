@@ -24,9 +24,6 @@ function WorkoutDetails() {
   const workoutData = location.state.workoutData;
   const routine = location.state.routine;
 
-  console.log(location.state);
-  console.log(workoutData);
-
   const encodedRoutine = encodeURIComponent(routine.rName)
 
   const navigate = useNavigate();
@@ -172,7 +169,7 @@ function WorkoutDetails() {
                     color="inherit"
                     onClick={handleDeleteRoutineOrWorkoutModal}
                   >
-                    <DeleteForeverIcon sx={{ color: "white" }} />
+                    <DeleteForeverIcon sx={{color:"#FFA500"}} />
                   </IconButton>
                 )}
 
@@ -185,7 +182,7 @@ function WorkoutDetails() {
                     color="inherit"
                     onClick={handleCopyWorkout}
                   >
-                    <ContentCopyIcon sx={{ color: "white" }} />
+                    <ContentCopyIcon sx={{color:"#FFA500"}} />
                   </IconButton>
 
                   <IconButton
@@ -198,7 +195,7 @@ function WorkoutDetails() {
                     navigate(`/home/workout/preset-workouts/preset-routine-details/${encodedRoutine}`,{state:{routine}})
                   }
                 >
-                  <ArrowBackIosNew sx={{ color: "white" }} />
+                  <ArrowBackIosNew sx={{color:"#FFA500"}} />
                 </IconButton>
                 </Box>
               </Box>

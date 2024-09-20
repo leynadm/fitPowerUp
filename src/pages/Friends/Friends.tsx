@@ -232,7 +232,7 @@ function Friends() {
                 color="inherit"
                 onClick={handleNotifications}
               >
-                <NotificationsIcon />
+                <NotificationsIcon sx={{color:"#FFA500"}} />
                 {/* 
               <Badge badgeContent={17} color="error">
               
@@ -250,7 +250,7 @@ function Friends() {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle  />
               </IconButton>
             </Box>
 
@@ -263,7 +263,7 @@ function Friends() {
                 onClick={handleMobileMenuOpen}
                 color="inherit"
               >
-                <MoreIcon />
+                <MoreIcon sx={{color:"#FFA500"}} />
               </IconButton>
             </Box>
           </Toolbar>

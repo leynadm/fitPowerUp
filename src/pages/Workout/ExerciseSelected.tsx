@@ -135,7 +135,7 @@ function ExerciseSelected() {
                       }}
                     />
                   ) : (
-                    <BookmarkAddIcon />
+                    <BookmarkAddIcon sx={{color:"#FFA500"}} />
                   )}
                 </IconButton>
 
@@ -147,7 +147,7 @@ function ExerciseSelected() {
                   color="inherit"
                   onClick={handleExerciseInfoModal}
                 >
-                  <HelpIcon />
+                  <HelpIcon sx={{color:"#FFA500"}} />
                 </IconButton>
 
                 <IconButton
@@ -158,7 +158,7 @@ function ExerciseSelected() {
                   color="inherit"
                   onClick={handleNewWorkout}
                 >
-                  <AddHomeIcon />
+                  <AddHomeIcon sx={{color:"#FFA500"}} />
                 </IconButton>
               
               </Box>

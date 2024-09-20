@@ -39,10 +39,12 @@ declare module "@mui/material/Typography" {
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary']; // Define the new property type
+    tertiary:Palette['primary']
   }
 
   interface PaletteOptions {
     neutral?: PaletteOptions['primary']; // Extend the options to include the new property
+    tertiary?:PaletteOptions['primary']
   }
 }
 
@@ -64,8 +66,6 @@ export const getThemeMode = (): 'light' | 'dark' => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
-console.log("logging theme mode:")
-console.log(getThemeMode())
 const theme = createTheme({
 
   components: {
@@ -342,6 +342,12 @@ const theme = createTheme({
       dark: "#102e72", // Dark blue for deeper accents
       contrastText: "#FFFFFF", // White for good contrast
     },
+    tertiary:{
+      main: "#1c4595", // Bold blue for Saiyan aura
+      light: "#4a6fb3", // Lighter blue for softer elements
+      dark: "#102e72", // Dark blue for deeper accents
+      contrastText: "#FFFFFF", // White for good contrast
+    },
     success: {
       main: "#FF8C00", // Bright orange for Super Saiyan vibes
       light: "#ffb347", // Lighter orange for highlights
@@ -378,7 +384,7 @@ const theme = createTheme({
     },
     text: {
       primary: "#01080a", // Deep black for main text
-      secondary: "#1c4595", // Blue for secondary text or accents
+      secondary: "#000", // Blue for secondary text or accents
     },
   },
 

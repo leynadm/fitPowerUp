@@ -190,7 +190,7 @@ function PresetWorkoutsOverview() {
                       color="inherit"
                       onClick={handleNewPresetRoutine}
                     >
-                      <AddBoxIcon sx={{ color: "white" }} />
+                      <AddBoxIcon sx={{color:"#FFA500"}} />
                     </IconButton>
                   </Box>
                 ) : (
@@ -203,7 +203,7 @@ function PresetWorkoutsOverview() {
                       color="inherit"
                       onClick={handleNewPresetWorkout}
                     >
-                      <AddOutlinedIcon sx={{ color: "white" }} />
+                      <AddOutlinedIcon sx={{color:"#FFA500"}} />
                     </IconButton>
                   </Box>
                 )}

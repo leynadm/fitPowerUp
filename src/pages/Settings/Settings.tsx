@@ -164,7 +164,6 @@ function Settings() {
         <Typography color="text.secondary" textAlign="center">
           Applying the new settings...
         </Typography>
-        ;
       </Container>
     );
   }

@@ -1225,7 +1225,6 @@ function PresetWorkoutExercise() {
                 }}
               >
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleSubtractButtonClick(measurement)}
                 >
@@ -1251,7 +1250,6 @@ function PresetWorkoutExercise() {
                 />
 
                 <Button
-                  sx={{ backgroundColor: "white" }}
                   variant="outlined"
                   onClick={() => handleAddButtonClick(measurement)}
                 >

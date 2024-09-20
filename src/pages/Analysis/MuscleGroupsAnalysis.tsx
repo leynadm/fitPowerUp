@@ -34,9 +34,6 @@ function MuscleGroupsAnalysis() {
   const { userTrainingData,refetchUserTrainingData } = useContext(UserTrainingDataContext);
 
   const { userExercisesLibrary,refetchUserExercisesLibrary } = useContext(UserExercisesLibraryContext);
-
-
-  console.log({theme})
   const { currentUserData } = useContext(AuthContext);
 
   const [exercisesMuscleGroupsArr,setExercisesMuscleGroupsArr] = useState<string[]>(getExercisesMuscleGroups(userExercisesLibrary))

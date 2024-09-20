@@ -96,7 +96,6 @@ function AddNewPresetWorkoutForRoutineModal({
     };
 
     try {
-      console.log({ presetWorkoutData });
       setIsLoading(true);
       await addWorkoutToRoutine(currentUser.uid, presetWorkoutData, routineId);
 
