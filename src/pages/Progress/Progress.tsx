@@ -11,6 +11,8 @@ import ProgressPath from "./ProgressPath";
 import ProgressFeats from "./ProgressFeats";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ProgressHero from "./ProgressHero";
+import MentorsOverview from "./Mentor/MentorsOverview";
+import MentorSkillTree from "./Mentor/MentorSkillTree";
 function Progress() {
   const navigate = useNavigate();
 
@@ -24,6 +26,10 @@ function Progress() {
 
   const handleNavigateFeats = () => {
     navigate("feats");
+  };
+
+  const handleNavigateMentor = () => {
+    navigate("mentor");
   };
 
   return (
@@ -58,7 +64,7 @@ function Progress() {
                 display: { xs: "none", md: "flex" },
 
                 letterSpacing: ".3rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -80,7 +86,7 @@ function Progress() {
                 flexGrow: 1,
 
                 letterSpacing: ".0rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -92,7 +98,14 @@ function Progress() {
 
       <ButtonGroup
         aria-label="outlined button group"
-        sx={{ width: "100%" }}
+        sx={{
+          width: "100%",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none" /* IE and Edge */,
+          "scrollbar-width": "none" /* Firefox */,
+        }}
         variant="text"
       >
         <Button
@@ -121,6 +134,16 @@ function Progress() {
         >
           Feats
         </Button>
+
+        <Button
+          sx={{
+            width:
+              "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
+          }}
+          onClick={handleNavigateMentor}
+        >
+          Mentor
+        </Button>
       </ButtonGroup>
 
       <Routes>
@@ -128,6 +151,8 @@ function Progress() {
         <Route path="path" element={<ProgressPath />} />
         <Route path="path/hero/:id" element={<ProgressHero />} />
         <Route path="feats" element={<ProgressFeats />} />
+        <Route path="mentor" element={<MentorsOverview />} />
+        <Route path="mentor/:id" element={<MentorSkillTree />} />
       </Routes>
     </Container>
   );

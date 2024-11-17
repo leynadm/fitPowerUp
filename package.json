@@ -14,6 +14,7 @@
     "@types/node": "^16.18.30",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "beautiful-skill-tree": "^1.7.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.13",
     "firebase": "^9.22.0",
