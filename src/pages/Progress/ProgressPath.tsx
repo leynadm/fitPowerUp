@@ -74,7 +74,7 @@ function ProgressPath() {
       }
 
     return (
-      <Box style={rowStyle} boxShadow={1}  borderRadius="4px">
+      <Box style={rowStyle} boxShadow={0} borderBottom="1px solid lightgray" >
         <Box
           display="flex"
           gap={3}

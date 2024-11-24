@@ -13,6 +13,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ProgressHero from "./ProgressHero";
 import MentorsOverview from "./Mentor/MentorsOverview";
 import MentorSkillTree from "./Mentor/MentorSkillTree";
+import MentorTree from "./Mentor/MentorTree";
 function Progress() {
   const navigate = useNavigate();
 
@@ -152,7 +153,7 @@ function Progress() {
         <Route path="path/hero/:id" element={<ProgressHero />} />
         <Route path="feats" element={<ProgressFeats />} />
         <Route path="mentor" element={<MentorsOverview />} />
-        <Route path="mentor/:id" element={<MentorSkillTree />} />
+        <Route path="mentor/:id" element={<MentorTree />} />
       </Routes>
     </Container>
   );

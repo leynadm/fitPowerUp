@@ -8,7 +8,7 @@ import React, {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-
+import Divider from '@mui/material/Divider';
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Menu from "@mui/material/Menu";
@@ -266,6 +266,9 @@ function CompletedWorkouts() {
             </Box>
 
             <Menu
+              elevation={0}
+                      
+              
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -277,14 +280,16 @@ function CompletedWorkouts() {
                 vertical: "top",
                 horizontal: "left",
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
               
+              open={Boolean(anchorElNav)}
+              
+              onClose={handleCloseNavMenu}
+                
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: "block", md: "none" },               
               }}
             >
-              <MenuItem  onClick={() => handlePageClick("Analysis")}>
+              <MenuItem  onClick={() => handlePageClick("Analysis")} >
                 <ListItemIcon>
                   <InsertChartIcon fontSize="small" />
                 </ListItemIcon>
@@ -305,7 +310,6 @@ function CompletedWorkouts() {
                   Workouts & Routines
                 </ListItemText>
               </MenuItem>
-
               <MenuItem onClick={() => handlePageClick("Body Tracker")}>
                 <ListItemIcon>
                   <AccessibilityIcon fontSize="small" />
@@ -326,6 +330,7 @@ function CompletedWorkouts() {
                   Settings
                 </ListItemText>
               </MenuItem>
+
               <MenuItem onClick={() => handlePageClick("Sign Out")}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" />
@@ -377,8 +382,9 @@ function CompletedWorkouts() {
           position: "fixed",
           bottom: "75px",
           right: "15px",
-
+          boxShadow:"none"
         }}
+        
         size="medium"
         onClick={handleNewWorkout}
         aria-label="start-new-workout"

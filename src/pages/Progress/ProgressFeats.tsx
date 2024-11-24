@@ -120,11 +120,13 @@ function ProgressGraph() {
               variant="outlined"
               maxRows={4}
               size="small"
+              
               defaultValue={featEntry.description}
               slotProps={{
+                
                 input: {
                   readOnly: true,
-
+                  
                   // Apply styles to the input element
                   sx: {
                     margin: 0,

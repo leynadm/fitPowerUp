@@ -71,9 +71,10 @@ function CompleteChallengeCard({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-
+        
         width: "100%",
       }}
+      variant="outlined"
     >
       <Typography variant="h6" color="#1c4595" align="center">
         {completeChallengeEntry.name}
@@ -302,24 +303,7 @@ function CompleteChallengeCard({
         </Box>
       </Box>
       <Box display="flex" width="100%" justifyContent="space-around" gap={1}>
-        <Accordion >
-          <AccordionSummary
-          
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{ p: 0, m: 0 }}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            
-                <IconButton
+      <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
@@ -334,9 +318,6 @@ function CompleteChallengeCard({
                   />
                   <Typography variant="caption" fontSize="1rem" color="text.secondary">Delete</Typography>
                 </IconButton>
-             
-          </AccordionDetails>
-        </Accordion>
       </Box>
     </Paper>
   );

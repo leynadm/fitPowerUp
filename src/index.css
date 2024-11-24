@@ -114,6 +114,10 @@ div[tabindex="0"] > p {
   display: none !important;
   
 }
+div[tabindex="0"] > div > h2 {
+  display: none !important;
+  
+}
 div[tabindex="0"]{
   color: black;
 }

@@ -296,7 +296,7 @@ function BodyTrackerTrack() {
         />
       </Box>
 
-      <Accordion sx={{ marginTop: "0.5rem", borderRadius: "3px" }}>
+      <Accordion sx={{ marginTop: "0.5rem", borderRadius: "3px" }} variant="outlined">
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
