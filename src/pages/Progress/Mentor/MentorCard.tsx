@@ -6,7 +6,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { CircularProgress, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
+import { Visibility } from "@mui/icons-material";
+
 interface Mentor {
   mentorName: string;
   mentorDescription: string;
@@ -69,8 +71,16 @@ export default function MentorCard({ mentor }: { mentor: Mentor }) {
             size="small"
             onClick={() => navigate(mentor.mentorName.toLocaleLowerCase())}
             variant="outlined"
+            startIcon={<Visibility/>}
           >
             See Skill Tree
+          </Button>
+          <Button
+            size="small"
+            onClick={() => navigate(mentor.mentorName.toLocaleLowerCase())}
+            variant="outlined"
+          >
+            Select Skill Tree
           </Button>
         </CardActions>
       </Card>

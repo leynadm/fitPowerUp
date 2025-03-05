@@ -17,6 +17,7 @@ import { SocialDataProvider } from "../../context/SocialData";
 import { PresetWorkoutsDataProvider } from "../../context/UserPresetWorkouts";
 import { AuthContext } from "../../context/Auth";
 import { UserChallengesDataProvider } from "../../context/UserChallenges";
+import { SkillTreeDataProvider } from "../../context/SkillTreeData";
 import { Box } from "@mui/material";
 function Home() {
   const [existingExercises, setExistingExercises] = useState<
@@ -39,6 +40,7 @@ function Home() {
                 <FriendsSummaryProvider>
                   <SocialDataProvider>
                     <UserChallengesDataProvider>
+                      <SkillTreeDataProvider>
                       <VerifyEmailDialog
                         verifyEmailModalOpen={verifyEmailModalOpen}
                         setVerifyEmailModalOpen={setVerifyEmailModalOpen}
@@ -52,10 +54,9 @@ function Home() {
                         overflow="auto"
                         width="100%"
                         className="XXXX---BOOXXnowbox"
-    paddingBottom={1}
->
+                        paddingBottom={1}
+                      >
                         <Routes>
-                        
                           <Route
                             path="workout/*"
                             index
@@ -66,13 +67,13 @@ function Home() {
                               />
                             }
                           />
-                        
+
                           <Route path="friends/*" element={<Friends />} />
-                        
+
                           <Route path="progress/*" element={<Progress />} />
-                        
                         </Routes>
                       </Box>
+                      </SkillTreeDataProvider>
                     </UserChallengesDataProvider>
                   </SocialDataProvider>
                 </FriendsSummaryProvider>

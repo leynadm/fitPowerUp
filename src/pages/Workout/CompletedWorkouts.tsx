@@ -8,7 +8,7 @@ import React, {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Menu from "@mui/material/Menu";
@@ -19,6 +19,8 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { auth } from "../../config/firebase";
+import Fade from "@mui/material/Fade";
+import Grow from "@mui/material/Grow";
 
 import { WorkoutSetCard } from "../../components/workouts/WorkoutSetCard";
 import Fab from "@mui/material/Fab";
@@ -43,7 +45,7 @@ import { CompletedWorkoutNavArrows } from "../../components/workouts/CompletedWo
 import { getThemeMode } from "../../theme";
 function CompletedWorkouts() {
   const isDarkModeEnabled = getThemeMode();
-  
+
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -209,13 +211,11 @@ function CompletedWorkouts() {
         style={{
           top: 0,
           width: "100%",
-          height: "56px"
+          height: "56px",
         }}
       >
         <Container maxWidth="md">
           <Toolbar disableGutters>
-
-
             <Typography
               variant="h6"
               noWrap
@@ -223,7 +223,7 @@ function CompletedWorkouts() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 letterSpacing: ".3rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -242,7 +242,7 @@ function CompletedWorkouts() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 letterSpacing: ".0rem",
-                color:"#FFA500",
+                color: "#FFA500",
                 textDecoration: "none",
               }}
             >
@@ -267,8 +267,6 @@ function CompletedWorkouts() {
 
             <Menu
               elevation={0}
-                      
-              
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -280,16 +278,13 @@ function CompletedWorkouts() {
                 vertical: "top",
                 horizontal: "left",
               }}
-              
               open={Boolean(anchorElNav)}
-              
               onClose={handleCloseNavMenu}
-                
               sx={{
-                display: { xs: "block", md: "none" },               
+                display: { xs: "block", md: "none" },
               }}
             >
-              <MenuItem  onClick={() => handlePageClick("Analysis")} >
+              <MenuItem onClick={() => handlePageClick("Analysis")}>
                 <ListItemIcon>
                   <InsertChartIcon fontSize="small" />
                 </ListItemIcon>
@@ -349,10 +344,10 @@ function CompletedWorkouts() {
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
-                  aria-haspopup="true"                  
+                  aria-haspopup="true"
                   onClick={handleCalendar}
                 >
-                  <CalendarMonthIcon sx={{color:"neutral.main"}}  />
+                  <CalendarMonthIcon sx={{ color: "neutral.main" }} />
                 </IconButton>
 
                 <IconButton
@@ -361,9 +356,9 @@ function CompletedWorkouts() {
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   onClick={handleOpenNavMenu}
-                  sx={{ display: { md: "none" } ,color:"neutral.main"}}
+                  sx={{ display: { md: "none" }, color: "neutral.main" }}
                 >
-                  <MenuIcon  />
+                  <MenuIcon />
                 </IconButton>
               </Box>
             </Box>
@@ -378,13 +373,12 @@ function CompletedWorkouts() {
 
       <Fab
         sx={{
-          background:"#FFA500",
+          background: "#FFA500",
           position: "fixed",
           bottom: "75px",
           right: "15px",
-          boxShadow:"none"
+          boxShadow: "none",
         }}
-        
         size="medium"
         onClick={handleNewWorkout}
         aria-label="start-new-workout"
@@ -445,31 +439,37 @@ function CompletedWorkouts() {
           <>
             {filteredUserTrainingData &&
               filteredUserTrainingData.length === 0 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexGrow: 1,
-                    height: "calc(100svh - 168px)",
-                  }}
-                >
-                  <img
-                    src={isDarkModeEnabled==='light'?'/svg/goku.svg':'/svg/goku-orange.svg'}
-                    alt="son goku"
-                    width={128}
-                    height={128}
-                  />
-                  <Typography
-                    textAlign="center"
-                    fontSize="2rem"
-                    color="text.secondary"
+                <Grow in={true}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexGrow: 1,
+                      height: "calc(100svh - 168px)",
+                    }}
                   >
-                    Workout log <br />
-                    is empty
-                  </Typography>
-                </Box>
+                    <img
+                      src={
+                        isDarkModeEnabled === "light"
+                          ? "/svg/goku.svg"
+                          : "/svg/goku-orange.svg"
+                      }
+                      alt="son goku"
+                      width={128}
+                      height={128}
+                    />
+                    <Typography
+                      textAlign="center"
+                      fontSize="2rem"
+                      color="text.secondary"
+                    >
+                      Workout log <br />
+                      is empty
+                    </Typography>
+                  </Box>
+                </Grow>
               )}
           </>
         )}

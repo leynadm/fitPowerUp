@@ -9,10 +9,8 @@ import { useNavigate } from "react-router-dom";
 import ProgressLevel from "./ProgressLevel";
 import ProgressPath from "./ProgressPath";
 import ProgressFeats from "./ProgressFeats";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ProgressHero from "./ProgressHero";
 import MentorsOverview from "./Mentor/MentorsOverview";
-import MentorSkillTree from "./Mentor/MentorSkillTree";
 import MentorTree from "./Mentor/MentorTree";
 function Progress() {
   const navigate = useNavigate();
@@ -136,15 +134,15 @@ function Progress() {
           Feats
         </Button>
 
-        <Button
+{/*         <Button
           sx={{
             width:
-              "100%" /* marginTop:"2px", marginRight:"2px",backgroundColor:"#520975" */,
+              "100%"
           }}
           onClick={handleNavigateMentor}
         >
           Mentor
-        </Button>
+        </Button> */}
       </ButtonGroup>
 
       <Routes>

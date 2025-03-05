@@ -1,6 +1,5 @@
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, writeBatch, arrayUnion, collection } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { arrayUnion } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { IWorkoutData } from "../interfaces/IUserTrainingData";
 
@@ -9,6 +8,8 @@ async function completeWorkout(
   workoutData: IWorkoutData,
   userTrainingDataSize: number
 ) {
+  const batch = writeBatch(db);
+
   try {
     const userDocRef = doc(db, "users", userId);
 
@@ -23,11 +24,19 @@ async function completeWorkout(
       `userTrainingCollection/userTrainingData_${docSuffix}`
     );
 
-    await updateDoc(userTrainingDataDocRef, {
+    // Reference the "userWorkouts" subcollection and create a new document reference
+    const userWorkoutsCollectionRef = collection(userDocRef, "userWorkouts");
+    const newWorkoutDocRef = doc(userWorkoutsCollectionRef); // Auto-generated ID
+
+    batch.set(userTrainingDataDocRef, {
       workoutSessions: arrayUnion(workoutData),
     });
+
+    batch.set(newWorkoutDocRef, workoutData);
+    
+    await batch.commit();
+
   } catch (error) {
-    console.log(error);
     console.error(error);
     toast.error("completeWorkout had an error!");
   }

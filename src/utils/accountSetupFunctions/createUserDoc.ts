@@ -114,7 +114,6 @@ async function createUserDoc(userID: string, fullname: string | null) {
 
       batch.set(userTrainingDoc, {
         workoutSessions: [],
-        // Add data for the workout document
       });
 
       const userFeatsDocRef = doc(userCollectionRef, "userFeats");

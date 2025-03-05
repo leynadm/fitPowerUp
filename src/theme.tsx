@@ -84,6 +84,24 @@ const theme = createTheme({
         elevation: 0,
       },
     },
+    MuiPopover: {
+      defaultProps: {
+        PaperProps: {
+          sx: {
+            border: '1px solid lightgray',
+          },
+        },
+      },
+    },
+    MuiMenu: {
+      defaultProps: {
+        PaperProps: {
+          sx: {
+            border: '1px solid lightgray', // Apply the border to the Paper
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {},
 
